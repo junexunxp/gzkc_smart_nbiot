@@ -1,0 +1,1162 @@
+###############################################################################
+#
+# IAR ELF Linker V8.32.3.193/W32 for ARM                  26/Jun/2019  11:09:18
+# Copyright 2007-2019 IAR Systems AB.
+#
+#    Output file  =  
+#        C:\Development\smart_washing_machine_3080\debug\smart_wm_mk3080.out
+#    Map file     =  
+#        C:\Development\smart_washing_machine_3080\debug\list\smart_wm_mk3080.map
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW60D2.tmp
+#        (C:\Development\smart_washing_machine_3080\debug\obj\aes.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\aes_alt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\aesni.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\arc4.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\aria.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\asn1parse.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\asn1write.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\at_api.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\at_conn_mbox.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\at_conn_mgmt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\at_parser.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\at_tcp.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_bind.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_bind_statis.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_cmp_coap.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_cmp_mqtt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_dev_reset.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_event.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_info.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_notify.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_packet.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_report.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\awss_timer.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\base64.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\bignum.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\blowfish.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\board.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\camellia.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ccm.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\certs.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\chacha20.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\chachapoly.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\cipher.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\cipher_wrap.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\cJSON.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\clock_config.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\cmac.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPDeserialize_common.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPExport.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPMessage.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPMessage_common.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPNetwork.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPObserve.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPPlatform.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPResource.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPSerialize_common.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\CoAPServer.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\csdk.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ctr_drbg.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\debug.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\des.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\des_alt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dev_sign_example.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dev_sign_mqtt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dhm.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_api.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_client.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_client_adapter.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_cota.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_fota.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_ipc.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_log_report.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_manager.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_message.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_message_cache.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_msg_process.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_opt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_ota.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_server.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_server_adapter.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_shadow.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_tsl_alink.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\dm_utils.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecdh.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecdsa.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecjpake.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecp.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecp_alt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecp_alt_ksdk.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecp_curves.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ecp_curves_alt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\entropy.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\entropy_poll.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\error.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\event_groups.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\evkbimxrt1050_flexspi_nor_config.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\evkbimxrt1050_sdram_ini_dcd.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\flexspi_hyper_flash_ops.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_assert.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_cache.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_clock.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_common.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_dcp.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_debug_console.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_flexspi.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_flexspi_nor_boot.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_gpio.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_lpuart.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_lpuart_freertos.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_str.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_trng.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\fsl_usdhc.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\gcm.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\generic_list.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\HAL_DTLS_mbedtls.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\HAL_TLS_mbedtls.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\havege.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\heap_4.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\hkdf.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\hmac_drbg.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\impl_gateway.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\impl_linkkit.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\impl_ntp.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\impl_solo.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_cjson.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_compat.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_defs.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_json_parser.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_log.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_md5.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_net.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_prt_nwk_payload.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_report.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_sha1.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_sha256.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_string.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\infra_timer.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\iotx_cm.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\iotx_cm_coap.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\iotx_cm_mqtt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\iotx_mqtt_client.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ksdk_mbedtls.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\kv.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\kv_adapt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\kv_cli.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\kv_secure.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\linkkit_example_csdk.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\linkkit_example_solo.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\list.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\log.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\lpuart_adapter.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\md.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\md2.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\md4.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\md5.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\md_wrap.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\memory_buffer_alloc.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\mk3060.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\mqtt_api.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\mqtt_example_at.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTConnectClient.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTDeserializePublish.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTPacket.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTSerializePublish.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTSubscribeClient.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\MQTTUnsubscribeClient.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\net_sockets.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\nist_kw.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\oid.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\os_misc.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\padlock.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\passwd.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pem.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pin_mux.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pk.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pk_wrap.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pkcs11.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pkcs12.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pkcs5.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pkparse.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\pkwrite.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\platform.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\platform_util.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\poly1305.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\port.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\portasm.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\queue.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ripemd160.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\root_ca.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\rsa.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\rsa_internal.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\serial_manager.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\serial_port_uart.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\sha1.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\sha256.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\sha512.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_cache.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_ciphersuites.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_cli.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_cookie.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_srv.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_ticket.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\ssl_tls.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\startup_MIMXRT1052.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\stream_buffer.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\system_MIMXRT1052.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\tasks.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\threading.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\timers.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\timing.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\version.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\version_features.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\washing_machine.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\wrapper.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509_create.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509_crl.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509_crt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509_csr.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509write_crt.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\x509write_csr.o
+#        C:\Development\smart_washing_machine_3080\debug\obj\xtea.o --redirect
+#        _Printf=_PrintfSmallNoMb --redirect _Scanf=_ScanfSmallNoMb
+#        --no_out_extension -o
+#        C:\Development\smart_washing_machine_3080\debug\smart_wm_mk3080.out
+#        --map
+#        C:\Development\smart_washing_machine_3080\debug\list\smart_wm_mk3080.map
+#        --config
+#        C:\Development\smart_washing_machine_3080/MIMXRT1052xxxxx_ram.icf
+#        --semihosting --entry __iar_program_start --vfe --text_out locale)
+#
+###############################################################################
+
+*******************************************************************************
+*** RUNTIME MODEL ATTRIBUTES
+***
+
+CppFlavor       = *
+__Heap_Handler  = DLMalloc
+__SystemLibrary = DLib
+__dlib_version  = 6
+
+
+*******************************************************************************
+*** HEAP SELECTION
+***
+
+The advanced heap was selected because the application calls memory
+allocation functions outside of system library functions, and there
+are calls to deallocation functions in the application.
+
+
+*******************************************************************************
+*** PLACEMENT SUMMARY
+***
+
+"A0":  place at 0x0 { ro section .intvec };
+"P1":  place in [from 0x0 to 0x3ff] |
+                [from 0x400 to 0x1'ffff] { ro };
+define block RW { rw };
+"P2":  place in [from 0x2000'0000 to 0x2001'fbff] { block RW };
+define block ZI { zi };
+"P3":  place in [from 0x2000'0000 to 0x2001'fbff] { block ZI };
+define block NCACHE_VAR { section NonCacheable, section NonCacheable.init };
+"P5":  place in [from 0x2000'0000 to 0x2001'fbff] { block NCACHE_VAR };
+define block CSTACK with size = 1K, alignment = 8 { };
+"P6":  place in [from 0x2001'fc00 to 0x2001'ffff] { block CSTACK };
+initialize by copy { rw, section .textrw };
+
+No sections matched the following patterns:
+
+  section NonCacheable       in block NCACHE_VAR
+  section NonCacheable.init  in block NCACHE_VAR
+
+
+  Section            Kind         Address     Size  Object
+  -------            ----         -------     ----  ------
+"A0":                                        0x400
+  .intvec            ro code          0x0    0x400  startup_MIMXRT1052.o [1]
+                                  - 0x400    0x400
+
+"P1":                                       0x77d0
+  .text              ro code        0x400    0xcb4  tasks.o [1]
+  .text              ro code       0x10b4    0x274  heap_4.o [1]
+  .text              ro code       0x1328     0x66  ABImemset.o [4]
+  .text              ro code       0x138e     0x9a  list.o [1]
+  .text              ro code       0x1428    0x25c  port.o [1]
+  .text              ro code       0x1684    0x4a4  timers.o [1]
+  CODE               ro code       0x1b28     0xb0  portasm.o [1]
+  .text              ro code       0x1bd8    0x944  queue.o [1]
+  .text              ro code       0x251c     0xa6  ABImemcpy.o [4]
+  .text              ro code       0x25c2     0x3a  zero_init3.o [4]
+  .text              ro code       0x25fc    0xc1c  kv.o [1]
+  .text              ro code       0x3218    0x2a4  kv_adapt.o [1]
+  .text              ro code       0x34bc     0x68  memcmp.o [4]
+  .text              ro code       0x3524     0x36  strlen.o [4]
+  .text              ro code       0x355a     0x1a  xsnprout.o [2]
+  .text              ro code       0x3574      0x6  ABImemclr4.o [4]
+  .text              ro code       0x357a      0x2  kv_cli.o [1]
+  .text              ro code       0x357c    0x318  flexspi_hyper_flash_ops.o [1]
+  .text              ro code       0x3894     0x54  fsl_cache.o [1]
+  .text              ro code       0x38e8     0xe4  fsl_debug_console.o [1]
+  .text              ro code       0x39cc    0x154  wrapper.o [1]
+  .text              ro code       0x3b20     0x32  ABImemset48.o [4]
+  .rodata            const         0x3b52      0x2  fsl_flexspi.o [1]
+  .text              ro code       0x3b54     0x1c  fsl_assert.o [1]
+  .text              ro code       0x3b70    0x854  fsl_flexspi.o [1]
+  .text              ro code       0x43c4     0xd4  serial_manager.o [1]
+  .text              ro code       0x4498    0x310  fsl_str.o [1]
+  .text              ro code       0x47a8     0x90  fsl_lpuart_freertos.o [1]
+  .text              ro code       0x4838     0x3c  vsnprint.o [2]
+  .text              ro code       0x4874     0x64  serial_port_uart.o [1]
+  .text              ro code       0x48d8    0x530  fsl_lpuart.o [1]
+  .text              ro code       0x4e08    0x174  event_groups.o [1]
+  .text              ro code       0x4f7c    0x2cc  log.o [1]
+  .text              ro code       0x5248    0x4d0  xprintfsmall_nomb.o [2]
+  .text              ro code       0x5718     0x70  lpuart_adapter.o [1]
+  .text              ro code       0x5788    0x110  csdk.o [1]
+  .text              ro code       0x5898    0x2dc  board.o [1]
+  .text              ro code       0x5b74     0x16  strchr.o [4]
+  .text              ro code       0x5b8a      0x2  startup_MIMXRT1052.o [1]
+  .text              ro code       0x5b8c     0x40  xfail_s.o [2]
+  .text              ro code       0x5bcc     0x58  memchr.o [4]
+  .text              ro code       0x5c24     0xb4  mk3060.o [1]
+  .text              ro code       0x5cd8    0x1a0  pin_mux.o [1]
+  .text              ro code       0x5e78    0x818  clock_config.o [1]
+  .text              ro code       0x6690    0x1ee  fsl_gpio.o [1]
+  .text              ro code       0x687e      0x2  startup_MIMXRT1052.o [1]
+  .text              ro code       0x6880    0x498  fsl_clock.o [1]
+  .text              ro code       0x6d18      0x6  abort.o [2]
+  .text              ro code       0x6d1e      0x2  startup_MIMXRT1052.o [1]
+  .text              ro code       0x6d20    0x114  at_parser.o [1]
+  .text              ro code       0x6e34     0x14  exit.o [5]
+  .text              ro code       0x6e48    0x14e  system_MIMXRT1052.o [1]
+  .text              ro code       0x6f96      0x2  startup_MIMXRT1052.o [1]
+  Initializer bytes  const         0x6f98    0x128  <for RW-1>
+  .rodata            const         0x70c0     0x58  serial_port_uart.o [1]
+  .rodata            const         0x7118     0x54  serial_manager.o [1]
+  .rodata            const         0x716c     0x4c  lpuart_adapter.o [1]
+  .rodata            const         0x71b8     0x48  fsl_debug_console.o [1]
+  .rodata            const         0x7200     0x44  fsl_flexspi.o [1]
+  .rodata            const         0x7244     0x40  clock_config.o [1]
+  .rodata            const         0x7284     0x40  flexspi_hyper_flash_ops.o [1]
+  .rodata            const         0x72c4     0x40  fsl_clock.o [1]
+  .rodata            const         0x7304     0x40  fsl_flexspi.o [1]
+  .rodata            const         0x7344     0x40  fsl_flexspi.o [1]
+  .rodata            const         0x7384     0x40  fsl_gpio.o [1]
+  .rodata            const         0x73c4     0x40  fsl_gpio.o [1]
+  .rodata            const         0x7404     0x40  fsl_lpuart.o [1]
+  .rodata            const         0x7444     0x40  fsl_lpuart.o [1]
+  .rodata            const         0x7484     0x40  fsl_lpuart.o [1]
+  .rodata            const         0x74c4     0x40  pin_mux.o [1]
+  .rodata            const         0x7504     0x3c  fsl_gpio.o [1]
+  .text              ro code       0x7540     0x34  fsl_usdhc.o [1]
+  .rodata            const         0x7574     0x30  kv_adapt.o [1]
+  .rodata            const         0x75a4     0x2c  fsl_assert.o [1]
+  .text              ro code       0x75d0     0x2c  copy_init3.o [4]
+  .text              ro code       0x75fc     0x28  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7624     0x28  data_init.o [4]
+  .rodata            const         0x764c     0x24  at_parser.o [1]
+  .rodata            const         0x7670     0x24  fsl_lpuart.o [1]
+  .rodata            const         0x7694     0x24  lpuart_adapter.o [1]
+  .text              ro code       0x76b8     0x22  fpinit_M.o [3]
+  .iar.init_table    const         0x76dc     0x24  - Linker created -
+  .text              ro code       0x7700      0x2  startup_MIMXRT1052.o [1]
+  .rodata            const         0x7704     0x20  fsl_lpuart.o [1]
+  .rodata            const         0x7724     0x20  fsl_lpuart.o [1]
+  .rodata            const         0x7744     0x20  fsl_lpuart_freertos.o [1]
+  .text              ro code       0x7764     0x1e  cmain.o [4]
+  .text              ro code       0x7782      0x4  low_level_init.o [2]
+  .text              ro code       0x7786      0x4  exit.o [2]
+  .text              ro code       0x778a      0x2  startup_MIMXRT1052.o [1]
+  .text              ro code       0x778c      0xa  cexit.o [4]
+  .rodata            const         0x7796      0x1  kv.o [1]
+  .rodata            const         0x7797      0x1  kv.o [1]
+  .rodata            const         0x7798     0x1c  at_parser.o [1]
+  .rodata            const         0x77b4     0x1c  csdk.o [1]
+  .rodata            const         0x77d0     0x18  at_parser.o [1]
+  .rodata            const         0x77e8     0x18  clock_config.o [1]
+  .rodata            const         0x7800     0x18  fsl_gpio.o [1]
+  .rodata            const         0x7818     0x18  fsl_lpuart.o [1]
+  .rodata            const         0x7830     0x14  at_parser.o [1]
+  .rodata            const         0x7844     0x14  clock_config.o [1]
+  .rodata            const         0x7858     0x14  csdk.o [1]
+  .rodata            const         0x786c     0x14  csdk.o [1]
+  .rodata            const         0x7880     0x14  fsl_lpuart.o [1]
+  .rodata            const         0x7894     0x10  fsl_clock.o [1]
+  .rodata            const         0x78a4     0x10  fsl_clock.o [1]
+  .rodata            const         0x78b4     0x10  fsl_lpuart.o [1]
+  .rodata            const         0x78c4     0x10  mk3060.o [1]
+  .rodata            const         0x78d4     0x10  serial_port_uart.o [1]
+  .rodata            const         0x78e4      0xc  clock_config.o [1]
+  .rodata            const         0x78f0      0xc  csdk.o [1]
+  .rodata            const         0x78fc      0xc  csdk.o [1]
+  .rodata            const         0x7908      0xc  flexspi_hyper_flash_ops.o [1]
+  .rodata            const         0x7914      0xc  fsl_debug_console.o [1]
+  .rodata            const         0x7920      0xc  fsl_flexspi.o [1]
+  .rodata            const         0x792c      0xc  fsl_flexspi.o [1]
+  .rodata            const         0x7938      0xc  fsl_gpio.o [1]
+  .rodata            const         0x7944      0xc  fsl_gpio.o [1]
+  .rodata            const         0x7950      0xc  fsl_gpio.o [1]
+  .rodata            const         0x795c      0xc  fsl_lpuart.o [1]
+  .rodata            const         0x7968      0xc  fsl_lpuart.o [1]
+  .rodata            const         0x7974      0xc  fsl_usdhc.o [1]
+  .rodata            const         0x7980      0xc  log.o [1]
+  .rodata            const         0x798c      0xc  mk3060.o [1]
+  .rodata            const         0x7998      0xc  pin_mux.o [1]
+  .rodata            const         0x79a4      0xc  serial_manager.o [1]
+  .text              ro code       0x79b0      0xc  cstartup_M.o [4]
+  .rodata            const         0x79bc      0x8  clock_config.o [1]
+  .rodata            const         0x79c4      0x8  fsl_debug_console.o [1]
+  .rodata            const         0x79cc      0x8  fsl_lpuart.o [1]
+  .rodata            const         0x79d4      0x8  fsl_lpuart.o [1]
+  .rodata            const         0x79dc      0x8  fsl_lpuart.o [1]
+  .rodata            const         0x79e4      0x8  fsl_lpuart.o [1]
+  .rodata            const         0x79ec      0x8  kv.o [1]
+  .rodata            const         0x79f4      0x8  lpuart_adapter.o [1]
+  .rodata            const         0x79fc      0x8  lpuart_adapter.o [1]
+  .rodata            const         0x7a04      0x8  lpuart_adapter.o [1]
+  .rodata            const         0x7a0c      0x8  serial_manager.o [1]
+  .rodata            const         0x7a14      0x8  serial_manager.o [1]
+  .rodata            const         0x7a1c      0x8  serial_manager.o [1]
+  .rodata            const         0x7a24      0x8  serial_port_uart.o [1]
+  .rodata            const         0x7a2c      0x8  serial_port_uart.o [1]
+  .rodata            const         0x7a34      0x8  tasks.o [1]
+  .rodata            const         0x7a3c      0x8  timers.o [1]
+  .rodata            const         0x7a44      0x8  timers.o [1]
+  .text              ro code       0x7a4c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a54      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a5c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a64      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a6c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a74      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a7c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a84      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a8c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a94      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7a9c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7aa4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7aac      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7ab4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7abc      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7ac4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7acc      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7ad4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7adc      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7ae4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7aec      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7af4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7afc      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b04      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b0c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b14      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b1c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b24      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b2c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b34      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b3c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b44      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b4c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b54      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b5c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b64      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b6c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b74      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b7c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b84      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b8c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b94      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7b9c      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7ba4      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7bac      0x8  startup_MIMXRT1052.o [1]
+  .text              ro code       0x7bb4      0x8  startup_MIMXRT1052.o [1]
+  .rodata            const         0x7bbc      0x4  csdk.o [1]
+  .rodata            const         0x7bc0      0x4  fsl_flexspi.o [1]
+  .rodata            const         0x7bc4      0x4  heap_4.o [1]
+  .rodata            const         0x7bc8      0x4  port.o [1]
+  .text              ro code       0x7bcc      0x4  startup_MIMXRT1052.o [1]
+  .rodata            const         0x7bd0      0x0  zero_init3.o [4]
+  .rodata            const         0x7bd0      0x0  copy_init3.o [4]
+                                 - 0x7bd0   0x77d0
+
+"P2-P3|P5", part 1 of 2:                     0x128
+  RW                          0x2000'0000    0x128  <Block>
+    RW-1                      0x2000'0000    0x128  <Init block>
+      .data          inited   0x2000'0000     0x20  flexspi_hyper_flash_ops.o [1]
+      .data          inited   0x2000'0020    0x100  flexspi_hyper_flash_ops.o [1]
+      .data          inited   0x2000'0120      0x4  port.o [1]
+      .data          inited   0x2000'0124      0x4  system_MIMXRT1052.o [1]
+                            - 0x2000'0128    0x128
+
+"P2-P3|P5", part 2 of 2:                   0x14898
+  ZI                          0x2000'0128  0x14898  <Block>
+    .bss             zero     0x2000'0128     0xc8  at_parser.o [1]
+    .bss             zero     0x2000'01f0      0x4  fsl_clock.o [1]
+    .bss             zero     0x2000'01f4      0x4  fsl_clock.o [1]
+    .bss             zero     0x2000'01f8     0x1c  fsl_debug_console.o [1]
+    .bss             zero     0x2000'0214      0x4  fsl_debug_console.o [1]
+    .bss             zero     0x2000'0218     0x24  fsl_lpuart.o [1]
+    .bss             zero     0x2000'023c      0x4  fsl_lpuart.o [1]
+    .bss             zero     0x2000'0240      0xc  fsl_usdhc.o [1]
+    .bss             zero     0x2000'024c      0x4  fsl_usdhc.o [1]
+    .bss             zero     0x2000'0250  0x14000  heap_4.o [1]
+    .bss             zero     0x2001'4250      0x8  heap_4.o [1]
+    .bss             zero     0x2001'4258      0x4  heap_4.o [1]
+    .bss             zero     0x2001'425c      0x4  heap_4.o [1]
+    .bss             zero     0x2001'4260      0x4  heap_4.o [1]
+    .bss             zero     0x2001'4264      0x4  heap_4.o [1]
+    .bss             zero     0x2001'4268     0x90  kv.o [1]
+    .bss             zero     0x2001'42f8      0x4  kv_adapt.o [1]
+    .bss             zero     0x2001'42fc    0x200  kv_adapt.o [1]
+    .bss             zero     0x2001'44fc      0x4  log.o [1]
+    .bss             zero     0x2001'4500      0x4  log.o [1]
+    .bss             zero     0x2001'4504    0x200  log.o [1]
+    .bss             zero     0x2001'4704    0x100  log.o [1]
+    .bss             zero     0x2001'4804      0x4  port.o [1]
+    .bss             zero     0x2001'4808     0x40  queue.o [1]
+    .bss             zero     0x2001'4848      0x4  tasks.o [1]
+    .bss             zero     0x2001'484c     0x64  tasks.o [1]
+    .bss             zero     0x2001'48b0     0x14  tasks.o [1]
+    .bss             zero     0x2001'48c4     0x14  tasks.o [1]
+    .bss             zero     0x2001'48d8      0x4  tasks.o [1]
+    .bss             zero     0x2001'48dc      0x4  tasks.o [1]
+    .bss             zero     0x2001'48e0     0x14  tasks.o [1]
+    .bss             zero     0x2001'48f4     0x14  tasks.o [1]
+    .bss             zero     0x2001'4908      0x4  tasks.o [1]
+    .bss             zero     0x2001'490c     0x14  tasks.o [1]
+    .bss             zero     0x2001'4920      0x4  tasks.o [1]
+    .bss             zero     0x2001'4924      0x4  tasks.o [1]
+    .bss             zero     0x2001'4928      0x4  tasks.o [1]
+    .bss             zero     0x2001'492c      0x4  tasks.o [1]
+    .bss             zero     0x2001'4930      0x4  tasks.o [1]
+    .bss             zero     0x2001'4934      0x4  tasks.o [1]
+    .bss             zero     0x2001'4938      0x4  tasks.o [1]
+    .bss             zero     0x2001'493c      0x4  tasks.o [1]
+    .bss             zero     0x2001'4940      0x4  tasks.o [1]
+    .bss             zero     0x2001'4944      0x4  tasks.o [1]
+    .bss             zero     0x2001'4948      0x4  tasks.o [1]
+    .bss             zero     0x2001'494c     0x14  timers.o [1]
+    .bss             zero     0x2001'4960     0x14  timers.o [1]
+    .bss             zero     0x2001'4974      0x4  timers.o [1]
+    .bss             zero     0x2001'4978      0x4  timers.o [1]
+    .bss             zero     0x2001'497c      0x4  timers.o [1]
+    .bss             zero     0x2001'4980      0x4  timers.o [1]
+    .bss             zero     0x2001'4984      0x4  timers.o [1]
+    .bss             zero     0x2001'4988     0x28  wrapper.o [1]
+    .bss             zero     0x2001'49b0      0x4  xfail_s.o [2]
+    .bss             zero     0x2001'49b4      0x2  log.o [1]
+    .bss             zero     0x2001'49b6      0x2  log.o [1]
+    .bss             zero     0x2001'49b8      0x1  at_parser.o [1]
+    .bss             zero     0x2001'49b9      0x1  log.o [1]
+    .bss             zero     0x2001'49ba      0x1  log.o [1]
+    .bss             zero     0x2001'49bb      0x1  mk3060.o [1]
+    .bss             zero     0x2001'49bc      0x1  port.o [1]
+                            - 0x2001'49c0  0x14898
+
+"P6":                                        0x400
+  CSTACK                      0x2001'fc00    0x400  <Block>
+    CSTACK           uninit   0x2001'fc00    0x400  <Block tail>
+                            - 0x2002'0000    0x400
+
+Unused ranges:
+
+         From           To      Size
+         ----           --      ----
+       0x7bd0     0x1'ffff  0x1'8430
+  0x2001'49c0  0x2001'fbff    0xb240
+
+
+*******************************************************************************
+*** INIT TABLE
+***
+
+          Address      Size
+          -------      ----
+Zero (__iar_zero_init3)
+    1 destination range, total size 0x14895:
+          0x2000'0128  0x14895
+
+Copy (__iar_copy_init3)
+    1 source range, total size 0x128:
+               0x6f98    0x128
+    1 destination range, total size 0x128:
+          0x2000'0000    0x128
+
+
+
+*******************************************************************************
+*** MODULE SUMMARY
+***
+
+    Module                     ro code  ro data  rw data
+    ------                     -------  -------  -------
+command line/config:
+    ----------------------------------------------------
+    Total:
+
+C:\Development\smart_washing_machine_3080\debug\obj: [1]
+    at_parser.o                    276      108      201
+    board.o                        732
+    clock_config.o               2 072      128
+    csdk.o                         272       96
+    event_groups.o                 372
+    flexspi_hyper_flash_ops.o      792      364      288
+    fsl_assert.o                    28       44
+    fsl_cache.o                     84
+    fsl_clock.o                  1 176       96        8
+    fsl_debug_console.o            228       92       32
+    fsl_flexspi.o                2 132      226
+    fsl_gpio.o                     494      248
+    fsl_lpuart.o                 1 328      408       40
+    fsl_lpuart_freertos.o          144       32
+    fsl_str.o                      784
+    fsl_usdhc.o                     52       12       16
+    heap_4.o                       628        4   81 944
+    kv.o                         3 100       10      144
+    kv_adapt.o                     676       48      516
+    kv_cli.o                         2
+    list.o                         154
+    log.o                          716       12      782
+    lpuart_adapter.o               112      136
+    mk3060.o                       180       28        1
+    pin_mux.o                      416       76
+    port.o                         604        8        9
+    portasm.o                      176
+    queue.o                      2 372                64
+    serial_manager.o               212      120
+    serial_port_uart.o             100      120
+    startup_MIMXRT1052.o         1 448
+    system_MIMXRT1052.o            334        4        4
+    tasks.o                      3 252        8      260
+    timers.o                     1 188       16       60
+    wrapper.o                      340                40
+    ----------------------------------------------------
+    Total:                      26 976    2 444   84 409
+
+dl7M_tln.a: [2]
+    abort.o                          6
+    exit.o                           4
+    low_level_init.o                 4
+    vsnprint.o                      60
+    xfail_s.o                       64                 4
+    xprintfsmall_nomb.o          1 232
+    xsnprout.o                      26
+    ----------------------------------------------------
+    Total:                       1 396                 4
+
+m7M_tlv.a: [3]
+    fpinit_M.o                      34
+    ----------------------------------------------------
+    Total:                          34
+
+rt7M_tl.a: [4]
+    ABImemclr4.o                     6
+    ABImemcpy.o                    166
+    ABImemset.o                    102
+    ABImemset48.o                   50
+    cexit.o                         10
+    cmain.o                         30
+    copy_init3.o                    44
+    cstartup_M.o                    12
+    data_init.o                     40
+    memchr.o                        88
+    memcmp.o                       104
+    strchr.o                        22
+    strlen.o                        54
+    zero_init3.o                    58
+    ----------------------------------------------------
+    Total:                         786
+
+shb_l.a: [5]
+    exit.o                          20
+    ----------------------------------------------------
+    Total:                          20
+
+    Gaps                                      4
+    Linker created                           36    1 024
+--------------------------------------------------------
+    Grand Total:                29 212    2 484   85 437
+
+
+*******************************************************************************
+*** ENTRY LIST
+***
+
+Entry                       Address     Size  Type      Object
+-----                       -------     ----  ----      ------
+.iar.init_table$$Base        0x76dc            --   Gb  - Linker created -
+.iar.init_table$$Limit       0x7700            --   Gb  - Linker created -
+?main                        0x7765           Code  Gb  cmain.o [4]
+ARM_MPU_Disable              0x58b9     0x22  Code  Lc  board.o [1]
+ARM_MPU_Enable               0x5899     0x20  Code  Lc  board.o [1]
+BOARD_BootClockRUN           0x6079    0x4d8  Code  Gb  clock_config.o [1]
+BOARD_ConfigMPU              0x5a87     0x74  Code  Gb  board.o [1]
+BOARD_DebugConsoleSrcFreq
+                             0x5a4d     0x3a  Code  Gb  board.o [1]
+BOARD_InitPins               0x5d57     0xe6  Code  Gb  pin_mux.o [1]
+CLOCK_ControlGate            0x5f65     0x48  Code  Lc  clock_config.o [1]
+CLOCK_ControlGate            0x357d     0x48  Code  Lc  flexspi_hyper_flash_ops.o [1]
+CLOCK_ControlGate            0x3b71     0x48  Code  Lc  fsl_flexspi.o [1]
+CLOCK_ControlGate            0x6691     0x42  Code  Lc  fsl_gpio.o [1]
+CLOCK_ControlGate            0x48d9     0x48  Code  Lc  fsl_lpuart.o [1]
+CLOCK_ControlGate            0x5cd9     0x42  Code  Lc  pin_mux.o [1]
+CLOCK_DeinitAudioPll         0x6a13      0xc  Code  Gb  fsl_clock.o [1]
+CLOCK_DeinitEnetPll          0x6a2b      0xc  Code  Gb  fsl_clock.o [1]
+CLOCK_DeinitUsb2Pll          0x6a09      0xa  Code  Gb  fsl_clock.o [1]
+CLOCK_DeinitVideoPll         0x6a1f      0xc  Code  Gb  fsl_clock.o [1]
+CLOCK_DisableClock           0x5fad     0x10  Code  Lc  clock_config.o [1]
+CLOCK_DisableClock           0x35d5     0x10  Code  Lc  flexspi_hyper_flash_ops.o [1]
+CLOCK_EnableClock            0x35c5     0x10  Code  Lc  flexspi_hyper_flash_ops.o [1]
+CLOCK_EnableClock            0x3bb9     0x10  Code  Lc  fsl_flexspi.o [1]
+CLOCK_EnableClock            0x66d3     0x10  Code  Lc  fsl_gpio.o [1]
+CLOCK_EnableClock            0x4921     0x10  Code  Lc  fsl_lpuart.o [1]
+CLOCK_EnableClock            0x5d1b     0x10  Code  Lc  pin_mux.o [1]
+CLOCK_GetDiv                 0x5a11     0x2a  Code  Lc  board.o [1]
+CLOCK_GetMux                 0x59e7     0x2a  Code  Lc  board.o [1]
+CLOCK_GetOscFreq             0x5a3b     0x12  Code  Lc  board.o [1]
+CLOCK_GetOscFreq             0x6881     0x18  Code  Lc  fsl_clock.o [1]
+CLOCK_GetPllBypassRefClk
+                             0x68bf     0x22  Code  Lc  fsl_clock.o [1]
+CLOCK_GetPllFreq             0x6a37    0x224  Code  Gb  fsl_clock.o [1]
+CLOCK_InitArmPll             0x6955     0x40  Code  Gb  fsl_clock.o [1]
+CLOCK_InitExternalClk        0x68e1     0x4a  Code  Gb  fsl_clock.o [1]
+CLOCK_InitRcOsc24M           0x6947      0xe  Code  Gb  fsl_clock.o [1]
+CLOCK_InitSysPfd             0x6c5b     0x40  Code  Gb  fsl_clock.o [1]
+CLOCK_InitSysPll             0x6995     0x74  Code  Gb  fsl_clock.o [1]
+CLOCK_IsPllBypassed          0x6899     0x10  Code  Lc  fsl_clock.o [1]
+CLOCK_IsPllEnabled           0x68a9     0x16  Code  Lc  fsl_clock.o [1]
+CLOCK_SetDiv                 0x5eef     0x76  Code  Lc  clock_config.o [1]
+CLOCK_SetMux                 0x5e79     0x76  Code  Lc  clock_config.o [1]
+CLOCK_SetPllBypass           0x5fcd     0x2c  Code  Lc  clock_config.o [1]
+CLOCK_SetRtcXtalFreq         0x5fc5      0x8  Code  Lc  clock_config.o [1]
+CLOCK_SetXtalFreq            0x5fbd      0x8  Code  Lc  clock_config.o [1]
+CLOCK_SwitchOsc              0x692b     0x1c  Code  Gb  fsl_clock.o [1]
+CSTACK$$Base            0x2001'fc00            --   Gb  - Linker created -
+CSTACK$$Limit           0x2002'0000            --   Gb  - Linker created -
+ConvertRadixNumToString
+                             0x4499     0xc0  Code  Lc  fsl_str.o [1]
+DCACHE_InvalidateByRange
+                             0x38d9     0x10  Code  Gb  fsl_cache.o [1]
+DbgConsole_PrintCallback
+                             0x3931     0x3e  Code  Lc  fsl_debug_console.o [1]
+DbgConsole_PrintCallback
+                             0x501b     0x50  Code  Lc  log.o [1]
+DbgConsole_Printf            0x396f     0x44  Code  Gb  fsl_debug_console.o [1]
+DbgConsole_SendDataReliable
+                             0x38e9     0x48  Code  Gb  fsl_debug_console.o [1]
+DisableGlobalIRQ             0x3219      0x8  Code  Lc  kv_adapt.o [1]
+EnableGlobalIRQ              0x3221      0x6  Code  Lc  kv_adapt.o [1]
+EnableIRQ                    0x4fc7     0x20  Code  Lc  log.o [1]
+FLEXSPI_CheckAndClearError
+                             0x3ca9     0x6a  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_ClearInterruptStatusFlags
+                             0x3bd9      0x8  Code  Lc  fsl_flexspi.o [1]
+FLEXSPI_ConfigureDll         0x3c2d     0x7c  Code  Lc  fsl_flexspi.o [1]
+FLEXSPI_Enable               0x35f5     0x1c  Code  Lc  flexspi_hyper_flash_ops.o [1]
+FLEXSPI_GetBusIdleStatus
+                             0x3be1     0x18  Code  Lc  fsl_flexspi.o [1]
+FLEXSPI_GetDefaultConfig
+                             0x3ec9     0xaa  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_GetInstance          0x3bf9     0x34  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_Init                 0x3d13    0x1b0  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_ReadBlocking         0x41d5     0xe6  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_SetFlashConfig       0x3f73    0x154  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_SoftwareReset        0x35e5     0x10  Code  Lc  flexspi_hyper_flash_ops.o [1]
+FLEXSPI_SoftwareReset        0x3bc9     0x10  Code  Lc  fsl_flexspi.o [1]
+FLEXSPI_TransferBlocking
+                             0x42bb     0xd0  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_UpdateLUT            0x40c7     0x64  Code  Gb  fsl_flexspi.o [1]
+FLEXSPI_WriteBlocking        0x412b     0xaa  Code  Gb  fsl_flexspi.o [1]
+GPIO_GetInstance             0x66f9     0x2e  Code  Lc  fsl_gpio.o [1]
+GPIO_PinInit                 0x6727     0x54  Code  Gb  fsl_gpio.o [1]
+GPIO_PinSetInterruptConfig
+                             0x67d5     0xaa  Code  Gb  fsl_gpio.o [1]
+GPIO_PinWrite                0x677b     0x3a  Code  Gb  fsl_gpio.o [1]
+GPIO_SetPinInterruptConfig
+                             0x66e3     0x16  Code  Lc  fsl_gpio.o [1]
+HAL_AT_Uart_Send             0x39cd     0x38  Code  Gb  wrapper.o [1]
+HAL_Free                     0x3a05      0xc  Code  Gb  wrapper.o [1]
+HAL_Kv_Set                   0x3a11     0x16  Code  Gb  wrapper.o [1]
+HAL_Malloc                   0x3a27      0xc  Code  Gb  wrapper.o [1]
+HAL_MutexCreate              0x3a33     0x16  Code  Gb  wrapper.o [1]
+HAL_MutexLock                0x3a49     0x2a  Code  Gb  wrapper.o [1]
+HAL_MutexUnlock              0x3a73     0x18  Code  Gb  wrapper.o [1]
+HAL_Printf                   0x506b     0x74  Code  Gb  log.o [1]
+HAL_SemaphoreCreate          0x3abb     0x1a  Code  Gb  wrapper.o [1]
+HAL_SemaphorePost            0x3ad5     0x18  Code  Gb  wrapper.o [1]
+HAL_SemaphoreWait            0x3aed     0x30  Code  Gb  wrapper.o [1]
+HAL_SleepMs                  0x3a8b     0x12  Code  Gb  wrapper.o [1]
+HAL_Snprintf                 0x3a9d     0x1e  Code  Gb  wrapper.o [1]
+HAL_UartSendBlocking         0x5719     0x5a  Code  Gb  lpuart_adapter.o [1]
+IOMUXC_EnableMode            0x5ff9     0x1c  Code  Lc  clock_config.o [1]
+IOMUXC_MQSConfig             0x6055     0x24  Code  Lc  clock_config.o [1]
+IOMUXC_SetPinConfig          0x5d47     0x10  Code  Lc  pin_mux.o [1]
+IOMUXC_SetPinMux             0x5d2b     0x1c  Code  Lc  pin_mux.o [1]
+IOMUXC_SetSaiMClkClockSource
+                             0x6015     0x40  Code  Lc  clock_config.o [1]
+KV_BLOCK_MAGIC_NUM           0x7796      0x1  Data  Lc  kv.o [1]
+KV_ITEM_MAGIC_NUM            0x7797      0x1  Data  Lc  kv.o [1]
+L1CACHE_InvalidateDCacheByRange
+                             0x38bb     0x18  Code  Lc  fsl_cache.o [1]
+LPUART1_IRQHandler           0x5177     0x24  Code  Gb  log.o [1]
+LPUART2_DriverIRQHandler
+                             0x4d61     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART3_DriverIRQHandler
+                             0x4d71     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART4_DriverIRQHandler
+                             0x4d85     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART5_DriverIRQHandler
+                             0x4d95     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART6_DriverIRQHandler
+                             0x4da5     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART7_DriverIRQHandler
+                             0x4db5     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART8_DriverIRQHandler
+                             0x4dc5     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART_EnableInterrupts
+                             0x4c2d     0x28  Code  Gb  fsl_lpuart.o [1]
+LPUART_GetDefaultConfig
+                             0x4bc1     0x6c  Code  Gb  fsl_lpuart.o [1]
+LPUART_GetInstance           0x4943     0x34  Code  Gb  fsl_lpuart.o [1]
+LPUART_GetStatusFlags        0x4c55     0x10  Code  Gb  fsl_lpuart.o [1]
+LPUART_Init                  0x4977    0x24a  Code  Gb  fsl_lpuart.o [1]
+LPUART_RTOS_Send             0x47a9     0x8c  Code  Gb  fsl_lpuart_freertos.o [1]
+LPUART_ReadByte              0x4fef     0x2c  Code  Lc  log.o [1]
+LPUART_SoftwareReset         0x4931     0x12  Code  Lc  fsl_lpuart.o [1]
+LPUART_TransferSendNonBlocking
+                             0x4c9d     0x90  Code  Gb  fsl_lpuart.o [1]
+LPUART_WriteBlocking         0x4c65     0x38  Code  Gb  fsl_lpuart.o [1]
+LPUART_WriteByte             0x4fe7      0x8  Code  Lc  log.o [1]
+LoadInt                      0x5467     0x56  Code  Lc  xprintfsmall_nomb.o [2]
+PendSV_Handler               0x1b29           Code  Gb  portasm.o [1]
+RW$$Base                0x2000'0000            --   Gb  - Linker created -
+RW$$Limit               0x2000'0128            --   Gb  - Linker created -
+Region$$Table$$Base          0x76dc            --   Gb  - Linker created -
+Region$$Table$$Limit         0x7700            --   Gb  - Linker created -
+SCB_DisableDCache            0x598b     0x5c  Code  Lc  board.o [1]
+SCB_DisableICache            0x5909     0x26  Code  Lc  board.o [1]
+SCB_EnableDCache             0x592f     0x5c  Code  Lc  board.o [1]
+SCB_EnableDCache             0x6e73     0x54  Code  Lc  system_MIMXRT1052.o [1]
+SCB_EnableICache             0x58db     0x2e  Code  Lc  board.o [1]
+SCB_EnableICache             0x6e49     0x2a  Code  Lc  system_MIMXRT1052.o [1]
+SCB_InvalidateDCache_by_Addr
+                             0x3895     0x26  Code  Lc  fsl_cache.o [1]
+SVC_Handler                  0x1b81           Code  Gb  portasm.o [1]
+SerialManager_StartWriting
+                             0x43c5     0x36  Code  Lc  serial_manager.o [1]
+SerialManager_Write          0x43fb     0x74  Code  Lc  serial_manager.o [1]
+SerialManager_WriteBlocking
+                             0x446f     0x14  Code  Gb  serial_manager.o [1]
+Serial_UartWrite             0x4875     0x52  Code  Gb  serial_port_uart.o [1]
+StrFormatPrintf              0x4559    0x250  Code  Gb  fsl_str.o [1]
+SysTick_Handler              0x15a9     0x28  Code  Gb  port.o [1]
+SystemCoreClock         0x2000'0124      0x4  Data  Gb  system_MIMXRT1052.o [1]
+SystemInit                   0x6ec7     0x90  Code  Gb  system_MIMXRT1052.o [1]
+USDHC1_DriverIRQHandler
+                             0x7541     0x12  Code  Gb  fsl_usdhc.o [1]
+USDHC2_DriverIRQHandler
+                             0x7553     0x12  Code  Gb  fsl_usdhc.o [1]
+ZI$$Base                0x2000'0128            --   Gb  - Linker created -
+ZI$$Limit               0x2001'49c0            --   Gb  - Linker created -
+_LitobSmallNoMb              0x55f9     0xce  Code  Lc  xprintfsmall_nomb.o [2]
+_PrintfSmallNoMb             0x5249    0x214  Code  Gb  xprintfsmall_nomb.o [2]
+_PutcharsSmallNoMb           0x56c7     0x2e  Code  Lc  xprintfsmall_nomb.o [2]
+_PutfldSmallNoMb             0x54bd    0x13c  Code  Lc  xprintfsmall_nomb.o [2]
+_SNProut                     0x355b     0x1a  Code  Gb  xsnprout.o [2]
+__NVIC_EnableIRQ             0x4f7d     0x1e  Code  Lc  log.o [1]
+__NVIC_SetPriority           0x4f9b     0x2c  Code  Lc  log.o [1]
+__RAM_VECTOR_TABLE_SIZE {Abs}
+                                0x0           Data  Gb  <internal module>
+__VECTOR_RAM {Abs}              0x0           Data  Gb  <internal module>
+__VECTOR_TABLE {Abs}            0x0           Data  Gb  <internal module>
+__Vectors                       0x0            --   Gb  startup_MIMXRT1052.o [1]
+__Vectors_End                 0x400           Data  Gb  startup_MIMXRT1052.o [1]
+__Vectors_Size {Abs}          0x400            --   Gb  startup_MIMXRT1052.o [1]
+__aeabi_assert               0x3b55     0x1c  Code  Gb  fsl_assert.o [1]
+__aeabi_memclr4              0x3575           Code  Gb  ABImemclr4.o [4]
+__aeabi_memcpy               0x251d           Code  Gb  ABImemcpy.o [4]
+__aeabi_memcpy4              0x253d           Code  Gb  ABImemcpy.o [4]
+__aeabi_memcpy8              0x253d           Code  Gb  ABImemcpy.o [4]
+__aeabi_memset               0x1329           Code  Gb  ABImemset.o [4]
+__cmain                      0x7765           Code  Gb  cmain.o [4]
+__exit                       0x6e35     0x14  Code  Gb  exit.o [5]
+__iar_Fail_s                 0x5b8d     0x1c  Code  Gb  xfail_s.o [2]
+__iar_Memchr                 0x5bcd           Code  Gb  memchr.o [4]
+__iar_Memset                 0x1329           Code  Gb  ABImemset.o [4]
+__iar_Memset4_word           0x3b21           Code  Gb  ABImemset48.o [4]
+__iar_Memset8_word           0x3b21           Code  Gb  ABImemset48.o [4]
+__iar_Memset_word            0x1331           Code  Gb  ABImemset.o [4]
+__iar_Strchr                 0x5b75           Code  Gb  strchr.o [4]
+__iar_copy_init3             0x75d1     0x2c  Code  Gb  copy_init3.o [4]
+__iar_data_init3             0x7625     0x28  Code  Gb  data_init.o [4]
+__iar_init_vfp               0x76b9           Code  Gb  fpinit_M.o [3]
+__iar_program_start          0x79b1           Code  Gb  cstartup_M.o [4]
+__iar_zero_init3             0x25c3     0x3a  Code  Gb  zero_init3.o [4]
+__item_find_cb               0x29a3     0x66  Code  Lc  kv.o [1]
+__item_gc_cb                 0x2a09     0x9c  Code  Lc  kv.o [1]
+__item_recovery_cb           0x292d     0x76  Code  Lc  kv.o [1]
+__low_level_init             0x7783      0x4  Code  Gb  low_level_init.o [2]
+__vector_table                  0x0           Data  Gb  startup_MIMXRT1052.o [1]
+__vector_table_0x1c            0x1c           Data  Gb  startup_MIMXRT1052.o [1]
+_call_main                   0x7771           Code  Gb  cmain.o [4]
+_exit                        0x778d           Code  Gb  cexit.o [4]
+_main                        0x777f           Code  Gb  cmain.o [4]
+abort                        0x6d19      0x6  Code  Gb  abort.o [2]
+app_process_recive_cmd       0x5789     0xc2  Code  Gb  csdk.o [1]
+armPllConfig_BOARD_BootClockRUN
+                             0x79bc      0x8  Data  Gb  clock_config.o [1]
+at                      0x2000'0128     0xc8  Data  Lc  at_parser.o [1]
+at_send_no_reply             0x6d41     0xd6  Code  Gb  at_parser.o [1]
+at_sendto_lower              0x6d21     0x20  Code  Lc  at_parser.o [1]
+at_wifi_factory_new          0x5c25     0x50  Code  Gb  mk3060.o [1]
+at_wifi_join                 0x5c75     0x58  Code  Gb  mk3060.o [1]
+calc_crc8                    0x25fd     0x3c  Code  Lc  kv.o [1]
+customLUT               0x2000'0020    0x100  Data  Lc  flexspi_hyper_flash_ops.o [1]
+deviceconfig            0x2000'0000     0x20  Data  Lc  flexspi_hyper_flash_ops.o [1]
+exit                         0x7787      0x4  Code  Gb  exit.o [2]
+flexspi_hyper_flash_init
+                             0x3611     0x5e  Code  Gb  flexspi_hyper_flash_ops.o [1]
+flexspi_nor_flash_erase_sector
+                             0x3705     0x5a  Code  Gb  flexspi_hyper_flash_ops.o [1]
+flexspi_nor_flash_page_program
+                             0x375f    0x114  Code  Gb  flexspi_hyper_flash_ops.o [1]
+flexspi_nor_wait_bus_busy
+                             0x369d     0x68  Code  Gb  flexspi_hyper_flash_ops.o [1]
+flexspi_nor_write_enable
+                             0x366f     0x2e  Code  Gb  flexspi_hyper_flash_ops.o [1]
+g_kv_mgr                0x2001'4268     0x90  Data  Lc  kv.o [1]
+g_rtcXtalFreq           0x2000'01f4      0x4  Data  Gb  fsl_clock.o [1]
+g_serialHandle          0x2000'0214      0x4  Data  Gb  fsl_debug_console.o [1]
+g_xtalFreq              0x2000'01f0      0x4  Data  Gb  fsl_clock.o [1]
+handle                  0x2001'4988     0x28  Data  Gb  wrapper.o [1]
+inited                  0x2001'49b8      0x1  Data  Lc  at_parser.o [1]
+inited                  0x2001'49bb      0x1  Data  Lc  mk3060.o [1]
+kv_block_format              0x26c3     0x80  Code  Lc  kv.o [1]
+kv_calc_position             0x2743     0xba  Code  Lc  kv.o [1]
+kv_delete_task               0x3485      0xc  Code  Gb  kv_adapt.o [1]
+kv_flash_erase               0x33d1     0x46  Code  Gb  kv_adapt.o [1]
+kv_flash_read                0x3227     0x24  Code  Gb  kv_adapt.o [1]
+kv_flash_write               0x324b    0x186  Code  Gb  kv_adapt.o [1]
+kv_flash_write::intBuffer
+                        0x2001'42fc    0x200  Data  Lc  kv_adapt.o [1]
+kv_free                      0x34b1      0xc  Code  Gb  kv_adapt.o [1]
+kv_gc_task                   0x2e65     0xe0  Code  Lc  kv.o [1]
+kv_init                      0x30bd     0x78  Code  Gb  kv.o [1]
+kv_init_internal             0x2c83    0x1de  Code  Lc  kv.o [1]
+kv_item_del                  0x27fd    0x130  Code  Lc  kv.o [1]
+kv_item_free                 0x2661     0x1c  Code  Lc  kv.o [1]
+kv_item_search               0x2aa5     0x42  Code  Lc  kv.o [1]
+kv_item_set                  0x3139     0x9e  Code  Gb  kv.o [1]
+kv_item_store                0x2ae7    0x152  Code  Lc  kv.o [1]
+kv_item_traverse             0x2f45    0x178  Code  Gb  kv.o [1]
+kv_item_update               0x2c39     0x4a  Code  Lc  kv.o [1]
+kv_lock                      0x341f      0xe  Code  Gb  kv_adapt.o [1]
+kv_lock_create               0x3417      0x8  Code  Gb  kv_adapt.o [1]
+kv_malloc                    0x34a5      0xc  Code  Gb  kv_adapt.o [1]
+kv_register_cli_command
+                             0x357b      0x2  Code  Gb  kv_cli.o [1]
+kv_sem_create                0x343b      0x8  Code  Gb  kv_adapt.o [1]
+kv_sem_post_all              0x3453      0xe  Code  Gb  kv_adapt.o [1]
+kv_sem_wait                  0x3443     0x10  Code  Gb  kv_adapt.o [1]
+kv_set_block_state           0x267d     0x36  Code  Lc  kv.o [1]
+kv_set_item_state            0x26b3     0x10  Code  Lc  kv.o [1]
+kv_start_task                0x3461     0x24  Code  Gb  kv_adapt.o [1]
+kv_task_handle          0x2001'42f8      0x4  Data  Lc  kv_adapt.o [1]
+kv_trigger_gc                0x2639     0x28  Code  Lc  kv.o [1]
+kv_unlock                    0x342d      0xe  Code  Gb  kv_adapt.o [1]
+log_init                     0x519b     0x70  Code  Gb  log.o [1]
+log_mutex               0x2001'4500      0x4  Data  Gb  log.o [1]
+log_rx                       0x512d     0x32  Code  Gb  log.o [1]
+log_task                     0x50df     0x4e  Code  Gb  log.o [1]
+log_task_handle         0x2001'44fc      0x4  Data  Gb  log.o [1]
+log_tx_rx_task               0x515f     0x18  Code  Lc  log.o [1]
+main                         0x584b     0x30  Code  Gb  csdk.o [1]
+memchr                       0x5bcd           Code  Gb  memchr.o [4]
+memcmp                       0x34bd           Code  Gb  memcmp.o [4]
+pcInterruptPriorityRegisters
+                             0x7bc8      0x4  Data  Lc  port.o [1]
+printf_buffer           0x2001'4504    0x200  Data  Lc  log.o [1]
+printf_r_ptr            0x2001'49b6      0x2  Data  Lc  log.o [1]
+printf_w_ptr            0x2001'49b4      0x2  Data  Lc  log.o [1]
+prvAddCurrentTaskToDelayedList
+                              0xffd     0x82  Code  Lc  tasks.o [1]
+prvAddNewTaskToReadyList
+                              0x577     0x9e  Code  Lc  tasks.o [1]
+prvCheckForValidListAndQueue
+                             0x1ab9     0x46  Code  Lc  timers.o [1]
+prvCheckTasksWaitingTermination
+                              0xca7     0x3e  Code  Lc  tasks.o [1]
+prvCopyDataFromQueue         0x23c7     0x36  Code  Lc  queue.o [1]
+prvCopyDataToQueue           0x232b     0x9c  Code  Lc  queue.o [1]
+prvDeleteTCB                  0xce5     0x12  Code  Lc  tasks.o [1]
+prvGetDisinheritPriorityAfterTimeout
+                             0x2315     0x16  Code  Lc  queue.o [1]
+prvGetNextExpireTime         0x184b     0x28  Code  Lc  timers.o [1]
+prvHeapInit                  0x1249     0x62  Code  Lc  heap_4.o [1]
+prvIdleTask                   0xc25     0x24  Code  Lc  tasks.o [1]
+prvInitialiseMutex           0x1cf9     0x22  Code  Lc  queue.o [1]
+prvInitialiseNewQueue        0x1cc3     0x36  Code  Lc  queue.o [1]
+prvInitialiseNewTask          0x475    0x102  Code  Lc  tasks.o [1]
+prvInitialiseTaskLists        0xc51     0x56  Code  Lc  tasks.o [1]
+prvInsertBlockIntoFreeList
+                             0x12ab     0x5e  Code  Lc  heap_4.o [1]
+prvInsertTimerInActiveList
+                             0x189b     0x52  Code  Lc  timers.o [1]
+prvIsQueueEmpty              0x246b     0x1c  Code  Lc  queue.o [1]
+prvIsQueueFull               0x2487     0x1e  Code  Lc  queue.o [1]
+prvProcessExpiredTimer       0x174f     0x6c  Code  Lc  timers.o [1]
+prvProcessReceivedCommands
+                             0x18ed    0x13e  Code  Lc  timers.o [1]
+prvProcessTimerOrBlockTask
+                             0x17d7     0x74  Code  Lc  timers.o [1]
+prvResetNextTaskUnblockTime
+                              0xcf7     0x26  Code  Lc  tasks.o [1]
+prvSampleTimeNow             0x1873     0x28  Code  Lc  timers.o [1]
+prvSampleTimeNow::xLastTime
+                        0x2001'4984      0x4  Data  Lc  timers.o [1]
+prvSwitchTimerLists          0x1a2b     0x8e  Code  Lc  timers.o [1]
+prvTaskExitError             0x1451     0x2a  Code  Lc  port.o [1]
+prvTestWaitCondition         0x4f53     0x24  Code  Lc  event_groups.o [1]
+prvTimerTask                 0x17bd     0x1a  Code  Lc  timers.o [1]
+prvUnlockQueue               0x23fd     0x6e  Code  Lc  queue.o [1]
+pvPortMalloc                 0x10b5    0x120  Code  Gb  heap_4.o [1]
+pvTaskIncrementMutexHeldCount
+                              0xfc5     0x16  Code  Gb  tasks.o [1]
+pxCurrentTCB            0x2001'4848      0x4  Data  Gb  tasks.o [1]
+pxCurrentTimerList      0x2001'4974      0x4  Data  Lc  timers.o [1]
+pxDelayedTaskList       0x2001'48d8      0x4  Data  Lc  tasks.o [1]
+pxEnd                   0x2001'4258      0x4  Data  Lc  heap_4.o [1]
+pxOverflowDelayedTaskList
+                        0x2001'48dc      0x4  Data  Lc  tasks.o [1]
+pxOverflowTimerList     0x2001'4978      0x4  Data  Lc  timers.o [1]
+pxPortInitialiseStack        0x1429     0x28  Code  Gb  port.o [1]
+pxReadyTasksLists       0x2001'484c     0x64  Data  Lc  tasks.o [1]
+rx_buffer               0x2001'4704    0x100  Data  Lc  log.o [1]
+rx_r_ptr                0x2001'49b9      0x1  Data  Lc  log.o [1]
+rx_w_ptr                0x2001'49ba      0x1  Data  Lc  log.o [1]
+s_LpuartAdapterBase          0x7694     0x24  Data  Lc  lpuart_adapter.o [1]
+s_debugConsoleState     0x2000'01f8     0x1c  Data  Lc  fsl_debug_console.o [1]
+s_flexspiBases               0x7bc0      0x4  Data  Lc  fsl_flexspi.o [1]
+s_flexspiClock               0x3b52      0x2  Data  Lc  fsl_flexspi.o [1]
+s_gpioBases                  0x7800     0x18  Data  Lc  fsl_gpio.o [1]
+s_gpioClock                  0x7950      0xc  Data  Lc  fsl_gpio.o [1]
+s_lpuartBases                0x7670     0x24  Data  Lc  fsl_lpuart.o [1]
+s_lpuartClock                0x7880     0x14  Data  Lc  fsl_lpuart.o [1]
+s_lpuartHandle          0x2000'0218     0x24  Data  Lc  fsl_lpuart.o [1]
+s_lpuartIsr             0x2000'023c      0x4  Data  Lc  fsl_lpuart.o [1]
+s_usdhcBase                  0x7974      0xc  Data  Lc  fsl_usdhc.o [1]
+s_usdhcHandle           0x2000'0240      0xc  Data  Lc  fsl_usdhc.o [1]
+s_usdhcIsr              0x2000'024c      0x4  Data  Lc  fsl_usdhc.o [1]
+sec_hand                0x2001'49b0      0x4  Data  Lc  xfail_s.o [2]
+strchr                       0x5b75           Code  Gb  strchr.o [4]
+strlen                       0x3525           Code  Gb  strlen.o [4]
+sysPllConfig_BOARD_BootClockRUN
+                             0x7844     0x14  Data  Gb  clock_config.o [1]
+ucHeap                  0x2000'0250  0x14000  Data  Lc  heap_4.o [1]
+ucMaxSysCallPriority    0x2001'49bc      0x1  Data  Lc  port.o [1]
+ulMaxPRIGROUPValue      0x2001'4804      0x4  Data  Lc  port.o [1]
+uxCriticalNesting       0x2000'0120      0x4  Data  Lc  port.o [1]
+uxCurrentNumberOfTasks  0x2001'4920      0x4  Data  Lc  tasks.o [1]
+uxDeletedTasksWaitingCleanUp
+                        0x2001'4908      0x4  Data  Lc  tasks.o [1]
+uxListRemove                 0x1401     0x28  Code  Gb  list.o [1]
+uxPendedTicks           0x2001'4930      0x4  Data  Lc  tasks.o [1]
+uxSchedulerSuspended    0x2001'4948      0x4  Data  Lc  tasks.o [1]
+uxTaskNumber            0x2001'493c      0x4  Data  Lc  tasks.o [1]
+uxTaskResetEventItemValue
+                              0xfaf     0x16  Code  Gb  tasks.o [1]
+uxTopReadyPriority      0x2001'4928      0x4  Data  Lc  tasks.o [1]
+vListInitialise              0x138f     0x1e  Code  Gb  list.o [1]
+vListInitialiseItem          0x13ad      0x6  Code  Gb  list.o [1]
+vListInsert                  0x13cb     0x36  Code  Gb  list.o [1]
+vListInsertEnd               0x13b3     0x18  Code  Gb  list.o [1]
+vPortEnableVFP               0x1bbd           Code  Gb  portasm.o [1]
+vPortEnterCritical           0x1549     0x34  Code  Gb  port.o [1]
+vPortExitCritical            0x157d     0x2c  Code  Gb  port.o [1]
+vPortFree                    0x11d5     0x74  Code  Gb  heap_4.o [1]
+vPortStartFirstTask          0x1b9d           Code  Gb  portasm.o [1]
+vPortValidateInterruptPriority
+                             0x15d1     0x4e  Code  Gb  port.o [1]
+vQueueAddToRegistry          0x24a5     0x26  Code  Gb  queue.o [1]
+vQueueWaitForMessageRestricted
+                             0x24d1     0x4c  Code  Gb  queue.o [1]
+vTaskDelay                    0x6e3     0x4e  Code  Gb  tasks.o [1]
+vTaskDelete                   0x615     0xce  Code  Gb  tasks.o [1]
+vTaskInternalSetTimeOutState
+                              0xb71     0x12  Code  Gb  tasks.o [1]
+vTaskMissedYield              0xc1b      0xa  Code  Gb  tasks.o [1]
+vTaskPlaceOnEventList         0x9fb     0x34  Code  Gb  tasks.o [1]
+vTaskPlaceOnEventListRestricted
+                              0xa9d     0x40  Code  Gb  tasks.o [1]
+vTaskPlaceOnUnorderedEventList
+                              0xa39     0x56  Code  Gb  tasks.o [1]
+vTaskPriorityDisinheritAfterTimeout
+                              0xec1     0xee  Code  Gb  tasks.o [1]
+vTaskStartScheduler           0x731     0x74  Code  Gb  tasks.o [1]
+vTaskSuspendAll               0x7a5      0xc  Code  Gb  tasks.o [1]
+vTaskSwitchContext            0x98f     0x6c  Code  Gb  tasks.o [1]
+vsnprintf                    0x4839     0x3c  Code  Gb  vsnprint.o [2]
+xActiveTimerList1       0x2001'494c     0x14  Data  Lc  timers.o [1]
+xActiveTimerList2       0x2001'4960     0x14  Data  Lc  timers.o [1]
+xBlockAllocatedBit      0x2001'4264      0x4  Data  Lc  heap_4.o [1]
+xDelayedTaskList1       0x2001'48b0     0x14  Data  Lc  tasks.o [1]
+xDelayedTaskList2       0x2001'48c4     0x14  Data  Lc  tasks.o [1]
+xEventGroupWaitBits          0x4e09    0x14a  Code  Gb  event_groups.o [1]
+xFreeBytesRemaining     0x2001'425c      0x4  Data  Lc  heap_4.o [1]
+xHeapStructSize              0x7bc4      0x4  Data  Lc  heap_4.o [1]
+xIdleTaskHandle         0x2001'4944      0x4  Data  Lc  tasks.o [1]
+xMinimumEverFreeBytesRemaining
+                        0x2001'4260      0x4  Data  Lc  heap_4.o [1]
+xNextTaskUnblockTime    0x2001'4940      0x4  Data  Lc  tasks.o [1]
+xNumOfOverflows         0x2001'4938      0x4  Data  Lc  tasks.o [1]
+xPendingReadyList       0x2001'48e0     0x14  Data  Lc  tasks.o [1]
+xPortStartScheduler          0x147b     0xce  Code  Gb  port.o [1]
+xQueueCreateCountingSemaphore
+                             0x1d3b     0x40  Code  Gb  queue.o [1]
+xQueueCreateMutex            0x1d1b     0x20  Code  Gb  queue.o [1]
+xQueueGenericCreate          0x1c6d     0x56  Code  Gb  queue.o [1]
+xQueueGenericReset           0x1bd9     0x94  Code  Gb  queue.o [1]
+xQueueGenericSend            0x1d7b    0x1a6  Code  Gb  queue.o [1]
+xQueueGenericSendFromISR
+                             0x1f21     0xe0  Code  Gb  queue.o [1]
+xQueueReceive                0x2001    0x16a  Code  Gb  queue.o [1]
+xQueueRegistry          0x2001'4808     0x40  Data  Gb  queue.o [1]
+xQueueSemaphoreTake          0x216b    0x1a4  Code  Gb  queue.o [1]
+xSchedulerRunning       0x2001'492c      0x4  Data  Lc  tasks.o [1]
+xStart                  0x2001'4250      0x8  Data  Lc  heap_4.o [1]
+xSuspendedTaskList      0x2001'490c     0x14  Data  Lc  tasks.o [1]
+xTaskCheckForTimeOut          0xb8d     0x8e  Code  Gb  tasks.o [1]
+xTaskCreate                   0x401     0x74  Code  Gb  tasks.o [1]
+xTaskGetSchedulerState        0xd1d     0x20  Code  Gb  tasks.o [1]
+xTaskGetTickCount             0x895      0x8  Code  Gb  tasks.o [1]
+xTaskIncrementTick            0x89d     0xf2  Code  Gb  tasks.o [1]
+xTaskPriorityDisinherit
+                              0xdff     0xb2  Code  Gb  tasks.o [1]
+xTaskPriorityInherit          0xd45     0xba  Code  Gb  tasks.o [1]
+xTaskRemoveFromEventList
+                              0xae1     0x82  Code  Gb  tasks.o [1]
+xTaskResumeAll                0x7b1     0xe4  Code  Gb  tasks.o [1]
+xTasksWaitingTermination
+                        0x2001'48f4     0x14  Data  Lc  tasks.o [1]
+xTickCount              0x2001'4924      0x4  Data  Lc  tasks.o [1]
+xTimerCreateTimerTask        0x1685     0x48  Code  Gb  timers.o [1]
+xTimerGenericCommand         0x16cd     0x82  Code  Gb  timers.o [1]
+xTimerQueue             0x2001'497c      0x4  Data  Lc  timers.o [1]
+xTimerTaskHandle        0x2001'4980      0x4  Data  Lc  timers.o [1]
+xYieldPending           0x2001'4934      0x4  Data  Lc  tasks.o [1]
+
+
+[1] = C:\Development\smart_washing_machine_3080\debug\obj
+[2] = dl7M_tln.a
+[3] = m7M_tlv.a
+[4] = rt7M_tl.a
+[5] = shb_l.a
+
+  29 212 bytes of readonly  code memory
+   2 484 bytes of readonly  data memory
+  85 437 bytes of readwrite data memory
+
+Errors: none
+Warnings: none

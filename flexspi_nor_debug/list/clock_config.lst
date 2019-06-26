@@ -1,0 +1,1732 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:21
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\board\clock_config.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWAE0.tmp
+#        (C:\Development\gzkc_smart_nbiot\board\clock_config.c -D DEBUG -D
+#        USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\clock_config.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\clock_config.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\board\clock_config.c
+      1          /*
+      2           * Copyright 2017-2019 NXP
+      3           * All rights reserved.
+      4           *
+      5           * SPDX-License-Identifier: BSD-3-Clause
+      6           */
+      7          
+      8          /*
+      9           * How to setup clock using clock driver functions:
+     10           *
+     11           * 1. Call CLOCK_InitXXXPLL() to configure corresponding PLL clock.
+     12           *
+     13           * 2. Call CLOCK_InitXXXpfd() to configure corresponding PLL pfd clock.
+     14           *
+     15           * 3. Call CLOCK_SetMux() to configure corresponding clock source for target clock out.
+     16           *
+     17           * 4. Call CLOCK_SetDiv() to configure corresponding clock divider for target clock out.
+     18           *
+     19           * 5. Call CLOCK_SetXtalFreq() to set XTAL frequency based on board settings.
+     20           *
+     21           */
+     22          
+     23          /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+     24          !!GlobalInfo
+     25          product: Clocks v5.0
+     26          processor: MIMXRT1052xxxxB
+     27          package_id: MIMXRT1052DVL6B
+     28          mcu_data: ksdk2_0
+     29          processor_version: 0.0.0
+     30          board: IMXRT1050-EVKB
+     31           * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+     32          
+     33          #include "clock_config.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_SetMux(clock_mux_t, uint32_t)
+   \                     CLOCK_SetMux: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0xF3C0 0x6485      UBFX     R4,R0,#+26,#+6
+   \        0x6   0x....'....        LDR.W    R2,??DataTable6  ;; 0x400fc000
+   \        0xA   0xF000 0x03FF      AND      R3,R0,#0xFF
+   \        0xE   0x18D3             ADDS     R3,R2,R3
+   \       0x10   0x681B             LDR      R3,[R3, #+0]
+   \       0x12   0xF3C0 0x354C      UBFX     R5,R0,#+13,#+13
+   \       0x16   0x4606             MOV      R6,R0
+   \       0x18   0x1236             ASRS     R6,R6,#+8
+   \       0x1A   0xF006 0x061F      AND      R6,R6,#0x1F
+   \       0x1E   0x40B5             LSLS     R5,R5,R6
+   \       0x20   0x43AB             BICS     R3,R3,R5
+   \       0x22   0xEA01 0x3160      AND      R1,R1,R0, ASR #+13
+   \       0x26   0xF3C1 0x010C      UBFX     R1,R1,#+0,#+13
+   \       0x2A   0x4605             MOV      R5,R0
+   \       0x2C   0x122D             ASRS     R5,R5,#+8
+   \       0x2E   0xF005 0x051F      AND      R5,R5,#0x1F
+   \       0x32   0x40A9             LSLS     R1,R1,R5
+   \       0x34   0x4319             ORRS     R1,R1,R3
+   \       0x36   0xF000 0x00FF      AND      R0,R0,#0xFF
+   \       0x3A   0x1810             ADDS     R0,R2,R0
+   \       0x3C   0x6001             STR      R1,[R0, #+0]
+   \       0x3E   0x2C21             CMP      R4,#+33
+   \       0x40   0xD309             BCC.N    ??CLOCK_SetMux_0
+   \       0x42   0xF240 0x327A      MOVW     R2,#+890
+   \       0x46   0x....'....        LDR.W    R1,??DataTable6_1
+   \       0x4A   0x....'....        LDR.W    R0,??DataTable6_2
+   \       0x4E   0x....'....        BL       __aeabi_assert
+   \       0x52   0x....'....        BL       __iar_EmptyStepPoint
+   \                     ??CLOCK_SetMux_0: (+1)
+   \       0x56   0x2C20             CMP      R4,#+32
+   \       0x58   0xD005             BEQ.N    ??CLOCK_SetMux_1
+   \                     ??CLOCK_SetMux_2: (+1)
+   \       0x5A   0x....'....        LDR.W    R0,??DataTable6_3  ;; 0x400fc048
+   \       0x5E   0x6800             LDR      R0,[R0, #+0]
+   \       0x60   0x40E0             LSRS     R0,R0,R4
+   \       0x62   0x07C0             LSLS     R0,R0,#+31
+   \       0x64   0xD4F9             BMI.N    ??CLOCK_SetMux_2
+   \                     ??CLOCK_SetMux_1: (+1)
+   \       0x66   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_SetDiv(clock_div_t, uint32_t)
+   \                     CLOCK_SetDiv: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0xF3C0 0x6485      UBFX     R4,R0,#+26,#+6
+   \        0x6   0x....'....        LDR.W    R2,??DataTable6  ;; 0x400fc000
+   \        0xA   0xF000 0x03FF      AND      R3,R0,#0xFF
+   \        0xE   0x18D3             ADDS     R3,R2,R3
+   \       0x10   0x681B             LDR      R3,[R3, #+0]
+   \       0x12   0xF3C0 0x354C      UBFX     R5,R0,#+13,#+13
+   \       0x16   0x4606             MOV      R6,R0
+   \       0x18   0x1236             ASRS     R6,R6,#+8
+   \       0x1A   0xF006 0x061F      AND      R6,R6,#0x1F
+   \       0x1E   0x40B5             LSLS     R5,R5,R6
+   \       0x20   0x43AB             BICS     R3,R3,R5
+   \       0x22   0xEA01 0x3160      AND      R1,R1,R0, ASR #+13
+   \       0x26   0xF3C1 0x010C      UBFX     R1,R1,#+0,#+13
+   \       0x2A   0x4605             MOV      R5,R0
+   \       0x2C   0x122D             ASRS     R5,R5,#+8
+   \       0x2E   0xF005 0x051F      AND      R5,R5,#0x1F
+   \       0x32   0x40A9             LSLS     R1,R1,R5
+   \       0x34   0x4319             ORRS     R1,R1,R3
+   \       0x36   0xF000 0x00FF      AND      R0,R0,#0xFF
+   \       0x3A   0x1810             ADDS     R0,R2,R0
+   \       0x3C   0x6001             STR      R1,[R0, #+0]
+   \       0x3E   0x2C21             CMP      R4,#+33
+   \       0x40   0xD309             BCC.N    ??CLOCK_SetDiv_0
+   \       0x42   0xF240 0x329F      MOVW     R2,#+927
+   \       0x46   0x....'....        LDR.W    R1,??DataTable6_1
+   \       0x4A   0x....'....        LDR.W    R0,??DataTable6_2
+   \       0x4E   0x....'....        BL       __aeabi_assert
+   \       0x52   0x....'....        BL       __iar_EmptyStepPoint
+   \                     ??CLOCK_SetDiv_0: (+1)
+   \       0x56   0x2C20             CMP      R4,#+32
+   \       0x58   0xD005             BEQ.N    ??CLOCK_SetDiv_1
+   \                     ??CLOCK_SetDiv_2: (+1)
+   \       0x5A   0x....'....        LDR.W    R0,??DataTable6_3  ;; 0x400fc048
+   \       0x5E   0x6800             LDR      R0,[R0, #+0]
+   \       0x60   0x40E0             LSRS     R0,R0,R4
+   \       0x62   0x07C0             LSLS     R0,R0,#+31
+   \       0x64   0xD4F9             BMI.N    ??CLOCK_SetDiv_2
+   \                     ??CLOCK_SetDiv_1: (+1)
+   \       0x66   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_ControlGate(clock_ip_name_t, clock_gate_value_t)
+   \                     CLOCK_ControlGate: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x460D             MOV      R5,R1
+   \        0x6   0x4626             MOV      R6,R4
+   \        0x8   0x0A36             LSRS     R6,R6,#+8
+   \        0xA   0xF004 0x041F      AND      R4,R4,#0x1F
+   \        0xE   0x2E07             CMP      R6,#+7
+   \       0x10   0xD309             BCC.N    ??CLOCK_ControlGate_0
+   \       0x12   0xF240 0x32C1      MOVW     R2,#+961
+   \       0x16   0x....'....        LDR.W    R1,??DataTable6_1
+   \       0x1A   0x....'....        LDR.W    R0,??DataTable6_4
+   \       0x1E   0x....'....        BL       __aeabi_assert
+   \       0x22   0x....'....        BL       __iar_EmptyStepPoint
+   \                     ??CLOCK_ControlGate_0: (+1)
+   \       0x26   0x....'....        LDR.W    R0,??DataTable6_5  ;; 0x400fc068
+   \       0x2A   0xEB00 0x0086      ADD      R0,R0,R6, LSL #+2
+   \       0x2E   0x6801             LDR      R1,[R0, #+0]
+   \       0x30   0x2203             MOVS     R2,#+3
+   \       0x32   0x40A2             LSLS     R2,R2,R4
+   \       0x34   0x4391             BICS     R1,R1,R2
+   \       0x36   0xFA05 0xF404      LSL      R4,R5,R4
+   \       0x3A   0x430C             ORRS     R4,R4,R1
+   \       0x3C   0x6004             STR      R4,[R0, #+0]
+   \       0x3E   0xBD70             POP      {R4-R6,PC}       ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_DisableClock(clock_ip_name_t)
+   \                     CLOCK_DisableClock: (+1)
+   \        0x0   0x2100             MOVS     R1,#+0
+   \        0x2   0x....             B.N      CLOCK_ControlGate
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_SetXtalFreq(uint32_t)
+   \                     CLOCK_SetXtalFreq: (+1)
+   \        0x0   0x....'....        LDR.W    R1,??DataTable6_6
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+   \        0x6   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_SetRtcXtalFreq(uint32_t)
+   \                     CLOCK_SetRtcXtalFreq: (+1)
+   \        0x0   0x....'....        LDR.W    R1,??DataTable6_7
+   \        0x4   0x6008             STR      R0,[R1, #+0]
+   \        0x6   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void CLOCK_SetPllBypass(CCM_ANALOG_Type *, clock_pll_t, bool)
+   \                     CLOCK_SetPllBypass: (+1)
+   \        0x0   0x2A00             CMP      R2,#+0
+   \        0x2   0xF3C1 0x410B      UBFX     R1,R1,#+16,#+12
+   \        0x6   0xD005             BEQ.N    ??CLOCK_SetPllBypass_0
+   \        0x8   0x1808             ADDS     R0,R1,R0
+   \        0xA   0x1D00             ADDS     R0,R0,#+4
+   \        0xC   0xF44F 0x3180      MOV      R1,#+65536
+   \       0x10   0x6001             STR      R1,[R0, #+0]
+   \       0x12   0x4770             BX       LR
+   \                     ??CLOCK_SetPllBypass_0: (+1)
+   \       0x14   0x1808             ADDS     R0,R1,R0
+   \       0x16   0x3008             ADDS     R0,R0,#+8
+   \       0x18   0xF44F 0x3180      MOV      R1,#+65536
+   \       0x1C   0x6001             STR      R1,[R0, #+0]
+   \       0x1E   0x4770             BX       LR               ;; return
+     34          #include "fsl_iomuxc.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void IOMUXC_EnableMode(IOMUXC_GPR_Type *, uint32_t, bool)
+   \                     IOMUXC_EnableMode: (+1)
+   \        0x0   0x0B09             LSRS     R1,R1,#+12
+   \        0x2   0x2A00             CMP      R2,#+0
+   \        0x4   0x6842             LDR      R2,[R0, #+4]
+   \        0x6   0xD003             BEQ.N    ??IOMUXC_EnableMode_0
+   \        0x8   0xEA52 0x3101      ORRS     R1,R2,R1, LSL #+12
+   \        0xC   0x6041             STR      R1,[R0, #+4]
+   \        0xE   0x4770             BX       LR
+   \                     ??IOMUXC_EnableMode_0: (+1)
+   \       0x10   0xEA22 0x3101      BIC      R1,R2,R1, LSL #+12
+   \       0x14   0x6041             STR      R1,[R0, #+4]
+   \       0x16   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR_Type *, iomuxc_gpr_saimclk_t, uint8_t)
+   \                     IOMUXC_SetSaiMClkClockSource: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+   \        0x2   0x460B             MOV      R3,R1
+   \        0x4   0x2B04             CMP      R3,#+4
+   \        0x6   0x6844             LDR      R4,[R0, #+4]
+   \        0x8   0xDB0A             BLT.N    ??IOMUXC_SetSaiMClkClockSource_0
+   \        0xA   0x2303             MOVS     R3,#+3
+   \        0xC   0x408B             LSLS     R3,R3,R1
+   \        0xE   0xEA24 0x0303      BIC      R3,R4,R3
+   \       0x12   0xF002 0x0203      AND      R2,R2,#0x3
+   \       0x16   0xFA02 0xF101      LSL      R1,R2,R1
+   \       0x1A   0x4319             ORRS     R1,R3,R1
+   \       0x1C   0x6041             STR      R1,[R0, #+4]
+   \       0x1E   0xE009             B.N      ??IOMUXC_SetSaiMClkClockSource_1
+   \                     ??IOMUXC_SetSaiMClkClockSource_0: (+1)
+   \       0x20   0x2307             MOVS     R3,#+7
+   \       0x22   0x408B             LSLS     R3,R3,R1
+   \       0x24   0xEA24 0x0303      BIC      R3,R4,R3
+   \       0x28   0xF002 0x0207      AND      R2,R2,#0x7
+   \       0x2C   0xFA02 0xF101      LSL      R1,R2,R1
+   \       0x30   0x4319             ORRS     R1,R3,R1
+   \       0x32   0x6041             STR      R1,[R0, #+4]
+   \                     ??IOMUXC_SetSaiMClkClockSource_1: (+1)
+   \       0x34   0xBC10             POP      {R4}
+   \       0x36   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void IOMUXC_MQSConfig(IOMUXC_GPR_Type *, iomuxc_mqs_pwm_oversample_rate_t, uint8_t)
+   \                     IOMUXC_MQSConfig: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+   \        0x2   0x6884             LDR      R4,[R0, #+8]
+   \        0x4   0x....'....        LDR.W    R3,??DataTable6_8  ;; 0xfb00ffff
+   \        0x8   0x401C             ANDS     R4,R3,R4
+   \        0xA   0x0689             LSLS     R1,R1,#+26
+   \        0xC   0xF001 0x6180      AND      R1,R1,#0x4000000
+   \       0x10   0x4321             ORRS     R1,R1,R4
+   \       0x12   0xEA41 0x4102      ORR      R1,R1,R2, LSL #+16
+   \       0x16   0x6081             STR      R1,[R0, #+8]
+   \       0x18   0xBC10             POP      {R4}
+   \       0x1A   0x4770             BX       LR               ;; return
+     35          
+     36          /*******************************************************************************
+     37           * Definitions
+     38           ******************************************************************************/
+     39          
+     40          /*******************************************************************************
+     41           * Variables
+     42           ******************************************************************************/
+     43          /* System clock frequency. */
+     44          extern uint32_t SystemCoreClock;
+     45          
+     46          /*******************************************************************************
+     47           ************************ BOARD_InitBootClocks function ************************
+     48           ******************************************************************************/
+
+   \                                 In section .text, align 4, keep-with-next
+     49          void BOARD_InitBootClocks(void)
+     50          {
+     51              BOARD_BootClockRUN();
+   \                     BOARD_InitBootClocks: (+1)
+   \        0x0   0xBF00             Nop      
+   \        0x2                      REQUIRE BOARD_BootClockRUN
+   \        0x2                      ;; // Fall through to label BOARD_BootClockRUN
+     52          }
+     53          
+     54          /*******************************************************************************
+     55           ********************** Configuration BOARD_BootClockRUN ***********************
+     56           ******************************************************************************/
+     57          /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+     58          !!Configuration
+     59          name: BOARD_BootClockRUN
+     60          called_from_default_init: true
+     61          outputs:
+     62          - {id: AHB_CLK_ROOT.outFreq, value: 600 MHz}
+     63          - {id: CAN_CLK_ROOT.outFreq, value: 40 MHz}
+     64          - {id: CKIL_SYNC_CLK_ROOT.outFreq, value: 32.768 kHz}
+     65          - {id: CLK_1M.outFreq, value: 1 MHz}
+     66          - {id: CLK_24M.outFreq, value: 24 MHz}
+     67          - {id: CSI_CLK_ROOT.outFreq, value: 12 MHz}
+     68          - {id: ENET1_TX_CLK.outFreq, value: 2.4 MHz}
+     69          - {id: ENET_125M_CLK.outFreq, value: 2.4 MHz}
+     70          - {id: ENET_25M_REF_CLK.outFreq, value: 1.2 MHz}
+     71          - {id: FLEXIO1_CLK_ROOT.outFreq, value: 30 MHz}
+     72          - {id: FLEXIO2_CLK_ROOT.outFreq, value: 30 MHz}
+     73          - {id: FLEXSPI_CLK_ROOT.outFreq, value: 160 MHz}
+     74          - {id: GPT1_ipg_clk_highfreq.outFreq, value: 75 MHz}
+     75          - {id: GPT2_ipg_clk_highfreq.outFreq, value: 75 MHz}
+     76          - {id: IPG_CLK_ROOT.outFreq, value: 150 MHz}
+     77          - {id: LCDIF_CLK_ROOT.outFreq, value: 67.5 MHz}
+     78          - {id: LPI2C_CLK_ROOT.outFreq, value: 60 MHz}
+     79          - {id: LPSPI_CLK_ROOT.outFreq, value: 105.6 MHz}
+     80          - {id: LVDS1_CLK.outFreq, value: 1.2 GHz}
+     81          - {id: MQS_MCLK.outFreq, value: 1080/17 MHz}
+     82          - {id: PERCLK_CLK_ROOT.outFreq, value: 75 MHz}
+     83          - {id: PLL7_MAIN_CLK.outFreq, value: 24 MHz}
+     84          - {id: SAI1_CLK_ROOT.outFreq, value: 1080/17 MHz}
+     85          - {id: SAI1_MCLK1.outFreq, value: 1080/17 MHz}
+     86          - {id: SAI1_MCLK2.outFreq, value: 1080/17 MHz}
+     87          - {id: SAI1_MCLK3.outFreq, value: 30 MHz}
+     88          - {id: SAI2_CLK_ROOT.outFreq, value: 1080/17 MHz}
+     89          - {id: SAI2_MCLK1.outFreq, value: 1080/17 MHz}
+     90          - {id: SAI2_MCLK3.outFreq, value: 30 MHz}
+     91          - {id: SAI3_CLK_ROOT.outFreq, value: 1080/17 MHz}
+     92          - {id: SAI3_MCLK1.outFreq, value: 1080/17 MHz}
+     93          - {id: SAI3_MCLK3.outFreq, value: 30 MHz}
+     94          - {id: SEMC_CLK_ROOT.outFreq, value: 75 MHz}
+     95          - {id: SPDIF0_CLK_ROOT.outFreq, value: 30 MHz}
+     96          - {id: TRACE_CLK_ROOT.outFreq, value: 352/3 MHz}
+     97          - {id: UART_CLK_ROOT.outFreq, value: 80 MHz}
+     98          - {id: USDHC1_CLK_ROOT.outFreq, value: 198 MHz}
+     99          - {id: USDHC2_CLK_ROOT.outFreq, value: 198 MHz}
+    100          settings:
+    101          - {id: CCM.AHB_PODF.scale, value: '1', locked: true}
+    102          - {id: CCM.ARM_PODF.scale, value: '2', locked: true}
+    103          - {id: CCM.FLEXSPI_PODF.scale, value: '3', locked: true}
+    104          - {id: CCM.FLEXSPI_SEL.sel, value: CCM.PLL3_SW_CLK_SEL}
+    105          - {id: CCM.LPSPI_PODF.scale, value: '5', locked: true}
+    106          - {id: CCM.PERCLK_PODF.scale, value: '2', locked: true}
+    107          - {id: CCM.SEMC_PODF.scale, value: '8'}
+    108          - {id: CCM.TRACE_PODF.scale, value: '3', locked: true}
+    109          - {id: CCM_ANALOG.PLL1_BYPASS.sel, value: CCM_ANALOG.PLL1}
+    110          - {id: CCM_ANALOG.PLL1_PREDIV.scale, value: '1', locked: true}
+    111          - {id: CCM_ANALOG.PLL1_VDIV.scale, value: '50', locked: true}
+    112          - {id: CCM_ANALOG.PLL2.denom, value: '1', locked: true}
+    113          - {id: CCM_ANALOG.PLL2.num, value: '0', locked: true}
+    114          - {id: CCM_ANALOG.PLL2_BYPASS.sel, value: CCM_ANALOG.PLL2_OUT_CLK}
+    115          - {id: CCM_ANALOG.PLL2_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD0}
+    116          - {id: CCM_ANALOG.PLL2_PFD1_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD1}
+    117          - {id: CCM_ANALOG.PLL2_PFD2_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD2}
+    118          - {id: CCM_ANALOG.PLL2_PFD3_BYPASS.sel, value: CCM_ANALOG.PLL2_PFD3}
+    119          - {id: CCM_ANALOG.PLL3_BYPASS.sel, value: CCM_ANALOG.PLL3}
+    120          - {id: CCM_ANALOG.PLL3_PFD0_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD0}
+    121          - {id: CCM_ANALOG.PLL3_PFD0_DIV.scale, value: '33', locked: true}
+    122          - {id: CCM_ANALOG.PLL3_PFD0_MUL.scale, value: '18', locked: true}
+    123          - {id: CCM_ANALOG.PLL3_PFD1_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD1}
+    124          - {id: CCM_ANALOG.PLL3_PFD2_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD2}
+    125          - {id: CCM_ANALOG.PLL3_PFD3_BYPASS.sel, value: CCM_ANALOG.PLL3_PFD3}
+    126          - {id: CCM_ANALOG.PLL4.denom, value: '50'}
+    127          - {id: CCM_ANALOG.PLL4.div, value: '47'}
+    128          - {id: CCM_ANALOG.PLL5.denom, value: '1'}
+    129          - {id: CCM_ANALOG.PLL5.div, value: '40'}
+    130          - {id: CCM_ANALOG.PLL5.num, value: '0'}
+    131          - {id: CCM_ANALOG_PLL_ENET_POWERDOWN_CFG, value: 'Yes'}
+    132          - {id: CCM_ANALOG_PLL_USB1_POWER_CFG, value: 'Yes'}
+    133          sources:
+    134          - {id: XTALOSC24M.OSC.outFreq, value: 24 MHz, enabled: true}
+    135          - {id: XTALOSC24M.RTC_OSC.outFreq, value: 32.768 kHz, enabled: true}
+    136           * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+    137          
+    138          /*******************************************************************************
+    139           * Variables for BOARD_BootClockRUN configuration
+    140           ******************************************************************************/
+
+   \                                 In section .rodata, align 4
+    141          const clock_arm_pll_config_t armPllConfig_BOARD_BootClockRUN = {
+   \                     armPllConfig_BOARD_BootClockRUN:
+   \        0x0   0x0000'0064        DC32 100
+   \        0x4   0x00 0x00          DC8 0, 0, 0, 0
+   \              0x00 0x00    
+    142              .loopDivider = 100, /* PLL loop divider, Fout = Fin * 50 */
+    143              .src         = 0,   /* Bypass clock source, 0 - OSC 24M, 1 - CLK1_P and CLK1_N */
+    144          };
+
+   \                                 In section .rodata, align 4
+    145          const clock_sys_pll_config_t sysPllConfig_BOARD_BootClockRUN = {
+   \                     sysPllConfig_BOARD_BootClockRUN:
+   \        0x0   0x01 0x00          DC8 1, 0, 0, 0
+   \              0x00 0x00    
+   \        0x4   0x0000'0000        DC32 0, 1
+   \              0x0000'0001  
+   \        0xC   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+    146              .loopDivider = 1, /* PLL loop divider, Fout = Fin * ( 20 + loopDivider*2 + numerator / denominator ) */
+    147              .numerator   = 0, /* 30 bit numerator of fractional loop divider */
+    148              .denominator = 1, /* 30 bit denominator of fractional loop divider */
+    149              .src         = 0, /* Bypass clock source, 0 - OSC 24M, 1 - CLK1_P and CLK1_N */
+    150          };
+
+   \                                 In section .rodata, align 2
+    151          const clock_usb_pll_config_t usb1PllConfig_BOARD_BootClockRUN = {
+   \                     usb1PllConfig_BOARD_BootClockRUN:
+   \        0x0   0x00 0x00          DC8 0, 0
+    152              .loopDivider = 0, /* PLL loop divider, Fout = Fin * 20 */
+    153              .src         = 0, /* Bypass clock source, 0 - OSC 24M, 1 - CLK1_P and CLK1_N */
+    154          };
+    155          /*******************************************************************************
+    156           * Code for BOARD_BootClockRUN configuration
+    157           ******************************************************************************/
+
+   \                                 In section .text, align 2, keep-with-next
+    158          void BOARD_BootClockRUN(void)
+    159          {
+   \                     BOARD_BootClockRUN: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+    160              /* Init RTC OSC clock frequency. */
+    161              CLOCK_SetRtcXtalFreq(32768U);
+   \        0x2   0xF44F 0x4000      MOV      R0,#+32768
+   \        0x6   0x....'....        BL       CLOCK_SetRtcXtalFreq
+    162              /* Enable 1MHz clock output. */
+    163              XTALOSC24M->OSC_CONFIG2 |= XTALOSC24M_OSC_CONFIG2_ENABLE_1M_MASK;
+   \        0xA   0x....'....        LDR.W    R0,??DataTable6_9  ;; 0x400d82c0
+   \        0xE   0x6801             LDR      R1,[R0, #+0]
+   \       0x10   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x14   0x6001             STR      R1,[R0, #+0]
+    164              /* Use free 1MHz clock output. */
+    165              XTALOSC24M->OSC_CONFIG2 &= ~XTALOSC24M_OSC_CONFIG2_MUX_1M_MASK;
+   \       0x16   0x6801             LDR      R1,[R0, #+0]
+   \       0x18   0xF421 0x3100      BIC      R1,R1,#0x20000
+   \       0x1C   0x6001             STR      R1,[R0, #+0]
+    166              /* Set XTAL 24MHz clock frequency. */
+    167              CLOCK_SetXtalFreq(24000000U);
+   \       0x1E   0x....'....        LDR.W    R0,??DataTable6_10  ;; 0x16e3600
+   \       0x22   0x....'....        BL       CLOCK_SetXtalFreq
+    168              /* Enable XTAL 24MHz clock source. */
+    169              CLOCK_InitExternalClk(0);
+   \       0x26   0x2000             MOVS     R0,#+0
+   \       0x28   0x....'....        BL       CLOCK_InitExternalClk
+    170              /* Enable internal RC. */
+    171              CLOCK_InitRcOsc24M();
+   \       0x2C   0x....'....        BL       CLOCK_InitRcOsc24M
+    172              /* Switch clock source to external OSC. */
+    173              CLOCK_SwitchOsc(kCLOCK_XtalOsc);
+   \       0x30   0x2001             MOVS     R0,#+1
+   \       0x32   0x....'....        BL       CLOCK_SwitchOsc
+    174              /* Set Oscillator ready counter value. */
+    175              CCM->CCR = (CCM->CCR & (~CCM_CCR_OSCNT_MASK)) | CCM_CCR_OSCNT(127);
+   \       0x36   0x....'....        LDR.W    R0,??DataTable6  ;; 0x400fc000
+   \       0x3A   0x6801             LDR      R1,[R0, #+0]
+   \       0x3C   0x0A09             LSRS     R1,R1,#+8
+   \       0x3E   0x0209             LSLS     R1,R1,#+8
+   \       0x40   0xF041 0x017F      ORR      R1,R1,#0x7F
+   \       0x44   0x6001             STR      R1,[R0, #+0]
+    176              /* Setting PeriphClk2Mux and PeriphMux to provide stable clock before PLLs are initialed */
+    177              CLOCK_SetMux(kCLOCK_PeriphClk2Mux, 1); /* Set PERIPH_CLK2 MUX to OSC */
+   \       0x46   0x....'....        LDR.W    R4,??DataTable6_11  ;; 0x80006c18
+   \       0x4A   0x2101             MOVS     R1,#+1
+   \       0x4C   0x4620             MOV      R0,R4
+   \       0x4E   0x....'....        BL       CLOCK_SetMux
+    178              CLOCK_SetMux(kCLOCK_PeriphMux, 1);     /* Set PERIPH_CLK MUX to PERIPH_CLK2 */
+   \       0x52   0x....'....        LDR.W    R5,??DataTable6_12  ;; 0x14003914
+   \       0x56   0x2101             MOVS     R1,#+1
+   \       0x58   0x4628             MOV      R0,R5
+   \       0x5A   0x....'....        BL       CLOCK_SetMux
+    179              /* Setting the VDD_SOC to 1.275V. It is necessary to config AHB to 600Mhz. */
+    180              DCDC->REG3 = (DCDC->REG3 & (~DCDC_REG3_TRG_MASK)) | DCDC_REG3_TRG(0x13);
+   \       0x5E   0x....'....        LDR.W    R0,??DataTable6_13  ;; 0x4008000c
+   \       0x62   0x6801             LDR      R1,[R0, #+0]
+   \       0x64   0x0949             LSRS     R1,R1,#+5
+   \       0x66   0x0149             LSLS     R1,R1,#+5
+   \       0x68   0xF041 0x0113      ORR      R1,R1,#0x13
+   \       0x6C   0x6001             STR      R1,[R0, #+0]
+    181              /* Waiting for DCDC_STS_DC_OK bit is asserted */
+    182              while (DCDC_REG0_STS_DC_OK_MASK != (DCDC_REG0_STS_DC_OK_MASK & DCDC->REG0))
+   \                     ??BOARD_BootClockRUN_0: (+1)
+   \       0x6E   0x....'....        LDR.W    R0,??DataTable6_14  ;; 0x40080000
+   \       0x72   0x6800             LDR      R0,[R0, #+0]
+   \       0x74   0x2800             CMP      R0,#+0
+   \       0x76   0xD5FA             BPL.N    ??BOARD_BootClockRUN_0
+    183              {
+    184              }
+    185              /* Set AHB_PODF. */
+    186              CLOCK_SetDiv(kCLOCK_AhbDiv, 0);
+   \       0x78   0x2100             MOVS     R1,#+0
+   \       0x7A   0x....'....        LDR.W    R0,??DataTable6_15  ;; 0x400ea14
+   \       0x7E   0x....'....        BL       CLOCK_SetDiv
+    187              /* Disable IPG clock gate. */
+    188              CLOCK_DisableClock(kCLOCK_Adc1);
+   \       0x82   0xF44F 0x7088      MOV      R0,#+272
+   \       0x86   0x....'....        BL       CLOCK_DisableClock
+    189              CLOCK_DisableClock(kCLOCK_Adc2);
+   \       0x8A   0xF44F 0x7084      MOV      R0,#+264
+   \       0x8E   0x....'....        BL       CLOCK_DisableClock
+    190              CLOCK_DisableClock(kCLOCK_Xbar1);
+   \       0x92   0xF240 0x2016      MOVW     R0,#+534
+   \       0x96   0x....'....        BL       CLOCK_DisableClock
+    191              CLOCK_DisableClock(kCLOCK_Xbar2);
+   \       0x9A   0xF44F 0x7006      MOV      R0,#+536
+   \       0x9E   0x....'....        BL       CLOCK_DisableClock
+    192              CLOCK_DisableClock(kCLOCK_Xbar3);
+   \       0xA2   0xF240 0x200E      MOVW     R0,#+526
+   \       0xA6   0x....'....        BL       CLOCK_DisableClock
+    193              /* Set IPG_PODF. */
+    194              CLOCK_SetDiv(kCLOCK_IpgDiv, 3);
+   \       0xAA   0x2103             MOVS     R1,#+3
+   \       0xAC   0x....'....        LDR.W    R0,??DataTable6_16  ;; 0x80006814
+   \       0xB0   0x....'....        BL       CLOCK_SetDiv
+    195              /* Set ARM_PODF. */
+    196              CLOCK_SetDiv(kCLOCK_ArmDiv, 1);
+   \       0xB4   0x2101             MOVS     R1,#+1
+   \       0xB6   0x....'....        LDR.W    R0,??DataTable6_17  ;; 0x4000e010
+   \       0xBA   0x....'....        BL       CLOCK_SetDiv
+    197              /* Set PERIPH_CLK2_PODF. */
+    198              CLOCK_SetDiv(kCLOCK_PeriphClk2Div, 0);
+   \       0xBE   0x2100             MOVS     R1,#+0
+   \       0xC0   0x....'....        LDR.W    R0,??DataTable6_18  ;; 0x8000fb14
+   \       0xC4   0x....'....        BL       CLOCK_SetDiv
+    199              /* Disable PERCLK clock gate. */
+    200              CLOCK_DisableClock(kCLOCK_Gpt1);
+   \       0xC8   0xF44F 0x708A      MOV      R0,#+276
+   \       0xCC   0x....'....        BL       CLOCK_DisableClock
+    201              CLOCK_DisableClock(kCLOCK_Gpt1S);
+   \       0xD0   0xF44F 0x708B      MOV      R0,#+278
+   \       0xD4   0x....'....        BL       CLOCK_DisableClock
+    202              CLOCK_DisableClock(kCLOCK_Gpt2);
+   \       0xD8   0x2018             MOVS     R0,#+24
+   \       0xDA   0x....'....        BL       CLOCK_DisableClock
+    203              CLOCK_DisableClock(kCLOCK_Gpt2S);
+   \       0xDE   0x201A             MOVS     R0,#+26
+   \       0xE0   0x....'....        BL       CLOCK_DisableClock
+    204              CLOCK_DisableClock(kCLOCK_Pit);
+   \       0xE4   0xF44F 0x7086      MOV      R0,#+268
+   \       0xE8   0x....'....        BL       CLOCK_DisableClock
+    205              /* Set PERCLK_PODF. */
+    206              CLOCK_SetDiv(kCLOCK_PerclkDiv, 1);
+   \       0xEC   0x2101             MOVS     R1,#+1
+   \       0xEE   0x....'....        LDR.W    R0,??DataTable6_19  ;; 0x8007e01c
+   \       0xF2   0x....'....        BL       CLOCK_SetDiv
+    207              /* Disable USDHC1 clock gate. */
+    208              CLOCK_DisableClock(kCLOCK_Usdhc1);
+   \       0xF6   0xF240 0x6002      MOVW     R0,#+1538
+   \       0xFA   0x....'....        BL       CLOCK_DisableClock
+    209              /* Set USDHC1_PODF. */
+    210              CLOCK_SetDiv(kCLOCK_Usdhc1Div, 1);
+   \       0xFE   0x2101             MOVS     R1,#+1
+   \      0x100   0x....'....        LDR.W    R0,??DataTable6_20  ;; 0x8000eb24
+   \      0x104   0x....'....        BL       CLOCK_SetDiv
+    211              /* Set Usdhc1 clock source. */
+    212              CLOCK_SetMux(kCLOCK_Usdhc1Mux, 0);
+   \      0x108   0x2100             MOVS     R1,#+0
+   \      0x10A   0x....'....        LDR.W    R0,??DataTable6_21  ;; 0x8000301c
+   \      0x10E   0x....'....        BL       CLOCK_SetMux
+    213              /* Disable USDHC2 clock gate. */
+    214              CLOCK_DisableClock(kCLOCK_Usdhc2);
+   \      0x112   0xF240 0x6004      MOVW     R0,#+1540
+   \      0x116   0x....'....        BL       CLOCK_DisableClock
+    215              /* Set USDHC2_PODF. */
+    216              CLOCK_SetDiv(kCLOCK_Usdhc2Div, 1);
+   \      0x11A   0x2101             MOVS     R1,#+1
+   \      0x11C   0x....'....        LDR.W    R0,??DataTable6_22  ;; 0x8000f024
+   \      0x120   0x....'....        BL       CLOCK_SetDiv
+    217              /* Set Usdhc2 clock source. */
+    218              CLOCK_SetMux(kCLOCK_Usdhc2Mux, 0);
+   \      0x124   0x2100             MOVS     R1,#+0
+   \      0x126   0x....'....        LDR.W    R0,??DataTable6_23  ;; 0x8000311c
+   \      0x12A   0x....'....        BL       CLOCK_SetMux
+    219          /* In SDK projects, SDRAM (configured by SEMC) will be initialized in either debug script or dcd.
+    220           * With this macro SKIP_SYSCLK_INIT, system pll (selected to be SEMC source clock in SDK projects) will be left
+    221           * unchanged.
+    222           * Note: If another clock source is selected for SEMC, user may want to avoid changing that clock as well.*/
+    223          #ifndef SKIP_SYSCLK_INIT
+    224              /* Disable Semc clock gate. */
+    225              CLOCK_DisableClock(kCLOCK_Semc);
+   \      0x12E   0xF44F 0x7041      MOV      R0,#+772
+   \      0x132   0x....'....        BL       CLOCK_DisableClock
+    226              /* Set SEMC_PODF. */
+    227              CLOCK_SetDiv(kCLOCK_SemcDiv, 7);
+   \      0x136   0x2107             MOVS     R1,#+7
+   \      0x138   0xF24F 0x0014      MOVW     R0,#+61460
+   \      0x13C   0x....'....        BL       CLOCK_SetDiv
+    228              /* Set Semc alt clock source. */
+    229              CLOCK_SetMux(kCLOCK_SemcAltMux, 0);
+   \      0x140   0x2100             MOVS     R1,#+0
+   \      0x142   0x....'....        LDR.W    R0,??DataTable6_24  ;; 0x80002714
+   \      0x146   0x....'....        BL       CLOCK_SetMux
+    230              /* Set Semc clock source. */
+    231              CLOCK_SetMux(kCLOCK_SemcMux, 0);
+   \      0x14A   0x2100             MOVS     R1,#+0
+   \      0x14C   0x....'....        LDR.W    R0,??DataTable6_25  ;; 0x80002614
+   \      0x150   0x....'....        BL       CLOCK_SetMux
+    232          #endif
+    233          /* In SDK projects, external flash (configured by FLEXSPI) will be initialized by dcd.
+    234           * With this macro XIP_EXTERNAL_FLASH, usb1 pll (selected to be FLEXSPI clock source in SDK projects) will be left
+    235           * unchanged.
+    236           * Note: If another clock source is selected for FLEXSPI, user may want to avoid changing that clock as well.*/
+    237          #if !(defined(XIP_EXTERNAL_FLASH) && (XIP_EXTERNAL_FLASH == 1))
+    238              /* Disable Flexspi clock gate. */
+    239              CLOCK_DisableClock(kCLOCK_FlexSpi);
+    240              /* Set FLEXSPI_PODF. */
+    241              CLOCK_SetDiv(kCLOCK_FlexspiDiv, 2);
+    242              /* Set Flexspi clock source. */
+    243              CLOCK_SetMux(kCLOCK_FlexspiMux, 1);
+    244          #endif
+    245              /* Disable CSI clock gate. */
+    246              CLOCK_DisableClock(kCLOCK_Csi);
+   \      0x154   0xF240 0x2002      MOVW     R0,#+514
+   \      0x158   0x....'....        BL       CLOCK_DisableClock
+    247              /* Set CSI_PODF. */
+    248              CLOCK_SetDiv(kCLOCK_CsiDiv, 1);
+   \      0x15C   0x2101             MOVS     R1,#+1
+   \      0x15E   0x....'....        LDR.W    R0,??DataTable6_26  ;; 0x8000eb3c
+   \      0x162   0x....'....        BL       CLOCK_SetDiv
+    249              /* Set Csi clock source. */
+    250              CLOCK_SetMux(kCLOCK_CsiMux, 0);
+   \      0x166   0x2100             MOVS     R1,#+0
+   \      0x168   0x....'....        LDR.W    R0,??DataTable6_27  ;; 0x8000693c
+   \      0x16C   0x....'....        BL       CLOCK_SetMux
+    251              /* Disable LPSPI clock gate. */
+    252              CLOCK_DisableClock(kCLOCK_Lpspi1);
+   \      0x170   0xF44F 0x7080      MOV      R0,#+256
+   \      0x174   0x....'....        BL       CLOCK_DisableClock
+    253              CLOCK_DisableClock(kCLOCK_Lpspi2);
+   \      0x178   0xF44F 0x7081      MOV      R0,#+258
+   \      0x17C   0x....'....        BL       CLOCK_DisableClock
+    254              CLOCK_DisableClock(kCLOCK_Lpspi3);
+   \      0x180   0xF44F 0x7082      MOV      R0,#+260
+   \      0x184   0x....'....        BL       CLOCK_DisableClock
+    255              CLOCK_DisableClock(kCLOCK_Lpspi4);
+   \      0x188   0xF44F 0x7083      MOV      R0,#+262
+   \      0x18C   0x....'....        BL       CLOCK_DisableClock
+    256              /* Set LPSPI_PODF. */
+    257              CLOCK_SetDiv(kCLOCK_LpspiDiv, 4);
+   \      0x190   0x2104             MOVS     R1,#+4
+   \      0x192   0x....'....        LDR.W    R0,??DataTable6_28  ;; 0x8000fa18
+   \      0x196   0x....'....        BL       CLOCK_SetDiv
+    258              /* Set Lpspi clock source. */
+    259              CLOCK_SetMux(kCLOCK_LpspiMux, 2);
+   \      0x19A   0x2102             MOVS     R1,#+2
+   \      0x19C   0x....'....        LDR.W    R0,??DataTable6_29  ;; 0x80006418
+   \      0x1A0   0x....'....        BL       CLOCK_SetMux
+    260              /* Disable TRACE clock gate. */
+    261              CLOCK_DisableClock(kCLOCK_Trace);
+   \      0x1A4   0x2016             MOVS     R0,#+22
+   \      0x1A6   0x....'....        BL       CLOCK_DisableClock
+    262              /* Set TRACE_PODF. */
+    263              CLOCK_SetDiv(kCLOCK_TraceDiv, 2);
+   \      0x1AA   0x2102             MOVS     R1,#+2
+   \      0x1AC   0x....'....        LDR.W    R0,??DataTable6_30  ;; 0x80007924
+   \      0x1B0   0x....'....        BL       CLOCK_SetDiv
+    264              /* Set Trace clock source. */
+    265              CLOCK_SetMux(kCLOCK_TraceMux, 2);
+   \      0x1B4   0x2102             MOVS     R1,#+2
+   \      0x1B6   0x....'....        LDR.W    R0,??DataTable6_31  ;; 0x80006e18
+   \      0x1BA   0x....'....        BL       CLOCK_SetMux
+    266              /* Disable SAI1 clock gate. */
+    267              CLOCK_DisableClock(kCLOCK_Sai1);
+   \      0x1BE   0xF240 0x5012      MOVW     R0,#+1298
+   \      0x1C2   0x....'....        BL       CLOCK_DisableClock
+    268              /* Set SAI1_CLK_PRED. */
+    269              CLOCK_SetDiv(kCLOCK_Sai1PreDiv, 3);
+   \      0x1C6   0x2103             MOVS     R1,#+3
+   \      0x1C8   0x....'....        LDR.W    R0,??DataTable6_32  ;; 0x8000e628
+   \      0x1CC   0x....'....        BL       CLOCK_SetDiv
+    270              /* Set SAI1_CLK_PODF. */
+    271              CLOCK_SetDiv(kCLOCK_Sai1Div, 1);
+   \      0x1D0   0x2101             MOVS     R1,#+1
+   \      0x1D2   0x....             LDR.N    R0,??DataTable6_33  ;; 0x8007e028
+   \      0x1D4   0x....'....        BL       CLOCK_SetDiv
+    272              /* Set Sai1 clock source. */
+    273              CLOCK_SetMux(kCLOCK_Sai1Mux, 0);
+   \      0x1D8   0x2100             MOVS     R1,#+0
+   \      0x1DA   0x....             LDR.N    R0,??DataTable6_34  ;; 0x80006a1c
+   \      0x1DC   0x....'....        BL       CLOCK_SetMux
+    274              /* Disable SAI2 clock gate. */
+    275              CLOCK_DisableClock(kCLOCK_Sai2);
+   \      0x1E0   0xF240 0x5014      MOVW     R0,#+1300
+   \      0x1E4   0x....'....        BL       CLOCK_DisableClock
+    276              /* Set SAI2_CLK_PRED. */
+    277              CLOCK_SetDiv(kCLOCK_Sai2PreDiv, 3);
+   \      0x1E8   0x2103             MOVS     R1,#+3
+   \      0x1EA   0x....             LDR.N    R0,??DataTable6_35  ;; 0x8000e62c
+   \      0x1EC   0x....'....        BL       CLOCK_SetDiv
+    278              /* Set SAI2_CLK_PODF. */
+    279              CLOCK_SetDiv(kCLOCK_Sai2Div, 1);
+   \      0x1F0   0x2101             MOVS     R1,#+1
+   \      0x1F2   0x....             LDR.N    R0,??DataTable6_36  ;; 0x8007e02c
+   \      0x1F4   0x....'....        BL       CLOCK_SetDiv
+    280              /* Set Sai2 clock source. */
+    281              CLOCK_SetMux(kCLOCK_Sai2Mux, 0);
+   \      0x1F8   0x2100             MOVS     R1,#+0
+   \      0x1FA   0x....             LDR.N    R0,??DataTable6_37  ;; 0x80006c1c
+   \      0x1FC   0x....'....        BL       CLOCK_SetMux
+    282              /* Disable SAI3 clock gate. */
+    283              CLOCK_DisableClock(kCLOCK_Sai3);
+   \      0x200   0xF240 0x5016      MOVW     R0,#+1302
+   \      0x204   0x....'....        BL       CLOCK_DisableClock
+    284              /* Set SAI3_CLK_PRED. */
+    285              CLOCK_SetDiv(kCLOCK_Sai3PreDiv, 3);
+   \      0x208   0x2103             MOVS     R1,#+3
+   \      0x20A   0x....             LDR.N    R0,??DataTable6_38  ;; 0x8000f628
+   \      0x20C   0x....'....        BL       CLOCK_SetDiv
+    286              /* Set SAI3_CLK_PODF. */
+    287              CLOCK_SetDiv(kCLOCK_Sai3Div, 1);
+   \      0x210   0x2101             MOVS     R1,#+1
+   \      0x212   0x....             LDR.N    R0,??DataTable6_39  ;; 0x8007f028
+   \      0x214   0x....'....        BL       CLOCK_SetDiv
+    288              /* Set Sai3 clock source. */
+    289              CLOCK_SetMux(kCLOCK_Sai3Mux, 0);
+   \      0x218   0x2100             MOVS     R1,#+0
+   \      0x21A   0x....             LDR.N    R0,??DataTable6_40  ;; 0x80006e1c
+   \      0x21C   0x....'....        BL       CLOCK_SetMux
+    290              /* Disable Lpi2c clock gate. */
+    291              CLOCK_DisableClock(kCLOCK_Lpi2c1);
+   \      0x220   0xF240 0x2006      MOVW     R0,#+518
+   \      0x224   0x....'....        BL       CLOCK_DisableClock
+    292              CLOCK_DisableClock(kCLOCK_Lpi2c2);
+   \      0x228   0xF44F 0x7002      MOV      R0,#+520
+   \      0x22C   0x....'....        BL       CLOCK_DisableClock
+    293              CLOCK_DisableClock(kCLOCK_Lpi2c3);
+   \      0x230   0xF240 0x200A      MOVW     R0,#+522
+   \      0x234   0x....'....        BL       CLOCK_DisableClock
+    294              /* Set LPI2C_CLK_PODF. */
+    295              CLOCK_SetDiv(kCLOCK_Lpi2cDiv, 0);
+   \      0x238   0x2100             MOVS     R1,#+0
+   \      0x23A   0x....             LDR.N    R0,??DataTable6_41  ;; 0x8007f338
+   \      0x23C   0x....'....        BL       CLOCK_SetDiv
+    296              /* Set Lpi2c clock source. */
+    297              CLOCK_SetMux(kCLOCK_Lpi2cMux, 0);
+   \      0x240   0x2100             MOVS     R1,#+0
+   \      0x242   0x....             LDR.N    R0,??DataTable6_42  ;; 0x80003238
+   \      0x244   0x....'....        BL       CLOCK_SetMux
+    298              /* Disable CAN clock gate. */
+    299              CLOCK_DisableClock(kCLOCK_Can1);
+   \      0x248   0x200E             MOVS     R0,#+14
+   \      0x24A   0x....'....        BL       CLOCK_DisableClock
+    300              CLOCK_DisableClock(kCLOCK_Can2);
+   \      0x24E   0x2012             MOVS     R0,#+18
+   \      0x250   0x....'....        BL       CLOCK_DisableClock
+    301              CLOCK_DisableClock(kCLOCK_Can1S);
+   \      0x254   0x2010             MOVS     R0,#+16
+   \      0x256   0x....'....        BL       CLOCK_DisableClock
+    302              CLOCK_DisableClock(kCLOCK_Can2S);
+   \      0x25A   0x2014             MOVS     R0,#+20
+   \      0x25C   0x....'....        BL       CLOCK_DisableClock
+    303              /* Set CAN_CLK_PODF. */
+    304              CLOCK_SetDiv(kCLOCK_CanDiv, 1);
+   \      0x260   0x2101             MOVS     R1,#+1
+   \      0x262   0x....             LDR.N    R0,??DataTable6_43  ;; 0x8007e220
+   \      0x264   0x....'....        BL       CLOCK_SetDiv
+    305              /* Set Can clock source. */
+    306              CLOCK_SetMux(kCLOCK_CanMux, 2);
+   \      0x268   0x2102             MOVS     R1,#+2
+   \      0x26A   0x....             LDR.N    R0,??DataTable6_44  ;; 0x80006820
+   \      0x26C   0x....'....        BL       CLOCK_SetMux
+    307              /* Disable UART clock gate. */
+    308              CLOCK_DisableClock(kCLOCK_Lpuart1);
+   \      0x270   0xF44F 0x60A3      MOV      R0,#+1304
+   \      0x274   0x....'....        BL       CLOCK_DisableClock
+    309              CLOCK_DisableClock(kCLOCK_Lpuart2);
+   \      0x278   0x201C             MOVS     R0,#+28
+   \      0x27A   0x....'....        BL       CLOCK_DisableClock
+    310              CLOCK_DisableClock(kCLOCK_Lpuart3);
+   \      0x27E   0x200C             MOVS     R0,#+12
+   \      0x280   0x....'....        BL       CLOCK_DisableClock
+    311              CLOCK_DisableClock(kCLOCK_Lpuart4);
+   \      0x284   0xF44F 0x708C      MOV      R0,#+280
+   \      0x288   0x....'....        BL       CLOCK_DisableClock
+    312              CLOCK_DisableClock(kCLOCK_Lpuart5);
+   \      0x28C   0xF240 0x3002      MOVW     R0,#+770
+   \      0x290   0x....'....        BL       CLOCK_DisableClock
+    313              CLOCK_DisableClock(kCLOCK_Lpuart6);
+   \      0x294   0xF240 0x3006      MOVW     R0,#+774
+   \      0x298   0x....'....        BL       CLOCK_DisableClock
+    314              CLOCK_DisableClock(kCLOCK_Lpuart7);
+   \      0x29C   0xF240 0x501A      MOVW     R0,#+1306
+   \      0x2A0   0x....'....        BL       CLOCK_DisableClock
+    315              CLOCK_DisableClock(kCLOCK_Lpuart8);
+   \      0x2A4   0xF240 0x600E      MOVW     R0,#+1550
+   \      0x2A8   0x....'....        BL       CLOCK_DisableClock
+    316              /* Set UART_CLK_PODF. */
+    317              CLOCK_SetDiv(kCLOCK_UartDiv, 0);
+   \      0x2AC   0x2100             MOVS     R1,#+0
+   \      0x2AE   0x....             LDR.N    R0,??DataTable6_45  ;; 0x8007e024
+   \      0x2B0   0x....'....        BL       CLOCK_SetDiv
+    318              /* Set Uart clock source. */
+    319              CLOCK_SetMux(kCLOCK_UartMux, 0);
+   \      0x2B4   0x2100             MOVS     R1,#+0
+   \      0x2B6   0x....             LDR.N    R0,??DataTable6_46  ;; 0x80002624
+   \      0x2B8   0x....'....        BL       CLOCK_SetMux
+    320              /* Disable LCDIF clock gate. */
+    321              CLOCK_DisableClock(kCLOCK_LcdPixel);
+   \      0x2BC   0xF240 0x300A      MOVW     R0,#+778
+   \      0x2C0   0x....'....        BL       CLOCK_DisableClock
+    322              /* Set LCDIF_PRED. */
+    323              CLOCK_SetDiv(kCLOCK_LcdifPreDiv, 1);
+   \      0x2C4   0x2101             MOVS     R1,#+1
+   \      0x2C6   0x....             LDR.N    R0,??DataTable6_47  ;; 0x8000ec38
+   \      0x2C8   0x....'....        BL       CLOCK_SetDiv
+    324              /* Set LCDIF_CLK_PODF. */
+    325              CLOCK_SetDiv(kCLOCK_LcdifDiv, 3);
+   \      0x2CC   0x2103             MOVS     R1,#+3
+   \      0x2CE   0x....             LDR.N    R0,??DataTable6_48  ;; 0x8000f718
+   \      0x2D0   0x....'....        BL       CLOCK_SetDiv
+    326              /* Set Lcdif pre clock source. */
+    327              CLOCK_SetMux(kCLOCK_LcdifPreMux, 5);
+   \      0x2D4   0x2105             MOVS     R1,#+5
+   \      0x2D6   0x....             LDR.N    R0,??DataTable6_49  ;; 0x8000ef38
+   \      0x2D8   0x....'....        BL       CLOCK_SetMux
+    328              /* Disable SPDIF clock gate. */
+    329              CLOCK_DisableClock(kCLOCK_Spdif);
+   \      0x2DC   0xF240 0x500E      MOVW     R0,#+1294
+   \      0x2E0   0x....'....        BL       CLOCK_DisableClock
+    330              /* Set SPDIF0_CLK_PRED. */
+    331              CLOCK_SetDiv(kCLOCK_Spdif0PreDiv, 1);
+   \      0x2E4   0x2101             MOVS     R1,#+1
+   \      0x2E6   0x....             LDR.N    R0,??DataTable6_50  ;; 0x8000f930
+   \      0x2E8   0x....'....        BL       CLOCK_SetDiv
+    332              /* Set SPDIF0_CLK_PODF. */
+    333              CLOCK_SetDiv(kCLOCK_Spdif0Div, 7);
+   \      0x2EC   0x2107             MOVS     R1,#+7
+   \      0x2EE   0x....             LDR.N    R0,??DataTable6_51  ;; 0x8000f630
+   \      0x2F0   0x....'....        BL       CLOCK_SetDiv
+    334              /* Set Spdif clock source. */
+    335              CLOCK_SetMux(kCLOCK_SpdifMux, 3);
+   \      0x2F4   0x2103             MOVS     R1,#+3
+   \      0x2F6   0x....             LDR.N    R0,??DataTable6_52  ;; 0x80007430
+   \      0x2F8   0x....'....        BL       CLOCK_SetMux
+    336              /* Disable Flexio1 clock gate. */
+    337              CLOCK_DisableClock(kCLOCK_Flexio1);
+   \      0x2FC   0xF240 0x5002      MOVW     R0,#+1282
+   \      0x300   0x....'....        BL       CLOCK_DisableClock
+    338              /* Set FLEXIO1_CLK_PRED. */
+    339              CLOCK_SetDiv(kCLOCK_Flexio1PreDiv, 1);
+   \      0x304   0x2101             MOVS     R1,#+1
+   \      0x306   0x....             LDR.N    R0,??DataTable6_53  ;; 0x8000ec30
+   \      0x308   0x....'....        BL       CLOCK_SetDiv
+    340              /* Set FLEXIO1_CLK_PODF. */
+    341              CLOCK_SetDiv(kCLOCK_Flexio1Div, 7);
+   \      0x30C   0x2107             MOVS     R1,#+7
+   \      0x30E   0x....             LDR.N    R0,??DataTable6_54  ;; 0x8000e930
+   \      0x310   0x....'....        BL       CLOCK_SetDiv
+    342              /* Set Flexio1 clock source. */
+    343              CLOCK_SetMux(kCLOCK_Flexio1Mux, 3);
+   \      0x314   0x2103             MOVS     R1,#+3
+   \      0x316   0x....             LDR.N    R0,??DataTable6_55  ;; 0x80006730
+   \      0x318   0x....'....        BL       CLOCK_SetMux
+    344              /* Disable Flexio2 clock gate. */
+    345              CLOCK_DisableClock(kCLOCK_Flexio2);
+   \      0x31C   0xF44F 0x7040      MOV      R0,#+768
+   \      0x320   0x....'....        BL       CLOCK_DisableClock
+    346              /* Set FLEXIO2_CLK_PRED. */
+    347              CLOCK_SetDiv(kCLOCK_Flexio2PreDiv, 1);
+   \      0x324   0x2101             MOVS     R1,#+1
+   \      0x326   0x....             LDR.N    R0,??DataTable6_56  ;; 0x8000e928
+   \      0x328   0x....'....        BL       CLOCK_SetDiv
+    348              /* Set FLEXIO2_CLK_PODF. */
+    349              CLOCK_SetDiv(kCLOCK_Flexio2Div, 7);
+   \      0x32C   0x2107             MOVS     R1,#+7
+   \      0x32E   0x....             LDR.N    R0,??DataTable6_57  ;; 0x8000f928
+   \      0x330   0x....'....        BL       CLOCK_SetDiv
+    350              /* Set Flexio2 clock source. */
+    351              CLOCK_SetMux(kCLOCK_Flexio2Mux, 3);
+   \      0x334   0x2103             MOVS     R1,#+3
+   \      0x336   0x....             LDR.N    R0,??DataTable6_58  ;; 0x80007320
+   \      0x338   0x....'....        BL       CLOCK_SetMux
+    352              /* Set Pll3 sw clock source. */
+    353              CLOCK_SetMux(kCLOCK_Pll3SwMux, 0);
+   \      0x33C   0x2100             MOVS     R1,#+0
+   \      0x33E   0x....             LDR.N    R0,??DataTable6_59  ;; 0x8000200c
+   \      0x340   0x....'....        BL       CLOCK_SetMux
+    354              /* Init ARM PLL. */
+    355              CLOCK_InitArmPll(&armPllConfig_BOARD_BootClockRUN);
+   \      0x344   0x....             LDR.N    R0,??DataTable6_60
+   \      0x346   0x....'....        BL       CLOCK_InitArmPll
+    356              /* In SDK projects, SDRAM (configured by SEMC) will be initialized in either debug script or dcd.
+    357               * With this macro SKIP_SYSCLK_INIT, system pll (selected to be SEMC source clock in SDK projects) will be left
+    358               * unchanged. Note: If another clock source is selected for SEMC, user may want to avoid changing that clock as
+    359               * well.*/
+    360          #ifndef SKIP_SYSCLK_INIT
+    361              /* Init System PLL. */
+    362              CLOCK_InitSysPll(&sysPllConfig_BOARD_BootClockRUN);
+   \      0x34A   0x....             LDR.N    R0,??DataTable6_61
+   \      0x34C   0x....'....        BL       CLOCK_InitSysPll
+    363              /* Init System pfd0. */
+    364              CLOCK_InitSysPfd(kCLOCK_Pfd0, 27);
+   \      0x350   0x211B             MOVS     R1,#+27
+   \      0x352   0x2000             MOVS     R0,#+0
+   \      0x354   0x....'....        BL       CLOCK_InitSysPfd
+    365              /* Init System pfd1. */
+    366              CLOCK_InitSysPfd(kCLOCK_Pfd1, 16);
+   \      0x358   0x2110             MOVS     R1,#+16
+   \      0x35A   0x2001             MOVS     R0,#+1
+   \      0x35C   0x....'....        BL       CLOCK_InitSysPfd
+    367              /* Init System pfd2. */
+    368              CLOCK_InitSysPfd(kCLOCK_Pfd2, 24);
+   \      0x360   0x2118             MOVS     R1,#+24
+   \      0x362   0x2002             MOVS     R0,#+2
+   \      0x364   0x....'....        BL       CLOCK_InitSysPfd
+    369              /* Init System pfd3. */
+    370              CLOCK_InitSysPfd(kCLOCK_Pfd3, 16);
+   \      0x368   0x2110             MOVS     R1,#+16
+   \      0x36A   0x2003             MOVS     R0,#+3
+   \      0x36C   0x....'....        BL       CLOCK_InitSysPfd
+    371              /* Disable pfd offset. */
+    372              CCM_ANALOG->PLL_SYS &= ~CCM_ANALOG_PLL_SYS_PFD_OFFSET_EN_MASK;
+   \      0x370   0x....             LDR.N    R0,??DataTable6_62  ;; 0x400d8030
+   \      0x372   0x6801             LDR      R1,[R0, #+0]
+   \      0x374   0xF421 0x2180      BIC      R1,R1,#0x40000
+   \      0x378   0x6001             STR      R1,[R0, #+0]
+    373          #endif
+    374              /* In SDK projects, external flash (configured by FLEXSPI) will be initialized by dcd.
+    375               * With this macro XIP_EXTERNAL_FLASH, usb1 pll (selected to be FLEXSPI clock source in SDK projects) will be left
+    376               * unchanged. Note: If another clock source is selected for FLEXSPI, user may want to avoid changing that clock as
+    377               * well.*/
+    378          #if !(defined(XIP_EXTERNAL_FLASH) && (XIP_EXTERNAL_FLASH == 1))
+    379              /* Init Usb1 PLL. */
+    380              CLOCK_InitUsb1Pll(&usb1PllConfig_BOARD_BootClockRUN);
+    381              /* Init Usb1 pfd0. */
+    382              CLOCK_InitUsb1Pfd(kCLOCK_Pfd0, 33);
+    383              /* Init Usb1 pfd1. */
+    384              CLOCK_InitUsb1Pfd(kCLOCK_Pfd1, 16);
+    385              /* Init Usb1 pfd2. */
+    386              CLOCK_InitUsb1Pfd(kCLOCK_Pfd2, 17);
+    387              /* Init Usb1 pfd3. */
+    388              CLOCK_InitUsb1Pfd(kCLOCK_Pfd3, 19);
+    389              /* Disable Usb1 PLL output for USBPHY1. */
+    390              CCM_ANALOG->PLL_USB1 &= ~CCM_ANALOG_PLL_USB1_EN_USB_CLKS_MASK;
+    391          #endif
+    392              /* DeInit Audio PLL. */
+    393              CLOCK_DeinitAudioPll();
+   \      0x37A   0x....'....        BL       CLOCK_DeinitAudioPll
+    394              /* Bypass Audio PLL. */
+    395              CLOCK_SetPllBypass(CCM_ANALOG, kCLOCK_PllAudio, 1);
+   \      0x37E   0x....             LDR.N    R6,??DataTable6_63  ;; 0x400d8000
+   \      0x380   0x2201             MOVS     R2,#+1
+   \      0x382   0x....             LDR.N    R1,??DataTable6_64  ;; 0x70000d
+   \      0x384   0x4630             MOV      R0,R6
+   \      0x386   0x....'....        BL       CLOCK_SetPllBypass
+    396              /* Set divider for Audio PLL. */
+    397              CCM_ANALOG->MISC2 &= ~CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
+   \      0x38A   0x....             LDR.N    R7,??DataTable6_65  ;; 0x400d8170
+   \      0x38C   0x6838             LDR      R0,[R7, #+0]
+   \      0x38E   0xF420 0x4000      BIC      R0,R0,#0x8000
+   \      0x392   0x6038             STR      R0,[R7, #+0]
+    398              CCM_ANALOG->MISC2 &= ~CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK;
+   \      0x394   0x6838             LDR      R0,[R7, #+0]
+   \      0x396   0xF420 0x0000      BIC      R0,R0,#0x800000
+   \      0x39A   0x6038             STR      R0,[R7, #+0]
+    399              /* Enable Audio PLL output. */
+    400              CCM_ANALOG->PLL_AUDIO |= CCM_ANALOG_PLL_AUDIO_ENABLE_MASK;
+   \      0x39C   0x....             LDR.N    R0,??DataTable6_66  ;; 0x400d8070
+   \      0x39E   0x6801             LDR      R1,[R0, #+0]
+   \      0x3A0   0xF441 0x5100      ORR      R1,R1,#0x2000
+   \      0x3A4   0x6001             STR      R1,[R0, #+0]
+    401              /* DeInit Video PLL. */
+    402              CLOCK_DeinitVideoPll();
+   \      0x3A6   0x....'....        BL       CLOCK_DeinitVideoPll
+    403              /* Bypass Video PLL. */
+    404              CCM_ANALOG->PLL_VIDEO |= CCM_ANALOG_PLL_VIDEO_BYPASS_MASK;
+   \      0x3AA   0x....             LDR.N    R0,??DataTable6_67  ;; 0x400d80a0
+   \      0x3AC   0x6801             LDR      R1,[R0, #+0]
+   \      0x3AE   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \      0x3B2   0x6001             STR      R1,[R0, #+0]
+    405              /* Set divider for Video PLL. */
+    406              CCM_ANALOG->MISC2 = (CCM_ANALOG->MISC2 & (~CCM_ANALOG_MISC2_VIDEO_DIV_MASK)) | CCM_ANALOG_MISC2_VIDEO_DIV(0);
+   \      0x3B4   0x6839             LDR      R1,[R7, #+0]
+   \      0x3B6   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \      0x3BA   0x6039             STR      R1,[R7, #+0]
+    407              /* Enable Video PLL output. */
+    408              CCM_ANALOG->PLL_VIDEO |= CCM_ANALOG_PLL_VIDEO_ENABLE_MASK;
+   \      0x3BC   0x6801             LDR      R1,[R0, #+0]
+   \      0x3BE   0xF441 0x5100      ORR      R1,R1,#0x2000
+   \      0x3C2   0x6001             STR      R1,[R0, #+0]
+    409              /* DeInit Enet PLL. */
+    410              CLOCK_DeinitEnetPll();
+   \      0x3C4   0x....'....        BL       CLOCK_DeinitEnetPll
+    411              /* Bypass Enet PLL. */
+    412              CLOCK_SetPllBypass(CCM_ANALOG, kCLOCK_PllEnet, 1);
+   \      0x3C8   0x2201             MOVS     R2,#+1
+   \      0x3CA   0x....             LDR.N    R1,??DataTable6_68  ;; 0xe0000d
+   \      0x3CC   0x4630             MOV      R0,R6
+   \      0x3CE   0x....'....        BL       CLOCK_SetPllBypass
+    413              /* Set Enet output divider. */
+    414              CCM_ANALOG->PLL_ENET =
+    415                  (CCM_ANALOG->PLL_ENET & (~CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK)) | CCM_ANALOG_PLL_ENET_DIV_SELECT(1);
+   \      0x3D2   0x....             LDR.N    R0,??DataTable6_69  ;; 0x400d80e0
+   \      0x3D4   0x6801             LDR      R1,[R0, #+0]
+   \      0x3D6   0x0889             LSRS     R1,R1,#+2
+   \      0x3D8   0x0089             LSLS     R1,R1,#+2
+   \      0x3DA   0xF041 0x0101      ORR      R1,R1,#0x1
+   \      0x3DE   0x6001             STR      R1,[R0, #+0]
+    416              /* Enable Enet output. */
+    417              CCM_ANALOG->PLL_ENET |= CCM_ANALOG_PLL_ENET_ENABLE_MASK;
+   \      0x3E0   0x6801             LDR      R1,[R0, #+0]
+   \      0x3E2   0xF441 0x5100      ORR      R1,R1,#0x2000
+   \      0x3E6   0x6001             STR      R1,[R0, #+0]
+    418              /* Enable Enet25M output. */
+    419              CCM_ANALOG->PLL_ENET |= CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK;
+   \      0x3E8   0x6801             LDR      R1,[R0, #+0]
+   \      0x3EA   0xF441 0x1100      ORR      R1,R1,#0x200000
+   \      0x3EE   0x6001             STR      R1,[R0, #+0]
+    420              /* DeInit Usb2 PLL. */
+    421              CLOCK_DeinitUsb2Pll();
+   \      0x3F0   0x....'....        BL       CLOCK_DeinitUsb2Pll
+    422              /* Bypass Usb2 PLL. */
+    423              CLOCK_SetPllBypass(CCM_ANALOG, kCLOCK_PllUsb2, 1);
+   \      0x3F4   0x2201             MOVS     R2,#+1
+   \      0x3F6   0x....             LDR.N    R1,??DataTable6_70  ;; 0x20000d
+   \      0x3F8   0x4630             MOV      R0,R6
+   \      0x3FA   0x....'....        BL       CLOCK_SetPllBypass
+    424              /* Enable Usb2 PLL output. */
+    425              CCM_ANALOG->PLL_USB2 |= CCM_ANALOG_PLL_USB2_ENABLE_MASK;
+   \      0x3FE   0x....             LDR.N    R0,??DataTable6_71  ;; 0x400d8020
+   \      0x400   0x6801             LDR      R1,[R0, #+0]
+   \      0x402   0xF441 0x5100      ORR      R1,R1,#0x2000
+   \      0x406   0x6001             STR      R1,[R0, #+0]
+    426              /* Set preperiph clock source. */
+    427              CLOCK_SetMux(kCLOCK_PrePeriphMux, 3);
+   \      0x408   0x2103             MOVS     R1,#+3
+   \      0x40A   0x....             LDR.N    R0,??DataTable6_72  ;; 0x80007218
+   \      0x40C   0x....'....        BL       CLOCK_SetMux
+    428              /* Set periph clock source. */
+    429              CLOCK_SetMux(kCLOCK_PeriphMux, 0);
+   \      0x410   0x2100             MOVS     R1,#+0
+   \      0x412   0x4628             MOV      R0,R5
+   \      0x414   0x....'....        BL       CLOCK_SetMux
+    430              /* Set periph clock2 clock source. */
+    431              CLOCK_SetMux(kCLOCK_PeriphClk2Mux, 0);
+   \      0x418   0x2100             MOVS     R1,#+0
+   \      0x41A   0x4620             MOV      R0,R4
+   \      0x41C   0x....'....        BL       CLOCK_SetMux
+    432              /* Set per clock source. */
+    433              CLOCK_SetMux(kCLOCK_PerclkMux, 0);
+   \      0x420   0x2100             MOVS     R1,#+0
+   \      0x422   0x....             LDR.N    R0,??DataTable6_73  ;; 0x8000261c
+   \      0x424   0x....'....        BL       CLOCK_SetMux
+    434              /* Set lvds1 clock source. */
+    435              CCM_ANALOG->MISC1 =
+    436                  (CCM_ANALOG->MISC1 & (~CCM_ANALOG_MISC1_LVDS1_CLK_SEL_MASK)) | CCM_ANALOG_MISC1_LVDS1_CLK_SEL(0);
+   \      0x428   0x....             LDR.N    R0,??DataTable6_74  ;; 0x400d8160
+   \      0x42A   0x6801             LDR      R1,[R0, #+0]
+   \      0x42C   0x0949             LSRS     R1,R1,#+5
+   \      0x42E   0x0149             LSLS     R1,R1,#+5
+   \      0x430   0x6001             STR      R1,[R0, #+0]
+    437              /* Set clock out1 divider. */
+    438              CCM->CCOSR = (CCM->CCOSR & (~CCM_CCOSR_CLKO1_DIV_MASK)) | CCM_CCOSR_CLKO1_DIV(0);
+   \      0x432   0x....             LDR.N    R0,??DataTable6_75  ;; 0x400fc060
+   \      0x434   0x6801             LDR      R1,[R0, #+0]
+   \      0x436   0xF021 0x0170      BIC      R1,R1,#0x70
+   \      0x43A   0x6001             STR      R1,[R0, #+0]
+    439              /* Set clock out1 source. */
+    440              CCM->CCOSR = (CCM->CCOSR & (~CCM_CCOSR_CLKO1_SEL_MASK)) | CCM_CCOSR_CLKO1_SEL(1);
+   \      0x43C   0x6801             LDR      R1,[R0, #+0]
+   \      0x43E   0x0909             LSRS     R1,R1,#+4
+   \      0x440   0x0109             LSLS     R1,R1,#+4
+   \      0x442   0xF041 0x0101      ORR      R1,R1,#0x1
+   \      0x446   0x6001             STR      R1,[R0, #+0]
+    441              /* Set clock out2 divider. */
+    442              CCM->CCOSR = (CCM->CCOSR & (~CCM_CCOSR_CLKO2_DIV_MASK)) | CCM_CCOSR_CLKO2_DIV(0);
+   \      0x448   0x6801             LDR      R1,[R0, #+0]
+   \      0x44A   0xF421 0x0160      BIC      R1,R1,#0xE00000
+   \      0x44E   0x6001             STR      R1,[R0, #+0]
+    443              /* Set clock out2 source. */
+    444              CCM->CCOSR = (CCM->CCOSR & (~CCM_CCOSR_CLKO2_SEL_MASK)) | CCM_CCOSR_CLKO2_SEL(18);
+   \      0x450   0x6801             LDR      R1,[R0, #+0]
+   \      0x452   0xF421 0x11F8      BIC      R1,R1,#0x1F0000
+   \      0x456   0xF441 0x1190      ORR      R1,R1,#0x120000
+   \      0x45A   0x6001             STR      R1,[R0, #+0]
+    445              /* Set clock out1 drives clock out1. */
+    446              CCM->CCOSR &= ~CCM_CCOSR_CLK_OUT_SEL_MASK;
+   \      0x45C   0x6801             LDR      R1,[R0, #+0]
+   \      0x45E   0xF421 0x7180      BIC      R1,R1,#0x100
+   \      0x462   0x6001             STR      R1,[R0, #+0]
+    447              /* Disable clock out1. */
+    448              CCM->CCOSR &= ~CCM_CCOSR_CLKO1_EN_MASK;
+   \      0x464   0x6801             LDR      R1,[R0, #+0]
+   \      0x466   0xF021 0x0180      BIC      R1,R1,#0x80
+   \      0x46A   0x6001             STR      R1,[R0, #+0]
+    449              /* Disable clock out2. */
+    450              CCM->CCOSR &= ~CCM_CCOSR_CLKO2_EN_MASK;
+   \      0x46C   0x6801             LDR      R1,[R0, #+0]
+   \      0x46E   0xF021 0x7180      BIC      R1,R1,#0x1000000
+   \      0x472   0x6001             STR      R1,[R0, #+0]
+    451              /* Set SAI1 MCLK1 clock source. */
+    452              IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk1Sel, 0);
+   \      0x474   0x....             LDR.N    R4,??DataTable6_76  ;; 0x400ac000
+   \      0x476   0x2200             MOVS     R2,#+0
+   \      0x478   0x4611             MOV      R1,R2
+   \      0x47A   0x4620             MOV      R0,R4
+   \      0x47C   0x....'....        BL       IOMUXC_SetSaiMClkClockSource
+    453              /* Set SAI1 MCLK2 clock source. */
+    454              IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk2Sel, 0);
+   \      0x480   0x2200             MOVS     R2,#+0
+   \      0x482   0x2103             MOVS     R1,#+3
+   \      0x484   0x4620             MOV      R0,R4
+   \      0x486   0x....'....        BL       IOMUXC_SetSaiMClkClockSource
+    455              /* Set SAI1 MCLK3 clock source. */
+    456              IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI1MClk3Sel, 0);
+   \      0x48A   0x2200             MOVS     R2,#+0
+   \      0x48C   0x2106             MOVS     R1,#+6
+   \      0x48E   0x4620             MOV      R0,R4
+   \      0x490   0x....'....        BL       IOMUXC_SetSaiMClkClockSource
+    457              /* Set SAI2 MCLK3 clock source. */
+    458              IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI2MClk3Sel, 0);
+   \      0x494   0x2200             MOVS     R2,#+0
+   \      0x496   0x2108             MOVS     R1,#+8
+   \      0x498   0x4620             MOV      R0,R4
+   \      0x49A   0x....'....        BL       IOMUXC_SetSaiMClkClockSource
+    459              /* Set SAI3 MCLK3 clock source. */
+    460              IOMUXC_SetSaiMClkClockSource(IOMUXC_GPR, kIOMUXC_GPR_SAI3MClk3Sel, 0);
+   \      0x49E   0x2200             MOVS     R2,#+0
+   \      0x4A0   0x210A             MOVS     R1,#+10
+   \      0x4A2   0x4620             MOV      R0,R4
+   \      0x4A4   0x....'....        BL       IOMUXC_SetSaiMClkClockSource
+    461              /* Set MQS configuration. */
+    462              IOMUXC_MQSConfig(IOMUXC_GPR, kIOMUXC_MqsPwmOverSampleRate32, 0);
+   \      0x4A8   0x2200             MOVS     R2,#+0
+   \      0x4AA   0x4611             MOV      R1,R2
+   \      0x4AC   0x4620             MOV      R0,R4
+   \      0x4AE   0x....'....        BL       IOMUXC_MQSConfig
+    463              /* Set ENET Tx clock source. */
+    464              IOMUXC_EnableMode(IOMUXC_GPR, kIOMUXC_GPR_ENET1RefClkMode, false);
+   \      0x4B2   0x2200             MOVS     R2,#+0
+   \      0x4B4   0xF44F 0x5100      MOV      R1,#+8192
+   \      0x4B8   0x4620             MOV      R0,R4
+   \      0x4BA   0x....'....        BL       IOMUXC_EnableMode
+    465              /* Set GPT1 High frequency reference clock source. */
+    466              IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT1_MASK;
+   \      0x4BE   0x....             LDR.N    R0,??DataTable6_77  ;; 0x400ac014
+   \      0x4C0   0x6801             LDR      R1,[R0, #+0]
+   \      0x4C2   0xF021 0x5180      BIC      R1,R1,#0x10000000
+   \      0x4C6   0x6001             STR      R1,[R0, #+0]
+    467              /* Set GPT2 High frequency reference clock source. */
+    468              IOMUXC_GPR->GPR5 &= ~IOMUXC_GPR_GPR5_VREF_1M_CLK_GPT2_MASK;
+   \      0x4C8   0x6801             LDR      R1,[R0, #+0]
+   \      0x4CA   0xF021 0x5100      BIC      R1,R1,#0x20000000
+   \      0x4CE   0x6001             STR      R1,[R0, #+0]
+    469              /* Set SystemCoreClock variable. */
+    470              SystemCoreClock = BOARD_BOOTCLOCKRUN_CORE_CLOCK;
+   \      0x4D0   0x....             LDR.N    R0,??DataTable6_78  ;; 0x23c34600
+   \      0x4D2   0x....             LDR.N    R1,??DataTable6_79
+   \      0x4D4   0x6008             STR      R0,[R1, #+0]
+    471          }
+   \      0x4D6   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \        0x0   0x400F'C000        DC32     0x400fc000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \        0x0   0x400F'C048        DC32     0x400fc048
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_4:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_5:
+   \        0x0   0x400F'C068        DC32     0x400fc068
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_6:
+   \        0x0   0x....'....        DC32     g_xtalFreq
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_7:
+   \        0x0   0x....'....        DC32     g_rtcXtalFreq
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_8:
+   \        0x0   0xFB00'FFFF        DC32     0xfb00ffff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_9:
+   \        0x0   0x400D'82C0        DC32     0x400d82c0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_10:
+   \        0x0   0x016E'3600        DC32     0x16e3600
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_11:
+   \        0x0   0x8000'6C18        DC32     0x80006c18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_12:
+   \        0x0   0x1400'3914        DC32     0x14003914
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_13:
+   \        0x0   0x4008'000C        DC32     0x4008000c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_14:
+   \        0x0   0x4008'0000        DC32     0x40080000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_15:
+   \        0x0   0x0400'EA14        DC32     0x400ea14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_16:
+   \        0x0   0x8000'6814        DC32     0x80006814
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_17:
+   \        0x0   0x4000'E010        DC32     0x4000e010
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_18:
+   \        0x0   0x8000'FB14        DC32     0x8000fb14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_19:
+   \        0x0   0x8007'E01C        DC32     0x8007e01c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_20:
+   \        0x0   0x8000'EB24        DC32     0x8000eb24
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_21:
+   \        0x0   0x8000'301C        DC32     0x8000301c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_22:
+   \        0x0   0x8000'F024        DC32     0x8000f024
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_23:
+   \        0x0   0x8000'311C        DC32     0x8000311c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_24:
+   \        0x0   0x8000'2714        DC32     0x80002714
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_25:
+   \        0x0   0x8000'2614        DC32     0x80002614
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_26:
+   \        0x0   0x8000'EB3C        DC32     0x8000eb3c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_27:
+   \        0x0   0x8000'693C        DC32     0x8000693c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_28:
+   \        0x0   0x8000'FA18        DC32     0x8000fa18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_29:
+   \        0x0   0x8000'6418        DC32     0x80006418
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_30:
+   \        0x0   0x8000'7924        DC32     0x80007924
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_31:
+   \        0x0   0x8000'6E18        DC32     0x80006e18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_32:
+   \        0x0   0x8000'E628        DC32     0x8000e628
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_33:
+   \        0x0   0x8007'E028        DC32     0x8007e028
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_34:
+   \        0x0   0x8000'6A1C        DC32     0x80006a1c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_35:
+   \        0x0   0x8000'E62C        DC32     0x8000e62c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_36:
+   \        0x0   0x8007'E02C        DC32     0x8007e02c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_37:
+   \        0x0   0x8000'6C1C        DC32     0x80006c1c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_38:
+   \        0x0   0x8000'F628        DC32     0x8000f628
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_39:
+   \        0x0   0x8007'F028        DC32     0x8007f028
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_40:
+   \        0x0   0x8000'6E1C        DC32     0x80006e1c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_41:
+   \        0x0   0x8007'F338        DC32     0x8007f338
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_42:
+   \        0x0   0x8000'3238        DC32     0x80003238
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_43:
+   \        0x0   0x8007'E220        DC32     0x8007e220
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_44:
+   \        0x0   0x8000'6820        DC32     0x80006820
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_45:
+   \        0x0   0x8007'E024        DC32     0x8007e024
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_46:
+   \        0x0   0x8000'2624        DC32     0x80002624
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_47:
+   \        0x0   0x8000'EC38        DC32     0x8000ec38
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_48:
+   \        0x0   0x8000'F718        DC32     0x8000f718
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_49:
+   \        0x0   0x8000'EF38        DC32     0x8000ef38
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_50:
+   \        0x0   0x8000'F930        DC32     0x8000f930
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_51:
+   \        0x0   0x8000'F630        DC32     0x8000f630
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_52:
+   \        0x0   0x8000'7430        DC32     0x80007430
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_53:
+   \        0x0   0x8000'EC30        DC32     0x8000ec30
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_54:
+   \        0x0   0x8000'E930        DC32     0x8000e930
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_55:
+   \        0x0   0x8000'6730        DC32     0x80006730
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_56:
+   \        0x0   0x8000'E928        DC32     0x8000e928
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_57:
+   \        0x0   0x8000'F928        DC32     0x8000f928
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_58:
+   \        0x0   0x8000'7320        DC32     0x80007320
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_59:
+   \        0x0   0x8000'200C        DC32     0x8000200c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_60:
+   \        0x0   0x....'....        DC32     armPllConfig_BOARD_BootClockRUN
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_61:
+   \        0x0   0x....'....        DC32     sysPllConfig_BOARD_BootClockRUN
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_62:
+   \        0x0   0x400D'8030        DC32     0x400d8030
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_63:
+   \        0x0   0x400D'8000        DC32     0x400d8000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_64:
+   \        0x0   0x0070'000D        DC32     0x70000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_65:
+   \        0x0   0x400D'8170        DC32     0x400d8170
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_66:
+   \        0x0   0x400D'8070        DC32     0x400d8070
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_67:
+   \        0x0   0x400D'80A0        DC32     0x400d80a0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_68:
+   \        0x0   0x00E0'000D        DC32     0xe0000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_69:
+   \        0x0   0x400D'80E0        DC32     0x400d80e0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_70:
+   \        0x0   0x0020'000D        DC32     0x20000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_71:
+   \        0x0   0x400D'8020        DC32     0x400d8020
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_72:
+   \        0x0   0x8000'7218        DC32     0x80007218
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_73:
+   \        0x0   0x8000'261C        DC32     0x8000261c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_74:
+   \        0x0   0x400D'8160        DC32     0x400d8160
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_75:
+   \        0x0   0x400F'C060        DC32     0x400fc060
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_76:
+   \        0x0   0x400A'C000        DC32     0x400ac000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_77:
+   \        0x0   0x400A'C014        DC32     0x400ac014
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_78:
+   \        0x0   0x23C3'4600        DC32     0x23c34600
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_79:
+   \        0x0   0x....'....        DC32     SystemCoreClock
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x62 0x75          DC8 "busyShift <= (0x20U)"
+   \              0x73 0x79    
+   \              0x53 0x68    
+   \              0x69 0x66    
+   \              0x74 0x20    
+   \              0x3C 0x3D    
+   \              0x20 0x28    
+   \              0x30 0x78    
+   \              0x32 0x30    
+   \              0x55 0x29    
+   \              0x00         
+   \       0x15   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x43 0x3A          DC8 43H, 3AH, 5CH, 44H, 65H, 76H, 65H, 6CH
+   \              0x5C 0x44    
+   \              0x65 0x76    
+   \              0x65 0x6C    
+   \        0x8   0x6F 0x70          DC8 6FH, 70H, 6DH, 65H, 6EH, 74H, 5CH, 67H
+   \              0x6D 0x65    
+   \              0x6E 0x74    
+   \              0x5C 0x67    
+   \       0x10   0x7A 0x6B          DC8 7AH, 6BH, 63H, 5FH, 73H, 6DH, 61H, 72H
+   \              0x63 0x5F    
+   \              0x73 0x6D    
+   \              0x61 0x72    
+   \       0x18   0x74 0x5F          DC8 74H, 5FH, 6EH, 62H, 69H, 6FH, 74H, 5CH
+   \              0x6E 0x62    
+   \              0x69 0x6F    
+   \              0x74 0x5C    
+   \       0x20   0x64 0x72          DC8 64H, 72H, 69H, 76H, 65H, 72H, 73H, 5CH
+   \              0x69 0x76    
+   \              0x65 0x72    
+   \              0x73 0x5C    
+   \       0x28   0x66 0x73          DC8 66H, 73H, 6CH, 5FH, 63H, 6CH, 6FH, 63H
+   \              0x6C 0x5F    
+   \              0x63 0x6C    
+   \              0x6F 0x63    
+   \       0x30   0x6B 0x2E          DC8 6BH, 2EH, 68H, 0
+   \              0x68 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x69 0x6E          DC8 "index <= 6"
+   \              0x64 0x65    
+   \              0x78 0x20    
+   \              0x3C 0x3D    
+   \              0x20 0x36    
+   \              0x00         
+   \        0xB   0x00               DC8 0
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      24   BOARD_BootClockRUN
+        24   -> CLOCK_DeinitAudioPll
+        24   -> CLOCK_DeinitEnetPll
+        24   -> CLOCK_DeinitUsb2Pll
+        24   -> CLOCK_DeinitVideoPll
+        24   -> CLOCK_DisableClock
+        24   -> CLOCK_InitArmPll
+        24   -> CLOCK_InitExternalClk
+        24   -> CLOCK_InitRcOsc24M
+        24   -> CLOCK_InitSysPfd
+        24   -> CLOCK_InitSysPll
+        24   -> CLOCK_SetDiv
+        24   -> CLOCK_SetMux
+        24   -> CLOCK_SetPllBypass
+        24   -> CLOCK_SetRtcXtalFreq
+        24   -> CLOCK_SetXtalFreq
+        24   -> CLOCK_SwitchOsc
+        24   -> IOMUXC_EnableMode
+        24   -> IOMUXC_MQSConfig
+        24   -> IOMUXC_SetSaiMClkClockSource
+       0   BOARD_InitBootClocks
+         0   -> BOARD_BootClockRUN
+      16   CLOCK_ControlGate
+        16   -> __aeabi_assert
+        16   -> __iar_EmptyStepPoint
+       0   CLOCK_DisableClock
+         0   -> CLOCK_ControlGate
+      16   CLOCK_SetDiv
+        16   -> __aeabi_assert
+        16   -> __iar_EmptyStepPoint
+      16   CLOCK_SetMux
+        16   -> __aeabi_assert
+        16   -> __iar_EmptyStepPoint
+       0   CLOCK_SetPllBypass
+       0   CLOCK_SetRtcXtalFreq
+       0   CLOCK_SetXtalFreq
+       0   IOMUXC_EnableMode
+       4   IOMUXC_MQSConfig
+       4   IOMUXC_SetSaiMClkClockSource
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_10
+       4  ??DataTable6_11
+       4  ??DataTable6_12
+       4  ??DataTable6_13
+       4  ??DataTable6_14
+       4  ??DataTable6_15
+       4  ??DataTable6_16
+       4  ??DataTable6_17
+       4  ??DataTable6_18
+       4  ??DataTable6_19
+       4  ??DataTable6_2
+       4  ??DataTable6_20
+       4  ??DataTable6_21
+       4  ??DataTable6_22
+       4  ??DataTable6_23
+       4  ??DataTable6_24
+       4  ??DataTable6_25
+       4  ??DataTable6_26
+       4  ??DataTable6_27
+       4  ??DataTable6_28
+       4  ??DataTable6_29
+       4  ??DataTable6_3
+       4  ??DataTable6_30
+       4  ??DataTable6_31
+       4  ??DataTable6_32
+       4  ??DataTable6_33
+       4  ??DataTable6_34
+       4  ??DataTable6_35
+       4  ??DataTable6_36
+       4  ??DataTable6_37
+       4  ??DataTable6_38
+       4  ??DataTable6_39
+       4  ??DataTable6_4
+       4  ??DataTable6_40
+       4  ??DataTable6_41
+       4  ??DataTable6_42
+       4  ??DataTable6_43
+       4  ??DataTable6_44
+       4  ??DataTable6_45
+       4  ??DataTable6_46
+       4  ??DataTable6_47
+       4  ??DataTable6_48
+       4  ??DataTable6_49
+       4  ??DataTable6_5
+       4  ??DataTable6_50
+       4  ??DataTable6_51
+       4  ??DataTable6_52
+       4  ??DataTable6_53
+       4  ??DataTable6_54
+       4  ??DataTable6_55
+       4  ??DataTable6_56
+       4  ??DataTable6_57
+       4  ??DataTable6_58
+       4  ??DataTable6_59
+       4  ??DataTable6_6
+       4  ??DataTable6_60
+       4  ??DataTable6_61
+       4  ??DataTable6_62
+       4  ??DataTable6_63
+       4  ??DataTable6_64
+       4  ??DataTable6_65
+       4  ??DataTable6_66
+       4  ??DataTable6_67
+       4  ??DataTable6_68
+       4  ??DataTable6_69
+       4  ??DataTable6_7
+       4  ??DataTable6_70
+       4  ??DataTable6_71
+       4  ??DataTable6_72
+       4  ??DataTable6_73
+       4  ??DataTable6_74
+       4  ??DataTable6_75
+       4  ??DataTable6_76
+       4  ??DataTable6_77
+       4  ??DataTable6_78
+       4  ??DataTable6_79
+       4  ??DataTable6_8
+       4  ??DataTable6_9
+      24  ?_0
+      52  ?_1
+      12  ?_2
+    1240  BOARD_BootClockRUN
+       2  BOARD_InitBootClocks
+      64  CLOCK_ControlGate
+       4  CLOCK_DisableClock
+     104  CLOCK_SetDiv
+     104  CLOCK_SetMux
+      32  CLOCK_SetPllBypass
+       8  CLOCK_SetRtcXtalFreq
+       8  CLOCK_SetXtalFreq
+      24  IOMUXC_EnableMode
+      28  IOMUXC_MQSConfig
+      56  IOMUXC_SetSaiMClkClockSource
+       8  armPllConfig_BOARD_BootClockRUN
+      20  sysPllConfig_BOARD_BootClockRUN
+       2  usb1PllConfig_BOARD_BootClockRUN
+
+ 
+   118 bytes in section .rodata
+ 1 994 bytes in section .text
+ 
+ 1 994 bytes of CODE  memory
+   118 bytes of CONST memory
+
+Errors: none
+Warnings: none

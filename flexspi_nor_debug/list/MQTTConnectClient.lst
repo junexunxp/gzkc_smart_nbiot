@@ -1,0 +1,629 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:22:01
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\MQTTConnectClient.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWA863.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\MQTTConnectClient.c -D
+#        DEBUG -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1
+#        -D CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE
+#        -D "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\MQTTConnectClient.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\MQTTConnectClient.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\MQTTConnectClient.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          #include "MQTTPacket.h"
+      6          
+      7          #include <string.h>
+      8          
+      9          /**
+     10            * Determines the length of the MQTT connect packet that would be produced using the supplied connect options.
+     11            * @param options the options to be used to build the connect packet
+     12            * @return the length of buffer needed to contain the serialized version of the packet
+     13            */
+
+   \                                 In section .text, align 2, keep-with-next
+     14          int MQTTSerialize_connectLength(MQTTPacket_connectData *options)
+     15          {
+   \                     MQTTSerialize_connectLength: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+     16              int len = 0;
+   \        0x4   0x2500             MOVS     R5,#+0
+     17          
+     18          
+     19              if (options->MQTTVersion == 3) {
+   \        0x6   0x7A20             LDRB     R0,[R4, #+8]
+   \        0x8   0x2803             CMP      R0,#+3
+   \        0xA   0xD101             BNE.N    ??MQTTSerialize_connectLength_0
+     20                  len = 12;    /* variable depending on MQTT or MQIsdp */
+   \        0xC   0x250C             MOVS     R5,#+12
+   \        0xE   0xE002             B.N      ??MQTTSerialize_connectLength_1
+     21              } else if (options->MQTTVersion == 4) {
+   \                     ??MQTTSerialize_connectLength_0: (+1)
+   \       0x10   0x2804             CMP      R0,#+4
+   \       0x12   0xD100             BNE.N    ??MQTTSerialize_connectLength_1
+     22                  len = 10;
+   \       0x14   0x250A             MOVS     R5,#+10
+     23              }
+     24          
+     25              len += MQTTstrlen(options->clientID) + 2;
+   \                     ??MQTTSerialize_connectLength_1: (+1)
+   \       0x16   0xF104 0x000C      ADD      R0,R4,#+12
+   \       0x1A   0xC807             LDM      R0,{R0-R2}
+   \       0x1C   0x....'....        BL       MQTTstrlen
+   \       0x20   0x1C80             ADDS     R0,R0,#+2
+   \       0x22   0x1945             ADDS     R5,R0,R5
+     26              if (options->willFlag) {
+   \       0x24   0x7EE0             LDRB     R0,[R4, #+27]
+   \       0x26   0x2800             CMP      R0,#+0
+   \       0x28   0xD00D             BEQ.N    ??MQTTSerialize_connectLength_2
+     27                  len += MQTTstrlen(options->will.topicName) + 2 + MQTTstrlen(options->will.message) + 2;
+   \       0x2A   0xF104 0x0024      ADD      R0,R4,#+36
+   \       0x2E   0xC807             LDM      R0,{R0-R2}
+   \       0x30   0x....'....        BL       MQTTstrlen
+   \       0x34   0x4606             MOV      R6,R0
+   \       0x36   0xF104 0x0030      ADD      R0,R4,#+48
+   \       0x3A   0xC807             LDM      R0,{R0-R2}
+   \       0x3C   0x....'....        BL       MQTTstrlen
+   \       0x40   0x1980             ADDS     R0,R0,R6
+   \       0x42   0x1D00             ADDS     R0,R0,#+4
+   \       0x44   0x1945             ADDS     R5,R0,R5
+     28              }
+     29              if (options->username.cstring || options->username.lenstring.data) {
+   \                     ??MQTTSerialize_connectLength_2: (+1)
+   \       0x46   0x6C20             LDR      R0,[R4, #+64]
+   \       0x48   0x2800             CMP      R0,#+0
+   \       0x4A   0xD102             BNE.N    ??MQTTSerialize_connectLength_3
+   \       0x4C   0x6CA0             LDR      R0,[R4, #+72]
+   \       0x4E   0x2800             CMP      R0,#+0
+   \       0x50   0xD006             BEQ.N    ??MQTTSerialize_connectLength_4
+     30                  len += MQTTstrlen(options->username) + 2;
+   \                     ??MQTTSerialize_connectLength_3: (+1)
+   \       0x52   0xF104 0x0040      ADD      R0,R4,#+64
+   \       0x56   0xC807             LDM      R0,{R0-R2}
+   \       0x58   0x....'....        BL       MQTTstrlen
+   \       0x5C   0x1C80             ADDS     R0,R0,#+2
+   \       0x5E   0x1945             ADDS     R5,R0,R5
+     31              }
+     32              if (options->password.cstring || options->password.lenstring.data) {
+   \                     ??MQTTSerialize_connectLength_4: (+1)
+   \       0x60   0x6CE0             LDR      R0,[R4, #+76]
+   \       0x62   0x2800             CMP      R0,#+0
+   \       0x64   0xD102             BNE.N    ??MQTTSerialize_connectLength_5
+   \       0x66   0x6D60             LDR      R0,[R4, #+84]
+   \       0x68   0x2800             CMP      R0,#+0
+   \       0x6A   0xD006             BEQ.N    ??MQTTSerialize_connectLength_6
+     33                  len += MQTTstrlen(options->password) + 2;
+   \                     ??MQTTSerialize_connectLength_5: (+1)
+   \       0x6C   0xF104 0x004C      ADD      R0,R4,#+76
+   \       0x70   0xC807             LDM      R0,{R0-R2}
+   \       0x72   0x....'....        BL       MQTTstrlen
+   \       0x76   0x1C80             ADDS     R0,R0,#+2
+   \       0x78   0x1945             ADDS     R5,R0,R5
+     34              }
+     35          
+     36              return len;
+   \                     ??MQTTSerialize_connectLength_6: (+1)
+   \       0x7A   0x4628             MOV      R0,R5
+   \       0x7C   0xBD70             POP      {R4-R6,PC}       ;; return
+     37          }
+     38          
+     39          
+     40          /**
+     41            * Serializes the connect options into the buffer.
+     42            * @param buf the buffer into which the packet will be serialized
+     43            * @param len the length in bytes of the supplied buffer
+     44            * @param options the options to be used to build the connect packet
+     45            * @return serialized length, or error if 0
+     46            */
+
+   \                                 In section .text, align 2, keep-with-next
+     47          int MQTTSerialize_connect(unsigned char *buf, int buflen, MQTTPacket_connectData *options)
+     48          {
+   \                     MQTTSerialize_connect: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4616             MOV      R6,R2
+     49              unsigned char *ptr = buf;
+   \        0x8   0x9500             STR      R5,[SP, #+0]
+     50              MQTTHeader header = {0};
+     51              MQTTConnectFlags flags = {0};
+     52              int len = 0;
+     53              int rc = -1;
+     54          
+     55              if (MQTTPacket_len(len = MQTTSerialize_connectLength(options)) > buflen) {
+   \        0xA   0x4630             MOV      R0,R6
+   \        0xC   0x....'....        BL       MQTTSerialize_connectLength
+   \       0x10   0x4607             MOV      R7,R0
+   \       0x12   0x....'....        BL       MQTTPacket_len
+   \       0x16   0x4284             CMP      R4,R0
+   \       0x18   0xDA02             BGE.N    ??MQTTSerialize_connect_0
+     56                  rc = MQTTPACKET_BUFFER_TOO_SHORT;
+   \       0x1A   0xF06F 0x0001      MVN      R0,#+1
+     57                  goto exit;
+   \       0x1E   0xBDF2             POP      {R1,R4-R7,PC}
+     58              }
+     59          
+     60              header.byte = 0;
+     61              MQTT_HEADER_SET_TYPE(header.byte, CONNECT);
+     62          
+     63              writeChar(&ptr, header.byte); /* write header */
+   \                     ??MQTTSerialize_connect_0: (+1)
+   \       0x20   0x2110             MOVS     R1,#+16
+   \       0x22   0x4668             MOV      R0,SP
+   \       0x24   0x....'....        BL       writeChar
+     64          
+     65              ptr += MQTTPacket_encode(ptr, len); /* write remaining length */
+   \       0x28   0x4639             MOV      R1,R7
+   \       0x2A   0x9800             LDR      R0,[SP, #+0]
+   \       0x2C   0x....'....        BL       MQTTPacket_encode
+   \       0x30   0x9900             LDR      R1,[SP, #+0]
+   \       0x32   0x4408             ADD      R0,R1,R0
+   \       0x34   0x9000             STR      R0,[SP, #+0]
+     66          
+     67              if (options->MQTTVersion == 4) {
+   \       0x36   0x7A30             LDRB     R0,[R6, #+8]
+   \       0x38   0x2804             CMP      R0,#+4
+   \       0x3A   0xD108             BNE.N    ??MQTTSerialize_connect_1
+     68                  writeCString(&ptr, "MQTT");
+   \       0x3C   0x....             LDR.N    R1,??DataTable2
+   \       0x3E   0x4668             MOV      R0,SP
+   \       0x40   0x....'....        BL       writeCString
+     69                  writeChar(&ptr, (char) 4);
+   \       0x44   0x2104             MOVS     R1,#+4
+   \       0x46   0x4668             MOV      R0,SP
+   \       0x48   0x....'....        BL       writeChar
+   \       0x4C   0xE007             B.N      ??MQTTSerialize_connect_2
+     70              } else {
+     71                  writeCString(&ptr, "MQIsdp");
+   \                     ??MQTTSerialize_connect_1: (+1)
+   \       0x4E   0x....             LDR.N    R1,??DataTable2_1
+   \       0x50   0x4668             MOV      R0,SP
+   \       0x52   0x....'....        BL       writeCString
+     72                  writeChar(&ptr, (char) 3);
+   \       0x56   0x2103             MOVS     R1,#+3
+   \       0x58   0x4668             MOV      R0,SP
+   \       0x5A   0x....'....        BL       writeChar
+     73              }
+     74          
+     75              flags.all = 0;
+     76              flags.all |= (options->cleansession) ? MQTT_CONN_FLAG_CLEAN_SESSION : 0;
+   \                     ??MQTTSerialize_connect_2: (+1)
+   \       0x5E   0x7EB0             LDRB     R0,[R6, #+26]
+   \       0x60   0x2800             CMP      R0,#+0
+   \       0x62   0xD001             BEQ.N    ??MQTTSerialize_connect_3
+   \       0x64   0x2402             MOVS     R4,#+2
+   \       0x66   0xE000             B.N      ??MQTTSerialize_connect_4
+   \                     ??MQTTSerialize_connect_3: (+1)
+   \       0x68   0x2400             MOVS     R4,#+0
+     77              flags.all |= (options->willFlag) ? MQTT_CONN_FLAG_WILL_FLAG : 0;
+   \                     ??MQTTSerialize_connect_4: (+1)
+   \       0x6A   0x7EF0             LDRB     R0,[R6, #+27]
+   \       0x6C   0x2800             CMP      R0,#+0
+   \       0x6E   0xD001             BEQ.N    ??MQTTSerialize_connect_5
+   \       0x70   0x2004             MOVS     R0,#+4
+   \       0x72   0xE000             B.N      ??MQTTSerialize_connect_6
+   \                     ??MQTTSerialize_connect_5: (+1)
+   \       0x74   0x2000             MOVS     R0,#+0
+   \                     ??MQTTSerialize_connect_6: (+1)
+   \       0x76   0x4304             ORRS     R4,R0,R4
+     78              if (flags.all & MQTT_CONN_FLAG_WILL_FLAG) {
+   \       0x78   0x0760             LSLS     R0,R4,#+29
+   \       0x7A   0xD50D             BPL.N    ??MQTTSerialize_connect_7
+     79                  flags.all |= ((options->will.qos & 0x03) << 3);
+   \       0x7C   0xF896 0x003D      LDRB     R0,[R6, #+61]
+   \       0x80   0x00C0             LSLS     R0,R0,#+3
+   \       0x82   0xF000 0x0018      AND      R0,R0,#0x18
+   \       0x86   0x4304             ORRS     R4,R0,R4
+     80                  flags.all |= (options->will.retained) ? MQTT_CONN_FLAG_WILL_RETAIN : 0;
+   \       0x88   0xF896 0x003C      LDRB     R0,[R6, #+60]
+   \       0x8C   0x2800             CMP      R0,#+0
+   \       0x8E   0xD001             BEQ.N    ??MQTTSerialize_connect_8
+   \       0x90   0x2020             MOVS     R0,#+32
+   \       0x92   0xE000             B.N      ??MQTTSerialize_connect_9
+   \                     ??MQTTSerialize_connect_8: (+1)
+   \       0x94   0x2000             MOVS     R0,#+0
+   \                     ??MQTTSerialize_connect_9: (+1)
+   \       0x96   0x4304             ORRS     R4,R0,R4
+     81              }
+     82          
+     83              if (options->username.cstring || options->username.lenstring.data) {
+   \                     ??MQTTSerialize_connect_7: (+1)
+   \       0x98   0x6C30             LDR      R0,[R6, #+64]
+   \       0x9A   0x2800             CMP      R0,#+0
+   \       0x9C   0xD102             BNE.N    ??MQTTSerialize_connect_10
+   \       0x9E   0x6CB0             LDR      R0,[R6, #+72]
+   \       0xA0   0x2800             CMP      R0,#+0
+   \       0xA2   0xD001             BEQ.N    ??MQTTSerialize_connect_11
+     84                  flags.all |= MQTT_CONN_FLAG_USER_NAME;
+   \                     ??MQTTSerialize_connect_10: (+1)
+   \       0xA4   0xF044 0x0480      ORR      R4,R4,#0x80
+     85              }
+     86              if (options->password.cstring || options->password.lenstring.data) {
+   \                     ??MQTTSerialize_connect_11: (+1)
+   \       0xA8   0x6CF0             LDR      R0,[R6, #+76]
+   \       0xAA   0x2800             CMP      R0,#+0
+   \       0xAC   0xD102             BNE.N    ??MQTTSerialize_connect_12
+   \       0xAE   0x6D70             LDR      R0,[R6, #+84]
+   \       0xB0   0x2800             CMP      R0,#+0
+   \       0xB2   0xD001             BEQ.N    ??MQTTSerialize_connect_13
+     87                  flags.all |= MQTT_CONN_FLAG_PASSWORD;
+   \                     ??MQTTSerialize_connect_12: (+1)
+   \       0xB4   0xF044 0x0440      ORR      R4,R4,#0x40
+     88              }
+     89          
+     90              writeChar(&ptr, flags.all);
+   \                     ??MQTTSerialize_connect_13: (+1)
+   \       0xB8   0x4621             MOV      R1,R4
+   \       0xBA   0x4668             MOV      R0,SP
+   \       0xBC   0x....'....        BL       writeChar
+     91              writeInt(&ptr, options->keepAliveInterval);
+   \       0xC0   0x8B31             LDRH     R1,[R6, #+24]
+   \       0xC2   0x4668             MOV      R0,SP
+   \       0xC4   0x....'....        BL       writeInt
+     92              writeMQTTString(&ptr, options->clientID);
+   \       0xC8   0xF106 0x000C      ADD      R0,R6,#+12
+   \       0xCC   0xE890 0x000E      LDM      R0,{R1-R3}
+   \       0xD0   0x4668             MOV      R0,SP
+   \       0xD2   0x....'....        BL       writeMQTTString
+     93              if (options->willFlag) {
+   \       0xD6   0x7EF0             LDRB     R0,[R6, #+27]
+   \       0xD8   0x2800             CMP      R0,#+0
+   \       0xDA   0xD00D             BEQ.N    ??MQTTSerialize_connect_14
+     94                  writeMQTTString(&ptr, options->will.topicName);
+   \       0xDC   0xF106 0x0024      ADD      R0,R6,#+36
+   \       0xE0   0xE890 0x000E      LDM      R0,{R1-R3}
+   \       0xE4   0x4668             MOV      R0,SP
+   \       0xE6   0x....'....        BL       writeMQTTString
+     95                  writeMQTTString(&ptr, options->will.message);
+   \       0xEA   0xF106 0x0030      ADD      R0,R6,#+48
+   \       0xEE   0xE890 0x000E      LDM      R0,{R1-R3}
+   \       0xF2   0x4668             MOV      R0,SP
+   \       0xF4   0x....'....        BL       writeMQTTString
+     96              }
+     97              if (flags.all & MQTT_CONN_FLAG_USER_NAME) {
+   \                     ??MQTTSerialize_connect_14: (+1)
+   \       0xF8   0x0620             LSLS     R0,R4,#+24
+   \       0xFA   0xD506             BPL.N    ??MQTTSerialize_connect_15
+     98                  writeMQTTString(&ptr, options->username);
+   \       0xFC   0xF106 0x0040      ADD      R0,R6,#+64
+   \      0x100   0xE890 0x000E      LDM      R0,{R1-R3}
+   \      0x104   0x4668             MOV      R0,SP
+   \      0x106   0x....'....        BL       writeMQTTString
+     99              }
+    100              if (flags.all & MQTT_CONN_FLAG_PASSWORD) {
+   \                     ??MQTTSerialize_connect_15: (+1)
+   \      0x10A   0x0660             LSLS     R0,R4,#+25
+   \      0x10C   0xD506             BPL.N    ??MQTTSerialize_connect_16
+    101                  writeMQTTString(&ptr, options->password);
+   \      0x10E   0xF106 0x004C      ADD      R0,R6,#+76
+   \      0x112   0xE890 0x000E      LDM      R0,{R1-R3}
+   \      0x116   0x4668             MOV      R0,SP
+   \      0x118   0x....'....        BL       writeMQTTString
+    102              }
+    103          
+    104              rc = ptr - buf;
+   \                     ??MQTTSerialize_connect_16: (+1)
+   \      0x11C   0x9800             LDR      R0,[SP, #+0]
+   \      0x11E   0x1B45             SUBS     R5,R0,R5
+   \      0x120   0x4628             MOV      R0,R5
+    105          
+    106          exit:
+    107              return rc;
+   \      0x122   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    108          }
+    109          
+    110          
+    111          /**
+    112            * Deserializes the supplied (wire) buffer into connack data - return code
+    113            * @param sessionPresent the session present flag returned (only for MQTT 3.1.1)
+    114            * @param connack_rc returned integer value of the connack return code
+    115            * @param buf the raw buffer data, of the correct length determined by the remaining length field
+    116            * @param len the length in bytes of the data in the supplied buffer
+    117            * @return error code.  1 is success, 0 is failure
+    118            */
+
+   \                                 In section .text, align 2, keep-with-next
+    119          int MQTTDeserialize_connack(unsigned char *sessionPresent, unsigned char *connack_rc, unsigned char *buf, int buflen)
+    120          {
+   \                     MQTTDeserialize_connack: (+1)
+   \        0x0   0xB57F             PUSH     {R0-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x460D             MOV      R5,R1
+    121              MQTTHeader header = {0};
+    122              unsigned char *curdata = buf;
+   \        0x6   0x9200             STR      R2,[SP, #+0]
+    123              unsigned char *enddata = NULL;
+    124              int rc = 0;
+   \        0x8   0x2600             MOVS     R6,#+0
+    125              int mylen;
+    126              MQTTConnackFlags flags = {0};
+   \        0xA   0x....             LDR.N    R0,??DataTable2_2
+   \        0xC   0x6800             LDR      R0,[R0, #+0]
+   \        0xE   0x9001             STR      R0,[SP, #+4]
+    127          
+    128              header.byte = readChar(&curdata);
+   \       0x10   0x4668             MOV      R0,SP
+   \       0x12   0x....'....        BL       readChar
+    129              if (MQTT_HEADER_GET_TYPE(header.byte) != CONNACK) {
+   \       0x16   0x0900             LSRS     R0,R0,#+4
+   \       0x18   0x2802             CMP      R0,#+2
+   \       0x1A   0xD118             BNE.N    ??MQTTDeserialize_connack_0
+    130                  goto exit;
+    131              }
+    132          
+    133              curdata += (rc = MQTTPacket_decodeBuf(curdata, &mylen)); /* read remaining length */
+   \       0x1C   0xA902             ADD      R1,SP,#+8
+   \       0x1E   0x9800             LDR      R0,[SP, #+0]
+   \       0x20   0x....'....        BL       MQTTPacket_decodeBuf
+   \       0x24   0x4606             MOV      R6,R0
+   \       0x26   0x9800             LDR      R0,[SP, #+0]
+   \       0x28   0x4430             ADD      R0,R0,R6
+   \       0x2A   0x9000             STR      R0,[SP, #+0]
+    134              enddata = curdata + mylen;
+    135              if (enddata - curdata < 2) {
+   \       0x2C   0x9802             LDR      R0,[SP, #+8]
+   \       0x2E   0x2802             CMP      R0,#+2
+   \       0x30   0xDB0D             BLT.N    ??MQTTDeserialize_connack_0
+    136                  goto exit;
+    137              }
+    138          
+    139              flags.all = readChar(&curdata);
+   \       0x32   0x4668             MOV      R0,SP
+   \       0x34   0x....'....        BL       readChar
+   \       0x38   0xF88D 0x0004      STRB     R0,[SP, #+4]
+    140              *sessionPresent = flags.bits.sessionpresent;
+   \       0x3C   0x9801             LDR      R0,[SP, #+4]
+   \       0x3E   0xF000 0x0001      AND      R0,R0,#0x1
+   \       0x42   0x7020             STRB     R0,[R4, #+0]
+    141              *connack_rc = readChar(&curdata);
+   \       0x44   0x4668             MOV      R0,SP
+   \       0x46   0x....'....        BL       readChar
+   \       0x4A   0x7028             STRB     R0,[R5, #+0]
+    142          
+    143              rc = 1;
+   \       0x4C   0x2601             MOVS     R6,#+1
+    144          exit:
+    145              return rc;
+   \                     ??MQTTDeserialize_connack_0: (+1)
+   \       0x4E   0x4630             MOV      R0,R6
+   \       0x50   0xB004             ADD      SP,SP,#+16
+   \       0x52   0xBD70             POP      {R4-R6,PC}       ;; return
+    146          }
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0
+   \              0x00 0x00    
+    147          
+    148          
+    149          /**
+    150            * Serializes a 0-length packet into the supplied buffer, ready for writing to a socket
+    151            * @param buf the buffer into which the packet will be serialized
+    152            * @param buflen the length in bytes of the supplied buffer, to avoid overruns
+    153            * @param packettype the message type
+    154            * @return serialized length, or error if 0
+    155            */
+
+   \                                 In section .text, align 2, keep-with-next
+    156          int MQTTSerialize_zero(unsigned char *buf, int buflen, unsigned char packettype)
+    157          {
+   \                     MQTTSerialize_zero: (+1)
+   \        0x0   0xB51C             PUSH     {R2-R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    158              MQTTHeader header = {0};
+    159              int rc = -1;
+    160              unsigned char *ptr = buf;
+   \        0x4   0x9400             STR      R4,[SP, #+0]
+    161          
+    162              if (buflen < 2) {
+   \        0x6   0x2902             CMP      R1,#+2
+   \        0x8   0xDA02             BGE.N    ??MQTTSerialize_zero_0
+    163                  rc = MQTTPACKET_BUFFER_TOO_SHORT;
+   \        0xA   0xF06F 0x0401      MVN      R4,#+1
+    164                  goto exit;
+   \        0xE   0xE00D             B.N      ??MQTTSerialize_zero_1
+    165              }
+    166              header.byte = 0;
+    167              MQTT_HEADER_SET_TYPE(header.byte, packettype);
+    168              writeChar(&ptr, header.byte); /* write header */
+   \                     ??MQTTSerialize_zero_0: (+1)
+   \       0x10   0x0112             LSLS     R2,R2,#+4
+   \       0x12   0x4611             MOV      R1,R2
+   \       0x14   0xB2C9             UXTB     R1,R1
+   \       0x16   0x4668             MOV      R0,SP
+   \       0x18   0x....'....        BL       writeChar
+    169          
+    170              ptr += MQTTPacket_encode(ptr, 0); /* write remaining length */
+   \       0x1C   0x2100             MOVS     R1,#+0
+   \       0x1E   0x9800             LDR      R0,[SP, #+0]
+   \       0x20   0x....'....        BL       MQTTPacket_encode
+   \       0x24   0x9900             LDR      R1,[SP, #+0]
+   \       0x26   0x4408             ADD      R0,R1,R0
+   \       0x28   0x9000             STR      R0,[SP, #+0]
+    171              rc = ptr - buf;
+   \       0x2A   0x1B04             SUBS     R4,R0,R4
+    172          exit:
+    173              return rc;
+   \                     ??MQTTSerialize_zero_1: (+1)
+   \       0x2C   0x4620             MOV      R0,R4
+   \       0x2E   0xBD16             POP      {R1,R2,R4,PC}    ;; return
+    174          }
+    175          
+    176          
+    177          /**
+    178            * Serializes a disconnect packet into the supplied buffer, ready for writing to a socket
+    179            * @param buf the buffer into which the packet will be serialized
+    180            * @param buflen the length in bytes of the supplied buffer, to avoid overruns
+    181            * @return serialized length, or error if 0
+    182            */
+
+   \                                 In section .text, align 2, keep-with-next
+    183          int MQTTSerialize_disconnect(unsigned char *buf, int buflen)
+    184          {
+    185              return MQTTSerialize_zero(buf, buflen, DISCONNECT);
+   \                     MQTTSerialize_disconnect: (+1)
+   \        0x0   0x220E             MOVS     R2,#+14
+   \        0x2   0x....             B.N      MQTTSerialize_zero
+    186          }
+    187          
+    188          
+    189          /**
+    190            * Serializes a disconnect packet into the supplied buffer, ready for writing to a socket
+    191            * @param buf the buffer into which the packet will be serialized
+    192            * @param buflen the length in bytes of the supplied buffer, to avoid overruns
+    193            * @return serialized length, or error if 0
+    194            */
+
+   \                                 In section .text, align 2, keep-with-next
+    195          int MQTTSerialize_pingreq(unsigned char *buf, int buflen)
+    196          {
+    197              return MQTTSerialize_zero(buf, buflen, PINGREQ);
+   \                     MQTTSerialize_pingreq: (+1)
+   \        0x0   0x220C             MOVS     R2,#+12
+   \        0x2   0x....             B.N      MQTTSerialize_zero
+    198          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x4D 0x51          DC8 "MQTT"
+   \              0x54 0x54    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x4D 0x51          DC8 "MQIsdp"
+   \              0x49 0x73    
+   \              0x64 0x70    
+   \              0x00         
+   \        0x7   0x00               DC8 0
+    199          
+    200          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+      32   MQTTDeserialize_connack
+        32   -> MQTTPacket_decodeBuf
+        32   -> readChar
+      24   MQTTSerialize_connect
+        24   -> MQTTPacket_encode
+        24   -> MQTTPacket_len
+        24   -> MQTTSerialize_connectLength
+        24   -> writeCString
+        24   -> writeChar
+        24   -> writeInt
+        24   -> writeMQTTString
+      16   MQTTSerialize_connectLength
+        16   -> MQTTstrlen
+       0   MQTTSerialize_disconnect
+         0   -> MQTTSerialize_zero
+       0   MQTTSerialize_pingreq
+         0   -> MQTTSerialize_zero
+      16   MQTTSerialize_zero
+        16   -> MQTTPacket_encode
+        16   -> writeChar
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       8  ?_0
+       8  ?_1
+       4  ?_2
+      84  MQTTDeserialize_connack
+     292  MQTTSerialize_connect
+     126  MQTTSerialize_connectLength
+       4  MQTTSerialize_disconnect
+       4  MQTTSerialize_pingreq
+      48  MQTTSerialize_zero
+
+ 
+  20 bytes in section .rodata
+ 570 bytes in section .text
+ 
+ 570 bytes of CODE  memory
+  20 bytes of CONST memory
+
+Errors: none
+Warnings: none

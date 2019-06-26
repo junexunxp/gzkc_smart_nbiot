@@ -1,0 +1,251 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:44:02
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\source\csdk.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWD1A5.tmp
+#        (C:\Development\gzkc_smart_nbiot\source\csdk.c -D DEBUG -D USE_RTOS -D
+#        XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\csdk.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\csdk.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\source\csdk.c
+      1          /*
+      2           * Copyright (c) 2015, Freescale Semiconductor, Inc.
+      3           * Copyright 2016-2017 NXP
+      4           * All rights reserved.
+      5           *
+      6           * SPDX-License-Identifier: BSD-3-Clause
+      7           */
+      8          
+      9          /* FreeRTOS kernel includes. */
+     10          #include <stdarg.h>
+     11          #include <stdlib.h>
+     12          #include "FreeRTOS.h"
+     13          #include "task.h"
+     14          #include "queue.h"
+     15          #include "timers.h"
+     16          
+     17          /* Freescale includes. */
+     18          #include "fsl_device_registers.h"
+     19          #include "fsl_debug_console.h"
+     20          #include "board.h"
+     21          
+     22          #include "fsl_lpuart.h"
+     23          #include "pin_mux.h"
+     24          #include "clock_config.h"
+     25          /*******************************************************************************
+     26           * Definitions
+     27           ******************************************************************************/
+     28          
+     29          
+     30          /*******************************************************************************
+     31           * Prototypes
+     32           ******************************************************************************/
+     33          
+     34          /*******************************************************************************
+     35           * Code
+     36           ******************************************************************************/
+     37          /*!
+     38           * @brief Main function
+     39           */
+     40          /*******************************************************************************
+     41           * Variables
+     42           ******************************************************************************/
+     43          #define MAX_SSID_SIZE  32
+     44          #define MAX_PWD_SIZE   64
+     45          
+     46          #ifndef MAX_SSID_LEN
+     47          #define MAX_SSID_LEN (MAX_SSID_SIZE+1)
+     48          #endif
+     49          #ifndef ETH_ALEN
+     50          #define ETH_ALEN                        (6)
+     51          #endif
+     52          
+     53          
+     54          
+     55          
+
+   \                                 In section .text, align 2, keep-with-next
+     56          void app_process_recive_cmd(char *buff, uint8_t len){
+     57          
+     58            
+     59          }
+   \                     app_process_recive_cmd: (+1)
+   \        0x0   0x4770             BX       LR               ;; return
+     60          
+     61          
+     62          /*******************************************************************************
+     63           * Definitions
+     64           ******************************************************************************/
+     65          
+     66          /* Task priorities. */
+     67          
+     68          /*******************************************************************************
+     69           * Prototypes
+     70           ******************************************************************************/
+     71          
+     72          /*******************************************************************************
+     73           * Code
+     74           ******************************************************************************/
+     75          /*!
+     76           * @brief Application entry point.
+     77           */
+
+   \                                 In section .text, align 2, keep-with-next
+     78          int main(void)
+     79          {
+   \                     main: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     80              /* Init board hardware. */
+     81              BOARD_ConfigMPU();
+   \        0x2   0x....'....        BL       BOARD_ConfigMPU
+     82              BOARD_InitPins();
+   \        0x6   0x....'....        BL       BOARD_InitPins
+     83          	
+     84              BOARD_BootClockRUN();
+   \        0xA   0x....'....        BL       BOARD_BootClockRUN
+     85              flexspi_hyper_flash_init();
+                     ^
+Warning[Pe223]: function "flexspi_hyper_flash_init" declared implicitly
+   \        0xE   0x....'....        BL       flexspi_hyper_flash_init
+     86              kv_init();
+                     ^
+Warning[Pe223]: function "kv_init" declared implicitly
+   \       0x12   0x....'....        BL       kv_init
+     87              
+     88              
+     89              gpio_pin_config_t led_config = {kGPIO_DigitalOutput, 0, kGPIO_NoIntmode};
+   \       0x16   0x....             LDR.N    R0,??DataTable1
+   \       0x18   0x6800             LDR      R0,[R0, #+0]
+   \       0x1A   0x9000             STR      R0,[SP, #+0]
+     90          	/* Init output LED GPIO. */
+     91              GPIO_PinInit(BOARD_USER_LED_GPIO, BOARD_USER_LED_GPIO_PIN, &led_config);
+   \       0x1C   0x466A             MOV      R2,SP
+   \       0x1E   0x2109             MOVS     R1,#+9
+   \       0x20   0x....             LDR.N    R0,??DataTable1_1  ;; 0x401b8000
+   \       0x22   0x....'....        BL       GPIO_PinInit
+     92              log_init();
+                     ^
+Warning[Pe223]: function "log_init" declared implicitly
+   \       0x26   0x....'....        BL       log_init
+     93              //linkkit_init();
+     94          	linkkitcsdk_init();
+                 	^
+Warning[Pe223]: function "linkkitcsdk_init" declared implicitly
+   \       0x2A   0x....'....        BL       linkkitcsdk_init
+     95                //  smart_wm_init();
+     96              vTaskStartScheduler();
+   \       0x2E   0x....'....        BL       vTaskStartScheduler
+     97              while(1);
+   \                     ??main_0: (+1)
+   \       0x32   0xE7FE             B.N      ??main_0
+     98          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1_1:
+   \        0x0   0x401B'8000        DC32     0x401b8000
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x01 0x00          DC8 1, 0, 0, 0
+   \              0x00 0x00    
+     99          
+    100          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   app_process_recive_cmd
+       8   main
+         8   -> BOARD_BootClockRUN
+         8   -> BOARD_ConfigMPU
+         8   -> BOARD_InitPins
+         8   -> GPIO_PinInit
+         8   -> flexspi_hyper_flash_init
+         8   -> kv_init
+         8   -> linkkitcsdk_init
+         8   -> log_init
+         8   -> vTaskStartScheduler
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       4  ??DataTable1_1
+       4  ?_0
+       2  app_process_recive_cmd
+      52  main
+
+ 
+  4 bytes in section .rodata
+ 62 bytes in section .text
+ 
+ 62 bytes of CODE  memory
+  4 bytes of CONST memory
+
+Errors: none
+Warnings: 4

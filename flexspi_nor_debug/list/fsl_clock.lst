@@ -1,0 +1,2966 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:39
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\drivers\fsl_clock.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW4EEC.tmp
+#        (C:\Development\gzkc_smart_nbiot\drivers\fsl_clock.c -D DEBUG -D
+#        USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\fsl_clock.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\fsl_clock.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\drivers\fsl_clock.c
+      1          /*
+      2           * Copyright 2017 NXP
+      3           * All rights reserved.
+      4           *
+      5           * SPDX-License-Identifier: BSD-3-Clause
+      6           */
+      7          
+      8          #include "fsl_clock.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp uint32_t CLOCK_GetOscFreq(void)
+   \                     CLOCK_GetOscFreq: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable38  ;; 0x400d8270
+   \        0x4   0x6800             LDR      R0,[R0, #+0]
+   \        0x6   0x06C0             LSLS     R0,R0,#+27
+   \        0x8   0xD502             BPL.N    ??CLOCK_GetOscFreq_0
+   \        0xA   0x....'....        LDR.W    R0,??DataTable38_1  ;; 0x16e3600
+   \        0xE   0x4770             BX       LR
+   \                     ??CLOCK_GetOscFreq_0: (+1)
+   \       0x10   0x....'....        LDR.W    R0,??DataTable38_2
+   \       0x14   0x6800             LDR      R0,[R0, #+0]
+   \       0x16   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp uint32_t CLOCK_GetRtcFreq(void)
+   \                     CLOCK_GetRtcFreq: (+1)
+   \        0x0   0xF44F 0x4000      MOV      R0,#+32768
+   \        0x4   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp bool CLOCK_IsPllBypassed(CCM_ANALOG_Type *, clock_pll_t)
+   \                     CLOCK_IsPllBypassed: (+1)
+   \        0x0   0x0109             LSLS     R1,R1,#+4
+   \        0x2   0xEB10 0x5011      ADDS     R0,R0,R1, LSR #+20
+   \        0x6   0x6800             LDR      R0,[R0, #+0]
+   \        0x8   0x0C00             LSRS     R0,R0,#+16
+   \        0xA   0xF000 0x0001      AND      R0,R0,#0x1
+   \        0xE   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp bool CLOCK_IsPllEnabled(CCM_ANALOG_Type *, clock_pll_t)
+   \                     CLOCK_IsPllEnabled: (+1)
+   \        0x0   0x460A             MOV      R2,R1
+   \        0x2   0x0112             LSLS     R2,R2,#+4
+   \        0x4   0xEB10 0x5012      ADDS     R0,R0,R2, LSR #+20
+   \        0x8   0x6800             LDR      R0,[R0, #+0]
+   \        0xA   0xF001 0x011F      AND      R1,R1,#0x1F
+   \        0xE   0x40C8             LSRS     R0,R0,R1
+   \       0x10   0xF000 0x0001      AND      R0,R0,#0x1
+   \       0x14   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp uint32_t CLOCK_GetPllBypassRefClk(CCM_ANALOG_Type *, clock_pll_t)
+   \                     CLOCK_GetPllBypassRefClk: (+1)
+   \        0x0   0x0109             LSLS     R1,R1,#+4
+   \        0x2   0xEB10 0x5011      ADDS     R0,R0,R1, LSR #+20
+   \        0x6   0x6800             LDR      R0,[R0, #+0]
+   \        0x8   0xF3C0 0x3081      UBFX     R0,R0,#+14,#+2
+   \        0xC   0x2800             CMP      R0,#+0
+   \        0xE   0xD100             BNE.N    ??CLOCK_GetPllBypassRefClk_0
+   \       0x10   0x....             B.N      CLOCK_GetOscFreq
+   \                     ??CLOCK_GetPllBypassRefClk_0: (+1)
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0x4770             BX       LR               ;; return
+      9          /* Component ID definition, used by tools. */
+     10          #ifndef FSL_COMPONENT_ID
+     11          #define FSL_COMPONENT_ID "platform.drivers.clock"
+     12          #endif
+     13          /*******************************************************************************
+     14           * Definitions
+     15           ******************************************************************************/
+     16          /* To make full use of CM7 hardware FPU, use double instead of uint64_t in clock driver to
+     17          achieve better performance, it is depend on the IDE Floating point settings, if double precision is selected
+     18          in IDE, clock_64b_t will switch to double type automatically. only support IAR and MDK here */
+     19          #if __FPU_USED
+     20          
+     21          #if ((defined(__ICCARM__)) || (defined(__GNUC__)))
+     22          
+     23          #if (__ARMVFP__ >= __ARMFPV5__) && \
+     24              (__ARM_FP == 0xE) /*0xe implies support for half, single and double precision operations*/
+     25          typedef double clock_64b_t;
+     26          #else
+     27          typedef uint64_t clock_64b_t;
+     28          #endif
+     29          
+     30          #elif defined(__CC_ARM) || defined(__ARMCC_VERSION)
+     31          
+     32          #if defined __TARGET_FPU_FPV5_D16
+     33          typedef double clock_64b_t;
+     34          #else
+     35          typedef uint64_t clock_64b_t;
+     36          #endif
+     37          
+     38          #else
+     39          typedef uint64_t clock_64b_t;
+     40          #endif
+     41          
+     42          #else
+     43          typedef uint64_t clock_64b_t;
+     44          #endif
+     45          
+     46          /*******************************************************************************
+     47           * Variables
+     48           ******************************************************************************/
+     49          
+     50          /* External XTAL (OSC) clock frequency. */
+
+   \                                 In section .bss, align 4
+     51          volatile uint32_t g_xtalFreq;
+   \                     g_xtalFreq:
+   \        0x0                      DS8 4
+     52          /* External RTC XTAL clock frequency. */
+
+   \                                 In section .bss, align 4
+     53          volatile uint32_t g_rtcXtalFreq;
+   \                     g_rtcXtalFreq:
+   \        0x0                      DS8 4
+     54          
+     55          /*******************************************************************************
+     56           * Prototypes
+     57           ******************************************************************************/
+     58          
+     59          /*!
+     60           * @brief Get the periph clock frequency.
+     61           *
+     62           * @return Periph clock frequency in Hz.
+     63           */
+     64          static uint32_t CLOCK_GetPeriphClkFreq(void);
+     65          
+     66          /*******************************************************************************
+     67           * Code
+     68           ******************************************************************************/
+     69          
+
+   \                                 In section .text, align 2, keep-with-next
+     70          static uint32_t CLOCK_GetPeriphClkFreq(void)
+     71          {
+   \                     CLOCK_GetPeriphClkFreq: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     72              uint32_t freq;
+     73          
+     74              /* Periph_clk2_clk ---> Periph_clk */
+     75              if (CCM->CBCDR & CCM_CBCDR_PERIPH_CLK_SEL_MASK)
+   \        0x2   0x....'....        LDR.W    R4,??DataTable38_3  ;; 0x400fc014
+   \        0x6   0x6820             LDR      R0,[R4, #+0]
+   \        0x8   0x0180             LSLS     R0,R0,#+6
+   \        0xA   0x....'....        LDR.W    R0,??DataTable38_4  ;; 0x400fc018
+   \        0xE   0x6800             LDR      R0,[R0, #+0]
+   \       0x10   0xD51E             BPL.N    ??CLOCK_GetPeriphClkFreq_0
+     76              {
+     77                  switch (CCM->CBCMR & CCM_CBCMR_PERIPH_CLK2_SEL_MASK)
+   \       0x12   0xF410 0x5040      ANDS     R0,R0,#0x3000
+   \       0x16   0xD006             BEQ.N    ??CLOCK_GetPeriphClkFreq_1
+   \       0x18   0xF5B0 0x5F80      CMP      R0,#+4096
+   \       0x1C   0xD008             BEQ.N    ??CLOCK_GetPeriphClkFreq_2
+   \       0x1E   0xF5B0 0x5F00      CMP      R0,#+8192
+   \       0x22   0xD008             BEQ.N    ??CLOCK_GetPeriphClkFreq_3
+   \       0x24   0xE00C             B.N      ??CLOCK_GetPeriphClkFreq_4
+     78                  {
+     79                      /* Pll3_sw_clk ---> Periph_clk2_clk ---> Periph_clk */
+     80                      case CCM_CBCMR_PERIPH_CLK2_SEL(0U):
+     81                          freq = CLOCK_GetPllFreq(kCLOCK_PllUsb1);
+   \                     ??CLOCK_GetPeriphClkFreq_1: (+1)
+   \       0x26   0x....'....        LDR.W    R0,??DataTable38_5  ;; 0x10000d
+   \       0x2A   0x....'....        BL       CLOCK_GetPllFreq
+     82                          break;
+   \       0x2E   0xE008             B.N      ??CLOCK_GetPeriphClkFreq_5
+     83          
+     84                      /* Osc_clk ---> Periph_clk2_clk ---> Periph_clk */
+     85                      case CCM_CBCMR_PERIPH_CLK2_SEL(1U):
+     86                          freq = CLOCK_GetOscFreq();
+   \                     ??CLOCK_GetPeriphClkFreq_2: (+1)
+   \       0x30   0x....'....        BL       CLOCK_GetOscFreq
+     87                          break;
+   \       0x34   0xE005             B.N      ??CLOCK_GetPeriphClkFreq_5
+     88          
+     89                      case CCM_CBCMR_PERIPH_CLK2_SEL(2U):
+     90                          freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+   \                     ??CLOCK_GetPeriphClkFreq_3: (+1)
+   \       0x36   0x....'....        LDR.W    R0,??DataTable38_6  ;; 0x30000d
+   \       0x3A   0x....'....        BL       CLOCK_GetPllFreq
+     91                          break;
+   \       0x3E   0xE000             B.N      ??CLOCK_GetPeriphClkFreq_5
+     92          
+     93                      case CCM_CBCMR_PERIPH_CLK2_SEL(3U):
+     94                      default:
+     95                          freq = 0U;
+   \                     ??CLOCK_GetPeriphClkFreq_4: (+1)
+   \       0x40   0x2000             MOVS     R0,#+0
+     96                          break;
+     97                  }
+     98          
+     99                  freq /= (((CCM->CBCDR & CCM_CBCDR_PERIPH_CLK2_PODF_MASK) >> CCM_CBCDR_PERIPH_CLK2_PODF_SHIFT) + 1U);
+   \                     ??CLOCK_GetPeriphClkFreq_5: (+1)
+   \       0x42   0x6821             LDR      R1,[R4, #+0]
+   \       0x44   0xF3C1 0x61C2      UBFX     R1,R1,#+27,#+3
+   \       0x48   0x1C49             ADDS     R1,R1,#+1
+   \       0x4A   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   \       0x4E   0xBD10             POP      {R4,PC}
+    100              }
+    101              /* Pre_Periph_clk ---> Periph_clk */
+    102              else
+    103              {
+    104                  switch (CCM->CBCMR & CCM_CBCMR_PRE_PERIPH_CLK_SEL_MASK)
+   \                     ??CLOCK_GetPeriphClkFreq_0: (+1)
+   \       0x50   0xF410 0x2040      ANDS     R0,R0,#0xC0000
+   \       0x54   0xD009             BEQ.N    ??CLOCK_GetPeriphClkFreq_6
+   \       0x56   0xF5B0 0x2F80      CMP      R0,#+262144
+   \       0x5A   0xD00B             BEQ.N    ??CLOCK_GetPeriphClkFreq_7
+   \       0x5C   0xF5B0 0x2F00      CMP      R0,#+524288
+   \       0x60   0xD00D             BEQ.N    ??CLOCK_GetPeriphClkFreq_8
+   \       0x62   0xF5B0 0x2F40      CMP      R0,#+786432
+   \       0x66   0xD00F             BEQ.N    ??CLOCK_GetPeriphClkFreq_9
+   \       0x68   0xE01A             B.N      ??CLOCK_GetPeriphClkFreq_10
+    105                  {
+    106                      /* PLL2 ---> Pre_Periph_clk ---> Periph_clk */
+    107                      case CCM_CBCMR_PRE_PERIPH_CLK_SEL(0U):
+    108                          freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+   \                     ??CLOCK_GetPeriphClkFreq_6: (+1)
+   \       0x6A   0x....'....        LDR.W    R0,??DataTable38_6  ;; 0x30000d
+   \       0x6E   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x72   0x....             B.N      CLOCK_GetPllFreq
+    109                          break;
+    110          
+    111                      /* PLL2 PFD2 ---> Pre_Periph_clk ---> Periph_clk */
+    112                      case CCM_CBCMR_PRE_PERIPH_CLK_SEL(1U):
+    113                          freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+   \                     ??CLOCK_GetPeriphClkFreq_7: (+1)
+   \       0x74   0x2002             MOVS     R0,#+2
+   \       0x76   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x7A   0x....'....        B.W      CLOCK_GetSysPfdFreq
+    114                          break;
+    115          
+    116                      /* PLL2 PFD0 ---> Pre_Periph_clk ---> Periph_clk */
+    117                      case CCM_CBCMR_PRE_PERIPH_CLK_SEL(2U):
+    118                          freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd0);
+   \                     ??CLOCK_GetPeriphClkFreq_8: (+1)
+   \       0x7E   0x2000             MOVS     R0,#+0
+   \       0x80   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x84   0x....'....        B.W      CLOCK_GetSysPfdFreq
+    119                          break;
+    120          
+    121                      /* PLL1 divided(/2) ---> Pre_Periph_clk ---> Periph_clk */
+    122                      case CCM_CBCMR_PRE_PERIPH_CLK_SEL(3U):
+    123                          freq = CLOCK_GetPllFreq(kCLOCK_PllArm) /
+    124                                 (((CCM->CACRR & CCM_CACRR_ARM_PODF_MASK) >> CCM_CACRR_ARM_PODF_SHIFT) + 1U);
+   \                     ??CLOCK_GetPeriphClkFreq_9: (+1)
+   \       0x88   0x200D             MOVS     R0,#+13
+   \       0x8A   0x....'....        BL       CLOCK_GetPllFreq
+   \       0x8E   0x....'....        LDR.W    R1,??DataTable38_7  ;; 0x400fc010
+   \       0x92   0x6809             LDR      R1,[R1, #+0]
+   \       0x94   0xF001 0x0107      AND      R1,R1,#0x7
+   \       0x98   0x1C49             ADDS     R1,R1,#+1
+   \       0x9A   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+    125                          break;
+   \       0x9E   0xBD10             POP      {R4,PC}
+    126          
+    127                      default:
+    128                          freq = 0U;
+   \                     ??CLOCK_GetPeriphClkFreq_10: (+1)
+   \       0xA0   0x2000             MOVS     R0,#+0
+    129                          break;
+    130                  }
+    131              }
+    132          
+    133              return freq;
+   \       0xA2   0xBD10             POP      {R4,PC}          ;; return
+    134          }
+    135          
+    136          /*!
+    137           * brief Initialize the external 24MHz clock.
+    138           *
+    139           * This function supports two modes:
+    140           * 1. Use external crystal oscillator.
+    141           * 2. Bypass the external crystal oscillator, using input source clock directly.
+    142           *
+    143           * After this function, please call ref CLOCK_SetXtal0Freq to inform clock driver
+    144           * the external clock frequency.
+    145           *
+    146           * param bypassXtalOsc Pass in true to bypass the external crystal oscillator.
+    147           * note This device does not support bypass external crystal oscillator, so
+    148           * the input parameter should always be false.
+    149           */
+
+   \                                 In section .text, align 2, keep-with-next
+    150          void CLOCK_InitExternalClk(bool bypassXtalOsc)
+    151          {
+   \                     CLOCK_InitExternalClk: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    152              /* This device does not support bypass XTAL OSC. */
+    153              assert(!bypassXtalOsc);
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD008             BEQ.N    ??CLOCK_InitExternalClk_0
+   \        0x6   0x2299             MOVS     R2,#+153
+   \        0x8   0x....'....        LDR.W    R1,??DataTable38_8
+   \        0xC   0x....'....        LDR.W    R0,??DataTable38_9
+   \       0x10   0x....'....        BL       __aeabi_assert
+   \       0x14   0x....'....        BL       __iar_EmptyStepPoint
+    154          
+    155              CCM_ANALOG->MISC0_CLR = CCM_ANALOG_MISC0_XTAL_24M_PWD_MASK; /* Power up */
+   \                     ??CLOCK_InitExternalClk_0: (+1)
+   \       0x18   0x....'....        LDR.W    R0,??DataTable38_10  ;; 0x400d8158
+   \       0x1C   0xF04F 0x4180      MOV      R1,#+1073741824
+   \       0x20   0x6001             STR      R1,[R0, #+0]
+    156              while ((XTALOSC24M->LOWPWR_CTRL & XTALOSC24M_LOWPWR_CTRL_XTALOSC_PWRUP_STAT_MASK) == 0)
+   \                     ??CLOCK_InitExternalClk_1: (+1)
+   \       0x22   0x....'....        LDR.W    R1,??DataTable38  ;; 0x400d8270
+   \       0x26   0x6809             LDR      R1,[R1, #+0]
+   \       0x28   0x03C9             LSLS     R1,R1,#+15
+   \       0x2A   0xD5FA             BPL.N    ??CLOCK_InitExternalClk_1
+    157              {
+    158              }
+    159              CCM_ANALOG->MISC0_SET = CCM_ANALOG_MISC0_OSC_XTALOK_EN_MASK; /* detect freq */
+   \       0x2C   0xF44F 0x3180      MOV      R1,#+65536
+   \       0x30   0x....'....        LDR.W    R2,??DataTable38_11  ;; 0x400d8154
+   \       0x34   0x6011             STR      R1,[R2, #+0]
+    160              while ((CCM_ANALOG->MISC0 & CCM_ANALOG_MISC0_OSC_XTALOK_MASK) == 0)
+   \                     ??CLOCK_InitExternalClk_2: (+1)
+   \       0x36   0x....'....        LDR.W    R2,??DataTable38_12  ;; 0x400d8150
+   \       0x3A   0x6812             LDR      R2,[R2, #+0]
+   \       0x3C   0x0412             LSLS     R2,R2,#+16
+   \       0x3E   0xD5FA             BPL.N    ??CLOCK_InitExternalClk_2
+    161              {
+    162              }
+    163              CCM_ANALOG->MISC0_CLR = CCM_ANALOG_MISC0_OSC_XTALOK_EN_MASK;
+   \       0x40   0x6001             STR      R1,[R0, #+0]
+    164          }
+   \       0x42   0xBD01             POP      {R0,PC}          ;; return
+    165          
+    166          /*!
+    167           * brief Deinitialize the external 24MHz clock.
+    168           *
+    169           * This function disables the external 24MHz clock.
+    170           *
+    171           * After this function, please call ref CLOCK_SetXtal0Freq to set external clock
+    172           * frequency to 0.
+    173           */
+
+   \                                 In section .text, align 2, keep-with-next
+    174          void CLOCK_DeinitExternalClk(void)
+    175          {
+    176              CCM_ANALOG->MISC0_SET = CCM_ANALOG_MISC0_XTAL_24M_PWD_MASK; /* Power down */
+   \                     CLOCK_DeinitExternalClk: (+1)
+   \        0x0   0xF04F 0x4080      MOV      R0,#+1073741824
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_11  ;; 0x400d8154
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    177          }
+   \        0xA   0x4770             BX       LR               ;; return
+    178          
+    179          /*!
+    180           * brief Switch the OSC.
+    181           *
+    182           * This function switches the OSC source for SoC.
+    183           *
+    184           * param osc   OSC source to switch to.
+    185           */
+
+   \                                 In section .text, align 2, keep-with-next
+    186          void CLOCK_SwitchOsc(clock_osc_t osc)
+    187          {
+    188              if (osc == kCLOCK_RcOsc)
+   \                     CLOCK_SwitchOsc: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD104             BNE.N    ??CLOCK_SwitchOsc_0
+    189                  XTALOSC24M->LOWPWR_CTRL_SET = XTALOSC24M_LOWPWR_CTRL_SET_OSC_SEL_MASK;
+   \        0x4   0x2010             MOVS     R0,#+16
+   \        0x6   0x....'....        LDR.W    R1,??DataTable38_13  ;; 0x400d8274
+   \        0xA   0x6008             STR      R0,[R1, #+0]
+   \        0xC   0x4770             BX       LR
+    190              else
+    191                  XTALOSC24M->LOWPWR_CTRL_CLR = XTALOSC24M_LOWPWR_CTRL_CLR_OSC_SEL_MASK;
+   \                     ??CLOCK_SwitchOsc_0: (+1)
+   \        0xE   0x2010             MOVS     R0,#+16
+   \       0x10   0x....'....        LDR.W    R1,??DataTable38_14  ;; 0x400d8278
+   \       0x14   0x6008             STR      R0,[R1, #+0]
+    192          }
+   \       0x16   0x4770             BX       LR               ;; return
+    193          
+    194          /*!
+    195           * brief Initialize the RC oscillator 24MHz clock.
+    196           */
+
+   \                                 In section .text, align 2, keep-with-next
+    197          void CLOCK_InitRcOsc24M(void)
+    198          {
+    199              XTALOSC24M->LOWPWR_CTRL |= XTALOSC24M_LOWPWR_CTRL_RC_OSC_EN_MASK;
+   \                     CLOCK_InitRcOsc24M: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable38  ;; 0x400d8270
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0xF041 0x0101      ORR      R1,R1,#0x1
+   \        0xA   0x6001             STR      R1,[R0, #+0]
+    200          }
+   \        0xC   0x4770             BX       LR               ;; return
+    201          
+    202          /*!
+    203           * brief Power down the RCOSC 24M clock.
+    204           */
+
+   \                                 In section .text, align 2, keep-with-next
+    205          void CLOCK_DeinitRcOsc24M(void)
+    206          {
+    207              XTALOSC24M->LOWPWR_CTRL &= ~XTALOSC24M_LOWPWR_CTRL_RC_OSC_EN_MASK;
+   \                     CLOCK_DeinitRcOsc24M: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable38  ;; 0x400d8270
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x0849             LSRS     R1,R1,#+1
+   \        0x8   0x0049             LSLS     R1,R1,#+1
+   \        0xA   0x6001             STR      R1,[R0, #+0]
+    208          }
+   \        0xC   0x4770             BX       LR               ;; return
+    209          
+    210          /*!
+    211           * brief Gets the AHB clock frequency.
+    212           *
+    213           * return  The AHB clock frequency value in hertz.
+    214           */
+
+   \                                 In section .text, align 2, keep-with-next
+    215          uint32_t CLOCK_GetAhbFreq(void)
+    216          {
+   \                     CLOCK_GetAhbFreq: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    217              return CLOCK_GetPeriphClkFreq() / (((CCM->CBCDR & CCM_CBCDR_AHB_PODF_MASK) >> CCM_CBCDR_AHB_PODF_SHIFT) + 1U);
+   \        0x2   0x....'....        BL       CLOCK_GetPeriphClkFreq
+   \        0x6   0x....'....        LDR.W    R1,??DataTable38_3  ;; 0x400fc014
+   \        0xA   0x6809             LDR      R1,[R1, #+0]
+   \        0xC   0xF3C1 0x2182      UBFX     R1,R1,#+10,#+3
+   \       0x10   0x1C49             ADDS     R1,R1,#+1
+   \       0x12   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   \       0x16   0xBD02             POP      {R1,PC}          ;; return
+    218          }
+    219          
+    220          /*!
+    221           * brief Gets the SEMC clock frequency.
+    222           *
+    223           * return  The SEMC clock frequency value in hertz.
+    224           */
+
+   \                                 In section .text, align 2, keep-with-next
+    225          uint32_t CLOCK_GetSemcFreq(void)
+    226          {
+   \                     CLOCK_GetSemcFreq: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    227              uint32_t freq;
+    228          
+    229              /* SEMC alternative clock ---> SEMC Clock */
+    230              if (CCM->CBCDR & CCM_CBCDR_SEMC_CLK_SEL_MASK)
+   \        0x2   0x....'....        LDR.W    R4,??DataTable38_3  ;; 0x400fc014
+   \        0x6   0x6820             LDR      R0,[R4, #+0]
+   \        0x8   0x0640             LSLS     R0,R0,#+25
+   \        0xA   0xD50A             BPL.N    ??CLOCK_GetSemcFreq_0
+    231              {
+    232                  /* PLL3 PFD1 ---> SEMC alternative clock ---> SEMC Clock */
+    233                  if (CCM->CBCDR & CCM_CBCDR_SEMC_ALT_CLK_SEL_MASK)
+   \        0xC   0x6820             LDR      R0,[R4, #+0]
+   \        0xE   0x0600             LSLS     R0,R0,#+24
+   \       0x10   0xD503             BPL.N    ??CLOCK_GetSemcFreq_1
+    234                  {
+    235                      freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd1);
+   \       0x12   0x2001             MOVS     R0,#+1
+   \       0x14   0x....'....        BL       CLOCK_GetUsb1PfdFreq
+   \       0x18   0xE005             B.N      ??CLOCK_GetSemcFreq_2
+    236                  }
+    237                  /* PLL2 PFD2 ---> SEMC alternative clock ---> SEMC Clock */
+    238                  else
+    239                  {
+    240                      freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+   \                     ??CLOCK_GetSemcFreq_1: (+1)
+   \       0x1A   0x2002             MOVS     R0,#+2
+   \       0x1C   0x....'....        BL       CLOCK_GetSysPfdFreq
+   \       0x20   0xE001             B.N      ??CLOCK_GetSemcFreq_2
+    241                  }
+    242              }
+    243              /* Periph_clk ---> SEMC Clock */
+    244              else
+    245              {
+    246                  freq = CLOCK_GetPeriphClkFreq();
+   \                     ??CLOCK_GetSemcFreq_0: (+1)
+   \       0x22   0x....'....        BL       CLOCK_GetPeriphClkFreq
+    247              }
+    248          
+    249              freq /= (((CCM->CBCDR & CCM_CBCDR_SEMC_PODF_MASK) >> CCM_CBCDR_SEMC_PODF_SHIFT) + 1U);
+   \                     ??CLOCK_GetSemcFreq_2: (+1)
+   \       0x26   0x6821             LDR      R1,[R4, #+0]
+   \       0x28   0xF3C1 0x4102      UBFX     R1,R1,#+16,#+3
+   \       0x2C   0x1C49             ADDS     R1,R1,#+1
+   \       0x2E   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+    250          
+    251              return freq;
+   \       0x32   0xBD10             POP      {R4,PC}          ;; return
+    252          }
+    253          
+    254          /*!
+    255           * brief Gets the IPG clock frequency.
+    256           *
+    257           * return  The IPG clock frequency value in hertz.
+    258           */
+
+   \                                 In section .text, align 2, keep-with-next
+    259          uint32_t CLOCK_GetIpgFreq(void)
+    260          {
+   \                     CLOCK_GetIpgFreq: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    261              return CLOCK_GetAhbFreq() / (((CCM->CBCDR & CCM_CBCDR_IPG_PODF_MASK) >> CCM_CBCDR_IPG_PODF_SHIFT) + 1U);
+   \        0x2   0x....'....        BL       CLOCK_GetAhbFreq
+   \        0x6   0x....'....        LDR.W    R1,??DataTable38_3  ;; 0x400fc014
+   \        0xA   0x6809             LDR      R1,[R1, #+0]
+   \        0xC   0xF3C1 0x2101      UBFX     R1,R1,#+8,#+2
+   \       0x10   0x1C49             ADDS     R1,R1,#+1
+   \       0x12   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   \       0x16   0xBD02             POP      {R1,PC}          ;; return
+    262          }
+    263          
+    264          /*!
+    265           * brief Gets the PER clock frequency.
+    266           *
+    267           * return  The PER clock frequency value in hertz.
+    268           */
+
+   \                                 In section .text, align 2, keep-with-next
+    269          uint32_t CLOCK_GetPerClkFreq(void)
+    270          {
+   \                     CLOCK_GetPerClkFreq: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    271              uint32_t freq;
+    272          
+    273              /* Osc_clk ---> PER Clock*/
+    274              if (CCM->CSCMR1 & CCM_CSCMR1_PERCLK_CLK_SEL_MASK)
+   \        0x2   0x....'....        LDR.W    R4,??DataTable38_15  ;; 0x400fc01c
+   \        0x6   0x6820             LDR      R0,[R4, #+0]
+   \        0x8   0x0640             LSLS     R0,R0,#+25
+   \        0xA   0xD502             BPL.N    ??CLOCK_GetPerClkFreq_0
+    275              {
+    276                  freq = CLOCK_GetOscFreq();
+   \        0xC   0x....'....        BL       CLOCK_GetOscFreq
+   \       0x10   0xE002             B.N      ??CLOCK_GetPerClkFreq_1
+    277              }
+    278              /* Periph_clk ---> AHB Clock ---> IPG Clock ---> PER Clock */
+    279              else
+    280              {
+    281                  freq = CLOCK_GetFreq(kCLOCK_IpgClk);
+   \                     ??CLOCK_GetPerClkFreq_0: (+1)
+   \       0x12   0x2003             MOVS     R0,#+3
+   \       0x14   0x....'....        BL       CLOCK_GetFreq
+    282              }
+    283          
+    284              freq /= (((CCM->CSCMR1 & CCM_CSCMR1_PERCLK_PODF_MASK) >> CCM_CSCMR1_PERCLK_PODF_SHIFT) + 1U);
+   \                     ??CLOCK_GetPerClkFreq_1: (+1)
+   \       0x18   0x6821             LDR      R1,[R4, #+0]
+   \       0x1A   0xF001 0x013F      AND      R1,R1,#0x3F
+   \       0x1E   0x1C49             ADDS     R1,R1,#+1
+   \       0x20   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+    285          
+    286              return freq;
+   \       0x24   0xBD10             POP      {R4,PC}          ;; return
+    287          }
+    288          
+    289          /*!
+    290           * brief Gets the clock frequency for a specific clock name.
+    291           *
+    292           * This function checks the current clock configurations and then calculates
+    293           * the clock frequency for a specific clock name defined in clock_name_t.
+    294           *
+    295           * param clockName Clock names defined in clock_name_t
+    296           * return Clock frequency value in hertz
+    297           */
+
+   \                                 In section .text, align 4, keep-with-next
+    298          uint32_t CLOCK_GetFreq(clock_name_t name)
+    299          {
+    300              uint32_t freq;
+    301          
+    302              switch (name)
+   \                     CLOCK_GetFreq: (+1)
+   \        0x0   0x2816             CMP      R0,#+22
+   \        0x2   0xD83A             BHI.N    ??CLOCK_GetFreq_1
+   \        0x4   0xE8DF 0xF000      TBB      [PC, R0]
+   \                     ??CLOCK_GetFreq_0:
+   \        0x8   0x0C 0x0C          DC8      0xC,0xC,0xD,0xE
+   \              0x0D 0x0E    
+   \        0xC   0x0F 0x10          DC8      0xF,0x10,0x11,0x12
+   \              0x11 0x12    
+   \       0x10   0x14 0x17          DC8      0x14,0x17,0x19,0x1B
+   \              0x19 0x1B    
+   \       0x14   0x1D 0x1F          DC8      0x1D,0x1F,0x22,0x25
+   \              0x22 0x25    
+   \       0x18   0x27 0x29          DC8      0x27,0x29,0x2B,0x2D
+   \              0x2B 0x2D    
+   \       0x1C   0x30 0x33          DC8      0x30,0x33,0x36,0x0
+   \              0x36 0x00    
+    303              {
+    304                  case kCLOCK_CpuClk:
+    305                  case kCLOCK_AhbClk:
+    306                      freq = CLOCK_GetAhbFreq();
+   \                     ??CLOCK_GetFreq_2: (+1)
+   \       0x20   0x....             B.N      CLOCK_GetAhbFreq
+    307                      break;
+    308          
+    309                  case kCLOCK_SemcClk:
+    310                      freq = CLOCK_GetSemcFreq();
+   \                     ??CLOCK_GetFreq_3: (+1)
+   \       0x22   0x....             B.N      CLOCK_GetSemcFreq
+    311                      break;
+    312          
+    313                  case kCLOCK_IpgClk:
+    314                      freq = CLOCK_GetIpgFreq();
+   \                     ??CLOCK_GetFreq_4: (+1)
+   \       0x24   0x....             B.N      CLOCK_GetIpgFreq
+    315                      break;
+    316          
+    317                  case kCLOCK_PerClk:
+    318                      freq = CLOCK_GetPerClkFreq();
+   \                     ??CLOCK_GetFreq_5: (+1)
+   \       0x26   0x....             B.N      CLOCK_GetPerClkFreq
+    319                      break;
+    320          
+    321                  case kCLOCK_OscClk:
+    322                      freq = CLOCK_GetOscFreq();
+   \                     ??CLOCK_GetFreq_6: (+1)
+   \       0x28   0x....             B.N      CLOCK_GetOscFreq
+    323                      break;
+    324                  case kCLOCK_RtcClk:
+    325                      freq = CLOCK_GetRtcFreq();
+   \                     ??CLOCK_GetFreq_7: (+1)
+   \       0x2A   0x....             B.N      CLOCK_GetRtcFreq
+    326                      break;
+    327                  case kCLOCK_ArmPllClk:
+    328                      freq = CLOCK_GetPllFreq(kCLOCK_PllArm);
+   \                     ??CLOCK_GetFreq_8: (+1)
+   \       0x2C   0x200D             MOVS     R0,#+13
+   \       0x2E   0x....             B.N      CLOCK_GetPllFreq
+    329                      break;
+    330                  case kCLOCK_Usb1PllClk:
+    331                      freq = CLOCK_GetPllFreq(kCLOCK_PllUsb1);
+   \                     ??CLOCK_GetFreq_9: (+1)
+   \       0x30   0x....'....        LDR.W    R0,??DataTable38_5  ;; 0x10000d
+   \       0x34   0x....             B.N      CLOCK_GetPllFreq
+    332                      break;
+    333                  case kCLOCK_Usb1PllPfd0Clk:
+    334                      freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd0);
+   \                     ??CLOCK_GetFreq_10: (+1)
+   \       0x36   0x2000             MOVS     R0,#+0
+   \       0x38   0x....             B.N      CLOCK_GetUsb1PfdFreq
+    335                      break;
+    336                  case kCLOCK_Usb1PllPfd1Clk:
+    337                      freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd1);
+   \                     ??CLOCK_GetFreq_11: (+1)
+   \       0x3A   0x2001             MOVS     R0,#+1
+   \       0x3C   0x....             B.N      CLOCK_GetUsb1PfdFreq
+    338                      break;
+    339                  case kCLOCK_Usb1PllPfd2Clk:
+    340                      freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd2);
+   \                     ??CLOCK_GetFreq_12: (+1)
+   \       0x3E   0x2002             MOVS     R0,#+2
+   \       0x40   0x....             B.N      CLOCK_GetUsb1PfdFreq
+    341                      break;
+    342                  case kCLOCK_Usb1PllPfd3Clk:
+    343                      freq = CLOCK_GetUsb1PfdFreq(kCLOCK_Pfd3);
+   \                     ??CLOCK_GetFreq_13: (+1)
+   \       0x42   0x2003             MOVS     R0,#+3
+   \       0x44   0x....             B.N      CLOCK_GetUsb1PfdFreq
+    344                      break;
+    345                  case kCLOCK_Usb2PllClk:
+    346                      freq = CLOCK_GetPllFreq(kCLOCK_PllUsb2);
+   \                     ??CLOCK_GetFreq_14: (+1)
+   \       0x46   0x....'....        LDR.W    R0,??DataTable38_16  ;; 0x20000d
+   \       0x4A   0x....             B.N      CLOCK_GetPllFreq
+    347                      break;
+    348                  case kCLOCK_SysPllClk:
+    349                      freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+   \                     ??CLOCK_GetFreq_15: (+1)
+   \       0x4C   0x....'....        LDR.W    R0,??DataTable38_6  ;; 0x30000d
+   \       0x50   0x....             B.N      CLOCK_GetPllFreq
+    350                      break;
+    351                  case kCLOCK_SysPllPfd0Clk:
+    352                      freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd0);
+   \                     ??CLOCK_GetFreq_16: (+1)
+   \       0x52   0x2000             MOVS     R0,#+0
+   \       0x54   0x....             B.N      CLOCK_GetSysPfdFreq
+    353                      break;
+    354                  case kCLOCK_SysPllPfd1Clk:
+    355                      freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd1);
+   \                     ??CLOCK_GetFreq_17: (+1)
+   \       0x56   0x2001             MOVS     R0,#+1
+   \       0x58   0x....             B.N      CLOCK_GetSysPfdFreq
+    356                      break;
+    357                  case kCLOCK_SysPllPfd2Clk:
+    358                      freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd2);
+   \                     ??CLOCK_GetFreq_18: (+1)
+   \       0x5A   0x2002             MOVS     R0,#+2
+   \       0x5C   0x....             B.N      CLOCK_GetSysPfdFreq
+    359                      break;
+    360                  case kCLOCK_SysPllPfd3Clk:
+    361                      freq = CLOCK_GetSysPfdFreq(kCLOCK_Pfd3);
+   \                     ??CLOCK_GetFreq_19: (+1)
+   \       0x5E   0x2003             MOVS     R0,#+3
+   \       0x60   0x....             B.N      CLOCK_GetSysPfdFreq
+    362                      break;
+    363                  case kCLOCK_EnetPll0Clk:
+    364                      freq = CLOCK_GetPllFreq(kCLOCK_PllEnet);
+   \                     ??CLOCK_GetFreq_20: (+1)
+   \       0x62   0x....'....        LDR.W    R0,??DataTable38_17  ;; 0xe0000d
+   \       0x66   0x....             B.N      CLOCK_GetPllFreq
+    365                      break;
+    366                  case kCLOCK_EnetPll1Clk:
+    367                      freq = CLOCK_GetPllFreq(kCLOCK_PllEnet25M);
+   \                     ??CLOCK_GetFreq_21: (+1)
+   \       0x68   0x....'....        LDR.W    R0,??DataTable38_18  ;; 0xe00015
+   \       0x6C   0x....             B.N      CLOCK_GetPllFreq
+    368                      break;
+    369                  case kCLOCK_AudioPllClk:
+    370                      freq = CLOCK_GetPllFreq(kCLOCK_PllAudio);
+   \                     ??CLOCK_GetFreq_22: (+1)
+   \       0x6E   0x....'....        LDR.W    R0,??DataTable38_19  ;; 0x70000d
+   \       0x72   0x....             B.N      CLOCK_GetPllFreq
+    371                      break;
+    372                  case kCLOCK_VideoPllClk:
+    373                      freq = CLOCK_GetPllFreq(kCLOCK_PllVideo);
+   \                     ??CLOCK_GetFreq_23: (+1)
+   \       0x74   0x....'....        LDR.W    R0,??DataTable38_20  ;; 0xa0000d
+   \       0x78   0x....             B.N      CLOCK_GetPllFreq
+    374                      break;
+    375                  default:
+    376                      freq = 0U;
+   \                     ??CLOCK_GetFreq_1: (+1)
+   \       0x7A   0x2000             MOVS     R0,#+0
+    377                      break;
+    378              }
+    379          
+    380              return freq;
+   \       0x7C   0x4770             BX       LR               ;; return
+    381          }
+    382          
+    383          /*! brief Enable USB HS clock.
+    384           *
+    385           * This function only enables the access to USB HS prepheral, upper layer
+    386           * should first call the ref CLOCK_EnableUsbhs0PhyPllClock to enable the PHY
+    387           * clock to use USB HS.
+    388           *
+    389           * param src  USB HS does not care about the clock source, here must be ref kCLOCK_UsbSrcUnused.
+    390           * param freq USB HS does not care about the clock source, so this parameter is ignored.
+    391           * retval true The clock is set successfully.
+    392           * retval false The clock source is invalid to get proper USB HS clock.
+    393           */
+
+   \                                 In section .text, align 4, keep-with-next
+    394          bool CLOCK_EnableUsbhs0Clock(clock_usb_src_t src, uint32_t freq)
+    395          {
+   \                     CLOCK_EnableUsbhs0Clock: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+    396              CCM->CCGR6 |= CCM_CCGR6_CG0_MASK;
+   \        0x2   0x....'....        LDR.W    R0,??DataTable38_21  ;; 0x400fc080
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0xF041 0x0103      ORR      R1,R1,#0x3
+   \        0xC   0x6001             STR      R1,[R0, #+0]
+    397              USB1->USBCMD |= USBHS_USBCMD_RST_MASK;
+   \        0xE   0x....'....        LDR.W    R0,??DataTable38_22  ;; 0x402e0140
+   \       0x12   0x6801             LDR      R1,[R0, #+0]
+   \       0x14   0xF041 0x0102      ORR      R1,R1,#0x2
+   \       0x18   0x6001             STR      R1,[R0, #+0]
+    398              for (volatile uint32_t i = 0; i < 400000;
+   \       0x1A   0x2000             MOVS     R0,#+0
+   \       0x1C   0x9000             STR      R0,[SP, #+0]
+   \       0x1E   0x....'....        LDR.W    R1,??DataTable38_23  ;; 0x61a80
+   \       0x22   0xE003             B.N      ??CLOCK_EnableUsbhs0Clock_0
+    399                   i++) /* Add a delay between RST and RS so make sure there is a DP pullup sequence*/
+    400              {
+    401                  __ASM("nop");
+   \                     ??CLOCK_EnableUsbhs0Clock_1: (+1)
+   \       0x24   0xBF00             nop
+    402              }
+   \       0x26   0x9800             LDR      R0,[SP, #+0]
+   \       0x28   0x1C40             ADDS     R0,R0,#+1
+   \       0x2A   0x9000             STR      R0,[SP, #+0]
+   \                     ??CLOCK_EnableUsbhs0Clock_0: (+1)
+   \       0x2C   0x9800             LDR      R0,[SP, #+0]
+   \       0x2E   0x4288             CMP      R0,R1
+   \       0x30   0xD3F8             BCC.N    ??CLOCK_EnableUsbhs0Clock_1
+    403              PMU->REG_3P0 = (PMU->REG_3P0 & (~PMU_REG_3P0_OUTPUT_TRG_MASK)) |
+    404                             (PMU_REG_3P0_OUTPUT_TRG(0x17) | PMU_REG_3P0_ENABLE_LINREG_MASK);
+   \       0x32   0x....'....        LDR.W    R0,??DataTable38_24  ;; 0x400d8120
+   \       0x36   0x6801             LDR      R1,[R0, #+0]
+   \       0x38   0xF421 0x51F8      BIC      R1,R1,#0x1F00
+   \       0x3C   0xF441 0x51B8      ORR      R1,R1,#0x1700
+   \       0x40   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x44   0x6001             STR      R1,[R0, #+0]
+    405              return true;
+   \       0x46   0x2001             MOVS     R0,#+1
+   \       0x48   0xB001             ADD      SP,SP,#+4
+   \       0x4A   0x4770             BX       LR               ;; return
+    406          }
+    407          
+    408          /*! brief Enable USB HS clock.
+    409           *
+    410           * This function only enables the access to USB HS prepheral, upper layer
+    411           * should first call the ref CLOCK_EnableUsbhs0PhyPllClock to enable the PHY
+    412           * clock to use USB HS.
+    413           *
+    414           * param src  USB HS does not care about the clock source, here must be ref kCLOCK_UsbSrcUnused.
+    415           * param freq USB HS does not care about the clock source, so this parameter is ignored.
+    416           * retval true The clock is set successfully.
+    417           * retval false The clock source is invalid to get proper USB HS clock.
+    418           */
+
+   \                                 In section .text, align 4, keep-with-next
+    419          bool CLOCK_EnableUsbhs1Clock(clock_usb_src_t src, uint32_t freq)
+    420          {
+   \                     CLOCK_EnableUsbhs1Clock: (+1)
+   \        0x0   0xB081             SUB      SP,SP,#+4
+    421              CCM->CCGR6 |= CCM_CCGR6_CG0_MASK;
+   \        0x2   0x....'....        LDR.W    R0,??DataTable38_21  ;; 0x400fc080
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0xF041 0x0103      ORR      R1,R1,#0x3
+   \        0xC   0x6001             STR      R1,[R0, #+0]
+    422              USB2->USBCMD |= USBHS_USBCMD_RST_MASK;
+   \        0xE   0x....'....        LDR.W    R0,??DataTable38_25  ;; 0x402e0340
+   \       0x12   0x6801             LDR      R1,[R0, #+0]
+   \       0x14   0xF041 0x0102      ORR      R1,R1,#0x2
+   \       0x18   0x6001             STR      R1,[R0, #+0]
+    423              for (volatile uint32_t i = 0; i < 400000;
+   \       0x1A   0x2000             MOVS     R0,#+0
+   \       0x1C   0x9000             STR      R0,[SP, #+0]
+   \       0x1E   0x....'....        LDR.W    R1,??DataTable38_23  ;; 0x61a80
+   \       0x22   0xE003             B.N      ??CLOCK_EnableUsbhs1Clock_0
+    424                   i++) /* Add a delay between RST and RS so make sure there is a DP pullup sequence*/
+    425              {
+    426                  __ASM("nop");
+   \                     ??CLOCK_EnableUsbhs1Clock_1: (+1)
+   \       0x24   0xBF00             nop
+    427              }
+   \       0x26   0x9800             LDR      R0,[SP, #+0]
+   \       0x28   0x1C40             ADDS     R0,R0,#+1
+   \       0x2A   0x9000             STR      R0,[SP, #+0]
+   \                     ??CLOCK_EnableUsbhs1Clock_0: (+1)
+   \       0x2C   0x9800             LDR      R0,[SP, #+0]
+   \       0x2E   0x4288             CMP      R0,R1
+   \       0x30   0xD3F8             BCC.N    ??CLOCK_EnableUsbhs1Clock_1
+    428              PMU->REG_3P0 = (PMU->REG_3P0 & (~PMU_REG_3P0_OUTPUT_TRG_MASK)) |
+    429                             (PMU_REG_3P0_OUTPUT_TRG(0x17) | PMU_REG_3P0_ENABLE_LINREG_MASK);
+   \       0x32   0x....'....        LDR.W    R0,??DataTable38_24  ;; 0x400d8120
+   \       0x36   0x6801             LDR      R1,[R0, #+0]
+   \       0x38   0xF421 0x51F8      BIC      R1,R1,#0x1F00
+   \       0x3C   0xF441 0x51B8      ORR      R1,R1,#0x1700
+   \       0x40   0xF041 0x0101      ORR      R1,R1,#0x1
+   \       0x44   0x6001             STR      R1,[R0, #+0]
+    430              return true;
+   \       0x46   0x2001             MOVS     R0,#+1
+   \       0x48   0xB001             ADD      SP,SP,#+4
+   \       0x4A   0x4770             BX       LR               ;; return
+    431          }
+    432          
+    433          /*! brief Enable USB HS PHY PLL clock.
+    434           *
+    435           * This function enables the internal 480MHz USB PHY PLL clock.
+    436           *
+    437           * param src  USB HS PHY PLL clock source.
+    438           * param freq The frequency specified by src.
+    439           * retval true The clock is set successfully.
+    440           * retval false The clock source is invalid to get proper USB HS clock.
+    441           */
+
+   \                                 In section .text, align 2, keep-with-next
+    442          bool CLOCK_EnableUsbhs0PhyPllClock(clock_usb_phy_src_t src, uint32_t freq)
+    443          {
+   \                     CLOCK_EnableUsbhs0PhyPllClock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    444              const clock_usb_pll_config_t g_ccmConfigUsbPll = {.loopDivider = 0U};
+   \        0x2   0x....'....        LDR.W    R0,??DataTable38_26
+   \        0x6   0x8800             LDRH     R0,[R0, #+0]
+   \        0x8   0xF8AD 0x0000      STRH     R0,[SP, #+0]
+    445              if (CCM_ANALOG->PLL_USB1 & CCM_ANALOG_PLL_USB1_ENABLE_MASK)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable38_27  ;; 0x400d8010
+   \       0x10   0x6801             LDR      R1,[R0, #+0]
+   \       0x12   0x0489             LSLS     R1,R1,#+18
+   \       0x14   0xD504             BPL.N    ??CLOCK_EnableUsbhs0PhyPllClock_0
+    446              {
+    447                  CCM_ANALOG->PLL_USB1 |= CCM_ANALOG_PLL_USB1_EN_USB_CLKS_MASK;
+   \       0x16   0x6801             LDR      R1,[R0, #+0]
+   \       0x18   0xF041 0x0140      ORR      R1,R1,#0x40
+   \       0x1C   0x6001             STR      R1,[R0, #+0]
+   \       0x1E   0xE002             B.N      ??CLOCK_EnableUsbhs0PhyPllClock_1
+    448              }
+    449              else
+    450              {
+    451                  CLOCK_InitUsb1Pll(&g_ccmConfigUsbPll);
+   \                     ??CLOCK_EnableUsbhs0PhyPllClock_0: (+1)
+   \       0x20   0x4668             MOV      R0,SP
+   \       0x22   0x....'....        BL       CLOCK_InitUsb1Pll
+    452              }
+    453              USBPHY1->CTRL &= ~USBPHY_CTRL_SFTRST_MASK; /* release PHY from reset */
+   \                     ??CLOCK_EnableUsbhs0PhyPllClock_1: (+1)
+   \       0x26   0x....'....        LDR.W    R0,??DataTable38_28  ;; 0x400d9030
+   \       0x2A   0x6801             LDR      R1,[R0, #+0]
+   \       0x2C   0xF021 0x4100      BIC      R1,R1,#0x80000000
+   \       0x30   0x6001             STR      R1,[R0, #+0]
+    454              USBPHY1->CTRL &= ~USBPHY_CTRL_CLKGATE_MASK;
+   \       0x32   0x6801             LDR      R1,[R0, #+0]
+   \       0x34   0xF021 0x4180      BIC      R1,R1,#0x40000000
+   \       0x38   0x6001             STR      R1,[R0, #+0]
+    455          
+    456              USBPHY1->PWD = 0;
+   \       0x3A   0x2100             MOVS     R1,#+0
+   \       0x3C   0x....'....        LDR.W    R2,??DataTable38_29  ;; 0x400d9000
+   \       0x40   0x6011             STR      R1,[R2, #+0]
+    457              USBPHY1->CTRL |= USBPHY_CTRL_ENAUTOCLR_PHY_PWD_MASK | USBPHY_CTRL_ENAUTOCLR_CLKGATE_MASK |
+    458                               USBPHY_CTRL_ENUTMILEVEL2_MASK | USBPHY_CTRL_ENUTMILEVEL3_MASK;
+   \       0x42   0x6801             LDR      R1,[R0, #+0]
+   \       0x44   0xF441 0x11C6      ORR      R1,R1,#0x18C000
+   \       0x48   0x6001             STR      R1,[R0, #+0]
+    459              return true;
+   \       0x4A   0x2001             MOVS     R0,#+1
+   \       0x4C   0xBD02             POP      {R1,PC}          ;; return
+    460          }
+
+   \                                 In section .rodata, align 2
+   \                     ?_2:
+   \        0x0   0x00 0x00          DC8 0, 0
+    461          
+    462          /*! brief Disable USB HS PHY PLL clock.
+    463           *
+    464           * This function disables USB HS PHY PLL clock.
+    465           */
+
+   \                                 In section .text, align 2, keep-with-next
+    466          void CLOCK_DisableUsbhs0PhyPllClock(void)
+    467          {
+    468              CCM_ANALOG->PLL_USB1 &= ~CCM_ANALOG_PLL_USB1_EN_USB_CLKS_MASK;
+   \                     CLOCK_DisableUsbhs0PhyPllClock: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable38_27  ;; 0x400d8010
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0xF021 0x0140      BIC      R1,R1,#0x40
+   \        0xA   0x6001             STR      R1,[R0, #+0]
+    469              USBPHY1->CTRL |= USBPHY_CTRL_CLKGATE_MASK; /* Set to 1U to gate clocks */
+   \        0xC   0x....'....        LDR.W    R0,??DataTable38_28  ;; 0x400d9030
+   \       0x10   0x6801             LDR      R1,[R0, #+0]
+   \       0x12   0xF041 0x4180      ORR      R1,R1,#0x40000000
+   \       0x16   0x6001             STR      R1,[R0, #+0]
+    470          }
+   \       0x18   0x4770             BX       LR               ;; return
+    471          
+    472          /*!
+    473           * brief Initialize the ARM PLL.
+    474           *
+    475           * This function initialize the ARM PLL with specific settings
+    476           *
+    477           * param config   configuration to set to PLL.
+    478           */
+
+   \                                 In section .text, align 2, keep-with-next
+    479          void CLOCK_InitArmPll(const clock_arm_pll_config_t *config)
+    480          {
+    481              /* Bypass PLL first */
+    482              CCM_ANALOG->PLL_ARM = (CCM_ANALOG->PLL_ARM & (~CCM_ANALOG_PLL_ARM_BYPASS_CLK_SRC_MASK)) |
+    483                                    CCM_ANALOG_PLL_ARM_BYPASS_MASK | CCM_ANALOG_PLL_ARM_BYPASS_CLK_SRC(config->src);
+   \                     CLOCK_InitArmPll: (+1)
+   \        0x0   0x....'....        LDR.W    R2,??DataTable38_30  ;; 0x400d8000
+   \        0x4   0x6811             LDR      R1,[R2, #+0]
+   \        0x6   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \        0xA   0x7903             LDRB     R3,[R0, #+4]
+   \        0xC   0x039B             LSLS     R3,R3,#+14
+   \        0xE   0xF403 0x4340      AND      R3,R3,#0xC000
+   \       0x12   0x4319             ORRS     R1,R3,R1
+   \       0x14   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x18   0x6011             STR      R1,[R2, #+0]
+    484          
+    485              CCM_ANALOG->PLL_ARM =
+    486                  (CCM_ANALOG->PLL_ARM & (~(CCM_ANALOG_PLL_ARM_DIV_SELECT_MASK | CCM_ANALOG_PLL_ARM_POWERDOWN_MASK))) |
+    487                  CCM_ANALOG_PLL_ARM_ENABLE_MASK | CCM_ANALOG_PLL_ARM_DIV_SELECT(config->loopDivider);
+   \       0x1A   0x6813             LDR      R3,[R2, #+0]
+   \       0x1C   0x....'....        LDR.W    R1,??DataTable38_31  ;; 0xffffef80
+   \       0x20   0x400B             ANDS     R3,R1,R3
+   \       0x22   0x7800             LDRB     R0,[R0, #+0]
+   \       0x24   0xF000 0x007F      AND      R0,R0,#0x7F
+   \       0x28   0x4303             ORRS     R3,R0,R3
+   \       0x2A   0xF443 0x5300      ORR      R3,R3,#0x2000
+   \       0x2E   0x6013             STR      R3,[R2, #+0]
+    488          
+    489              while ((CCM_ANALOG->PLL_ARM & CCM_ANALOG_PLL_ARM_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitArmPll_0: (+1)
+   \       0x30   0x6810             LDR      R0,[R2, #+0]
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD5FC             BPL.N    ??CLOCK_InitArmPll_0
+    490              {
+    491              }
+    492          
+    493              /* Disable Bypass */
+    494              CCM_ANALOG->PLL_ARM &= ~CCM_ANALOG_PLL_ARM_BYPASS_MASK;
+   \       0x36   0x6810             LDR      R0,[R2, #+0]
+   \       0x38   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x3C   0x6010             STR      R0,[R2, #+0]
+    495          }
+   \       0x3E   0x4770             BX       LR               ;; return
+    496          
+    497          /*!
+    498           * brief De-initialize the ARM PLL.
+    499           */
+
+   \                                 In section .text, align 2, keep-with-next
+    500          void CLOCK_DeinitArmPll(void)
+    501          {
+    502              CCM_ANALOG->PLL_ARM = CCM_ANALOG_PLL_ARM_POWERDOWN_MASK;
+   \                     CLOCK_DeinitArmPll: (+1)
+   \        0x0   0xF44F 0x5080      MOV      R0,#+4096
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_30  ;; 0x400d8000
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    503          }
+   \        0xA   0x4770             BX       LR               ;; return
+    504          
+    505          /*!
+    506           * brief Initialize the System PLL.
+    507           *
+    508           * This function initializes the System PLL with specific settings
+    509           *
+    510           * param config Configuration to set to PLL.
+    511           */
+
+   \                                 In section .text, align 2, keep-with-next
+    512          void CLOCK_InitSysPll(const clock_sys_pll_config_t *config)
+    513          {
+    514              /* Bypass PLL first */
+    515              CCM_ANALOG->PLL_SYS = (CCM_ANALOG->PLL_SYS & (~CCM_ANALOG_PLL_SYS_BYPASS_CLK_SRC_MASK)) |
+    516                                    CCM_ANALOG_PLL_SYS_BYPASS_MASK | CCM_ANALOG_PLL_SYS_BYPASS_CLK_SRC(config->src);
+   \                     CLOCK_InitSysPll: (+1)
+   \        0x0   0x....'....        LDR.W    R2,??DataTable38_32  ;; 0x400d8030
+   \        0x4   0x6811             LDR      R1,[R2, #+0]
+   \        0x6   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \        0xA   0x7B03             LDRB     R3,[R0, #+12]
+   \        0xC   0x039B             LSLS     R3,R3,#+14
+   \        0xE   0xF403 0x4340      AND      R3,R3,#0xC000
+   \       0x12   0x4319             ORRS     R1,R3,R1
+   \       0x14   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x18   0x6011             STR      R1,[R2, #+0]
+    517          
+    518              CCM_ANALOG->PLL_SYS =
+    519                  (CCM_ANALOG->PLL_SYS & (~(CCM_ANALOG_PLL_SYS_DIV_SELECT_MASK | CCM_ANALOG_PLL_SYS_POWERDOWN_MASK))) |
+    520                  CCM_ANALOG_PLL_SYS_ENABLE_MASK | CCM_ANALOG_PLL_SYS_DIV_SELECT(config->loopDivider);
+   \       0x1A   0x6813             LDR      R3,[R2, #+0]
+   \       0x1C   0x....'....        LDR.W    R1,??DataTable38_33  ;; 0xffffeffe
+   \       0x20   0x400B             ANDS     R3,R1,R3
+   \       0x22   0x7801             LDRB     R1,[R0, #+0]
+   \       0x24   0xF001 0x0101      AND      R1,R1,#0x1
+   \       0x28   0x430B             ORRS     R3,R1,R3
+   \       0x2A   0xF443 0x5300      ORR      R3,R3,#0x2000
+   \       0x2E   0x6013             STR      R3,[R2, #+0]
+    521          
+    522              /* Initialize the fractional mode */
+    523              CCM_ANALOG->PLL_SYS_NUM = CCM_ANALOG_PLL_SYS_NUM_A(config->numerator);
+   \       0x30   0x6841             LDR      R1,[R0, #+4]
+   \       0x32   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x36   0x....'....        LDR.W    R3,??DataTable38_34  ;; 0x400d8050
+   \       0x3A   0x6019             STR      R1,[R3, #+0]
+    524              CCM_ANALOG->PLL_SYS_DENOM = CCM_ANALOG_PLL_SYS_DENOM_B(config->denominator);
+   \       0x3C   0x6881             LDR      R1,[R0, #+8]
+   \       0x3E   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x42   0x....'....        LDR.W    R3,??DataTable38_35  ;; 0x400d8060
+   \       0x46   0x6019             STR      R1,[R3, #+0]
+    525          
+    526              /* Initialize the spread spectrum mode */
+    527              CCM_ANALOG->PLL_SYS_SS = CCM_ANALOG_PLL_SYS_SS_STEP(config->ss_step) |
+    528                                       CCM_ANALOG_PLL_SYS_SS_ENABLE(config->ss_enable) |
+    529                                       CCM_ANALOG_PLL_SYS_SS_STOP(config->ss_stop);
+   \       0x48   0x8A41             LDRH     R1,[R0, #+18]
+   \       0x4A   0xF3C1 0x010E      UBFX     R1,R1,#+0,#+15
+   \       0x4E   0x7C03             LDRB     R3,[R0, #+16]
+   \       0x50   0x03DB             LSLS     R3,R3,#+15
+   \       0x52   0xF403 0x4300      AND      R3,R3,#0x8000
+   \       0x56   0x4319             ORRS     R1,R3,R1
+   \       0x58   0x89C0             LDRH     R0,[R0, #+14]
+   \       0x5A   0xEA41 0x4100      ORR      R1,R1,R0, LSL #+16
+   \       0x5E   0x....'....        LDR.W    R0,??DataTable38_36  ;; 0x400d8040
+   \       0x62   0x6001             STR      R1,[R0, #+0]
+    530          
+    531              while ((CCM_ANALOG->PLL_SYS & CCM_ANALOG_PLL_SYS_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitSysPll_0: (+1)
+   \       0x64   0x6810             LDR      R0,[R2, #+0]
+   \       0x66   0x2800             CMP      R0,#+0
+   \       0x68   0xD5FC             BPL.N    ??CLOCK_InitSysPll_0
+    532              {
+    533              }
+    534          
+    535              /* Disable Bypass */
+    536              CCM_ANALOG->PLL_SYS &= ~CCM_ANALOG_PLL_SYS_BYPASS_MASK;
+   \       0x6A   0x6810             LDR      R0,[R2, #+0]
+   \       0x6C   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x70   0x6010             STR      R0,[R2, #+0]
+    537          }
+   \       0x72   0x4770             BX       LR               ;; return
+    538          
+    539          /*!
+    540           * brief De-initialize the System PLL.
+    541           */
+
+   \                                 In section .text, align 2, keep-with-next
+    542          void CLOCK_DeinitSysPll(void)
+    543          {
+    544              CCM_ANALOG->PLL_SYS = CCM_ANALOG_PLL_SYS_POWERDOWN_MASK;
+   \                     CLOCK_DeinitSysPll: (+1)
+   \        0x0   0xF44F 0x5080      MOV      R0,#+4096
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_32  ;; 0x400d8030
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    545          }
+   \        0xA   0x4770             BX       LR               ;; return
+    546          
+    547          /*!
+    548           * brief Initialize the USB1 PLL.
+    549           *
+    550           * This function initializes the USB1 PLL with specific settings
+    551           *
+    552           * param config Configuration to set to PLL.
+    553           */
+
+   \                                 In section .text, align 2, keep-with-next
+    554          void CLOCK_InitUsb1Pll(const clock_usb_pll_config_t *config)
+    555          {
+    556              /* Bypass PLL first */
+    557              CCM_ANALOG->PLL_USB1 = (CCM_ANALOG->PLL_USB1 & (~CCM_ANALOG_PLL_USB1_BYPASS_CLK_SRC_MASK)) |
+    558                                     CCM_ANALOG_PLL_USB1_BYPASS_MASK | CCM_ANALOG_PLL_USB1_BYPASS_CLK_SRC(config->src);
+   \                     CLOCK_InitUsb1Pll: (+1)
+   \        0x0   0x....'....        LDR.W    R1,??DataTable38_27  ;; 0x400d8010
+   \        0x4   0x680A             LDR      R2,[R1, #+0]
+   \        0x6   0xF422 0x4240      BIC      R2,R2,#0xC000
+   \        0xA   0x7843             LDRB     R3,[R0, #+1]
+   \        0xC   0x039B             LSLS     R3,R3,#+14
+   \        0xE   0xF403 0x4340      AND      R3,R3,#0xC000
+   \       0x12   0x431A             ORRS     R2,R3,R2
+   \       0x14   0xF442 0x3280      ORR      R2,R2,#0x10000
+   \       0x18   0x600A             STR      R2,[R1, #+0]
+    559          
+    560              CCM_ANALOG->PLL_USB1 = (CCM_ANALOG->PLL_USB1 & (~CCM_ANALOG_PLL_USB1_DIV_SELECT_MASK)) |
+    561                                     CCM_ANALOG_PLL_USB1_ENABLE_MASK | CCM_ANALOG_PLL_USB1_POWER_MASK |
+    562                                     CCM_ANALOG_PLL_USB1_EN_USB_CLKS_MASK | CCM_ANALOG_PLL_USB1_DIV_SELECT(config->loopDivider);
+   \       0x1A   0x680A             LDR      R2,[R1, #+0]
+   \       0x1C   0xF022 0x0202      BIC      R2,R2,#0x2
+   \       0x20   0x7800             LDRB     R0,[R0, #+0]
+   \       0x22   0x0040             LSLS     R0,R0,#+1
+   \       0x24   0xF000 0x0002      AND      R0,R0,#0x2
+   \       0x28   0x4302             ORRS     R2,R0,R2
+   \       0x2A   0xF442 0x5241      ORR      R2,R2,#0x3040
+   \       0x2E   0x600A             STR      R2,[R1, #+0]
+    563          
+    564              while ((CCM_ANALOG->PLL_USB1 & CCM_ANALOG_PLL_USB1_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitUsb1Pll_0: (+1)
+   \       0x30   0x6808             LDR      R0,[R1, #+0]
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD5FC             BPL.N    ??CLOCK_InitUsb1Pll_0
+    565              {
+    566              }
+    567          
+    568              /* Disable Bypass */
+    569              CCM_ANALOG->PLL_USB1 &= ~CCM_ANALOG_PLL_USB1_BYPASS_MASK;
+   \       0x36   0x6808             LDR      R0,[R1, #+0]
+   \       0x38   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x3C   0x6008             STR      R0,[R1, #+0]
+    570          }
+   \       0x3E   0x4770             BX       LR               ;; return
+    571          
+    572          /*!
+    573           * brief Deinitialize the USB1 PLL.
+    574           */
+
+   \                                 In section .text, align 2, keep-with-next
+    575          void CLOCK_DeinitUsb1Pll(void)
+    576          {
+    577              CCM_ANALOG->PLL_USB1 = 0U;
+   \                     CLOCK_DeinitUsb1Pll: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x....'....        LDR.W    R1,??DataTable38_27  ;; 0x400d8010
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+    578          }
+   \        0x8   0x4770             BX       LR               ;; return
+    579          
+    580          /*!
+    581           * brief Initialize the USB2 PLL.
+    582           *
+    583           * This function initializes the USB2 PLL with specific settings
+    584           *
+    585           * param config Configuration to set to PLL.
+    586           */
+
+   \                                 In section .text, align 2, keep-with-next
+    587          void CLOCK_InitUsb2Pll(const clock_usb_pll_config_t *config)
+    588          {
+    589              /* Bypass PLL first */
+    590              CCM_ANALOG->PLL_USB2 = (CCM_ANALOG->PLL_USB2 & (~CCM_ANALOG_PLL_USB2_BYPASS_CLK_SRC_MASK)) |
+    591                                     CCM_ANALOG_PLL_USB2_BYPASS_MASK | CCM_ANALOG_PLL_USB2_BYPASS_CLK_SRC(config->src);
+   \                     CLOCK_InitUsb2Pll: (+1)
+   \        0x0   0x....'....        LDR.W    R1,??DataTable38_37  ;; 0x400d8020
+   \        0x4   0x680A             LDR      R2,[R1, #+0]
+   \        0x6   0xF422 0x4240      BIC      R2,R2,#0xC000
+   \        0xA   0x7843             LDRB     R3,[R0, #+1]
+   \        0xC   0x039B             LSLS     R3,R3,#+14
+   \        0xE   0xF403 0x4340      AND      R3,R3,#0xC000
+   \       0x12   0x431A             ORRS     R2,R3,R2
+   \       0x14   0xF442 0x3280      ORR      R2,R2,#0x10000
+   \       0x18   0x600A             STR      R2,[R1, #+0]
+    592          
+    593              CCM_ANALOG->PLL_USB2 = (CCM_ANALOG->PLL_USB2 & (~CCM_ANALOG_PLL_USB2_DIV_SELECT_MASK)) |
+    594                                     CCM_ANALOG_PLL_USB2_ENABLE_MASK | CCM_ANALOG_PLL_USB2_POWER_MASK |
+    595                                     CCM_ANALOG_PLL_USB2_EN_USB_CLKS_MASK | CCM_ANALOG_PLL_USB2_DIV_SELECT(config->loopDivider);
+   \       0x1A   0x680A             LDR      R2,[R1, #+0]
+   \       0x1C   0xF022 0x0202      BIC      R2,R2,#0x2
+   \       0x20   0x7800             LDRB     R0,[R0, #+0]
+   \       0x22   0x0040             LSLS     R0,R0,#+1
+   \       0x24   0xF000 0x0002      AND      R0,R0,#0x2
+   \       0x28   0x4302             ORRS     R2,R0,R2
+   \       0x2A   0xF442 0x5241      ORR      R2,R2,#0x3040
+   \       0x2E   0x600A             STR      R2,[R1, #+0]
+    596          
+    597              while ((CCM_ANALOG->PLL_USB2 & CCM_ANALOG_PLL_USB2_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitUsb2Pll_0: (+1)
+   \       0x30   0x6808             LDR      R0,[R1, #+0]
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD5FC             BPL.N    ??CLOCK_InitUsb2Pll_0
+    598              {
+    599              }
+    600          
+    601              /* Disable Bypass */
+    602              CCM_ANALOG->PLL_USB2 &= ~CCM_ANALOG_PLL_USB2_BYPASS_MASK;
+   \       0x36   0x6808             LDR      R0,[R1, #+0]
+   \       0x38   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x3C   0x6008             STR      R0,[R1, #+0]
+    603          }
+   \       0x3E   0x4770             BX       LR               ;; return
+    604          
+    605          /*!
+    606           * brief Deinitialize the USB2 PLL.
+    607           */
+
+   \                                 In section .text, align 2, keep-with-next
+    608          void CLOCK_DeinitUsb2Pll(void)
+    609          {
+    610              CCM_ANALOG->PLL_USB2 = 0U;
+   \                     CLOCK_DeinitUsb2Pll: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x....'....        LDR.W    R1,??DataTable38_37  ;; 0x400d8020
+   \        0x6   0x6008             STR      R0,[R1, #+0]
+    611          }
+   \        0x8   0x4770             BX       LR               ;; return
+    612          
+    613          /*!
+    614           * brief Initializes the Audio PLL.
+    615           *
+    616           * This function initializes the Audio PLL with specific settings
+    617           *
+    618           * param config Configuration to set to PLL.
+    619           */
+
+   \                                 In section .text, align 2, keep-with-next
+    620          void CLOCK_InitAudioPll(const clock_audio_pll_config_t *config)
+    621          {
+   \                     CLOCK_InitAudioPll: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+    622              uint32_t pllAudio;
+    623              uint32_t misc2 = 0;
+   \        0x2   0x2200             MOVS     R2,#+0
+    624          
+    625              /* Bypass PLL first */
+    626              CCM_ANALOG->PLL_AUDIO = (CCM_ANALOG->PLL_AUDIO & (~CCM_ANALOG_PLL_AUDIO_BYPASS_CLK_SRC_MASK)) |
+    627                                      CCM_ANALOG_PLL_AUDIO_BYPASS_MASK | CCM_ANALOG_PLL_AUDIO_BYPASS_CLK_SRC(config->src);
+   \        0x4   0x....'....        LDR.W    R3,??DataTable38_38  ;; 0x400d8070
+   \        0x8   0x6819             LDR      R1,[R3, #+0]
+   \        0xA   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \        0xE   0x7B04             LDRB     R4,[R0, #+12]
+   \       0x10   0x03A4             LSLS     R4,R4,#+14
+   \       0x12   0xF404 0x4440      AND      R4,R4,#0xC000
+   \       0x16   0x4321             ORRS     R1,R4,R1
+   \       0x18   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x1C   0x6019             STR      R1,[R3, #+0]
+    628          
+    629              CCM_ANALOG->PLL_AUDIO_NUM = CCM_ANALOG_PLL_AUDIO_NUM_A(config->numerator);
+   \       0x1E   0x6841             LDR      R1,[R0, #+4]
+   \       0x20   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x24   0x....'....        LDR.W    R4,??DataTable38_39  ;; 0x400d8080
+   \       0x28   0x6021             STR      R1,[R4, #+0]
+    630              CCM_ANALOG->PLL_AUDIO_DENOM = CCM_ANALOG_PLL_AUDIO_DENOM_B(config->denominator);
+   \       0x2A   0x6881             LDR      R1,[R0, #+8]
+   \       0x2C   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x30   0x....'....        LDR.W    R4,??DataTable38_40  ;; 0x400d8090
+   \       0x34   0x6021             STR      R1,[R4, #+0]
+    631          
+    632              /*
+    633               * Set post divider:
+    634               *
+    635               * ------------------------------------------------------------------------
+    636               * | config->postDivider | PLL_AUDIO[POST_DIV_SELECT]  | MISC2[AUDIO_DIV] |
+    637               * ------------------------------------------------------------------------
+    638               * |         1           |            2                |        0         |
+    639               * ------------------------------------------------------------------------
+    640               * |         2           |            1                |        0         |
+    641               * ------------------------------------------------------------------------
+    642               * |         4           |            2                |        3         |
+    643               * ------------------------------------------------------------------------
+    644               * |         8           |            1                |        3         |
+    645               * ------------------------------------------------------------------------
+    646               * |         16          |            0                |        3         |
+    647               * ------------------------------------------------------------------------
+    648               */
+    649              pllAudio =
+    650                  (CCM_ANALOG->PLL_AUDIO & (~(CCM_ANALOG_PLL_AUDIO_DIV_SELECT_MASK | CCM_ANALOG_PLL_AUDIO_POWERDOWN_MASK))) |
+    651                  CCM_ANALOG_PLL_AUDIO_ENABLE_MASK | CCM_ANALOG_PLL_AUDIO_DIV_SELECT(config->loopDivider);
+   \       0x36   0x681C             LDR      R4,[R3, #+0]
+   \       0x38   0x....'....        LDR.W    R1,??DataTable38_31  ;; 0xffffef80
+   \       0x3C   0x400C             ANDS     R4,R1,R4
+   \       0x3E   0x7801             LDRB     R1,[R0, #+0]
+   \       0x40   0xF001 0x017F      AND      R1,R1,#0x7F
+   \       0x44   0x430C             ORRS     R4,R1,R4
+   \       0x46   0xF444 0x5400      ORR      R4,R4,#0x2000
+    652          
+    653              switch (config->postDivider)
+   \       0x4A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x4C   0x2802             CMP      R0,#+2
+   \       0x4E   0xD012             BEQ.N    ??CLOCK_InitAudioPll_0
+   \       0x50   0x2804             CMP      R0,#+4
+   \       0x52   0xD00B             BEQ.N    ??CLOCK_InitAudioPll_1
+   \       0x54   0x2808             CMP      R0,#+8
+   \       0x56   0xD004             BEQ.N    ??CLOCK_InitAudioPll_2
+   \       0x58   0x2810             CMP      R0,#+16
+   \       0x5A   0xD10F             BNE.N    ??CLOCK_InitAudioPll_3
+    654              {
+    655                  case 16:
+    656                      pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(0);
+    657                      misc2 = CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK | CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
+   \       0x5C   0x....'....        LDR.W    R2,??DataTable38_41  ;; 0x808000
+    658                      break;
+   \       0x60   0xE00E             B.N      ??CLOCK_InitAudioPll_4
+    659          
+    660                  case 8:
+    661                      pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(1);
+   \                     ??CLOCK_InitAudioPll_2: (+1)
+   \       0x62   0xF444 0x2400      ORR      R4,R4,#0x80000
+    662                      misc2 = CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK | CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
+   \       0x66   0x....'....        LDR.W    R2,??DataTable38_41  ;; 0x808000
+    663                      break;
+   \       0x6A   0xE009             B.N      ??CLOCK_InitAudioPll_4
+    664          
+    665                  case 4:
+    666                      pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(2);
+   \                     ??CLOCK_InitAudioPll_1: (+1)
+   \       0x6C   0xF444 0x1480      ORR      R4,R4,#0x100000
+    667                      misc2 = CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK | CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK;
+   \       0x70   0x....'....        LDR.W    R2,??DataTable38_41  ;; 0x808000
+    668                      break;
+   \       0x74   0xE004             B.N      ??CLOCK_InitAudioPll_4
+    669          
+    670                  case 2:
+    671                      pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(1);
+   \                     ??CLOCK_InitAudioPll_0: (+1)
+   \       0x76   0xF444 0x2400      ORR      R4,R4,#0x80000
+    672                      break;
+   \       0x7A   0xE001             B.N      ??CLOCK_InitAudioPll_4
+    673          
+    674                  default:
+    675                      pllAudio |= CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(2);
+   \                     ??CLOCK_InitAudioPll_3: (+1)
+   \       0x7C   0xF444 0x1480      ORR      R4,R4,#0x100000
+    676                      break;
+    677              }
+    678          
+    679              CCM_ANALOG->MISC2 =
+    680                  (CCM_ANALOG->MISC2 & ~(CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK | CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK)) | misc2;
+   \                     ??CLOCK_InitAudioPll_4: (+1)
+   \       0x80   0x....'....        LDR.W    R1,??DataTable38_42  ;; 0x400d8170
+   \       0x84   0x680D             LDR      R5,[R1, #+0]
+   \       0x86   0x....'....        LDR.W    R0,??DataTable38_43  ;; 0xff7f7fff
+   \       0x8A   0x4005             ANDS     R5,R0,R5
+   \       0x8C   0x432A             ORRS     R2,R2,R5
+   \       0x8E   0x600A             STR      R2,[R1, #+0]
+    681          
+    682              CCM_ANALOG->PLL_AUDIO = pllAudio;
+   \       0x90   0x601C             STR      R4,[R3, #+0]
+    683          
+    684              while ((CCM_ANALOG->PLL_AUDIO & CCM_ANALOG_PLL_AUDIO_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitAudioPll_5: (+1)
+   \       0x92   0x6818             LDR      R0,[R3, #+0]
+   \       0x94   0x2800             CMP      R0,#+0
+   \       0x96   0xD5FC             BPL.N    ??CLOCK_InitAudioPll_5
+    685              {
+    686              }
+    687          
+    688              /* Disable Bypass */
+    689              CCM_ANALOG->PLL_AUDIO &= ~CCM_ANALOG_PLL_AUDIO_BYPASS_MASK;
+   \       0x98   0x6818             LDR      R0,[R3, #+0]
+   \       0x9A   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x9E   0x6018             STR      R0,[R3, #+0]
+    690          }
+   \       0xA0   0xBC30             POP      {R4,R5}
+   \       0xA2   0x4770             BX       LR               ;; return
+    691          
+    692          /*!
+    693           * brief De-initialize the Audio PLL.
+    694           */
+
+   \                                 In section .text, align 2, keep-with-next
+    695          void CLOCK_DeinitAudioPll(void)
+    696          {
+    697              CCM_ANALOG->PLL_AUDIO = CCM_ANALOG_PLL_AUDIO_POWERDOWN_MASK;
+   \                     CLOCK_DeinitAudioPll: (+1)
+   \        0x0   0xF44F 0x5080      MOV      R0,#+4096
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_38  ;; 0x400d8070
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    698          }
+   \        0xA   0x4770             BX       LR               ;; return
+    699          
+    700          /*!
+    701           * brief Initialize the video PLL.
+    702           *
+    703           * This function configures the Video PLL with specific settings
+    704           *
+    705           * param config   configuration to set to PLL.
+    706           */
+
+   \                                 In section .text, align 2, keep-with-next
+    707          void CLOCK_InitVideoPll(const clock_video_pll_config_t *config)
+    708          {
+   \                     CLOCK_InitVideoPll: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+    709              uint32_t pllVideo;
+    710              uint32_t misc2 = 0;
+   \        0x2   0x2300             MOVS     R3,#+0
+    711          
+    712              /* Bypass PLL first */
+    713              CCM_ANALOG->PLL_VIDEO = (CCM_ANALOG->PLL_VIDEO & (~CCM_ANALOG_PLL_VIDEO_BYPASS_CLK_SRC_MASK)) |
+    714                                      CCM_ANALOG_PLL_VIDEO_BYPASS_MASK | CCM_ANALOG_PLL_VIDEO_BYPASS_CLK_SRC(config->src);
+   \        0x4   0x....'....        LDR.W    R2,??DataTable38_44  ;; 0x400d80a0
+   \        0x8   0x6811             LDR      R1,[R2, #+0]
+   \        0xA   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \        0xE   0x7B04             LDRB     R4,[R0, #+12]
+   \       0x10   0x03A4             LSLS     R4,R4,#+14
+   \       0x12   0xF404 0x4440      AND      R4,R4,#0xC000
+   \       0x16   0x4321             ORRS     R1,R4,R1
+   \       0x18   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x1C   0x6011             STR      R1,[R2, #+0]
+    715          
+    716              CCM_ANALOG->PLL_VIDEO_NUM = CCM_ANALOG_PLL_VIDEO_NUM_A(config->numerator);
+   \       0x1E   0x6841             LDR      R1,[R0, #+4]
+   \       0x20   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x24   0x....'....        LDR.W    R4,??DataTable38_45  ;; 0x400d80b0
+   \       0x28   0x6021             STR      R1,[R4, #+0]
+    717              CCM_ANALOG->PLL_VIDEO_DENOM = CCM_ANALOG_PLL_VIDEO_DENOM_B(config->denominator);
+   \       0x2A   0x6881             LDR      R1,[R0, #+8]
+   \       0x2C   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x30   0x....'....        LDR.W    R4,??DataTable38_46  ;; 0x400d80c0
+   \       0x34   0x6021             STR      R1,[R4, #+0]
+    718          
+    719              /*
+    720               * Set post divider:
+    721               *
+    722               * ------------------------------------------------------------------------
+    723               * | config->postDivider | PLL_VIDEO[POST_DIV_SELECT]  | MISC2[VIDEO_DIV] |
+    724               * ------------------------------------------------------------------------
+    725               * |         1           |            2                |        0         |
+    726               * ------------------------------------------------------------------------
+    727               * |         2           |            1                |        0         |
+    728               * ------------------------------------------------------------------------
+    729               * |         4           |            2                |        3         |
+    730               * ------------------------------------------------------------------------
+    731               * |         8           |            1                |        3         |
+    732               * ------------------------------------------------------------------------
+    733               * |         16          |            0                |        3         |
+    734               * ------------------------------------------------------------------------
+    735               */
+    736              pllVideo =
+    737                  (CCM_ANALOG->PLL_VIDEO & (~(CCM_ANALOG_PLL_VIDEO_DIV_SELECT_MASK | CCM_ANALOG_PLL_VIDEO_POWERDOWN_MASK))) |
+    738                  CCM_ANALOG_PLL_VIDEO_ENABLE_MASK | CCM_ANALOG_PLL_VIDEO_DIV_SELECT(config->loopDivider);
+   \       0x36   0x6814             LDR      R4,[R2, #+0]
+   \       0x38   0x....'....        LDR.W    R1,??DataTable38_31  ;; 0xffffef80
+   \       0x3C   0x400C             ANDS     R4,R1,R4
+   \       0x3E   0x7801             LDRB     R1,[R0, #+0]
+   \       0x40   0xF001 0x017F      AND      R1,R1,#0x7F
+   \       0x44   0x430C             ORRS     R4,R1,R4
+   \       0x46   0xF444 0x5400      ORR      R4,R4,#0x2000
+    739          
+    740              switch (config->postDivider)
+   \       0x4A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x4C   0x2802             CMP      R0,#+2
+   \       0x4E   0xD012             BEQ.N    ??CLOCK_InitVideoPll_0
+   \       0x50   0x2804             CMP      R0,#+4
+   \       0x52   0xD00B             BEQ.N    ??CLOCK_InitVideoPll_1
+   \       0x54   0x2808             CMP      R0,#+8
+   \       0x56   0xD004             BEQ.N    ??CLOCK_InitVideoPll_2
+   \       0x58   0x2810             CMP      R0,#+16
+   \       0x5A   0xD10F             BNE.N    ??CLOCK_InitVideoPll_3
+    741              {
+    742                  case 16:
+    743                      pllVideo |= CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(0);
+    744                      misc2 = CCM_ANALOG_MISC2_VIDEO_DIV(3);
+   \       0x5C   0xF04F 0x4340      MOV      R3,#-1073741824
+    745                      break;
+   \       0x60   0xE00E             B.N      ??CLOCK_InitVideoPll_4
+    746          
+    747                  case 8:
+    748                      pllVideo |= CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(1);
+   \                     ??CLOCK_InitVideoPll_2: (+1)
+   \       0x62   0xF444 0x2400      ORR      R4,R4,#0x80000
+    749                      misc2 = CCM_ANALOG_MISC2_VIDEO_DIV(3);
+   \       0x66   0xF04F 0x4340      MOV      R3,#-1073741824
+    750                      break;
+   \       0x6A   0xE009             B.N      ??CLOCK_InitVideoPll_4
+    751          
+    752                  case 4:
+    753                      pllVideo |= CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(2);
+   \                     ??CLOCK_InitVideoPll_1: (+1)
+   \       0x6C   0xF444 0x1480      ORR      R4,R4,#0x100000
+    754                      misc2 = CCM_ANALOG_MISC2_VIDEO_DIV(3);
+   \       0x70   0xF04F 0x4340      MOV      R3,#-1073741824
+    755                      break;
+   \       0x74   0xE004             B.N      ??CLOCK_InitVideoPll_4
+    756          
+    757                  case 2:
+    758                      pllVideo |= CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(1);
+   \                     ??CLOCK_InitVideoPll_0: (+1)
+   \       0x76   0xF444 0x2400      ORR      R4,R4,#0x80000
+    759                      break;
+   \       0x7A   0xE001             B.N      ??CLOCK_InitVideoPll_4
+    760          
+    761                  default:
+    762                      pllVideo |= CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(2);
+   \                     ??CLOCK_InitVideoPll_3: (+1)
+   \       0x7C   0xF444 0x1480      ORR      R4,R4,#0x100000
+    763                      break;
+    764              }
+    765          
+    766              CCM_ANALOG->MISC2 = (CCM_ANALOG->MISC2 & ~CCM_ANALOG_MISC2_VIDEO_DIV_MASK) | misc2;
+   \                     ??CLOCK_InitVideoPll_4: (+1)
+   \       0x80   0x....'....        LDR.W    R0,??DataTable38_42  ;; 0x400d8170
+   \       0x84   0x6801             LDR      R1,[R0, #+0]
+   \       0x86   0xF021 0x4140      BIC      R1,R1,#0xC0000000
+   \       0x8A   0x430B             ORRS     R3,R3,R1
+   \       0x8C   0x6003             STR      R3,[R0, #+0]
+    767          
+    768              CCM_ANALOG->PLL_VIDEO = pllVideo;
+   \       0x8E   0x6014             STR      R4,[R2, #+0]
+    769          
+    770              while ((CCM_ANALOG->PLL_VIDEO & CCM_ANALOG_PLL_VIDEO_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitVideoPll_5: (+1)
+   \       0x90   0x6810             LDR      R0,[R2, #+0]
+   \       0x92   0x2800             CMP      R0,#+0
+   \       0x94   0xD5FC             BPL.N    ??CLOCK_InitVideoPll_5
+    771              {
+    772              }
+    773          
+    774              /* Disable Bypass */
+    775              CCM_ANALOG->PLL_VIDEO &= ~CCM_ANALOG_PLL_VIDEO_BYPASS_MASK;
+   \       0x96   0x6810             LDR      R0,[R2, #+0]
+   \       0x98   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x9C   0x6010             STR      R0,[R2, #+0]
+    776          }
+   \       0x9E   0xBC10             POP      {R4}
+   \       0xA0   0x4770             BX       LR               ;; return
+    777          
+    778          /*!
+    779           * brief De-initialize the Video PLL.
+    780           */
+
+   \                                 In section .text, align 2, keep-with-next
+    781          void CLOCK_DeinitVideoPll(void)
+    782          {
+    783              CCM_ANALOG->PLL_VIDEO = CCM_ANALOG_PLL_VIDEO_POWERDOWN_MASK;
+   \                     CLOCK_DeinitVideoPll: (+1)
+   \        0x0   0xF44F 0x5080      MOV      R0,#+4096
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_44  ;; 0x400d80a0
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    784          }
+   \        0xA   0x4770             BX       LR               ;; return
+    785          
+    786          /*!
+    787           * brief Initialize the ENET PLL.
+    788           *
+    789           * This function initializes the ENET PLL with specific settings.
+    790           *
+    791           * param config Configuration to set to PLL.
+    792           */
+
+   \                                 In section .text, align 2, keep-with-next
+    793          void CLOCK_InitEnetPll(const clock_enet_pll_config_t *config)
+    794          {
+   \                     CLOCK_InitEnetPll: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+    795              uint32_t enet_pll = CCM_ANALOG_PLL_ENET_DIV_SELECT(config->loopDivider);
+   \        0x2   0x7882             LDRB     R2,[R0, #+2]
+   \        0x4   0xF002 0x0203      AND      R2,R2,#0x3
+    796          
+    797              CCM_ANALOG->PLL_ENET = (CCM_ANALOG->PLL_ENET & (~CCM_ANALOG_PLL_ENET_BYPASS_CLK_SRC_MASK)) |
+    798                                     CCM_ANALOG_PLL_ENET_BYPASS_MASK | CCM_ANALOG_PLL_ENET_BYPASS_CLK_SRC(config->src);
+   \        0x8   0x....'....        LDR.W    R3,??DataTable38_47  ;; 0x400d80e0
+   \        0xC   0x6819             LDR      R1,[R3, #+0]
+   \        0xE   0xF421 0x4140      BIC      R1,R1,#0xC000
+   \       0x12   0x78C4             LDRB     R4,[R0, #+3]
+   \       0x14   0x03A4             LSLS     R4,R4,#+14
+   \       0x16   0xF404 0x4440      AND      R4,R4,#0xC000
+   \       0x1A   0x4321             ORRS     R1,R4,R1
+   \       0x1C   0xF441 0x3180      ORR      R1,R1,#0x10000
+   \       0x20   0x6019             STR      R1,[R3, #+0]
+    799          
+    800              if (config->enableClkOutput)
+   \       0x22   0x7801             LDRB     R1,[R0, #+0]
+   \       0x24   0x2900             CMP      R1,#+0
+   \       0x26   0xD001             BEQ.N    ??CLOCK_InitEnetPll_0
+    801              {
+    802                  enet_pll |= CCM_ANALOG_PLL_ENET_ENABLE_MASK;
+   \       0x28   0xF442 0x5200      ORR      R2,R2,#0x2000
+    803              }
+    804          
+    805              if (config->enableClkOutput25M)
+   \                     ??CLOCK_InitEnetPll_0: (+1)
+   \       0x2C   0x7840             LDRB     R0,[R0, #+1]
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD001             BEQ.N    ??CLOCK_InitEnetPll_1
+    806              {
+    807                  enet_pll |= CCM_ANALOG_PLL_ENET_ENET_25M_REF_EN_MASK;
+   \       0x32   0xF442 0x1200      ORR      R2,R2,#0x200000
+    808              }
+    809          
+    810              CCM_ANALOG->PLL_ENET =
+    811                  (CCM_ANALOG->PLL_ENET & (~(CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK | CCM_ANALOG_PLL_ENET_POWERDOWN_MASK))) |
+    812                  enet_pll;
+   \                     ??CLOCK_InitEnetPll_1: (+1)
+   \       0x36   0x6819             LDR      R1,[R3, #+0]
+   \       0x38   0x....'....        LDR.W    R0,??DataTable38_48  ;; 0xffffeffc
+   \       0x3C   0x4001             ANDS     R1,R0,R1
+   \       0x3E   0x430A             ORRS     R2,R2,R1
+   \       0x40   0x601A             STR      R2,[R3, #+0]
+    813          
+    814              /* Wait for stable */
+    815              while ((CCM_ANALOG->PLL_ENET & CCM_ANALOG_PLL_ENET_LOCK_MASK) == 0)
+   \                     ??CLOCK_InitEnetPll_2: (+1)
+   \       0x42   0x6818             LDR      R0,[R3, #+0]
+   \       0x44   0x2800             CMP      R0,#+0
+   \       0x46   0xD5FC             BPL.N    ??CLOCK_InitEnetPll_2
+    816              {
+    817              }
+    818          
+    819              /* Disable Bypass */
+    820              CCM_ANALOG->PLL_ENET &= ~CCM_ANALOG_PLL_ENET_BYPASS_MASK;
+   \       0x48   0x6818             LDR      R0,[R3, #+0]
+   \       0x4A   0xF420 0x3080      BIC      R0,R0,#0x10000
+   \       0x4E   0x6018             STR      R0,[R3, #+0]
+    821          }
+   \       0x50   0xBC10             POP      {R4}
+   \       0x52   0x4770             BX       LR               ;; return
+    822          
+    823          /*!
+    824           * brief Deinitialize the ENET PLL.
+    825           *
+    826           * This function disables the ENET PLL.
+    827           */
+
+   \                                 In section .text, align 2, keep-with-next
+    828          void CLOCK_DeinitEnetPll(void)
+    829          {
+    830              CCM_ANALOG->PLL_ENET = CCM_ANALOG_PLL_ENET_POWERDOWN_MASK;
+   \                     CLOCK_DeinitEnetPll: (+1)
+   \        0x0   0xF44F 0x5080      MOV      R0,#+4096
+   \        0x4   0x....'....        LDR.W    R1,??DataTable38_47  ;; 0x400d80e0
+   \        0x8   0x6008             STR      R0,[R1, #+0]
+    831          }
+   \        0xA   0x4770             BX       LR               ;; return
+    832          
+    833          /*!
+    834           * brief Get current PLL output frequency.
+    835           *
+    836           * This function get current output frequency of specific PLL
+    837           *
+    838           * param pll   pll name to get frequency.
+    839           * return The PLL output frequency in hertz.
+    840           */
+
+   \                                 In section .text, align 2, keep-with-next
+    841          uint32_t CLOCK_GetPllFreq(clock_pll_t pll)
+    842          {
+   \                     CLOCK_GetPllFreq: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+    843              uint32_t freq;
+    844              uint32_t divSelect;
+    845              clock_64b_t freqTmp;
+    846          
+    847              const uint32_t enetRefClkFreq[] = {
+    848                  25000000U,  /* 25M */
+    849                  50000000U,  /* 50M */
+    850                  100000000U, /* 100M */
+    851                  125000000U  /* 125M */
+    852              };
+    853          
+    854              /* check if PLL is enabled */
+    855              if (!CLOCK_IsPllEnabled(CCM_ANALOG, pll))
+   \        0x4   0x....'....        LDR.W    R6,??DataTable38_30  ;; 0x400d8000
+   \        0x8   0x4629             MOV      R1,R5
+   \        0xA   0x4630             MOV      R0,R6
+   \        0xC   0x....'....        BL       CLOCK_IsPllEnabled
+   \       0x10   0x2800             CMP      R0,#+0
+   \       0x12   0xD101             BNE.N    ??CLOCK_GetPllFreq_0
+    856              {
+    857                  return 0U;
+   \       0x14   0x2000             MOVS     R0,#+0
+   \       0x16   0xBD70             POP      {R4-R6,PC}
+    858              }
+    859          
+    860              /* get pll reference clock */
+    861              freq = CLOCK_GetPllBypassRefClk(CCM_ANALOG, pll);
+   \                     ??CLOCK_GetPllFreq_0: (+1)
+   \       0x18   0x4629             MOV      R1,R5
+   \       0x1A   0x4630             MOV      R0,R6
+   \       0x1C   0x....'....        BL       CLOCK_GetPllBypassRefClk
+   \       0x20   0x4604             MOV      R4,R0
+    862          
+    863              /* check if pll is bypassed */
+    864              if (CLOCK_IsPllBypassed(CCM_ANALOG, pll))
+   \       0x22   0x4629             MOV      R1,R5
+   \       0x24   0x4630             MOV      R0,R6
+   \       0x26   0x....'....        BL       CLOCK_IsPllBypassed
+   \       0x2A   0x2800             CMP      R0,#+0
+   \       0x2C   0xF040 0x80C9      BNE.W    ??CLOCK_GetPllFreq_1
+    865              {
+    866                  return freq;
+    867              }
+    868          
+    869              switch (pll)
+   \       0x30   0x3D0D             SUBS     R5,R5,#+13
+   \       0x32   0xD019             BEQ.N    ??CLOCK_GetPllFreq_2
+   \       0x34   0xF44F 0x1080      MOV      R0,#+1048576
+   \       0x38   0x1A2D             SUBS     R5,R5,R0
+   \       0x3A   0xD03F             BEQ.N    ??CLOCK_GetPllFreq_3
+   \       0x3C   0x1A2D             SUBS     R5,R5,R0
+   \       0x3E   0xF000 0x80B6      BEQ.W    ??CLOCK_GetPllFreq_4
+   \       0x42   0x1A2D             SUBS     R5,R5,R0
+   \       0x44   0xD016             BEQ.N    ??CLOCK_GetPllFreq_5
+   \       0x46   0xF44F 0x0080      MOV      R0,#+4194304
+   \       0x4A   0x1A2D             SUBS     R5,R5,R0
+   \       0x4C   0xD03F             BEQ.N    ??CLOCK_GetPllFreq_6
+   \       0x4E   0xF44F 0x1040      MOV      R0,#+3145728
+   \       0x52   0x1A2D             SUBS     R5,R5,R0
+   \       0x54   0xD06E             BEQ.N    ??CLOCK_GetPllFreq_7
+   \       0x56   0xF44F 0x0080      MOV      R0,#+4194304
+   \       0x5A   0x1A2D             SUBS     R5,R5,R0
+   \       0x5C   0xF000 0x809D      BEQ.W    ??CLOCK_GetPllFreq_8
+   \       0x60   0x3D08             SUBS     R5,R5,#+8
+   \       0x62   0xF000 0x80A2      BEQ.W    ??CLOCK_GetPllFreq_9
+   \       0x66   0xE0AB             B.N      ??CLOCK_GetPllFreq_10
+    870              {
+    871                  case kCLOCK_PllArm:
+    872                      freq = ((freq * ((CCM_ANALOG->PLL_ARM & CCM_ANALOG_PLL_ARM_DIV_SELECT_MASK) >>
+    873                                       CCM_ANALOG_PLL_ARM_DIV_SELECT_SHIFT)) >>
+    874                              1U);
+   \                     ??CLOCK_GetPllFreq_2: (+1)
+   \       0x68   0x6830             LDR      R0,[R6, #+0]
+   \       0x6A   0xF000 0x007F      AND      R0,R0,#0x7F
+   \       0x6E   0x4344             MULS     R4,R0,R4
+   \       0x70   0x0864             LSRS     R4,R4,#+1
+    875                      break;
+   \       0x72   0xE0A6             B.N      ??CLOCK_GetPllFreq_1
+    876                  case kCLOCK_PllSys:
+    877                      /* PLL output frequency = Fref * (DIV_SELECT + NUM/DENOM). */
+    878                      freqTmp = ((clock_64b_t)freq * ((clock_64b_t)(CCM_ANALOG->PLL_SYS_NUM))) /
+    879                                ((clock_64b_t)(CCM_ANALOG->PLL_SYS_DENOM));
+   \                     ??CLOCK_GetPllFreq_5: (+1)
+   \       0x74   0x....'....        LDR.W    R0,??DataTable38_34  ;; 0x400d8050
+   \       0x78   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \       0x7C   0xEE00 0x4A90      VMOV     S1,R4
+   \       0x80   0xEEB8 0x1B60      VCVT.F64.U32 D1,S1
+   \       0x84   0xEEB8 0x0B40      VCVT.F64.U32 D0,S0
+   \       0x88   0xEE21 0x0B00      VMUL.F64 D0,D1,D0
+   \       0x8C   0x....'....        LDR.W    R0,??DataTable38_35  ;; 0x400d8060
+   \       0x90   0xED90 0x1A00      VLDR     S2,[R0, #0]
+   \       0x94   0xEEB8 0x1B41      VCVT.F64.U32 D1,S2
+   \       0x98   0xEE80 0x0B01      VDIV.F64 D0,D0,D1
+    880          
+    881                      if (CCM_ANALOG->PLL_SYS & CCM_ANALOG_PLL_SYS_DIV_SELECT_MASK)
+   \       0x9C   0x....             LDR.N    R0,??DataTable38_32  ;; 0x400d8030
+   \       0x9E   0x6800             LDR      R0,[R0, #+0]
+   \       0xA0   0x07C0             LSLS     R0,R0,#+31
+   \       0xA2   0xD502             BPL.N    ??CLOCK_GetPllFreq_11
+    882                      {
+    883                          freq *= 22U;
+   \       0xA4   0x2016             MOVS     R0,#+22
+   \       0xA6   0x4344             MULS     R4,R0,R4
+   \       0xA8   0xE002             B.N      ??CLOCK_GetPllFreq_12
+    884                      }
+    885                      else
+    886                      {
+    887                          freq *= 20U;
+   \                     ??CLOCK_GetPllFreq_11: (+1)
+   \       0xAA   0xEB04 0x0084      ADD      R0,R4,R4, LSL #+2
+   \       0xAE   0x0084             LSLS     R4,R0,#+2
+    888                      }
+    889          
+    890                      freq += (uint32_t)freqTmp;
+   \                     ??CLOCK_GetPllFreq_12: (+1)
+   \       0xB0   0xEEBC 0x0BC0      VCVT.U32.F64 S0,D0
+   \       0xB4   0xEE10 0x0A10      VMOV     R0,S0
+   \       0xB8   0x1904             ADDS     R4,R0,R4
+    891                      break;
+   \       0xBA   0xE082             B.N      ??CLOCK_GetPllFreq_1
+    892          
+    893                  case kCLOCK_PllUsb1:
+    894                      freq = (freq * ((CCM_ANALOG->PLL_USB1 & CCM_ANALOG_PLL_USB1_DIV_SELECT_MASK) ? 22U : 20U));
+   \                     ??CLOCK_GetPllFreq_3: (+1)
+   \       0xBC   0x....             LDR.N    R0,??DataTable38_27  ;; 0x400d8010
+   \       0xBE   0x6800             LDR      R0,[R0, #+0]
+   \       0xC0   0x0780             LSLS     R0,R0,#+30
+   \       0xC2   0xD501             BPL.N    ??CLOCK_GetPllFreq_13
+   \       0xC4   0x2016             MOVS     R0,#+22
+   \       0xC6   0xE000             B.N      ??CLOCK_GetPllFreq_14
+   \                     ??CLOCK_GetPllFreq_13: (+1)
+   \       0xC8   0x2014             MOVS     R0,#+20
+   \                     ??CLOCK_GetPllFreq_14: (+1)
+   \       0xCA   0x4344             MULS     R4,R0,R4
+    895                      break;
+   \       0xCC   0xE079             B.N      ??CLOCK_GetPllFreq_1
+    896          
+    897                  case kCLOCK_PllAudio:
+    898                      /* PLL output frequency = Fref * (DIV_SELECT + NUM/DENOM). */
+    899                      divSelect =
+    900                          (CCM_ANALOG->PLL_AUDIO & CCM_ANALOG_PLL_AUDIO_DIV_SELECT_MASK) >> CCM_ANALOG_PLL_AUDIO_DIV_SELECT_SHIFT;
+   \                     ??CLOCK_GetPllFreq_6: (+1)
+   \       0xCE   0x....             LDR.N    R2,??DataTable38_38  ;; 0x400d8070
+   \       0xD0   0x6811             LDR      R1,[R2, #+0]
+   \       0xD2   0xF001 0x017F      AND      R1,R1,#0x7F
+    901          
+    902                      freqTmp = ((clock_64b_t)freq * ((clock_64b_t)(CCM_ANALOG->PLL_AUDIO_NUM))) /
+    903                                ((clock_64b_t)(CCM_ANALOG->PLL_AUDIO_DENOM));
+   \       0xD6   0x....             LDR.N    R0,??DataTable38_39  ;; 0x400d8080
+   \       0xD8   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \       0xDC   0xEE00 0x4A90      VMOV     S1,R4
+   \       0xE0   0xEEB8 0x1B60      VCVT.F64.U32 D1,S1
+   \       0xE4   0xEEB8 0x0B40      VCVT.F64.U32 D0,S0
+   \       0xE8   0xEE21 0x0B00      VMUL.F64 D0,D1,D0
+   \       0xEC   0x....             LDR.N    R0,??DataTable38_40  ;; 0x400d8090
+   \       0xEE   0xED90 0x1A00      VLDR     S2,[R0, #0]
+   \       0xF2   0xEEB8 0x1B41      VCVT.F64.U32 D1,S2
+   \       0xF6   0xEE80 0x0B01      VDIV.F64 D0,D0,D1
+    904          
+    905                      freq = freq * divSelect + (uint32_t)freqTmp;
+   \       0xFA   0xEEBC 0x0BC0      VCVT.U32.F64 S0,D0
+   \       0xFE   0xEE10 0x0A10      VMOV     R0,S0
+   \      0x102   0xFB01 0x0404      MLA      R4,R1,R4,R0
+    906          
+    907                      /* AUDIO PLL output = PLL output frequency / POSTDIV. */
+    908          
+    909                      /*
+    910                       * Post divider:
+    911                       *
+    912                       * PLL_AUDIO[POST_DIV_SELECT]:
+    913                       * 0x00: 4
+    914                       * 0x01: 2
+    915                       * 0x02: 1
+    916                       *
+    917                       * MISC2[AUDO_DIV]:
+    918                       * 0x00: 1
+    919                       * 0x01: 2
+    920                       * 0x02: 1
+    921                       * 0x03: 4
+    922                       */
+    923                      switch (CCM_ANALOG->PLL_AUDIO & CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT_MASK)
+   \      0x106   0x6810             LDR      R0,[R2, #+0]
+   \      0x108   0xF410 0x10C0      ANDS     R0,R0,#0x180000
+   \      0x10C   0xD003             BEQ.N    ??CLOCK_GetPllFreq_15
+   \      0x10E   0xF5B0 0x2F00      CMP      R0,#+524288
+   \      0x112   0xD002             BEQ.N    ??CLOCK_GetPllFreq_16
+   \      0x114   0xE002             B.N      ??CLOCK_GetPllFreq_17
+    924                      {
+    925                          case CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(0U):
+    926                              freq = freq >> 2U;
+   \                     ??CLOCK_GetPllFreq_15: (+1)
+   \      0x116   0x08A4             LSRS     R4,R4,#+2
+    927                              break;
+   \      0x118   0xE000             B.N      ??CLOCK_GetPllFreq_17
+    928          
+    929                          case CCM_ANALOG_PLL_AUDIO_POST_DIV_SELECT(1U):
+    930                              freq = freq >> 1U;
+   \                     ??CLOCK_GetPllFreq_16: (+1)
+   \      0x11A   0x0864             LSRS     R4,R4,#+1
+    931                              break;
+    932          
+    933                          default:
+    934                              break;
+    935                      }
+    936          
+    937                      switch (CCM_ANALOG->MISC2 & (CCM_ANALOG_MISC2_AUDIO_DIV_MSB_MASK | CCM_ANALOG_MISC2_AUDIO_DIV_LSB_MASK))
+   \                     ??CLOCK_GetPllFreq_17: (+1)
+   \      0x11C   0x....             LDR.N    R0,??DataTable38_42  ;; 0x400d8170
+   \      0x11E   0x6801             LDR      R1,[R0, #+0]
+   \      0x120   0x....             LDR.N    R0,??DataTable38_41  ;; 0x808000
+   \      0x122   0x4001             ANDS     R1,R0,R1
+   \      0x124   0xF5B1 0x4F00      CMP      R1,#+32768
+   \      0x128   0xD002             BEQ.N    ??CLOCK_GetPllFreq_18
+   \      0x12A   0x4281             CMP      R1,R0
+   \      0x12C   0xD033             BEQ.N    ??CLOCK_GetPllFreq_19
+   \      0x12E   0xE048             B.N      ??CLOCK_GetPllFreq_1
+    938                      {
+    939                          case CCM_ANALOG_MISC2_AUDIO_DIV_MSB(1) | CCM_ANALOG_MISC2_AUDIO_DIV_LSB(1):
+    940                              freq >>= 2U;
+    941                              break;
+    942          
+    943                          case CCM_ANALOG_MISC2_AUDIO_DIV_MSB(0) | CCM_ANALOG_MISC2_AUDIO_DIV_LSB(1):
+    944                              freq >>= 1U;
+    945                              break;
+    946          
+    947                          default:
+    948                              break;
+    949                      }
+    950                      break;
+    951          
+    952                  case kCLOCK_PllVideo:
+    953                      /* PLL output frequency = Fref * (DIV_SELECT + NUM/DENOM). */
+    954                      divSelect =
+    955                          (CCM_ANALOG->PLL_VIDEO & CCM_ANALOG_PLL_VIDEO_DIV_SELECT_MASK) >> CCM_ANALOG_PLL_VIDEO_DIV_SELECT_SHIFT;
+    956          
+    957                      freqTmp = ((clock_64b_t)freq * ((clock_64b_t)(CCM_ANALOG->PLL_VIDEO_NUM))) /
+    958                                ((clock_64b_t)(CCM_ANALOG->PLL_VIDEO_DENOM));
+    959          
+    960                      freq = freq * divSelect + (uint32_t)freqTmp;
+    961          
+    962                      /* VIDEO PLL output = PLL output frequency / POSTDIV. */
+    963          
+    964                      /*
+    965                       * Post divider:
+    966                       *
+    967                       * PLL_VIDEO[POST_DIV_SELECT]:
+    968                       * 0x00: 4
+    969                       * 0x01: 2
+    970                       * 0x02: 1
+    971                       *
+    972                       * MISC2[VIDEO_DIV]:
+    973                       * 0x00: 1
+    974                       * 0x01: 2
+    975                       * 0x02: 1
+    976                       * 0x03: 4
+    977                       */
+    978                      switch (CCM_ANALOG->PLL_VIDEO & CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT_MASK)
+    979                      {
+    980                          case CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(0U):
+    981                              freq = freq >> 2U;
+    982                              break;
+    983          
+    984                          case CCM_ANALOG_PLL_VIDEO_POST_DIV_SELECT(1U):
+    985                              freq = freq >> 1U;
+    986                              break;
+    987          
+    988                          default:
+    989                              break;
+    990                      }
+    991          
+    992                      switch (CCM_ANALOG->MISC2 & CCM_ANALOG_MISC2_VIDEO_DIV_MASK)
+    993                      {
+    994                          case CCM_ANALOG_MISC2_VIDEO_DIV(3):
+    995                              freq >>= 2U;
+    996                              break;
+    997          
+    998                          case CCM_ANALOG_MISC2_VIDEO_DIV(1):
+    999                              freq >>= 1U;
+   \                     ??CLOCK_GetPllFreq_18: (+1)
+   \      0x130   0x0864             LSRS     R4,R4,#+1
+   1000                              break;
+   \      0x132   0xE046             B.N      ??CLOCK_GetPllFreq_1
+   \                     ??CLOCK_GetPllFreq_7: (+1)
+   \      0x134   0x....             LDR.N    R2,??DataTable38_44  ;; 0x400d80a0
+   \      0x136   0x6811             LDR      R1,[R2, #+0]
+   \      0x138   0xF001 0x017F      AND      R1,R1,#0x7F
+   \      0x13C   0x....             LDR.N    R0,??DataTable38_45  ;; 0x400d80b0
+   \      0x13E   0xED90 0x0A00      VLDR     S0,[R0, #0]
+   \      0x142   0xEE00 0x4A90      VMOV     S1,R4
+   \      0x146   0xEEB8 0x1B60      VCVT.F64.U32 D1,S1
+   \      0x14A   0xEEB8 0x0B40      VCVT.F64.U32 D0,S0
+   \      0x14E   0xEE21 0x0B00      VMUL.F64 D0,D1,D0
+   \      0x152   0x....             LDR.N    R0,??DataTable38_46  ;; 0x400d80c0
+   \      0x154   0xED90 0x1A00      VLDR     S2,[R0, #0]
+   \      0x158   0xEEB8 0x1B41      VCVT.F64.U32 D1,S2
+   \      0x15C   0xEE80 0x0B01      VDIV.F64 D0,D0,D1
+   \      0x160   0xEEBC 0x0BC0      VCVT.U32.F64 S0,D0
+   \      0x164   0xEE10 0x0A10      VMOV     R0,S0
+   \      0x168   0xFB01 0x0404      MLA      R4,R1,R4,R0
+   \      0x16C   0x6810             LDR      R0,[R2, #+0]
+   \      0x16E   0xF410 0x10C0      ANDS     R0,R0,#0x180000
+   \      0x172   0xD003             BEQ.N    ??CLOCK_GetPllFreq_20
+   \      0x174   0xF5B0 0x2F00      CMP      R0,#+524288
+   \      0x178   0xD002             BEQ.N    ??CLOCK_GetPllFreq_21
+   \      0x17A   0xE002             B.N      ??CLOCK_GetPllFreq_22
+   \                     ??CLOCK_GetPllFreq_20: (+1)
+   \      0x17C   0x08A4             LSRS     R4,R4,#+2
+   \      0x17E   0xE000             B.N      ??CLOCK_GetPllFreq_22
+   \                     ??CLOCK_GetPllFreq_21: (+1)
+   \      0x180   0x0864             LSRS     R4,R4,#+1
+   \                     ??CLOCK_GetPllFreq_22: (+1)
+   \      0x182   0x....             LDR.N    R0,??DataTable38_42  ;; 0x400d8170
+   \      0x184   0x6800             LDR      R0,[R0, #+0]
+   \      0x186   0xF000 0x4040      AND      R0,R0,#0xC0000000
+   \      0x18A   0xF1B0 0x4F80      CMP      R0,#+1073741824
+   \      0x18E   0xD0CF             BEQ.N    ??CLOCK_GetPllFreq_18
+   \      0x190   0xF1B0 0x4F40      CMP      R0,#-1073741824
+   \      0x194   0xD115             BNE.N    ??CLOCK_GetPllFreq_1
+   \                     ??CLOCK_GetPllFreq_19: (+1)
+   \      0x196   0x08A4             LSRS     R4,R4,#+2
+   \      0x198   0xE013             B.N      ??CLOCK_GetPllFreq_1
+   1001          
+   1002                          default:
+   1003                              break;
+   1004                      }
+   1005                      break;
+   1006                  case kCLOCK_PllEnet:
+   1007                      divSelect =
+   1008                          (CCM_ANALOG->PLL_ENET & CCM_ANALOG_PLL_ENET_DIV_SELECT_MASK) >> CCM_ANALOG_PLL_ENET_DIV_SELECT_SHIFT;
+   \                     ??CLOCK_GetPllFreq_8: (+1)
+   \      0x19A   0x....             LDR.N    R0,??DataTable38_47  ;; 0x400d80e0
+   \      0x19C   0x6800             LDR      R0,[R0, #+0]
+   \      0x19E   0xF000 0x0003      AND      R0,R0,#0x3
+   1009                      freq = enetRefClkFreq[divSelect];
+   \      0x1A2   0x....             LDR.N    R1,??DataTable38_49
+   \      0x1A4   0xF851 0x4020      LDR      R4,[R1, R0, LSL #+2]
+   1010                      break;
+   \      0x1A8   0xE00B             B.N      ??CLOCK_GetPllFreq_1
+   1011          
+   1012                  case kCLOCK_PllEnet25M:
+   1013                      /* ref_enetpll1 if fixed at 25MHz. */
+   1014                      freq = 25000000UL;
+   \                     ??CLOCK_GetPllFreq_9: (+1)
+   \      0x1AA   0x....             LDR.N    R4,??DataTable38_50  ;; 0x17d7840
+   1015                      break;
+   \      0x1AC   0xE009             B.N      ??CLOCK_GetPllFreq_1
+   1016          
+   1017                  case kCLOCK_PllUsb2:
+   1018                      freq = (freq * ((CCM_ANALOG->PLL_USB2 & CCM_ANALOG_PLL_USB2_DIV_SELECT_MASK) ? 22U : 20U));
+   \                     ??CLOCK_GetPllFreq_4: (+1)
+   \      0x1AE   0x....             LDR.N    R0,??DataTable38_37  ;; 0x400d8020
+   \      0x1B0   0x6800             LDR      R0,[R0, #+0]
+   \      0x1B2   0x0780             LSLS     R0,R0,#+30
+   \      0x1B4   0xD501             BPL.N    ??CLOCK_GetPllFreq_23
+   \      0x1B6   0x2016             MOVS     R0,#+22
+   \      0x1B8   0xE000             B.N      ??CLOCK_GetPllFreq_24
+   \                     ??CLOCK_GetPllFreq_23: (+1)
+   \      0x1BA   0x2014             MOVS     R0,#+20
+   \                     ??CLOCK_GetPllFreq_24: (+1)
+   \      0x1BC   0x4344             MULS     R4,R0,R4
+   1019                      break;
+   \      0x1BE   0xE000             B.N      ??CLOCK_GetPllFreq_1
+   1020                  default:
+   1021                      freq = 0U;
+   \                     ??CLOCK_GetPllFreq_10: (+1)
+   \      0x1C0   0x2400             MOVS     R4,#+0
+   1022                      break;
+   1023              }
+   1024          
+   1025              return freq;
+   \                     ??CLOCK_GetPllFreq_1: (+1)
+   \      0x1C2   0x4620             MOV      R0,R4
+   \      0x1C4   0xBD70             POP      {R4-R6,PC}       ;; return
+   1026          }
+
+   \                                 In section .rodata, align 4
+   \                     `CLOCK_GetPllFreq::enetRefClkFreq`:
+   \        0x0   0x017D'7840        DC32 25000000, 50000000, 100000000, 125000000
+   \              0x02FA'F080  
+   \              0x05F5'E100  
+   \              0x0773'5940  
+   1027          
+   1028          /*!
+   1029           * brief Initialize the System PLL PFD.
+   1030           *
+   1031           * This function initializes the System PLL PFD. During new value setting,
+   1032           * the clock output is disabled to prevent glitch.
+   1033           *
+   1034           * param pfd Which PFD clock to enable.
+   1035           * param pfdFrac The PFD FRAC value.
+   1036           * note It is recommended that PFD settings are kept between 12-35.
+   1037           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1038          void CLOCK_InitSysPfd(clock_pfd_t pfd, uint8_t pfdFrac)
+   1039          {
+   \                     CLOCK_InitSysPfd: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+   1040              uint32_t pfdIndex = (uint32_t)pfd;
+   1041              uint32_t pfd528;
+   1042          
+   1043              pfd528 = CCM_ANALOG->PFD_528 &
+   1044                       ~((CCM_ANALOG_PFD_528_PFD0_CLKGATE_MASK | CCM_ANALOG_PFD_528_PFD0_FRAC_MASK) << (8 * pfdIndex));
+   \        0x2   0x....             LDR.N    R3,??DataTable38_51  ;; 0x400d8100
+   \        0x4   0x681A             LDR      R2,[R3, #+0]
+   \        0x6   0x25BF             MOVS     R5,#+191
+   \        0x8   0x00C4             LSLS     R4,R0,#+3
+   \        0xA   0xFA05 0xF404      LSL      R4,R5,R4
+   \        0xE   0xEA22 0x0404      BIC      R4,R2,R4
+   1045          
+   1046              /* Disable the clock output first. */
+   1047              CCM_ANALOG->PFD_528 = pfd528 | (CCM_ANALOG_PFD_528_PFD0_CLKGATE_MASK << (8 * pfdIndex));
+   \       0x12   0x2580             MOVS     R5,#+128
+   \       0x14   0x00C2             LSLS     R2,R0,#+3
+   \       0x16   0x4095             LSLS     R5,R5,R2
+   \       0x18   0x4325             ORRS     R5,R5,R4
+   \       0x1A   0x601D             STR      R5,[R3, #+0]
+   1048          
+   1049              /* Set the new value and enable output. */
+   1050              CCM_ANALOG->PFD_528 = pfd528 | (CCM_ANALOG_PFD_528_PFD0_FRAC(pfdFrac) << (8 * pfdIndex));
+   \       0x1C   0xF001 0x013F      AND      R1,R1,#0x3F
+   \       0x20   0x00C0             LSLS     R0,R0,#+3
+   \       0x22   0x4081             LSLS     R1,R1,R0
+   \       0x24   0x4321             ORRS     R1,R1,R4
+   \       0x26   0x6019             STR      R1,[R3, #+0]
+   1051          }
+   \       0x28   0xBC30             POP      {R4,R5}
+   \       0x2A   0x4770             BX       LR               ;; return
+   1052          
+   1053          /*!
+   1054           * brief De-initialize the System PLL PFD.
+   1055           *
+   1056           * This function disables the System PLL PFD.
+   1057           *
+   1058           * param pfd Which PFD clock to disable.
+   1059           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1060          void CLOCK_DeinitSysPfd(clock_pfd_t pfd)
+   1061          {
+   1062              CCM_ANALOG->PFD_528 |= CCM_ANALOG_PFD_528_PFD0_CLKGATE_MASK << (8 * pfd);
+   \                     CLOCK_DeinitSysPfd: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable38_51  ;; 0x400d8100
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0x2380             MOVS     R3,#+128
+   \        0x6   0x00C0             LSLS     R0,R0,#+3
+   \        0x8   0xFA03 0xF000      LSL      R0,R3,R0
+   \        0xC   0x4310             ORRS     R0,R0,R2
+   \        0xE   0x6008             STR      R0,[R1, #+0]
+   1063          }
+   \       0x10   0x4770             BX       LR               ;; return
+   1064          
+   1065          /*!
+   1066           * brief Initialize the USB1 PLL PFD.
+   1067           *
+   1068           * This function initializes the USB1 PLL PFD. During new value setting,
+   1069           * the clock output is disabled to prevent glitch.
+   1070           *
+   1071           * param pfd Which PFD clock to enable.
+   1072           * param pfdFrac The PFD FRAC value.
+   1073           * note It is recommended that PFD settings are kept between 12-35.
+   1074           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1075          void CLOCK_InitUsb1Pfd(clock_pfd_t pfd, uint8_t pfdFrac)
+   1076          {
+   \                     CLOCK_InitUsb1Pfd: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+   1077              uint32_t pfdIndex = (uint32_t)pfd;
+   1078              uint32_t pfd480;
+   1079          
+   1080              pfd480 = CCM_ANALOG->PFD_480 &
+   1081                       ~((CCM_ANALOG_PFD_480_PFD0_CLKGATE_MASK | CCM_ANALOG_PFD_480_PFD0_FRAC_MASK) << (8 * pfdIndex));
+   \        0x2   0x....             LDR.N    R3,??DataTable38_52  ;; 0x400d80f0
+   \        0x4   0x681A             LDR      R2,[R3, #+0]
+   \        0x6   0x25BF             MOVS     R5,#+191
+   \        0x8   0x00C4             LSLS     R4,R0,#+3
+   \        0xA   0xFA05 0xF404      LSL      R4,R5,R4
+   \        0xE   0xEA22 0x0404      BIC      R4,R2,R4
+   1082          
+   1083              /* Disable the clock output first. */
+   1084              CCM_ANALOG->PFD_480 = pfd480 | (CCM_ANALOG_PFD_480_PFD0_CLKGATE_MASK << (8 * pfdIndex));
+   \       0x12   0x2580             MOVS     R5,#+128
+   \       0x14   0x00C2             LSLS     R2,R0,#+3
+   \       0x16   0x4095             LSLS     R5,R5,R2
+   \       0x18   0x4325             ORRS     R5,R5,R4
+   \       0x1A   0x601D             STR      R5,[R3, #+0]
+   1085          
+   1086              /* Set the new value and enable output. */
+   1087              CCM_ANALOG->PFD_480 = pfd480 | (CCM_ANALOG_PFD_480_PFD0_FRAC(pfdFrac) << (8 * pfdIndex));
+   \       0x1C   0xF001 0x013F      AND      R1,R1,#0x3F
+   \       0x20   0x00C0             LSLS     R0,R0,#+3
+   \       0x22   0x4081             LSLS     R1,R1,R0
+   \       0x24   0x4321             ORRS     R1,R1,R4
+   \       0x26   0x6019             STR      R1,[R3, #+0]
+   1088          }
+   \       0x28   0xBC30             POP      {R4,R5}
+   \       0x2A   0x4770             BX       LR               ;; return
+   1089          
+   1090          /*!
+   1091           * brief De-initialize the USB1 PLL PFD.
+   1092           *
+   1093           * This function disables the USB1 PLL PFD.
+   1094           *
+   1095           * param pfd Which PFD clock to disable.
+   1096           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1097          void CLOCK_DeinitUsb1Pfd(clock_pfd_t pfd)
+   1098          {
+   1099              CCM_ANALOG->PFD_480 |= CCM_ANALOG_PFD_480_PFD0_CLKGATE_MASK << (8 * pfd);
+   \                     CLOCK_DeinitUsb1Pfd: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable38_52  ;; 0x400d80f0
+   \        0x2   0x680A             LDR      R2,[R1, #+0]
+   \        0x4   0x2380             MOVS     R3,#+128
+   \        0x6   0x00C0             LSLS     R0,R0,#+3
+   \        0x8   0xFA03 0xF000      LSL      R0,R3,R0
+   \        0xC   0x4310             ORRS     R0,R0,R2
+   \        0xE   0x6008             STR      R0,[R1, #+0]
+   1100          }
+   \       0x10   0x4770             BX       LR               ;; return
+   1101          
+   1102          /*!
+   1103           * brief Get current System PLL PFD output frequency.
+   1104           *
+   1105           * This function get current output frequency of specific System PLL PFD
+   1106           *
+   1107           * param pfd   pfd name to get frequency.
+   1108           * return The PFD output frequency in hertz.
+   1109           */
+
+   \                                 In section .text, align 4, keep-with-next
+   1110          uint32_t CLOCK_GetSysPfdFreq(clock_pfd_t pfd)
+   1111          {
+   \                     CLOCK_GetSysPfdFreq: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   1112              uint32_t freq = CLOCK_GetPllFreq(kCLOCK_PllSys);
+   \        0x4   0x....             LDR.N    R0,??DataTable38_6  ;; 0x30000d
+   \        0x6   0x....'....        BL       CLOCK_GetPllFreq
+   1113          
+   1114              switch (pfd)
+   \        0xA   0x2C03             CMP      R4,#+3
+   \        0xC   0xD81F             BHI.N    ??CLOCK_GetSysPfdFreq_1
+   \        0xE   0xE8DF 0xF004      TBB      [PC, R4]
+   \                     ??CLOCK_GetSysPfdFreq_0:
+   \       0x12   0x02 0x09          DC8      0x2,0x9,0x10,0x17
+   \              0x10 0x17    
+   1115              {
+   1116                  case kCLOCK_Pfd0:
+   1117                      freq /= ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD0_FRAC_MASK) >> CCM_ANALOG_PFD_528_PFD0_FRAC_SHIFT);
+   \                     ??CLOCK_GetSysPfdFreq_2: (+1)
+   \       0x16   0x....             LDR.N    R1,??DataTable38_51  ;; 0x400d8100
+   \       0x18   0x6809             LDR      R1,[R1, #+0]
+   \       0x1A   0xF001 0x013F      AND      R1,R1,#0x3F
+   \       0x1E   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1118                      break;
+   \       0x22   0xE015             B.N      ??CLOCK_GetSysPfdFreq_3
+   1119          
+   1120                  case kCLOCK_Pfd1:
+   1121                      freq /= ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD1_FRAC_MASK) >> CCM_ANALOG_PFD_528_PFD1_FRAC_SHIFT);
+   \                     ??CLOCK_GetSysPfdFreq_4: (+1)
+   \       0x24   0x....             LDR.N    R1,??DataTable38_51  ;; 0x400d8100
+   \       0x26   0x6809             LDR      R1,[R1, #+0]
+   \       0x28   0xF3C1 0x2105      UBFX     R1,R1,#+8,#+6
+   \       0x2C   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1122                      break;
+   \       0x30   0xE00E             B.N      ??CLOCK_GetSysPfdFreq_3
+   1123          
+   1124                  case kCLOCK_Pfd2:
+   1125                      freq /= ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD2_FRAC_MASK) >> CCM_ANALOG_PFD_528_PFD2_FRAC_SHIFT);
+   \                     ??CLOCK_GetSysPfdFreq_5: (+1)
+   \       0x32   0x....             LDR.N    R1,??DataTable38_51  ;; 0x400d8100
+   \       0x34   0x6809             LDR      R1,[R1, #+0]
+   \       0x36   0xF3C1 0x4105      UBFX     R1,R1,#+16,#+6
+   \       0x3A   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1126                      break;
+   \       0x3E   0xE007             B.N      ??CLOCK_GetSysPfdFreq_3
+   1127          
+   1128                  case kCLOCK_Pfd3:
+   1129                      freq /= ((CCM_ANALOG->PFD_528 & CCM_ANALOG_PFD_528_PFD3_FRAC_MASK) >> CCM_ANALOG_PFD_528_PFD3_FRAC_SHIFT);
+   \                     ??CLOCK_GetSysPfdFreq_6: (+1)
+   \       0x40   0x....             LDR.N    R1,??DataTable38_51  ;; 0x400d8100
+   \       0x42   0x6809             LDR      R1,[R1, #+0]
+   \       0x44   0xF3C1 0x6105      UBFX     R1,R1,#+24,#+6
+   \       0x48   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1130                      break;
+   \       0x4C   0xE000             B.N      ??CLOCK_GetSysPfdFreq_3
+   1131          
+   1132                  default:
+   1133                      freq = 0U;
+   \                     ??CLOCK_GetSysPfdFreq_1: (+1)
+   \       0x4E   0x2000             MOVS     R0,#+0
+   1134                      break;
+   1135              }
+   1136              freq *= 18U;
+   1137          
+   1138              return freq;
+   \                     ??CLOCK_GetSysPfdFreq_3: (+1)
+   \       0x50   0xEB00 0x01C0      ADD      R1,R0,R0, LSL #+3
+   \       0x54   0x0048             LSLS     R0,R1,#+1
+   \       0x56   0xBD10             POP      {R4,PC}          ;; return
+   1139          }
+   1140          
+   1141          /*!
+   1142           * brief Get current USB1 PLL PFD output frequency.
+   1143           *
+   1144           * This function get current output frequency of specific USB1 PLL PFD
+   1145           *
+   1146           * param pfd   pfd name to get frequency.
+   1147           * return The PFD output frequency in hertz.
+   1148           */
+
+   \                                 In section .text, align 4, keep-with-next
+   1149          uint32_t CLOCK_GetUsb1PfdFreq(clock_pfd_t pfd)
+   1150          {
+   \                     CLOCK_GetUsb1PfdFreq: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   1151              uint32_t freq = CLOCK_GetPllFreq(kCLOCK_PllUsb1);
+   \        0x4   0x....             LDR.N    R0,??DataTable38_5  ;; 0x10000d
+   \        0x6   0x....'....        BL       CLOCK_GetPllFreq
+   1152          
+   1153              switch (pfd)
+   \        0xA   0x2C03             CMP      R4,#+3
+   \        0xC   0xD81F             BHI.N    ??CLOCK_GetUsb1PfdFreq_1
+   \        0xE   0xE8DF 0xF004      TBB      [PC, R4]
+   \                     ??CLOCK_GetUsb1PfdFreq_0:
+   \       0x12   0x02 0x09          DC8      0x2,0x9,0x10,0x17
+   \              0x10 0x17    
+   1154              {
+   1155                  case kCLOCK_Pfd0:
+   1156                      freq /= ((CCM_ANALOG->PFD_480 & CCM_ANALOG_PFD_480_PFD0_FRAC_MASK) >> CCM_ANALOG_PFD_480_PFD0_FRAC_SHIFT);
+   \                     ??CLOCK_GetUsb1PfdFreq_2: (+1)
+   \       0x16   0x....             LDR.N    R1,??DataTable38_52  ;; 0x400d80f0
+   \       0x18   0x6809             LDR      R1,[R1, #+0]
+   \       0x1A   0xF001 0x013F      AND      R1,R1,#0x3F
+   \       0x1E   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1157                      break;
+   \       0x22   0xE015             B.N      ??CLOCK_GetUsb1PfdFreq_3
+   1158          
+   1159                  case kCLOCK_Pfd1:
+   1160                      freq /= ((CCM_ANALOG->PFD_480 & CCM_ANALOG_PFD_480_PFD1_FRAC_MASK) >> CCM_ANALOG_PFD_480_PFD1_FRAC_SHIFT);
+   \                     ??CLOCK_GetUsb1PfdFreq_4: (+1)
+   \       0x24   0x....             LDR.N    R1,??DataTable38_52  ;; 0x400d80f0
+   \       0x26   0x6809             LDR      R1,[R1, #+0]
+   \       0x28   0xF3C1 0x2105      UBFX     R1,R1,#+8,#+6
+   \       0x2C   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1161                      break;
+   \       0x30   0xE00E             B.N      ??CLOCK_GetUsb1PfdFreq_3
+   1162          
+   1163                  case kCLOCK_Pfd2:
+   1164                      freq /= ((CCM_ANALOG->PFD_480 & CCM_ANALOG_PFD_480_PFD2_FRAC_MASK) >> CCM_ANALOG_PFD_480_PFD2_FRAC_SHIFT);
+   \                     ??CLOCK_GetUsb1PfdFreq_5: (+1)
+   \       0x32   0x....             LDR.N    R1,??DataTable38_52  ;; 0x400d80f0
+   \       0x34   0x6809             LDR      R1,[R1, #+0]
+   \       0x36   0xF3C1 0x4105      UBFX     R1,R1,#+16,#+6
+   \       0x3A   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1165                      break;
+   \       0x3E   0xE007             B.N      ??CLOCK_GetUsb1PfdFreq_3
+   1166          
+   1167                  case kCLOCK_Pfd3:
+   1168                      freq /= ((CCM_ANALOG->PFD_480 & CCM_ANALOG_PFD_480_PFD3_FRAC_MASK) >> CCM_ANALOG_PFD_480_PFD3_FRAC_SHIFT);
+   \                     ??CLOCK_GetUsb1PfdFreq_6: (+1)
+   \       0x40   0x....             LDR.N    R1,??DataTable38_52  ;; 0x400d80f0
+   \       0x42   0x6809             LDR      R1,[R1, #+0]
+   \       0x44   0xF3C1 0x6105      UBFX     R1,R1,#+24,#+6
+   \       0x48   0xFBB0 0xF0F1      UDIV     R0,R0,R1
+   1169                      break;
+   \       0x4C   0xE000             B.N      ??CLOCK_GetUsb1PfdFreq_3
+   1170          
+   1171                  default:
+   1172                      freq = 0U;
+   \                     ??CLOCK_GetUsb1PfdFreq_1: (+1)
+   \       0x4E   0x2000             MOVS     R0,#+0
+   1173                      break;
+   1174              }
+   1175              freq *= 18U;
+   1176          
+   1177              return freq;
+   \                     ??CLOCK_GetUsb1PfdFreq_3: (+1)
+   \       0x50   0xEB00 0x01C0      ADD      R1,R0,R0, LSL #+3
+   \       0x54   0x0048             LSLS     R0,R1,#+1
+   \       0x56   0xBD10             POP      {R4,PC}          ;; return
+   1178          }
+   1179          
+   1180          /*! brief Enable USB HS PHY PLL clock.
+   1181           *
+   1182           * This function enables the internal 480MHz USB PHY PLL clock.
+   1183           *
+   1184           * param src  USB HS PHY PLL clock source.
+   1185           * param freq The frequency specified by src.
+   1186           * retval true The clock is set successfully.
+   1187           * retval false The clock source is invalid to get proper USB HS clock.
+   1188           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1189          bool CLOCK_EnableUsbhs1PhyPllClock(clock_usb_phy_src_t src, uint32_t freq)
+   1190          {
+   \                     CLOCK_EnableUsbhs1PhyPllClock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+   1191              const clock_usb_pll_config_t g_ccmConfigUsbPll = {.loopDivider = 0U};
+   \        0x2   0x....             LDR.N    R0,??DataTable38_53
+   \        0x4   0x8800             LDRH     R0,[R0, #+0]
+   \        0x6   0xF8AD 0x0000      STRH     R0,[SP, #+0]
+   1192              CLOCK_InitUsb2Pll(&g_ccmConfigUsbPll);
+   \        0xA   0x4668             MOV      R0,SP
+   \        0xC   0x....'....        BL       CLOCK_InitUsb2Pll
+   1193              USBPHY2->CTRL &= ~USBPHY_CTRL_SFTRST_MASK; /* release PHY from reset */
+   \       0x10   0x....             LDR.N    R0,??DataTable38_54  ;; 0x400da030
+   \       0x12   0x6801             LDR      R1,[R0, #+0]
+   \       0x14   0xF021 0x4100      BIC      R1,R1,#0x80000000
+   \       0x18   0x6001             STR      R1,[R0, #+0]
+   1194              USBPHY2->CTRL &= ~USBPHY_CTRL_CLKGATE_MASK;
+   \       0x1A   0x6801             LDR      R1,[R0, #+0]
+   \       0x1C   0xF021 0x4180      BIC      R1,R1,#0x40000000
+   \       0x20   0x6001             STR      R1,[R0, #+0]
+   1195          
+   1196              USBPHY2->PWD = 0;
+   \       0x22   0x2100             MOVS     R1,#+0
+   \       0x24   0x....             LDR.N    R2,??DataTable38_55  ;; 0x400da000
+   \       0x26   0x6011             STR      R1,[R2, #+0]
+   1197              USBPHY2->CTRL |= USBPHY_CTRL_ENAUTOCLR_PHY_PWD_MASK | USBPHY_CTRL_ENAUTOCLR_CLKGATE_MASK |
+   1198                               USBPHY_CTRL_ENUTMILEVEL2_MASK | USBPHY_CTRL_ENUTMILEVEL3_MASK;
+   \       0x28   0x6801             LDR      R1,[R0, #+0]
+   \       0x2A   0xF441 0x11C6      ORR      R1,R1,#0x18C000
+   \       0x2E   0x6001             STR      R1,[R0, #+0]
+   1199          
+   1200              return true;
+   \       0x30   0x2001             MOVS     R0,#+1
+   \       0x32   0xBD02             POP      {R1,PC}          ;; return
+   1201          }
+
+   \                                 In section .rodata, align 2
+   \                     ?_3:
+   \        0x0   0x00 0x00          DC8 0, 0
+   1202          
+   1203          /*! brief Disable USB HS PHY PLL clock.
+   1204           *
+   1205           * This function disables USB HS PHY PLL clock.
+   1206           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1207          void CLOCK_DisableUsbhs1PhyPllClock(void)
+   1208          {
+   1209              CCM_ANALOG->PLL_USB2 &= ~CCM_ANALOG_PLL_USB2_EN_USB_CLKS_MASK;
+   \                     CLOCK_DisableUsbhs1PhyPllClock: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable38_37  ;; 0x400d8020
+   \        0x2   0x6801             LDR      R1,[R0, #+0]
+   \        0x4   0xF021 0x0140      BIC      R1,R1,#0x40
+   \        0x8   0x6001             STR      R1,[R0, #+0]
+   1210              USBPHY2->CTRL |= USBPHY_CTRL_CLKGATE_MASK; /* Set to 1U to gate clocks */
+   \        0xA   0x....             LDR.N    R0,??DataTable38_54  ;; 0x400da030
+   \        0xC   0x6801             LDR      R1,[R0, #+0]
+   \        0xE   0xF041 0x4180      ORR      R1,R1,#0x40000000
+   \       0x12   0x6001             STR      R1,[R0, #+0]
+   1211          }
+   \       0x14   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38:
+   \        0x0   0x400D'8270        DC32     0x400d8270
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_1:
+   \        0x0   0x016E'3600        DC32     0x16e3600
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_2:
+   \        0x0   0x....'....        DC32     g_xtalFreq
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_3:
+   \        0x0   0x400F'C014        DC32     0x400fc014
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_4:
+   \        0x0   0x400F'C018        DC32     0x400fc018
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_5:
+   \        0x0   0x0010'000D        DC32     0x10000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_6:
+   \        0x0   0x0030'000D        DC32     0x30000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_7:
+   \        0x0   0x400F'C010        DC32     0x400fc010
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_8:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_9:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_10:
+   \        0x0   0x400D'8158        DC32     0x400d8158
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_11:
+   \        0x0   0x400D'8154        DC32     0x400d8154
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_12:
+   \        0x0   0x400D'8150        DC32     0x400d8150
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_13:
+   \        0x0   0x400D'8274        DC32     0x400d8274
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_14:
+   \        0x0   0x400D'8278        DC32     0x400d8278
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_15:
+   \        0x0   0x400F'C01C        DC32     0x400fc01c
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_16:
+   \        0x0   0x0020'000D        DC32     0x20000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_17:
+   \        0x0   0x00E0'000D        DC32     0xe0000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_18:
+   \        0x0   0x00E0'0015        DC32     0xe00015
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_19:
+   \        0x0   0x0070'000D        DC32     0x70000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_20:
+   \        0x0   0x00A0'000D        DC32     0xa0000d
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_21:
+   \        0x0   0x400F'C080        DC32     0x400fc080
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_22:
+   \        0x0   0x402E'0140        DC32     0x402e0140
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_23:
+   \        0x0   0x0006'1A80        DC32     0x61a80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_24:
+   \        0x0   0x400D'8120        DC32     0x400d8120
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_25:
+   \        0x0   0x402E'0340        DC32     0x402e0340
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_26:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_27:
+   \        0x0   0x400D'8010        DC32     0x400d8010
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_28:
+   \        0x0   0x400D'9030        DC32     0x400d9030
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_29:
+   \        0x0   0x400D'9000        DC32     0x400d9000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_30:
+   \        0x0   0x400D'8000        DC32     0x400d8000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_31:
+   \        0x0   0xFFFF'EF80        DC32     0xffffef80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_32:
+   \        0x0   0x400D'8030        DC32     0x400d8030
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_33:
+   \        0x0   0xFFFF'EFFE        DC32     0xffffeffe
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_34:
+   \        0x0   0x400D'8050        DC32     0x400d8050
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_35:
+   \        0x0   0x400D'8060        DC32     0x400d8060
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_36:
+   \        0x0   0x400D'8040        DC32     0x400d8040
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_37:
+   \        0x0   0x400D'8020        DC32     0x400d8020
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_38:
+   \        0x0   0x400D'8070        DC32     0x400d8070
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_39:
+   \        0x0   0x400D'8080        DC32     0x400d8080
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_40:
+   \        0x0   0x400D'8090        DC32     0x400d8090
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_41:
+   \        0x0   0x0080'8000        DC32     0x808000
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_42:
+   \        0x0   0x400D'8170        DC32     0x400d8170
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_43:
+   \        0x0   0xFF7F'7FFF        DC32     0xff7f7fff
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_44:
+   \        0x0   0x400D'80A0        DC32     0x400d80a0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_45:
+   \        0x0   0x400D'80B0        DC32     0x400d80b0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_46:
+   \        0x0   0x400D'80C0        DC32     0x400d80c0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_47:
+   \        0x0   0x400D'80E0        DC32     0x400d80e0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_48:
+   \        0x0   0xFFFF'EFFC        DC32     0xffffeffc
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_49:
+   \        0x0   0x....'....        DC32     `CLOCK_GetPllFreq::enetRefClkFreq`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_50:
+   \        0x0   0x017D'7840        DC32     0x17d7840
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_51:
+   \        0x0   0x400D'8100        DC32     0x400d8100
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_52:
+   \        0x0   0x400D'80F0        DC32     0x400d80f0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_53:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_54:
+   \        0x0   0x400D'A030        DC32     0x400da030
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable38_55:
+   \        0x0   0x400D'A000        DC32     0x400da000
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x21 0x62          DC8 "!bypassXtalOsc"
+   \              0x79 0x70    
+   \              0x61 0x73    
+   \              0x73 0x58    
+   \              0x74 0x61    
+   \              0x6C 0x4F    
+   \              0x73 0x63    
+   \              0x00         
+   \        0xF   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x43 0x3A          DC8 43H, 3AH, 5CH, 44H, 65H, 76H, 65H, 6CH
+   \              0x5C 0x44    
+   \              0x65 0x76    
+   \              0x65 0x6C    
+   \        0x8   0x6F 0x70          DC8 6FH, 70H, 6DH, 65H, 6EH, 74H, 5CH, 67H
+   \              0x6D 0x65    
+   \              0x6E 0x74    
+   \              0x5C 0x67    
+   \       0x10   0x7A 0x6B          DC8 7AH, 6BH, 63H, 5FH, 73H, 6DH, 61H, 72H
+   \              0x63 0x5F    
+   \              0x73 0x6D    
+   \              0x61 0x72    
+   \       0x18   0x74 0x5F          DC8 74H, 5FH, 6EH, 62H, 69H, 6FH, 74H, 5CH
+   \              0x6E 0x62    
+   \              0x69 0x6F    
+   \              0x74 0x5C    
+   \       0x20   0x64 0x72          DC8 64H, 72H, 69H, 76H, 65H, 72H, 73H, 5CH
+   \              0x69 0x76    
+   \              0x65 0x72    
+   \              0x73 0x5C    
+   \       0x28   0x66 0x73          DC8 66H, 73H, 6CH, 5FH, 63H, 6CH, 6FH, 63H
+   \              0x6C 0x5F    
+   \              0x63 0x6C    
+   \              0x6F 0x63    
+   \       0x30   0x6B 0x2E          DC8 6BH, 2EH, 63H, 0
+   \              0x63 0x00    
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   CLOCK_DeinitArmPll
+       0   CLOCK_DeinitAudioPll
+       0   CLOCK_DeinitEnetPll
+       0   CLOCK_DeinitExternalClk
+       0   CLOCK_DeinitRcOsc24M
+       0   CLOCK_DeinitSysPfd
+       0   CLOCK_DeinitSysPll
+       0   CLOCK_DeinitUsb1Pfd
+       0   CLOCK_DeinitUsb1Pll
+       0   CLOCK_DeinitUsb2Pll
+       0   CLOCK_DeinitVideoPll
+       0   CLOCK_DisableUsbhs0PhyPllClock
+       0   CLOCK_DisableUsbhs1PhyPllClock
+       4   CLOCK_EnableUsbhs0Clock
+       8   CLOCK_EnableUsbhs0PhyPllClock
+         8   -> CLOCK_InitUsb1Pll
+       4   CLOCK_EnableUsbhs1Clock
+       8   CLOCK_EnableUsbhs1PhyPllClock
+         8   -> CLOCK_InitUsb2Pll
+       8   CLOCK_GetAhbFreq
+         8   -> CLOCK_GetPeriphClkFreq
+       0   CLOCK_GetFreq
+         0   -> CLOCK_GetAhbFreq
+         0   -> CLOCK_GetIpgFreq
+         0   -> CLOCK_GetOscFreq
+         0   -> CLOCK_GetPerClkFreq
+         0   -> CLOCK_GetPllFreq
+         0   -> CLOCK_GetRtcFreq
+         0   -> CLOCK_GetSemcFreq
+         0   -> CLOCK_GetSysPfdFreq
+         0   -> CLOCK_GetUsb1PfdFreq
+       8   CLOCK_GetIpgFreq
+         8   -> CLOCK_GetAhbFreq
+       0   CLOCK_GetOscFreq
+       8   CLOCK_GetPerClkFreq
+         8   -> CLOCK_GetFreq
+         8   -> CLOCK_GetOscFreq
+       8   CLOCK_GetPeriphClkFreq
+         8   -> CLOCK_GetOscFreq
+         0   -> CLOCK_GetPllFreq
+         8   -> CLOCK_GetPllFreq
+         0   -> CLOCK_GetSysPfdFreq
+       0   CLOCK_GetPllBypassRefClk
+         0   -> CLOCK_GetOscFreq
+      16   CLOCK_GetPllFreq
+        16   -> CLOCK_GetPllBypassRefClk
+        16   -> CLOCK_IsPllBypassed
+        16   -> CLOCK_IsPllEnabled
+       0   CLOCK_GetRtcFreq
+       8   CLOCK_GetSemcFreq
+         8   -> CLOCK_GetPeriphClkFreq
+         8   -> CLOCK_GetSysPfdFreq
+         8   -> CLOCK_GetUsb1PfdFreq
+       8   CLOCK_GetSysPfdFreq
+         8   -> CLOCK_GetPllFreq
+       8   CLOCK_GetUsb1PfdFreq
+         8   -> CLOCK_GetPllFreq
+       0   CLOCK_InitArmPll
+       8   CLOCK_InitAudioPll
+       4   CLOCK_InitEnetPll
+       8   CLOCK_InitExternalClk
+         8   -> __aeabi_assert
+         8   -> __iar_EmptyStepPoint
+       0   CLOCK_InitRcOsc24M
+       8   CLOCK_InitSysPfd
+       0   CLOCK_InitSysPll
+       8   CLOCK_InitUsb1Pfd
+       0   CLOCK_InitUsb1Pll
+       0   CLOCK_InitUsb2Pll
+       4   CLOCK_InitVideoPll
+       0   CLOCK_IsPllBypassed
+       0   CLOCK_IsPllEnabled
+       0   CLOCK_SwitchOsc
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable38
+       4  ??DataTable38_1
+       4  ??DataTable38_10
+       4  ??DataTable38_11
+       4  ??DataTable38_12
+       4  ??DataTable38_13
+       4  ??DataTable38_14
+       4  ??DataTable38_15
+       4  ??DataTable38_16
+       4  ??DataTable38_17
+       4  ??DataTable38_18
+       4  ??DataTable38_19
+       4  ??DataTable38_2
+       4  ??DataTable38_20
+       4  ??DataTable38_21
+       4  ??DataTable38_22
+       4  ??DataTable38_23
+       4  ??DataTable38_24
+       4  ??DataTable38_25
+       4  ??DataTable38_26
+       4  ??DataTable38_27
+       4  ??DataTable38_28
+       4  ??DataTable38_29
+       4  ??DataTable38_3
+       4  ??DataTable38_30
+       4  ??DataTable38_31
+       4  ??DataTable38_32
+       4  ??DataTable38_33
+       4  ??DataTable38_34
+       4  ??DataTable38_35
+       4  ??DataTable38_36
+       4  ??DataTable38_37
+       4  ??DataTable38_38
+       4  ??DataTable38_39
+       4  ??DataTable38_4
+       4  ??DataTable38_40
+       4  ??DataTable38_41
+       4  ??DataTable38_42
+       4  ??DataTable38_43
+       4  ??DataTable38_44
+       4  ??DataTable38_45
+       4  ??DataTable38_46
+       4  ??DataTable38_47
+       4  ??DataTable38_48
+       4  ??DataTable38_49
+       4  ??DataTable38_5
+       4  ??DataTable38_50
+       4  ??DataTable38_51
+       4  ??DataTable38_52
+       4  ??DataTable38_53
+       4  ??DataTable38_54
+       4  ??DataTable38_55
+       4  ??DataTable38_6
+       4  ??DataTable38_7
+       4  ??DataTable38_8
+       4  ??DataTable38_9
+      16  ?_0
+      52  ?_1
+       2  ?_2
+       2  ?_3
+      12  CLOCK_DeinitArmPll
+      12  CLOCK_DeinitAudioPll
+      12  CLOCK_DeinitEnetPll
+      12  CLOCK_DeinitExternalClk
+      14  CLOCK_DeinitRcOsc24M
+      18  CLOCK_DeinitSysPfd
+      12  CLOCK_DeinitSysPll
+      18  CLOCK_DeinitUsb1Pfd
+      10  CLOCK_DeinitUsb1Pll
+      10  CLOCK_DeinitUsb2Pll
+      12  CLOCK_DeinitVideoPll
+      26  CLOCK_DisableUsbhs0PhyPllClock
+      22  CLOCK_DisableUsbhs1PhyPllClock
+      76  CLOCK_EnableUsbhs0Clock
+      78  CLOCK_EnableUsbhs0PhyPllClock
+      76  CLOCK_EnableUsbhs1Clock
+      52  CLOCK_EnableUsbhs1PhyPllClock
+      24  CLOCK_GetAhbFreq
+     126  CLOCK_GetFreq
+      24  CLOCK_GetIpgFreq
+      24  CLOCK_GetOscFreq
+      38  CLOCK_GetPerClkFreq
+     164  CLOCK_GetPeriphClkFreq
+      22  CLOCK_GetPllBypassRefClk
+     454  CLOCK_GetPllFreq
+       6  CLOCK_GetRtcFreq
+      52  CLOCK_GetSemcFreq
+      88  CLOCK_GetSysPfdFreq
+      88  CLOCK_GetUsb1PfdFreq
+      64  CLOCK_InitArmPll
+     164  CLOCK_InitAudioPll
+      84  CLOCK_InitEnetPll
+      68  CLOCK_InitExternalClk
+      14  CLOCK_InitRcOsc24M
+      44  CLOCK_InitSysPfd
+     116  CLOCK_InitSysPll
+      44  CLOCK_InitUsb1Pfd
+      64  CLOCK_InitUsb1Pll
+      64  CLOCK_InitUsb2Pll
+     162  CLOCK_InitVideoPll
+      16  CLOCK_IsPllBypassed
+      22  CLOCK_IsPllEnabled
+      24  CLOCK_SwitchOsc
+      16  enetRefClkFreq
+       4  g_rtcXtalFreq
+       4  g_xtalFreq
+
+ 
+     8 bytes in section .bss
+    88 bytes in section .rodata
+ 2 756 bytes in section .text
+ 
+ 2 756 bytes of CODE  memory
+    88 bytes of CONST memory
+     8 bytes of DATA  memory
+
+Errors: none
+Warnings: none

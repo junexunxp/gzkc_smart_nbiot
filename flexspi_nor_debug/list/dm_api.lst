@@ -1,0 +1,3234 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:25
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_api.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW1B93.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_api.c -D DEBUG
+#        -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\dm_api.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\dm_api.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_api.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          
+      6          
+      7          #include "iotx_dm_internal.h"
+      8          
+
+   \                                 In section .bss, align 4
+      9          static dm_api_ctx_t g_dm_api_ctx;
+   \                     g_dm_api_ctx:
+   \        0x0                      DS8 16
+     10          
+
+   \                                 In section .text, align 2, keep-with-next
+     11          static dm_api_ctx_t *_dm_api_get_ctx(void)
+     12          {
+     13              return &g_dm_api_ctx;
+   \                     _dm_api_get_ctx: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable2
+   \        0x4   0x4770             BX       LR               ;; return
+     14          }
+     15          
+
+   \                                 In section .text, align 2, keep-with-next
+     16          static void _dm_api_lock(void)
+     17          {
+   \                     _dm_api_lock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     18              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x2   0x....'....        BL       _dm_api_get_ctx
+     19              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_dm_api_lock_0
+     20                  HAL_MutexLock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexLock
+     21              }
+     22          }
+   \                     ??_dm_api_lock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     23          
+
+   \                                 In section .text, align 2, keep-with-next
+     24          static void _dm_api_unlock(void)
+     25          {
+   \                     _dm_api_unlock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     26              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x2   0x....'....        BL       _dm_api_get_ctx
+     27              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_dm_api_unlock_0
+     28                  HAL_MutexUnlock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexUnlock
+     29              }
+     30          }
+   \                     ??_dm_api_unlock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     31          
+
+   \                                 In section .text, align 2, keep-with-next
+     32          int iotx_dm_open(void)
+     33          {
+   \                     iotx_dm_open: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     34              int res = 0;
+     35              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x2   0x....'....        BL       _dm_api_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+     36          #if defined(ALCS_ENABLED) || defined(DEPRECATED_LINKKIT)
+     37              lite_cjson_hooks hooks;
+     38          #endif
+     39              memset(ctx, 0, sizeof(dm_api_ctx_t));
+   \        0x8   0x2200             MOVS     R2,#+0
+   \        0xA   0x2110             MOVS     R1,#+16
+   \        0xC   0x....'....        BL       __aeabi_memset4
+     40          
+     41          #if defined(ALCS_ENABLED) || defined(DEPRECATED_LINKKIT)
+     42              /* lite-cjson Hooks Init */
+     43              hooks.malloc_fn = dm_utils_malloc;
+     44              hooks.free_fn = dm_utils_free;
+     45              lite_cjson_init_hooks(&hooks);
+     46          #endif
+     47          
+     48              /* DM Mutex Create*/
+     49              ctx->mutex = HAL_MutexCreate();
+   \       0x10   0x....'....        BL       HAL_MutexCreate
+   \       0x14   0x6020             STR      R0,[R4, #+0]
+     50              if (ctx->mutex == NULL) {
+   \       0x16   0x2800             CMP      R0,#+0
+   \       0x18   0xD102             BNE.N    ??iotx_dm_open_0
+     51                  return DM_MEMORY_NOT_ENOUGH;
+   \       0x1A   0xF06F 0x0002      MVN      R0,#+2
+   \       0x1E   0xBD10             POP      {R4,PC}
+     52              }
+     53          
+     54          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+     55              /* DM OTA Module Init */
+     56              res = dm_ota_init();
+     57              if (res != SUCCESS_RETURN) {
+     58                  goto ERROR;
+     59              }
+     60          #endif
+     61          
+     62          #if !defined(DM_MESSAGE_CACHE_DISABLED)
+     63              /* DM Message Cache Init */
+     64              res = dm_msg_cache_init();
+     65              if (res != SUCCESS_RETURN) {
+   \                     ??iotx_dm_open_0: (+1)
+   \       0x20   0x....'....        BL       dm_msg_cache_init
+   \       0x24   0x2800             CMP      R0,#+0
+   \       0x26   0xD112             BNE.N    ??iotx_dm_open_1
+     66                  goto ERROR;
+     67              }
+     68          #endif
+     69              /* DM Cloud Message Parse And Assemble Module Init */
+     70              res = dm_msg_init();
+     71              if (res != SUCCESS_RETURN) {
+   \       0x28   0x....'....        BL       dm_msg_init
+   \       0x2C   0x2800             CMP      R0,#+0
+   \       0x2E   0xD10E             BNE.N    ??iotx_dm_open_1
+     72                  goto ERROR;
+     73              }
+     74          
+     75              /* DM IPC Module Init */
+     76              res = dm_ipc_init(CONFIG_DISPATCH_QUEUE_MAXLEN);
+     77              if (res != SUCCESS_RETURN) {
+   \       0x30   0x2032             MOVS     R0,#+50
+   \       0x32   0x....'....        BL       dm_ipc_init
+   \       0x36   0x2800             CMP      R0,#+0
+   \       0x38   0xD109             BNE.N    ??iotx_dm_open_1
+     78                  goto ERROR;
+     79              }
+     80          
+     81              /* DM Manager Module Init */
+     82              res = dm_mgr_init();
+     83              if (res != SUCCESS_RETURN) {
+   \       0x3A   0x....'....        BL       dm_mgr_init
+   \       0x3E   0x2800             CMP      R0,#+0
+   \       0x40   0xD105             BNE.N    ??iotx_dm_open_1
+     84                  goto ERROR;
+     85              }
+     86          
+     87          #ifdef ALCS_ENABLED
+     88              /* Open Local Connection */
+     89              res = dm_server_open();
+     90              if (res < SUCCESS_RETURN) {
+     91                  goto ERROR;
+     92              }
+     93          #endif
+     94          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+     95              /* DM OTA Module Init */
+     96              res = dm_ota_sub();
+     97              if (res == SUCCESS_RETURN) {
+     98                  /* DM Config OTA Module Init */
+     99                  dm_cota_init();
+    100          
+    101                  /* DM Firmware OTA Mudule Init */
+    102                  dm_fota_init();
+    103              }
+    104          #endif
+    105          
+    106              /* Open Cloud Connection */
+    107              res = dm_client_open();
+    108              if (res < SUCCESS_RETURN) {
+   \       0x42   0x....'....        BL       dm_client_open
+   \       0x46   0x2800             CMP      R0,#+0
+   \       0x48   0xD401             BMI.N    ??iotx_dm_open_1
+    109                  goto ERROR;
+    110              }
+    111          
+    112              return SUCCESS_RETURN;
+   \       0x4A   0x2000             MOVS     R0,#+0
+   \       0x4C   0xBD10             POP      {R4,PC}
+    113          
+    114          ERROR:
+    115              dm_client_close();
+   \                     ??iotx_dm_open_1: (+1)
+   \       0x4E   0x....'....        BL       dm_client_close
+    116          #ifdef ALCS_ENABLED
+    117              dm_server_close();
+    118          #endif
+    119              dm_mgr_deinit();
+   \       0x52   0x....'....        BL       dm_mgr_deinit
+    120              dm_ipc_deinit();
+   \       0x56   0x....'....        BL       dm_ipc_deinit
+    121              dm_msg_deinit();
+   \       0x5A   0x....'....        BL       dm_msg_deinit
+    122          #if !defined(DM_MESSAGE_CACHE_DISABLED)
+    123              dm_msg_cache_deinit();
+   \       0x5E   0x....'....        BL       dm_msg_cache_deinit
+    124          #endif
+    125          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    126              dm_ota_deinit();
+    127          #endif
+    128          
+    129              if (ctx->mutex) {
+   \       0x62   0x6820             LDR      R0,[R4, #+0]
+   \       0x64   0x2800             CMP      R0,#+0
+   \       0x66   0xD001             BEQ.N    ??iotx_dm_open_2
+    130                  HAL_MutexDestroy(ctx->mutex);
+   \       0x68   0x....'....        BL       HAL_MutexDestroy
+    131              }
+    132              return FAIL_RETURN;
+   \                     ??iotx_dm_open_2: (+1)
+   \       0x6C   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x70   0xBD10             POP      {R4,PC}          ;; return
+    133          }
+    134          
+
+   \                                 In section .text, align 2, keep-with-next
+    135          int iotx_dm_connect(_IN_ iotx_dm_init_params_t *init_params)
+    136          {
+   \                     iotx_dm_connect: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    137              int res = 0;
+    138              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x4   0x....'....        BL       _dm_api_get_ctx
+    139          
+    140              if (init_params == NULL) {
+   \        0x8   0x2C00             CMP      R4,#+0
+   \        0xA   0xD102             BNE.N    ??iotx_dm_connect_0
+    141                  return DM_INVALID_PARAMETER;
+   \        0xC   0xF06F 0x0001      MVN      R0,#+1
+   \       0x10   0xBD10             POP      {R4,PC}
+    142              }
+    143          
+    144              /* DM Event Callback */
+    145              if (init_params->event_callback != NULL) {
+   \                     ??iotx_dm_connect_0: (+1)
+   \       0x12   0x6861             LDR      R1,[R4, #+4]
+   \       0x14   0x2900             CMP      R1,#+0
+   \       0x16   0xD000             BEQ.N    ??iotx_dm_connect_1
+    146                  ctx->event_callback = init_params->event_callback;
+   \       0x18   0x60C1             STR      R1,[R0, #+12]
+    147              }
+    148          
+    149              res = dm_client_connect(IOTX_DM_CLIENT_CONNECT_TIMEOUT_MS);
+    150              if (res != SUCCESS_RETURN) {
+   \                     ??iotx_dm_connect_1: (+1)
+   \       0x1A   0xF242 0x7010      MOVW     R0,#+10000
+   \       0x1E   0x....'....        BL       dm_client_connect
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD002             BEQ.N    ??iotx_dm_connect_2
+    151                  return FAIL_RETURN;
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xBD10             POP      {R4,PC}
+    152              }
+    153          
+    154          #ifdef ALCS_ENABLED
+    155              /* DM Connect Local */
+    156              res = dm_server_connect();
+    157              if (res != SUCCESS_RETURN) {
+    158                  return FAIL_RETURN;
+    159              }
+    160          #endif
+    161          
+    162              return SUCCESS_RETURN;
+   \                     ??iotx_dm_connect_2: (+1)
+   \       0x2C   0x2000             MOVS     R0,#+0
+   \       0x2E   0xBD10             POP      {R4,PC}          ;; return
+    163          }
+    164          
+
+   \                                 In section .text, align 2, keep-with-next
+    165          int iotx_dm_subscribe(_IN_ int devid)
+    166          {
+   \                     iotx_dm_subscribe: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+   \        0x2   0xB0A1             SUB      SP,SP,#+132
+   \        0x4   0x4604             MOV      R4,R0
+    167              int res = 0, dev_type = 0;
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8   0x9000             STR      R0,[SP, #+0]
+    168              char product_key[IOTX_PRODUCT_KEY_LEN + 1] = {0};
+   \        0xA   0xA801             ADD      R0,SP,#+4
+   \        0xC   0x2118             MOVS     R1,#+24
+   \        0xE   0x....'....        BL       __aeabi_memclr4
+    169              char device_name[IOTX_DEVICE_NAME_LEN + 1] = {0};
+   \       0x12   0xA818             ADD      R0,SP,#+96
+   \       0x14   0x2124             MOVS     R1,#+36
+   \       0x16   0x....'....        BL       __aeabi_memclr4
+    170              char device_secret[IOTX_DEVICE_SECRET_LEN + 1] = {0};
+   \       0x1A   0xA807             ADD      R0,SP,#+28
+   \       0x1C   0x2144             MOVS     R1,#+68
+   \       0x1E   0x....'....        BL       __aeabi_memclr4
+    171          
+    172              if (devid < 0) {
+   \       0x22   0x2C00             CMP      R4,#+0
+   \       0x24   0xD502             BPL.N    ??iotx_dm_subscribe_0
+    173                  return DM_INVALID_PARAMETER;
+   \       0x26   0xF06F 0x0001      MVN      R0,#+1
+   \       0x2A   0xE01D             B.N      ??iotx_dm_subscribe_1
+    174              }
+    175          
+    176              _dm_api_lock();
+   \                     ??iotx_dm_subscribe_0: (+1)
+   \       0x2C   0x....'....        BL       _dm_api_lock
+    177              res = dm_mgr_search_device_by_devid(devid, product_key, device_name, device_secret);
+   \       0x30   0xAB07             ADD      R3,SP,#+28
+   \       0x32   0xAA18             ADD      R2,SP,#+96
+   \       0x34   0xA901             ADD      R1,SP,#+4
+   \       0x36   0x4620             MOV      R0,R4
+   \       0x38   0x....'....        BL       dm_mgr_search_device_by_devid
+   \       0x3C   0x0005             MOVS     R5,R0
+    178              if (res < SUCCESS_RETURN) {
+   \       0x3E   0xD40C             BMI.N    ??iotx_dm_subscribe_2
+    179                  _dm_api_unlock();
+    180                  return res;
+    181              }
+    182          
+    183              res = dm_mgr_get_dev_type(devid, &dev_type);
+   \       0x40   0x4669             MOV      R1,SP
+   \       0x42   0x4620             MOV      R0,R4
+   \       0x44   0x....'....        BL       dm_mgr_get_dev_type
+   \       0x48   0x0005             MOVS     R5,R0
+    184              if (res < SUCCESS_RETURN) {
+   \       0x4A   0xD406             BMI.N    ??iotx_dm_subscribe_2
+    185                  _dm_api_unlock();
+    186                  return res;
+    187              }
+    188          
+    189          #ifdef ALCS_ENABLED
+    190              if (devid > 0) {
+    191                  dm_server_add_device(product_key, device_name);
+    192              }
+    193          
+    194              res = dm_server_subscribe_all(product_key, device_name);
+    195              if (res < SUCCESS_RETURN) {
+    196                  _dm_api_unlock();
+    197                  return res;
+    198              }
+    199          #endif
+    200          
+    201              res = dm_client_subscribe_all(product_key, device_name, dev_type);
+   \       0x4C   0x9A00             LDR      R2,[SP, #+0]
+   \       0x4E   0xA918             ADD      R1,SP,#+96
+   \       0x50   0xA801             ADD      R0,SP,#+4
+   \       0x52   0x....'....        BL       dm_client_subscribe_all
+   \       0x56   0x0005             MOVS     R5,R0
+    202              if (res < SUCCESS_RETURN) {
+   \       0x58   0xD503             BPL.N    ??iotx_dm_subscribe_3
+    203                  _dm_api_unlock();
+   \                     ??iotx_dm_subscribe_2: (+1)
+   \       0x5A   0x....'....        BL       _dm_api_unlock
+    204                  return res;
+   \       0x5E   0x4628             MOV      R0,R5
+   \       0x60   0xE002             B.N      ??iotx_dm_subscribe_1
+    205              }
+    206          
+    207              _dm_api_unlock();
+   \                     ??iotx_dm_subscribe_3: (+1)
+   \       0x62   0x....'....        BL       _dm_api_unlock
+    208              dm_log_info("Devid %d Sub Completed", devid);
+    209          
+    210              return SUCCESS_RETURN;
+   \       0x66   0x2000             MOVS     R0,#+0
+   \                     ??iotx_dm_subscribe_1: (+1)
+   \       0x68   0xB021             ADD      SP,SP,#+132
+   \       0x6A   0xBD30             POP      {R4,R5,PC}       ;; return
+    211          }
+    212          
+
+   \                                 In section .text, align 2, keep-with-next
+    213          int iotx_dm_close(void)
+    214          {
+   \                     iotx_dm_close: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    215              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x2   0x....'....        BL       _dm_api_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+    216          
+    217              dm_client_close();
+   \        0x8   0x....'....        BL       dm_client_close
+    218          #ifdef ALCS_ENABLED
+    219              dm_server_close();
+    220          #endif
+    221              dm_mgr_deinit();
+   \        0xC   0x....'....        BL       dm_mgr_deinit
+    222              dm_ipc_deinit();
+   \       0x10   0x....'....        BL       dm_ipc_deinit
+    223              dm_msg_deinit();
+   \       0x14   0x....'....        BL       dm_msg_deinit
+    224          #if !defined(DM_MESSAGE_CACHE_DISABLED)
+    225              dm_msg_cache_deinit();
+   \       0x18   0x....'....        BL       dm_msg_cache_deinit
+    226          #endif
+    227          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    228              dm_cota_deinit();
+    229              dm_fota_deinit();
+    230              dm_ota_deinit();
+    231          #endif
+    232          
+    233              if (ctx->mutex) {
+   \       0x1C   0x6820             LDR      R0,[R4, #+0]
+   \       0x1E   0x2800             CMP      R0,#+0
+   \       0x20   0xD001             BEQ.N    ??iotx_dm_close_0
+    234                  HAL_MutexDestroy(ctx->mutex);
+   \       0x22   0x....'....        BL       HAL_MutexDestroy
+    235              }
+    236          
+    237          #ifdef LOG_REPORT_TO_CLOUD
+    238              remove_log_poll();
+   \                     ??iotx_dm_close_0: (+1)
+   \       0x26   0x....'....        BL       remove_log_poll
+    239          #endif
+    240          
+    241              return SUCCESS_RETURN;
+   \       0x2A   0x2000             MOVS     R0,#+0
+   \       0x2C   0xBD10             POP      {R4,PC}          ;; return
+    242          }
+    243          
+
+   \                                 In section .text, align 2, keep-with-next
+    244          int iotx_dm_yield(int timeout_ms)
+    245          {
+   \                     iotx_dm_yield: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    246              if (timeout_ms <= 0) {
+   \        0x2   0x2801             CMP      R0,#+1
+   \        0x4   0xDA02             BGE.N    ??iotx_dm_yield_0
+    247                  return DM_INVALID_PARAMETER;
+   \        0x6   0xF06F 0x0001      MVN      R0,#+1
+   \        0xA   0xBD02             POP      {R1,PC}
+    248              }
+    249          
+    250              dm_client_yield(timeout_ms);
+   \                     ??iotx_dm_yield_0: (+1)
+   \        0xC   0x....'....        BL       dm_client_yield
+    251          #ifdef ALCS_ENABLED
+    252              dm_server_yield();
+    253          #endif
+    254          
+    255              return SUCCESS_RETURN;
+   \       0x10   0x2000             MOVS     R0,#+0
+   \       0x12   0xBD02             POP      {R1,PC}          ;; return
+    256          }
+    257          
+
+   \                                 In section .text, align 2, keep-with-next
+    258          void iotx_dm_dispatch(void)
+    259          {
+   \                     iotx_dm_dispatch: (+1)
+   \        0x0   0xB57C             PUSH     {R2-R6,LR}
+    260              int count = 0;
+   \        0x2   0x2400             MOVS     R4,#+0
+    261              void *data = NULL;
+   \        0x4   0x4620             MOV      R0,R4
+   \        0x6   0x9000             STR      R0,[SP, #+0]
+    262              dm_api_ctx_t *ctx = _dm_api_get_ctx();
+   \        0x8   0x....'....        BL       _dm_api_get_ctx
+   \        0xC   0x4605             MOV      R5,R0
+    263          
+    264          #if !defined(DM_MESSAGE_CACHE_DISABLED)
+    265              dm_msg_cache_tick();
+   \        0xE   0x....'....        BL       dm_msg_cache_tick
+    266          #endif
+    267          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    268              dm_cota_status_check();
+    269              dm_fota_status_check();
+    270          #endif
+    271              while (CONFIG_DISPATCH_QUEUE_MAXLEN == 0 || count++ < CONFIG_DISPATCH_QUEUE_MAXLEN) {
+   \                     ??iotx_dm_dispatch_0: (+1)
+   \       0x12   0x4620             MOV      R0,R4
+   \       0x14   0x1C44             ADDS     R4,R0,#+1
+   \       0x16   0x2832             CMP      R0,#+50
+   \       0x18   0xDA19             BGE.N    ??iotx_dm_dispatch_1
+    272                  if (dm_ipc_msg_next(&data) == SUCCESS_RETURN) {
+   \       0x1A   0x4668             MOV      R0,SP
+   \       0x1C   0x....'....        BL       dm_ipc_msg_next
+   \       0x20   0x2800             CMP      R0,#+0
+   \       0x22   0xD114             BNE.N    ??iotx_dm_dispatch_1
+    273                      dm_ipc_msg_t *msg = (dm_ipc_msg_t *)data;
+   \       0x24   0x9E00             LDR      R6,[SP, #+0]
+    274          
+    275                      if (ctx->event_callback) {
+   \       0x26   0x68E8             LDR      R0,[R5, #+12]
+   \       0x28   0x2800             CMP      R0,#+0
+   \       0x2A   0xD003             BEQ.N    ??iotx_dm_dispatch_2
+    276                          ctx->event_callback(msg->type, msg->data);
+   \       0x2C   0x6871             LDR      R1,[R6, #+4]
+   \       0x2E   0x7830             LDRB     R0,[R6, #+0]
+   \       0x30   0x68EA             LDR      R2,[R5, #+12]
+   \       0x32   0x4790             BLX      R2
+    277                      }
+    278          
+    279                      if (msg->data) {
+   \                     ??iotx_dm_dispatch_2: (+1)
+   \       0x34   0x6870             LDR      R0,[R6, #+4]
+   \       0x36   0x2800             CMP      R0,#+0
+   \       0x38   0xD003             BEQ.N    ??iotx_dm_dispatch_3
+    280                          DM_free(msg->data);
+   \       0x3A   0x....'....        BL       HAL_Free
+   \       0x3E   0x2000             MOVS     R0,#+0
+   \       0x40   0x6070             STR      R0,[R6, #+4]
+    281                      }
+    282                      DM_free(msg);
+   \                     ??iotx_dm_dispatch_3: (+1)
+   \       0x42   0x4630             MOV      R0,R6
+   \       0x44   0x....'....        BL       HAL_Free
+    283                      data = NULL;
+   \       0x48   0x2000             MOVS     R0,#+0
+   \       0x4A   0x9000             STR      R0,[SP, #+0]
+   \       0x4C   0xE7E1             B.N      ??iotx_dm_dispatch_0
+    284                  } else {
+    285                      break;
+    286                  }
+    287              }
+    288          }
+   \                     ??iotx_dm_dispatch_1: (+1)
+   \       0x4E   0xBD73             POP      {R0,R1,R4-R6,PC}  ;; return
+    289          
+
+   \                                 In section .text, align 2, keep-with-next
+    290          int iotx_dm_post_rawdata(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    291          {
+   \                     iotx_dm_post_rawdata: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4616             MOV      R6,R2
+    292              int res = 0;
+    293          
+    294              if (devid < 0 || payload == NULL || payload_len <= 0) {
+   \        0x8   0x2D00             CMP      R5,#+0
+   \        0xA   0xD403             BMI.N    ??iotx_dm_post_rawdata_0
+   \        0xC   0x2C00             CMP      R4,#+0
+   \        0xE   0xD001             BEQ.N    ??iotx_dm_post_rawdata_0
+   \       0x10   0x2E01             CMP      R6,#+1
+   \       0x12   0xDA02             BGE.N    ??iotx_dm_post_rawdata_1
+    295                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_post_rawdata_0: (+1)
+   \       0x14   0xF06F 0x0001      MVN      R0,#+1
+   \       0x18   0xBD70             POP      {R4-R6,PC}
+    296              }
+    297          
+    298              _dm_api_lock();
+   \                     ??iotx_dm_post_rawdata_1: (+1)
+   \       0x1A   0x....'....        BL       _dm_api_lock
+    299          
+    300              res = dm_mgr_upstream_thing_model_up_raw(devid, payload, payload_len);
+    301              if (res != SUCCESS_RETURN) {
+   \       0x1E   0x4632             MOV      R2,R6
+   \       0x20   0x4621             MOV      R1,R4
+   \       0x22   0x4628             MOV      R0,R5
+   \       0x24   0x....'....        BL       dm_mgr_upstream_thing_model_up_raw
+   \       0x28   0x2800             CMP      R0,#+0
+   \       0x2A   0xD004             BEQ.N    ??iotx_dm_post_rawdata_2
+    302                  _dm_api_unlock();
+   \       0x2C   0x....'....        BL       _dm_api_unlock
+    303                  return FAIL_RETURN;
+   \       0x30   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x34   0xBD70             POP      {R4-R6,PC}
+    304              }
+    305          
+    306              _dm_api_unlock();
+   \                     ??iotx_dm_post_rawdata_2: (+1)
+   \       0x36   0x....'....        BL       _dm_api_unlock
+    307              return SUCCESS_RETURN;
+   \       0x3A   0x2000             MOVS     R0,#+0
+   \       0x3C   0xBD70             POP      {R4-R6,PC}       ;; return
+    308          }
+    309          
+    310          #if !defined(DEVICE_MODEL_RAWDATA_SOLO)
+
+   \                                 In section .text, align 2, keep-with-next
+    311          int iotx_dm_set_opt(int opt, void *data)
+    312          {
+    313              return dm_opt_set(opt, data);
+                                       ^
+Warning[Pe188]: enumerated type mixed with another type
+   \                     iotx_dm_set_opt: (+1)
+   \        0x0   0xB2C0             UXTB     R0,R0
+   \        0x2   0x....'....        B.W      dm_opt_set
+    314          }
+    315          
+
+   \                                 In section .text, align 2, keep-with-next
+    316          int iotx_dm_get_opt(int opt, void *data)
+    317          {
+    318              if (data == NULL) {
+   \                     iotx_dm_get_opt: (+1)
+   \        0x0   0x2900             CMP      R1,#+0
+   \        0x2   0xD102             BNE.N    ??iotx_dm_get_opt_0
+    319                  return FAIL_RETURN;
+   \        0x4   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x8   0x4770             BX       LR
+    320              }
+    321          
+    322              return dm_opt_get(opt, data);
+                                       ^
+Warning[Pe188]: enumerated type mixed with another type
+   \                     ??iotx_dm_get_opt_0: (+1)
+   \        0xA   0xB2C0             UXTB     R0,R0
+   \        0xC   0x....'....        B.W      dm_opt_get
+    323          }
+    324          #ifdef DEVICE_MODEL_SHADOW
+    325          int iotx_dm_property_desired_get(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    326          {
+    327              int res = 0;
+    328          
+    329              _dm_api_lock();
+    330          
+    331              res = dm_mgr_upstream_thing_property_desired_get(devid, payload, payload_len);
+    332              if (res < SUCCESS_RETURN) {
+    333                  _dm_api_unlock();
+    334                  return FAIL_RETURN;
+    335              }
+    336          
+    337              _dm_api_unlock();
+    338              return res;
+    339          }
+    340          
+    341          int iotx_dm_property_desired_delete(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    342          {
+    343              int res = 0;
+    344          
+    345              _dm_api_lock();
+    346          
+    347              res = dm_mgr_upstream_thing_property_desired_delete(devid, payload, payload_len);
+    348              if (res < SUCCESS_RETURN) {
+    349                  _dm_api_unlock();
+    350                  return FAIL_RETURN;
+    351              }
+    352          
+    353              _dm_api_unlock();
+    354              return res;
+    355          }
+    356          #endif
+    357          
+
+   \                                 In section .text, align 2, keep-with-next
+    358          int iotx_dm_post_property(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    359          {
+   \                     iotx_dm_post_property: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x460D             MOV      R5,R1
+   \        0x6   0x4616             MOV      R6,R2
+    360              int res = 0;
+    361          
+    362              _dm_api_lock();
+   \        0x8   0x....'....        BL       _dm_api_lock
+    363          
+    364              res = dm_mgr_upstream_thing_property_post(devid, payload, payload_len);
+   \        0xC   0x4632             MOV      R2,R6
+   \        0xE   0x4629             MOV      R1,R5
+   \       0x10   0x4620             MOV      R0,R4
+   \       0x12   0x....'....        BL       dm_mgr_upstream_thing_property_post
+   \       0x16   0x0004             MOVS     R4,R0
+    365              if (res < SUCCESS_RETURN) {
+   \       0x18   0xD504             BPL.N    ??iotx_dm_post_property_0
+    366                  _dm_api_unlock();
+   \       0x1A   0x....'....        BL       _dm_api_unlock
+    367                  return FAIL_RETURN;
+   \       0x1E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x22   0xBD70             POP      {R4-R6,PC}
+    368              }
+    369          
+    370              _dm_api_unlock();
+   \                     ??iotx_dm_post_property_0: (+1)
+   \       0x24   0x....'....        BL       _dm_api_unlock
+    371              return res;
+   \       0x28   0x4620             MOV      R0,R4
+   \       0x2A   0xBD70             POP      {R4-R6,PC}       ;; return
+    372          }
+    373          
+    374          #ifdef LOG_REPORT_TO_CLOUD
+
+   \                                 In section .text, align 2, keep-with-next
+    375          int iotx_dm_log_post(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    376          {
+   \                     iotx_dm_log_post: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x460D             MOV      R5,R1
+   \        0x6   0x4616             MOV      R6,R2
+    377              int res = 0;
+    378          
+    379              _dm_api_lock();
+   \        0x8   0x....'....        BL       _dm_api_lock
+    380          
+    381              res = dm_mgr_upstream_thing_log_post(devid, payload, payload_len, 0);
+   \        0xC   0x2300             MOVS     R3,#+0
+   \        0xE   0x4632             MOV      R2,R6
+   \       0x10   0x4629             MOV      R1,R5
+   \       0x12   0x4620             MOV      R0,R4
+   \       0x14   0x....'....        BL       dm_mgr_upstream_thing_log_post
+   \       0x18   0x0004             MOVS     R4,R0
+    382              if (res < SUCCESS_RETURN) {
+   \       0x1A   0xD504             BPL.N    ??iotx_dm_log_post_0
+    383                  _dm_api_unlock();
+   \       0x1C   0x....'....        BL       _dm_api_unlock
+    384                  return FAIL_RETURN;
+   \       0x20   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x24   0xBD70             POP      {R4-R6,PC}
+    385              }
+    386          
+    387              _dm_api_unlock();
+   \                     ??iotx_dm_log_post_0: (+1)
+   \       0x26   0x....'....        BL       _dm_api_unlock
+    388              return res;
+   \       0x2A   0x4620             MOV      R0,R4
+   \       0x2C   0xBD70             POP      {R4-R6,PC}       ;; return
+    389          }
+    390          #endif
+    391          
+    392          
+
+   \                                 In section .text, align 2, keep-with-next
+    393          int iotx_dm_post_event(_IN_ int devid, _IN_ char *identifier, _IN_ int identifier_len, _IN_ char *payload,
+    394                                 _IN_ int payload_len)
+    395          {
+   \                     iotx_dm_post_event: (+1)
+   \        0x0   0xE92D 0x4FFE      PUSH     {R1-R11,LR}
+   \        0x4   0x4680             MOV      R8,R0
+   \        0x6   0x460F             MOV      R7,R1
+   \        0x8   0x4616             MOV      R6,R2
+   \        0xA   0x461D             MOV      R5,R3
+    396              int res = 0, method_len = 0;
+    397              const char *method_fmt = "thing.event.%.*s.post";
+   \        0xC   0x....'....        LDR.W    R10,??DataTable2_1
+    398              char *method = NULL;
+    399          
+    400              if (devid < 0 || identifier == NULL || identifier_len == 0 || payload == NULL || payload_len <= 0) {
+   \       0x10   0xF1B8 0x0F00      CMP      R8,#+0
+   \       0x14   0xD40A             BMI.N    ??iotx_dm_post_event_0
+   \       0x16   0x2F00             CMP      R7,#+0
+   \       0x18   0xD008             BEQ.N    ??iotx_dm_post_event_0
+   \       0x1A   0x2E00             CMP      R6,#+0
+   \       0x1C   0xD006             BEQ.N    ??iotx_dm_post_event_0
+   \       0x1E   0x2D00             CMP      R5,#+0
+   \       0x20   0xD004             BEQ.N    ??iotx_dm_post_event_0
+   \       0x22   0xF8DD 0x9030      LDR      R9,[SP, #+48]
+   \       0x26   0xF1B9 0x0F01      CMP      R9,#+1
+   \       0x2A   0xDA02             BGE.N    ??iotx_dm_post_event_1
+    401                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_post_event_0: (+1)
+   \       0x2C   0xF06F 0x0001      MVN      R0,#+1
+   \       0x30   0xE038             B.N      ??iotx_dm_post_event_2
+    402              }
+    403          
+    404              _dm_api_lock();
+   \                     ??iotx_dm_post_event_1: (+1)
+   \       0x32   0x....'....        BL       _dm_api_lock
+    405          
+    406              method_len = strlen(method_fmt) + strlen(identifier) + 1;
+   \       0x36   0x4650             MOV      R0,R10
+   \       0x38   0x....'....        BL       strlen
+   \       0x3C   0x4683             MOV      R11,R0
+   \       0x3E   0x4638             MOV      R0,R7
+   \       0x40   0x....'....        BL       strlen
+   \       0x44   0x4483             ADD      R11,R0,R11
+   \       0x46   0xF10B 0x0B01      ADD      R11,R11,#+1
+    407              method = DM_malloc(method_len);
+   \       0x4A   0x4658             MOV      R0,R11
+   \       0x4C   0x....'....        BL       HAL_Malloc
+   \       0x50   0x0004             MOVS     R4,R0
+    408              if (method == NULL) {
+   \       0x52   0xD104             BNE.N    ??iotx_dm_post_event_3
+    409                  _dm_api_unlock();
+   \       0x54   0x....'....        BL       _dm_api_unlock
+    410                  return DM_MEMORY_NOT_ENOUGH;
+   \       0x58   0xF06F 0x0002      MVN      R0,#+2
+   \       0x5C   0xE022             B.N      ??iotx_dm_post_event_2
+    411              }
+    412              memset(method, 0, method_len);
+   \                     ??iotx_dm_post_event_3: (+1)
+   \       0x5E   0x2200             MOVS     R2,#+0
+   \       0x60   0x4659             MOV      R1,R11
+   \       0x62   0x....'....        BL       __aeabi_memset
+    413              HAL_Snprintf(method, method_len, method_fmt, identifier_len, identifier);
+   \       0x66   0x9700             STR      R7,[SP, #+0]
+   \       0x68   0x4633             MOV      R3,R6
+   \       0x6A   0x4652             MOV      R2,R10
+   \       0x6C   0x4659             MOV      R1,R11
+   \       0x6E   0x4620             MOV      R0,R4
+   \       0x70   0x....'....        BL       HAL_Snprintf
+    414          
+    415              res = dm_mgr_upstream_thing_event_post(devid, identifier, identifier_len, method, payload, payload_len);
+   \       0x74   0xF8CD 0x9004      STR      R9,[SP, #+4]
+   \       0x78   0x9500             STR      R5,[SP, #+0]
+   \       0x7A   0x4623             MOV      R3,R4
+   \       0x7C   0x4632             MOV      R2,R6
+   \       0x7E   0x4639             MOV      R1,R7
+   \       0x80   0x4640             MOV      R0,R8
+   \       0x82   0x....'....        BL       dm_mgr_upstream_thing_event_post
+   \       0x86   0x0005             MOVS     R5,R0
+    416              if (res < SUCCESS_RETURN) {
+   \       0x88   0x4620             MOV      R0,R4
+   \       0x8A   0xD506             BPL.N    ??iotx_dm_post_event_4
+    417                  DM_free(method);
+   \       0x8C   0x....'....        BL       HAL_Free
+    418                  _dm_api_unlock();
+   \       0x90   0x....'....        BL       _dm_api_unlock
+    419                  return FAIL_RETURN;
+   \       0x94   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x98   0xE004             B.N      ??iotx_dm_post_event_2
+    420              }
+    421          
+    422              DM_free(method);
+   \                     ??iotx_dm_post_event_4: (+1)
+   \       0x9A   0x....'....        BL       HAL_Free
+    423              _dm_api_unlock();
+   \       0x9E   0x....'....        BL       _dm_api_unlock
+    424              return res;
+   \       0xA2   0x4628             MOV      R0,R5
+   \                     ??iotx_dm_post_event_2: (+1)
+   \       0xA4   0xE8BD 0x8FFE      POP      {R1-R11,PC}      ;; return
+    425          }
+    426          
+    427          
+
+   \                                 In section .text, align 2, keep-with-next
+    428          int iotx_dm_send_service_response(_IN_ int devid, _IN_ char *msgid, _IN_ int msgid_len, _IN_ iotx_dm_error_code_t code,
+    429                                            _IN_ char *identifier,
+    430                                            _IN_ int identifier_len, _IN_ char *payload, _IN_ int payload_len, void *ctx)
+    431          {
+   \                     iotx_dm_send_service_response: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \        0x4   0xB086             SUB      SP,SP,#+24
+   \        0x6   0x4607             MOV      R7,R0
+   \        0x8   0x460C             MOV      R4,R1
+   \        0xA   0x4690             MOV      R8,R2
+    432              int res = 0;
+    433          
+    434              if (devid < 0 || msgid == NULL || msgid_len <= 0 || identifier == NULL || identifier_len <= 0 || payload == NULL
+    435                  || payload_len <= 0) {
+   \        0xC   0x2F00             CMP      R7,#+0
+   \        0xE   0xD414             BMI.N    ??iotx_dm_send_service_response_0
+   \       0x10   0x2C00             CMP      R4,#+0
+   \       0x12   0xD012             BEQ.N    ??iotx_dm_send_service_response_0
+   \       0x14   0xF1B8 0x0F01      CMP      R8,#+1
+   \       0x18   0xDB0F             BLT.N    ??iotx_dm_send_service_response_0
+   \       0x1A   0x9D10             LDR      R5,[SP, #+64]
+   \       0x1C   0x2D00             CMP      R5,#+0
+   \       0x1E   0xD00C             BEQ.N    ??iotx_dm_send_service_response_0
+   \       0x20   0xF8DD 0x9044      LDR      R9,[SP, #+68]
+   \       0x24   0xF1B9 0x0F01      CMP      R9,#+1
+   \       0x28   0xDB07             BLT.N    ??iotx_dm_send_service_response_0
+   \       0x2A   0x9E12             LDR      R6,[SP, #+72]
+   \       0x2C   0x2E00             CMP      R6,#+0
+   \       0x2E   0xD004             BEQ.N    ??iotx_dm_send_service_response_0
+   \       0x30   0xF8DD 0xA04C      LDR      R10,[SP, #+76]
+   \       0x34   0xF1BA 0x0F01      CMP      R10,#+1
+   \       0x38   0xDA02             BGE.N    ??iotx_dm_send_service_response_1
+    436                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_send_service_response_0: (+1)
+   \       0x3A   0xF06F 0x0001      MVN      R0,#+1
+   \       0x3E   0xE016             B.N      ??iotx_dm_send_service_response_2
+    437              }
+   \                     ??iotx_dm_send_service_response_1: (+1)
+   \       0x40   0xF8DD 0xB050      LDR      R11,[SP, #+80]
+   \       0x44   0x9305             STR      R3,[SP, #+20]
+    438          
+    439              _dm_api_lock();
+   \       0x46   0x....'....        BL       _dm_api_lock
+    440          
+    441              dm_log_debug("Current Service Response Payload, Length: %d, Payload: %.*s", payload_len, payload_len, payload);
+    442          
+    443              res = dm_mgr_upstream_thing_service_response(devid, msgid, msgid_len, code, identifier, identifier_len, payload,
+    444                      payload_len, ctx);
+   \       0x4A   0xF8CD 0xB010      STR      R11,[SP, #+16]
+   \       0x4E   0xF8CD 0xA00C      STR      R10,[SP, #+12]
+   \       0x52   0x9602             STR      R6,[SP, #+8]
+   \       0x54   0xF8CD 0x9004      STR      R9,[SP, #+4]
+   \       0x58   0x9500             STR      R5,[SP, #+0]
+   \       0x5A   0x9B05             LDR      R3,[SP, #+20]
+   \       0x5C   0x4642             MOV      R2,R8
+   \       0x5E   0x4621             MOV      R1,R4
+   \       0x60   0x4638             MOV      R0,R7
+   \       0x62   0x....'....        BL       dm_mgr_upstream_thing_service_response
+   \       0x66   0x4604             MOV      R4,R0
+    445          
+    446              _dm_api_unlock();
+   \       0x68   0x....'....        BL       _dm_api_unlock
+    447              return res;
+   \       0x6C   0x4620             MOV      R0,R4
+   \                     ??iotx_dm_send_service_response_2: (+1)
+   \       0x6E   0xB007             ADD      SP,SP,#+28
+   \       0x70   0xE8BD 0x8FF0      POP      {R4-R11,PC}      ;; return
+    448          }
+    449          
+
+   \                                 In section .text, align 2, keep-with-next
+    450          int iotx_dm_send_property_get_response(_IN_ int devid, _IN_ char *msgid, _IN_ int msgid_len,
+    451                                                 _IN_ iotx_dm_error_code_t code, _IN_ char *payload, _IN_ int payload_len, void *ctx)
+    452          {
+   \                     iotx_dm_send_property_get_response: (+1)
+   \        0x0   0xE92D 0x47FF      PUSH     {R0-R10,LR}
+   \        0x4   0x4606             MOV      R6,R0
+   \        0x6   0x460D             MOV      R5,R1
+   \        0x8   0x4617             MOV      R7,R2
+   \        0xA   0x4698             MOV      R8,R3
+    453              int res = 0;
+    454          
+    455              if (devid < 0 || msgid == NULL || msgid_len <= 0 || payload == NULL || payload_len <= 0) {
+   \        0xC   0x2E00             CMP      R6,#+0
+   \        0xE   0xD40B             BMI.N    ??iotx_dm_send_property_get_response_0
+   \       0x10   0x2D00             CMP      R5,#+0
+   \       0x12   0xD009             BEQ.N    ??iotx_dm_send_property_get_response_0
+   \       0x14   0x2F01             CMP      R7,#+1
+   \       0x16   0xDB07             BLT.N    ??iotx_dm_send_property_get_response_0
+   \       0x18   0x9C0C             LDR      R4,[SP, #+48]
+   \       0x1A   0x2C00             CMP      R4,#+0
+   \       0x1C   0xD004             BEQ.N    ??iotx_dm_send_property_get_response_0
+   \       0x1E   0xF8DD 0x9034      LDR      R9,[SP, #+52]
+   \       0x22   0xF1B9 0x0F01      CMP      R9,#+1
+   \       0x26   0xDA02             BGE.N    ??iotx_dm_send_property_get_response_1
+    456                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_send_property_get_response_0: (+1)
+   \       0x28   0xF06F 0x0001      MVN      R0,#+1
+   \       0x2C   0xE012             B.N      ??iotx_dm_send_property_get_response_2
+    457              }
+   \                     ??iotx_dm_send_property_get_response_1: (+1)
+   \       0x2E   0xF8DD 0xA038      LDR      R10,[SP, #+56]
+    458          
+    459              _dm_api_lock();
+   \       0x32   0x....'....        BL       _dm_api_lock
+    460          
+    461              dm_log_debug("Current Property Get Response Payload, Length: %d, Payload: %.*s", payload_len, payload_len, payload);
+    462          
+    463              res = dm_mgr_upstream_thing_property_get_response(devid, msgid, msgid_len, code, payload,
+    464                      payload_len, ctx);
+   \       0x36   0xF8CD 0xA008      STR      R10,[SP, #+8]
+   \       0x3A   0xF8CD 0x9004      STR      R9,[SP, #+4]
+   \       0x3E   0x9400             STR      R4,[SP, #+0]
+   \       0x40   0x4643             MOV      R3,R8
+   \       0x42   0x463A             MOV      R2,R7
+   \       0x44   0x4629             MOV      R1,R5
+   \       0x46   0x4630             MOV      R0,R6
+   \       0x48   0x....'....        BL       dm_mgr_upstream_thing_property_get_response
+   \       0x4C   0x4604             MOV      R4,R0
+    465          
+    466              _dm_api_unlock();
+   \       0x4E   0x....'....        BL       _dm_api_unlock
+    467              return res;
+   \       0x52   0x4620             MOV      R0,R4
+   \                     ??iotx_dm_send_property_get_response_2: (+1)
+   \       0x54   0xB004             ADD      SP,SP,#+16
+   \       0x56   0xE8BD 0x87F0      POP      {R4-R10,PC}      ;; return
+    468          }
+    469          
+
+   \                                 In section .text, align 2, keep-with-next
+    470          int iotx_dm_deviceinfo_update(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    471          {
+   \                     iotx_dm_deviceinfo_update: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4616             MOV      R6,R2
+    472              int res = 0;
+    473          
+    474              if (devid < 0 || payload == NULL || payload_len <= 0) {
+   \        0x8   0x2D00             CMP      R5,#+0
+   \        0xA   0xD403             BMI.N    ??iotx_dm_deviceinfo_update_0
+   \        0xC   0x2C00             CMP      R4,#+0
+   \        0xE   0xD001             BEQ.N    ??iotx_dm_deviceinfo_update_0
+   \       0x10   0x2E01             CMP      R6,#+1
+   \       0x12   0xDA02             BGE.N    ??iotx_dm_deviceinfo_update_1
+    475                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_deviceinfo_update_0: (+1)
+   \       0x14   0xF06F 0x0001      MVN      R0,#+1
+   \       0x18   0xBD70             POP      {R4-R6,PC}
+    476              }
+    477          
+    478              _dm_api_lock();
+   \                     ??iotx_dm_deviceinfo_update_1: (+1)
+   \       0x1A   0x....'....        BL       _dm_api_lock
+    479          
+    480              res = dm_mgr_upstream_thing_deviceinfo_update(devid, payload, payload_len);
+   \       0x1E   0x4632             MOV      R2,R6
+   \       0x20   0x4621             MOV      R1,R4
+   \       0x22   0x4628             MOV      R0,R5
+   \       0x24   0x....'....        BL       dm_mgr_upstream_thing_deviceinfo_update
+   \       0x28   0x0004             MOVS     R4,R0
+    481              if (res < SUCCESS_RETURN) {
+   \       0x2A   0xD504             BPL.N    ??iotx_dm_deviceinfo_update_2
+    482                  _dm_api_unlock();
+   \       0x2C   0x....'....        BL       _dm_api_unlock
+    483                  return FAIL_RETURN;
+   \       0x30   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x34   0xBD70             POP      {R4-R6,PC}
+    484              }
+    485          
+    486              _dm_api_unlock();
+   \                     ??iotx_dm_deviceinfo_update_2: (+1)
+   \       0x36   0x....'....        BL       _dm_api_unlock
+    487              return res;
+   \       0x3A   0x4620             MOV      R0,R4
+   \       0x3C   0xBD70             POP      {R4-R6,PC}       ;; return
+    488          }
+    489          
+
+   \                                 In section .text, align 2, keep-with-next
+    490          int iotx_dm_deviceinfo_delete(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    491          {
+   \                     iotx_dm_deviceinfo_delete: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4616             MOV      R6,R2
+    492              int res = 0;
+    493          
+    494              if (devid < 0 || payload == NULL || payload_len <= 0) {
+   \        0x8   0x2D00             CMP      R5,#+0
+   \        0xA   0xD403             BMI.N    ??iotx_dm_deviceinfo_delete_0
+   \        0xC   0x2C00             CMP      R4,#+0
+   \        0xE   0xD001             BEQ.N    ??iotx_dm_deviceinfo_delete_0
+   \       0x10   0x2E01             CMP      R6,#+1
+   \       0x12   0xDA02             BGE.N    ??iotx_dm_deviceinfo_delete_1
+    495                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_deviceinfo_delete_0: (+1)
+   \       0x14   0xF06F 0x0001      MVN      R0,#+1
+   \       0x18   0xBD70             POP      {R4-R6,PC}
+    496              }
+    497          
+    498              _dm_api_lock();
+   \                     ??iotx_dm_deviceinfo_delete_1: (+1)
+   \       0x1A   0x....'....        BL       _dm_api_lock
+    499          
+    500              res = dm_mgr_upstream_thing_deviceinfo_delete(devid, payload, payload_len);
+   \       0x1E   0x4632             MOV      R2,R6
+   \       0x20   0x4621             MOV      R1,R4
+   \       0x22   0x4628             MOV      R0,R5
+   \       0x24   0x....'....        BL       dm_mgr_upstream_thing_deviceinfo_delete
+   \       0x28   0x0004             MOVS     R4,R0
+    501              if (res < SUCCESS_RETURN) {
+   \       0x2A   0xD504             BPL.N    ??iotx_dm_deviceinfo_delete_2
+    502                  _dm_api_unlock();
+   \       0x2C   0x....'....        BL       _dm_api_unlock
+    503                  return FAIL_RETURN;
+   \       0x30   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x34   0xBD70             POP      {R4-R6,PC}
+    504              }
+    505          
+    506              _dm_api_unlock();
+   \                     ??iotx_dm_deviceinfo_delete_2: (+1)
+   \       0x36   0x....'....        BL       _dm_api_unlock
+    507              return res;
+   \       0x3A   0x4620             MOV      R0,R4
+   \       0x3C   0xBD70             POP      {R4-R6,PC}       ;; return
+    508          }
+    509          
+
+   \                                 In section .text, align 2, keep-with-next
+    510          int iotx_dm_qurey_ntp(void)
+    511          {
+   \                     iotx_dm_qurey_ntp: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    512              int res = 0;
+    513          
+    514              _dm_api_lock();
+   \        0x2   0x....'....        BL       _dm_api_lock
+    515          
+    516              res = dm_mgr_upstream_ntp_request();
+   \        0x6   0x....'....        BL       dm_mgr_upstream_ntp_request
+   \        0xA   0x0004             MOVS     R4,R0
+    517              if (res < SUCCESS_RETURN) {
+   \        0xC   0xD504             BPL.N    ??iotx_dm_qurey_ntp_0
+    518                  _dm_api_unlock();
+   \        0xE   0x....'....        BL       _dm_api_unlock
+    519                  return FAIL_RETURN;
+   \       0x12   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x16   0xBD10             POP      {R4,PC}
+    520              }
+    521          
+    522              _dm_api_unlock();
+   \                     ??iotx_dm_qurey_ntp_0: (+1)
+   \       0x18   0x....'....        BL       _dm_api_unlock
+    523              return res;
+   \       0x1C   0x4620             MOV      R0,R4
+   \       0x1E   0xBD10             POP      {R4,PC}          ;; return
+    524          }
+    525          
+
+   \                                 In section .text, align 2, keep-with-next
+    526          int iotx_dm_send_aos_active(int devid)
+    527          {
+   \                     iotx_dm_send_aos_active: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0xB09C             SUB      SP,SP,#+112
+   \        0x4   0x4605             MOV      R5,R0
+    528              int active_param_len;
+    529              int i;
+    530              char *active_param;
+    531              char aos_active_data[AOS_ACTIVE_INFO_LEN];
+    532              char subdev_aos_verson[VERSION_NUM_SIZE] = {0};
+   \        0x6   0xA803             ADD      R0,SP,#+12
+   \        0x8   0x2100             MOVS     R1,#+0
+   \        0xA   0x6001             STR      R1,[R0, #+0]
+    533              char subdev_mac_num[MAC_ADDRESS_SIZE] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, ACTIVE_SUBDEV, ACTIVE_LINKKIT_OTHERS};
+   \        0xC   0xA805             ADD      R0,SP,#+20
+   \        0xE   0x....             LDR.N    R1,??DataTable2_2
+   \       0x10   0xE9D1 0x2300      LDRD     R2,R3,[R1, #+0]
+   \       0x14   0xE9C0 0x2300      STRD     R2,R3,[R0, #+0]
+    534              char subdev_chip_code[CHIP_CODE_SIZE] = {0x01, 0x02, 0x03, 0x04};
+   \       0x18   0xA804             ADD      R0,SP,#+16
+   \       0x1A   0x....             LDR.N    R1,??DataTable2_3
+   \       0x1C   0x680A             LDR      R2,[R1, #+0]
+   \       0x1E   0x6002             STR      R2,[R0, #+0]
+    535              char random_num[RANDOM_NUM_SIZE];
+    536              const char *fmt =
+    537                          "[{\"attrKey\":\"SYS_ALIOS_ACTIVATION\",\"attrValue\":\"%s\",\"domain\":\"SYSTEM\"}]";
+   \       0x20   0x....             LDR.N    R6,??DataTable2_4
+    538          
+    539              aos_get_version_hex((unsigned char *)subdev_aos_verson);
+   \       0x22   0xA803             ADD      R0,SP,#+12
+   \       0x24   0x....'....        BL       aos_get_version_hex
+    540          
+    541              HAL_Srandom(HAL_UptimeMs());
+   \       0x28   0x....'....        BL       HAL_UptimeMs
+   \       0x2C   0x....'....        BL       HAL_Srandom
+    542              for (i = 0; i < 4; i ++) {
+   \       0x30   0x2400             MOVS     R4,#+0
+   \       0x32   0xE005             B.N      ??iotx_dm_send_aos_active_0
+    543                  random_num[i] = (char)HAL_Random(0xFF);
+   \                     ??iotx_dm_send_aos_active_1: (+1)
+   \       0x34   0x20FF             MOVS     R0,#+255
+   \       0x36   0x....'....        BL       HAL_Random
+   \       0x3A   0xA902             ADD      R1,SP,#+8
+   \       0x3C   0x5508             STRB     R0,[R1, R4]
+    544              }
+   \       0x3E   0x1C64             ADDS     R4,R4,#+1
+   \                     ??iotx_dm_send_aos_active_0: (+1)
+   \       0x40   0x2C04             CMP      R4,#+4
+   \       0x42   0xDBF7             BLT.N    ??iotx_dm_send_aos_active_1
+    545              aos_get_version_info((unsigned char *)subdev_aos_verson, (unsigned char *)random_num, (unsigned char *)subdev_mac_num,
+    546                                   (unsigned char *)subdev_chip_code, (unsigned char *)aos_active_data, AOS_ACTIVE_INFO_LEN);
+   \       0x44   0x2051             MOVS     R0,#+81
+   \       0x46   0x9001             STR      R0,[SP, #+4]
+   \       0x48   0xA807             ADD      R0,SP,#+28
+   \       0x4A   0x9000             STR      R0,[SP, #+0]
+   \       0x4C   0xAB04             ADD      R3,SP,#+16
+   \       0x4E   0xAA05             ADD      R2,SP,#+20
+   \       0x50   0xA902             ADD      R1,SP,#+8
+   \       0x52   0xA803             ADD      R0,SP,#+12
+   \       0x54   0x....'....        BL       aos_get_version_info
+    547              memcpy(aos_active_data + 40, "1111111111222222222233333333334444444444", 40);
+   \       0x58   0x2228             MOVS     R2,#+40
+   \       0x5A   0x....             LDR.N    R1,??DataTable2_5
+   \       0x5C   0xA811             ADD      R0,SP,#+68
+   \       0x5E   0x....'....        BL       __aeabi_memcpy4
+    548          
+    549              active_param_len = strlen(fmt) + strlen(aos_active_data) + 1;
+   \       0x62   0x4630             MOV      R0,R6
+   \       0x64   0x....'....        BL       strlen
+   \       0x68   0x4607             MOV      R7,R0
+   \       0x6A   0xA807             ADD      R0,SP,#+28
+   \       0x6C   0x....'....        BL       strlen
+   \       0x70   0x19C7             ADDS     R7,R0,R7
+   \       0x72   0x1C7F             ADDS     R7,R7,#+1
+    550              active_param = DM_malloc(active_param_len);
+   \       0x74   0x4638             MOV      R0,R7
+   \       0x76   0x....'....        BL       HAL_Malloc
+   \       0x7A   0x0004             MOVS     R4,R0
+    551              if (active_param == NULL) {
+   \       0x7C   0xD102             BNE.N    ??iotx_dm_send_aos_active_2
+    552                  return FAIL_RETURN;
+   \       0x7E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x82   0xE00D             B.N      ??iotx_dm_send_aos_active_3
+    553              }
+    554              HAL_Snprintf(active_param, active_param_len, fmt, aos_active_data);
+   \                     ??iotx_dm_send_aos_active_2: (+1)
+   \       0x84   0xAB07             ADD      R3,SP,#+28
+   \       0x86   0x4632             MOV      R2,R6
+   \       0x88   0x4639             MOV      R1,R7
+   \       0x8A   0x....'....        BL       HAL_Snprintf
+    555              iotx_dm_deviceinfo_update(devid, active_param, active_param_len);
+   \       0x8E   0x463A             MOV      R2,R7
+   \       0x90   0x4621             MOV      R1,R4
+   \       0x92   0x4628             MOV      R0,R5
+   \       0x94   0x....'....        BL       iotx_dm_deviceinfo_update
+    556              DM_free(active_param);
+   \       0x98   0x4620             MOV      R0,R4
+   \       0x9A   0x....'....        BL       HAL_Free
+    557          
+    558              return SUCCESS_RETURN;
+   \       0x9E   0x2000             MOVS     R0,#+0
+   \                     ??iotx_dm_send_aos_active_3: (+1)
+   \       0xA0   0xB01D             ADD      SP,SP,#+116
+   \       0xA2   0xBDF0             POP      {R4-R7,PC}       ;; return
+    559          }
+    560          
+
+   \                                 In section .text, align 2, keep-with-next
+    561          int iotx_dm_send_rrpc_response(_IN_ int devid, _IN_ char *msgid, _IN_ int msgid_len, _IN_ iotx_dm_error_code_t code,
+    562                                         _IN_ char *rrpcid, _IN_ int rrpcid_len, _IN_ char *payload, _IN_ int payload_len)
+    563          {
+   \                     iotx_dm_send_rrpc_response: (+1)
+   \        0x0   0xE92D 0x4FF8      PUSH     {R3-R11,LR}
+   \        0x4   0xB084             SUB      SP,SP,#+16
+   \        0x6   0x4607             MOV      R7,R0
+   \        0x8   0x460E             MOV      R6,R1
+   \        0xA   0x4690             MOV      R8,R2
+   \        0xC   0x4699             MOV      R9,R3
+    564              int res = 0;
+    565          
+    566              if (devid < 0 || msgid == NULL || msgid_len <= 0 || rrpcid == NULL || rrpcid_len <= 0 || payload == NULL
+    567                  || payload_len <= 0) {
+   \        0xE   0x2F00             CMP      R7,#+0
+   \       0x10   0xD414             BMI.N    ??iotx_dm_send_rrpc_response_0
+   \       0x12   0x2E00             CMP      R6,#+0
+   \       0x14   0xD012             BEQ.N    ??iotx_dm_send_rrpc_response_0
+   \       0x16   0xF1B8 0x0F01      CMP      R8,#+1
+   \       0x1A   0xDB0F             BLT.N    ??iotx_dm_send_rrpc_response_0
+   \       0x1C   0x9D0E             LDR      R5,[SP, #+56]
+   \       0x1E   0x2D00             CMP      R5,#+0
+   \       0x20   0xD00C             BEQ.N    ??iotx_dm_send_rrpc_response_0
+   \       0x22   0xF8DD 0xA03C      LDR      R10,[SP, #+60]
+   \       0x26   0xF1BA 0x0F01      CMP      R10,#+1
+   \       0x2A   0xDB07             BLT.N    ??iotx_dm_send_rrpc_response_0
+   \       0x2C   0x9C10             LDR      R4,[SP, #+64]
+   \       0x2E   0x2C00             CMP      R4,#+0
+   \       0x30   0xD004             BEQ.N    ??iotx_dm_send_rrpc_response_0
+   \       0x32   0xF8DD 0xB044      LDR      R11,[SP, #+68]
+   \       0x36   0xF1BB 0x0F01      CMP      R11,#+1
+   \       0x3A   0xDA02             BGE.N    ??iotx_dm_send_rrpc_response_1
+    568                  return DM_INVALID_PARAMETER;
+   \                     ??iotx_dm_send_rrpc_response_0: (+1)
+   \       0x3C   0xF06F 0x0001      MVN      R0,#+1
+   \       0x40   0xE011             B.N      ??iotx_dm_send_rrpc_response_2
+    569              }
+    570          
+    571              _dm_api_lock();
+   \                     ??iotx_dm_send_rrpc_response_1: (+1)
+   \       0x42   0x....'....        BL       _dm_api_lock
+    572          
+    573              res = dm_mgr_upstream_rrpc_response(devid, msgid, msgid_len, code, rrpcid, rrpcid_len, payload, payload_len);
+   \       0x46   0xF8CD 0xB00C      STR      R11,[SP, #+12]
+   \       0x4A   0x9402             STR      R4,[SP, #+8]
+   \       0x4C   0xF8CD 0xA004      STR      R10,[SP, #+4]
+   \       0x50   0x9500             STR      R5,[SP, #+0]
+   \       0x52   0x464B             MOV      R3,R9
+   \       0x54   0x4642             MOV      R2,R8
+   \       0x56   0x4631             MOV      R1,R6
+   \       0x58   0x4638             MOV      R0,R7
+   \       0x5A   0x....'....        BL       dm_mgr_upstream_rrpc_response
+   \       0x5E   0x4604             MOV      R4,R0
+    574          
+    575              _dm_api_unlock();
+   \       0x60   0x....'....        BL       _dm_api_unlock
+    576              return res;
+   \       0x64   0x4620             MOV      R0,R4
+   \                     ??iotx_dm_send_rrpc_response_2: (+1)
+   \       0x66   0xB005             ADD      SP,SP,#+20
+   \       0x68   0xE8BD 0x8FF0      POP      {R4-R11,PC}      ;; return
+    577          }
+    578          #endif
+    579          
+
+   \                                 In section .text, align 2, keep-with-next
+    580          int iotx_dm_cota_perform_sync(_OU_ char *buffer, _IN_ int buffer_len)
+    581          {
+    582          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    583              return dm_cota_perform_sync(buffer, buffer_len);
+    584          #else
+    585              return -1;
+   \                     iotx_dm_cota_perform_sync: (+1)
+   \        0x0   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x4   0x4770             BX       LR               ;; return
+    586          #endif
+    587          }
+    588          
+
+   \                                 In section .text, align 2, keep-with-next
+    589          int iotx_dm_cota_get_config(_IN_ const char *config_scope, const char *get_type, const char *attribute_keys)
+    590          {
+    591          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    592              return dm_cota_get_config(config_scope, get_type, attribute_keys);
+    593          #else
+    594              return -1;
+   \                     iotx_dm_cota_get_config: (+1)
+   \        0x0   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x4   0x4770             BX       LR               ;; return
+    595          #endif
+    596          }
+    597          
+
+   \                                 In section .text, align 2, keep-with-next
+    598          int iotx_dm_fota_perform_sync(_OU_ char *buffer, _IN_ int buffer_len)
+    599          {
+    600          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    601              return dm_fota_perform_sync(buffer, buffer_len);
+    602          #else
+    603              return -1;
+   \                     iotx_dm_fota_perform_sync: (+1)
+   \        0x0   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x4   0x4770             BX       LR               ;; return
+    604          #endif
+    605          }
+    606          
+
+   \                                 In section .text, align 2, keep-with-next
+    607          int iotx_dm_fota_request_image(const char *version, int buffer_len)
+    608          {
+    609          #if defined(OTA_ENABLED) && !defined(BUILD_AOS)
+    610              return dm_fota_request_image(version, buffer_len);
+    611          #else
+    612              return -1;
+   \                     iotx_dm_fota_request_image: (+1)
+   \        0x0   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x4   0x4770             BX       LR               ;; return
+    613          #endif
+    614          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x....'....        DC32     g_dm_api_ctx
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x....'....        DC32     ?_5
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x....'....        DC32     ?_6
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \        0x0   0x....'....        DC32     ?_7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \        0x0   0x....'....        DC32     ?_8
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x15   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x2E   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_3:
+   \        0x0   0x74 0x68          DC8 "thing.event.%.*s.post"
+   \              0x69 0x6E    
+   \              0x67 0x2E    
+   \              0x65 0x76    
+   \              0x65 0x6E    
+   \              0x74 0x2E    
+   \              0x25 0x2E    
+   \              0x2A 0x73    
+   \              0x2E 0x70    
+   \              0x6F 0x73    
+   \              0x74 0x00    
+   \       0x16   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0
+   \              0x00 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_5:
+   \        0x0   0x01 0x02          DC8 1, 2, 3, 4, 5, 6, 0, 2
+   \              0x03 0x04    
+   \              0x05 0x06    
+   \              0x00 0x02    
+
+   \                                 In section .rodata, align 4
+   \                     ?_6:
+   \        0x0   0x01 0x02          DC8 1, 2, 3, 4
+   \              0x03 0x04    
+
+   \                                 In section .rodata, align 4
+   \                     ?_7:
+   \        0x0   0x5B 0x7B          DC8 5BH, 7BH, 22H, 61H, 74H, 74H, 72H, 4BH
+   \              0x22 0x61    
+   \              0x74 0x74    
+   \              0x72 0x4B    
+   \        0x8   0x65 0x79          DC8 65H, 79H, 22H, 3AH, 22H, 53H, 59H, 53H
+   \              0x22 0x3A    
+   \              0x22 0x53    
+   \              0x59 0x53    
+   \       0x10   0x5F 0x41          DC8 5FH, 41H, 4CH, 49H, 4FH, 53H, 5FH, 41H
+   \              0x4C 0x49    
+   \              0x4F 0x53    
+   \              0x5F 0x41    
+   \       0x18   0x43 0x54          DC8 43H, 54H, 49H, 56H, 41H, 54H, 49H, 4FH
+   \              0x49 0x56    
+   \              0x41 0x54    
+   \              0x49 0x4F    
+   \       0x20   0x4E 0x22          DC8 4EH, 22H, 2CH, 22H, 61H, 74H, 74H, 72H
+   \              0x2C 0x22    
+   \              0x61 0x74    
+   \              0x74 0x72    
+   \       0x28   0x56 0x61          DC8 56H, 61H, 6CH, 75H, 65H, 22H, 3AH, 22H
+   \              0x6C 0x75    
+   \              0x65 0x22    
+   \              0x3A 0x22    
+   \       0x30   0x25 0x73          DC8 25H, 73H, 22H, 2CH, 22H, 64H, 6FH, 6DH
+   \              0x22 0x2C    
+   \              0x22 0x64    
+   \              0x6F 0x6D    
+   \       0x38   0x61 0x69          DC8 61H, 69H, 6EH, 22H, 3AH, 22H, 53H, 59H
+   \              0x6E 0x22    
+   \              0x3A 0x22    
+   \              0x53 0x59    
+   \       0x40   0x53 0x54          DC8 53H, 54H, 45H, 4DH, 22H, 7DH, 5DH, 0
+   \              0x45 0x4D    
+   \              0x22 0x7D    
+   \              0x5D 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_8:
+   \        0x0   0x31 0x31          DC8 "1111111111222222222233333333334444444444"
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+    615          
+    616          #ifdef DEVICE_MODEL_GATEWAY
+    617          int iotx_dm_query_topo_list(void)
+    618          {
+    619              int res = 0;
+    620          
+    621              _dm_api_lock();
+    622          
+    623              res = dm_mgr_upstream_thing_topo_get();
+    624              if (res < SUCCESS_RETURN) {
+    625                  _dm_api_unlock();
+    626                  return FAIL_RETURN;
+    627              }
+    628          
+    629              _dm_api_unlock();
+    630              return res;
+    631          }
+    632          
+    633          int iotx_dm_subdev_query(_IN_ char product_key[IOTX_PRODUCT_KEY_LEN + 1],
+    634                                   _IN_ char device_name[IOTX_DEVICE_NAME_LEN + 1],
+    635                                   _OU_ int *devid)
+    636          {
+    637              int res = 0;
+    638          
+    639              if (product_key == NULL || device_name == NULL ||
+    640                  (strlen(product_key) >= IOTX_PRODUCT_KEY_LEN + 1) ||
+    641                  (strlen(device_name) >= IOTX_DEVICE_NAME_LEN + 1) ||
+    642                  devid == NULL) {
+    643                  return DM_INVALID_PARAMETER;
+    644              }
+    645          
+    646              _dm_api_lock();
+    647              res = dm_mgr_device_query(product_key, device_name, devid);
+    648              if (res != SUCCESS_RETURN) {
+    649                  _dm_api_unlock();
+    650                  return FAIL_RETURN;
+    651              }
+    652              _dm_api_unlock();
+    653              return SUCCESS_RETURN;
+    654          }
+    655          
+    656          int iotx_dm_subdev_create(_IN_ char product_key[IOTX_PRODUCT_KEY_LEN + 1],
+    657                                    _IN_ char device_name[IOTX_DEVICE_NAME_LEN + 1],
+    658                                    _IN_ char device_secret[IOTX_DEVICE_SECRET_LEN + 1], _OU_ int *devid)
+    659          {
+    660              int res = 0;
+    661          
+    662              if (product_key == NULL || device_name == NULL ||
+    663                  (strlen(product_key) >= IOTX_PRODUCT_KEY_LEN + 1) ||
+    664                  (strlen(device_name) >= IOTX_DEVICE_NAME_LEN + 1) ||
+    665                  devid == NULL) {
+    666                  return DM_INVALID_PARAMETER;
+    667              }
+    668          
+    669              if (device_secret != NULL && strlen(device_secret) >= IOTX_DEVICE_SECRET_LEN + 1) {
+    670                  return DM_INVALID_PARAMETER;
+    671              }
+    672          
+    673              _dm_api_lock();
+    674              res = dm_mgr_device_create(IOTX_DM_DEVICE_SUBDEV, product_key, device_name, device_secret, devid);
+    675              if (res != SUCCESS_RETURN) {
+    676                  _dm_api_unlock();
+    677                  return FAIL_RETURN;
+    678              }
+    679              _dm_api_unlock();
+    680              return SUCCESS_RETURN;
+    681          }
+    682          
+    683          int iotx_dm_subdev_destroy(_IN_ int devid)
+    684          {
+    685              int res = 0;
+    686          
+    687              if (devid < 0) {
+    688                  return DM_INVALID_PARAMETER;
+    689              }
+    690          
+    691              _dm_api_lock();
+    692              res = dm_mgr_device_destroy(devid);
+    693              if (res != SUCCESS_RETURN) {
+    694                  _dm_api_unlock();
+    695                  return FAIL_RETURN;
+    696              }
+    697          
+    698              _dm_api_unlock();
+    699              return SUCCESS_RETURN;
+    700          }
+    701          
+    702          int iotx_dm_subdev_number(void)
+    703          {
+    704              int number = 0;
+    705          
+    706              _dm_api_lock();
+    707              number = dm_mgr_device_number();
+    708              _dm_api_unlock();
+    709          
+    710              return number;
+    711          }
+    712          
+    713          int iotx_dm_subdev_register(_IN_ int devid)
+    714          {
+    715              int res = 0;
+    716              dm_mgr_dev_node_t *search_node = NULL;
+    717          
+    718              if (devid < 0) {
+    719                  return DM_INVALID_PARAMETER;
+    720              }
+    721          
+    722              _dm_api_lock();
+    723              res = dm_mgr_search_device_node_by_devid(devid, (void **)&search_node);
+    724              if (res != SUCCESS_RETURN) {
+    725                  _dm_api_unlock();
+    726                  return FAIL_RETURN;
+    727              }
+    728          
+    729              if ((strlen(search_node->device_secret) > 0) && (strlen(search_node->device_secret) < IOTX_DEVICE_SECRET_LEN + 1)) {
+    730                  _dm_api_unlock();
+    731                  return SUCCESS_RETURN;
+    732              }
+    733          
+    734              res = dm_mgr_upstream_thing_sub_register(devid);
+    735          
+    736              _dm_api_unlock();
+    737              return res;
+    738          }
+    739          
+    740          int iotx_dm_subdev_unregister(_IN_ int devid)
+    741          {
+    742              int res = 0;
+    743          
+    744              if (devid < 0) {
+    745                  return DM_INVALID_PARAMETER;
+    746              }
+    747          
+    748              _dm_api_lock();
+    749          
+    750              res = dm_mgr_upstream_thing_sub_unregister(devid);
+    751          
+    752              _dm_api_unlock();
+    753              return res;
+    754          }
+    755          
+    756          int iotx_dm_subdev_topo_add(_IN_ int devid)
+    757          {
+    758              int res = 0;
+    759          
+    760              if (devid < 0) {
+    761                  return DM_INVALID_PARAMETER;
+    762              }
+    763          
+    764              _dm_api_lock();
+    765          
+    766              res = dm_mgr_upstream_thing_topo_add(devid);
+    767          
+    768              _dm_api_unlock();
+    769              return res;
+    770          }
+    771          
+    772          int iotx_dm_subdev_topo_del(_IN_ int devid)
+    773          {
+    774              int res = 0;
+    775          
+    776              if (devid < 0) {
+    777                  return DM_INVALID_PARAMETER;
+    778              }
+    779          
+    780              _dm_api_lock();
+    781          
+    782              res = dm_mgr_upstream_thing_topo_delete(devid);
+    783          
+    784              _dm_api_unlock();
+    785              return res;
+    786          }
+    787          
+    788          int iotx_dm_subdev_login(_IN_ int devid)
+    789          {
+    790              int res = 0;
+    791          
+    792              if (devid < 0) {
+    793                  return DM_INVALID_PARAMETER;
+    794              }
+    795          
+    796              _dm_api_lock();
+    797          
+    798              res = dm_mgr_upstream_combine_login(devid);
+    799          
+    800              _dm_api_unlock();
+    801              return res;
+    802          }
+    803          
+    804          int iotx_dm_subdev_logout(_IN_ int devid)
+    805          {
+    806              int res = 0;
+    807          
+    808              if (devid < 0) {
+    809                  return DM_INVALID_PARAMETER;
+    810              }
+    811          
+    812              _dm_api_lock();
+    813          
+    814              res = dm_mgr_upstream_combine_logout(devid);
+    815          
+    816              _dm_api_unlock();
+    817              return res;
+    818          }
+    819          
+    820          int iotx_dm_get_device_type(_IN_ int devid, _OU_ int *type)
+    821          {
+    822              int res = 0;
+    823          
+    824              if (devid < 0 || type == NULL) {
+    825                  return DM_INVALID_PARAMETER;
+    826              }
+    827          
+    828              _dm_api_lock();
+    829              res = dm_mgr_get_dev_type(devid, type);
+    830              if (res != SUCCESS_RETURN) {
+    831                  _dm_api_unlock();
+    832                  return FAIL_RETURN;
+    833              }
+    834          
+    835              _dm_api_unlock();
+    836              return SUCCESS_RETURN;
+    837          }
+    838          
+    839          int iotx_dm_get_device_avail_status(_IN_ int devid, _OU_ iotx_dm_dev_avail_t *status)
+    840          {
+    841              int res = 0;
+    842              char product_key[IOTX_PRODUCT_KEY_LEN + 1] = {0};
+    843              char device_name[IOTX_DEVICE_NAME_LEN + 1] = {0};
+    844              char device_secret[IOTX_DEVICE_SECRET_LEN + 1] = {0};
+    845          
+    846              if (devid < 0 || status == NULL) {
+    847                  return DM_INVALID_PARAMETER;
+    848              }
+    849          
+    850              _dm_api_lock();
+    851              res = dm_mgr_search_device_by_devid(devid, product_key, device_name, device_secret);
+    852              if (res != SUCCESS_RETURN) {
+    853                  _dm_api_unlock();
+    854                  return FAIL_RETURN;
+    855              }
+    856          
+    857              res = dm_mgr_get_dev_avail(product_key, device_name, status);
+    858              if (res != SUCCESS_RETURN) {
+    859                  _dm_api_unlock();
+    860                  return FAIL_RETURN;
+    861              }
+    862          
+    863              _dm_api_unlock();
+    864              return SUCCESS_RETURN;
+    865          }
+    866          
+    867          int iotx_dm_get_device_status(_IN_ int devid, _OU_ iotx_dm_dev_status_t *status)
+    868          {
+    869              int res = 0;
+    870          
+    871              if (devid < 0 || status == NULL) {
+    872                  return DM_INVALID_PARAMETER;
+    873              }
+    874          
+    875              _dm_api_lock();
+    876              res = dm_mgr_get_dev_status(devid, status);
+    877              _dm_api_unlock();
+    878          
+    879              return res;
+    880          }
+    881          #ifdef DEVICE_MODEL_SUBDEV_OTA
+    882          int iotx_dm_firmware_version_update(_IN_ int devid, _IN_ char *payload, _IN_ int payload_len)
+    883          {
+    884              int res = 0;
+    885          
+    886              if (devid < 0 || payload == NULL || payload_len <= 0) {
+    887                  return DM_INVALID_PARAMETER;
+    888              }
+    889          
+    890              _dm_api_lock();
+    891              res = dm_mgr_upstream_thing_firmware_version_update(devid, payload, payload_len);
+    892              if (res < SUCCESS_RETURN) {
+    893                  _dm_api_unlock();
+    894                  return FAIL_RETURN;
+    895              }
+    896          
+    897              _dm_api_unlock();
+    898              return res;
+    899          }
+    900          
+    901          int iotx_dm_send_firmware_version(int devid, const char *version)
+    902          {
+    903              char msg[FIRMWARE_VERSION_MSG_LEN] = {0};
+    904              int msg_len = 0;
+    905              /* firmware report message json data generate */
+    906              int ret = HAL_Snprintf(msg,
+    907                                     FIRMWARE_VERSION_MSG_LEN,
+    908                                     "{\"id\":\"%d\",\"params\":{\"version\":\"%s\"}}",
+    909                                     iotx_report_id(),
+    910                                     version
+    911                                    );
+    912              if (ret <= 0) {
+    913                  printf("firmware report message json data generate err");
+    914                  return FAIL_RETURN;
+    915              }
+    916          
+    917              msg_len = strlen(msg);
+    918          
+    919              ret = iotx_dm_firmware_version_update(devid, msg, msg_len);
+    920              return SUCCESS_RETURN;
+    921          }
+    922          
+    923          int iotx_dm_ota_switch_device(_IN_ int devid)
+    924          {
+    925              return dm_ota_switch_device(devid);
+    926          }
+    927          #endif
+    928          #endif
+    929          
+    930          #ifdef DEPRECATED_LINKKIT
+    931          int iotx_dm_deprecated_set_tsl(_IN_ int devid, _IN_ iotx_dm_tsl_source_t source, _IN_ const char *tsl, _IN_ int tsl_len)
+    932          {
+    933              int res = 0;
+    934          
+    935              if (devid < 0) {
+    936                  return DM_INVALID_PARAMETER;
+    937              }
+    938          
+    939              _dm_api_lock();
+    940              if (source == IOTX_DM_TSL_SOURCE_CLOUD) {
+    941                  res = dm_mgr_upstream_thing_dynamictsl_get(devid);
+    942          
+    943                  _dm_api_unlock();
+    944                  return res;
+    945              }
+    946          
+    947              if (source == IOTX_DM_TSL_SOURCE_LOCAL) {
+    948                  if (tsl == NULL || tsl_len <= 0) {
+    949                      _dm_api_unlock();
+    950                      return DM_INVALID_PARAMETER;
+    951                  }
+    952          
+    953                  res = dm_mgr_deprecated_set_tsl(devid, IOTX_DM_TSL_TYPE_ALINK, tsl, tsl_len);
+    954                  if (res != SUCCESS_RETURN) {
+    955                      _dm_api_unlock();
+    956                      return FAIL_RETURN;
+    957                  }
+    958          
+    959                  _dm_api_unlock();
+    960                  return SUCCESS_RETURN;
+    961              }
+    962          
+    963              _dm_api_unlock();
+    964              return FAIL_RETURN;
+    965          }
+    966          
+    967          int iotx_dm_deprecated_set_property_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+    968                  _IN_ int value_len)
+    969          {
+    970              int res = 0;
+    971          
+    972              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+    973                  return DM_INVALID_PARAMETER;
+    974              }
+    975          
+    976              _dm_api_lock();
+    977              res = dm_mgr_deprecated_set_property_value(devid, key, key_len, value, value_len);
+    978              if (res != SUCCESS_RETURN) {
+    979                  _dm_api_unlock();
+    980                  return FAIL_RETURN;
+    981              }
+    982          
+    983              _dm_api_unlock();
+    984              return SUCCESS_RETURN;
+    985          }
+    986          
+    987          int iotx_dm_deprecated_get_property_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value)
+    988          {
+    989              int res = 0;
+    990          
+    991              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+    992                  return DM_INVALID_PARAMETER;
+    993              }
+    994          
+    995              _dm_api_lock();
+    996              res = dm_mgr_deprecated_get_property_value(devid, key, key_len, value);
+    997              if (res != SUCCESS_RETURN) {
+    998                  _dm_api_unlock();
+    999                  return FAIL_RETURN;
+   1000              }
+   1001          
+   1002              _dm_api_unlock();
+   1003              return SUCCESS_RETURN;
+   1004          }
+   1005          
+   1006          int iotx_dm_deprecated_set_event_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1007                  _IN_ int value_len)
+   1008          {
+   1009              int res = 0;
+   1010          
+   1011              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+   1012                  return DM_INVALID_PARAMETER;
+   1013              }
+   1014          
+   1015              _dm_api_lock();
+   1016              res = dm_mgr_deprecated_set_event_output_value(devid, key, key_len, value, value_len);
+   1017              if (res != SUCCESS_RETURN) {
+   1018                  _dm_api_unlock();
+   1019                  return FAIL_RETURN;
+   1020              }
+   1021          
+   1022              _dm_api_unlock();
+   1023              return SUCCESS_RETURN;
+   1024          }
+   1025          
+   1026          int iotx_dm_deprecated_get_event_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value)
+   1027          {
+   1028              int res = 0;
+   1029          
+   1030              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+   1031                  return DM_INVALID_PARAMETER;
+   1032              }
+   1033          
+   1034              _dm_api_lock();
+   1035              res = dm_mgr_deprecated_get_event_output_value(devid, key, key_len, value);
+   1036              if (res != SUCCESS_RETURN) {
+   1037                  _dm_api_unlock();
+   1038                  return FAIL_RETURN;
+   1039              }
+   1040          
+   1041              _dm_api_unlock();
+   1042              return SUCCESS_RETURN;
+   1043          }
+   1044          
+   1045          int iotx_dm_deprecated_get_service_input_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value)
+   1046          {
+   1047              int res = 0;
+   1048          
+   1049              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+   1050                  return DM_INVALID_PARAMETER;
+   1051              }
+   1052          
+   1053              _dm_api_lock();
+   1054              res = dm_mgr_deprecated_get_service_input_value(devid, key, key_len, value);
+   1055              if (res != SUCCESS_RETURN) {
+   1056                  _dm_api_unlock();
+   1057                  return FAIL_RETURN;
+   1058              }
+   1059          
+   1060              _dm_api_unlock();
+   1061              return SUCCESS_RETURN;
+   1062          }
+   1063          
+   1064          int iotx_dm_deprecated_set_service_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1065                  _IN_ int value_len)
+   1066          {
+   1067              int res = 0;
+   1068          
+   1069              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+   1070                  return DM_INVALID_PARAMETER;
+   1071              }
+   1072          
+   1073              _dm_api_lock();
+   1074              res = dm_mgr_deprecated_set_service_output_value(devid, key, key_len, value, value_len);
+   1075              if (res != SUCCESS_RETURN) {
+   1076                  _dm_api_unlock();
+   1077                  return FAIL_RETURN;
+   1078              }
+   1079          
+   1080              _dm_api_unlock();
+   1081              return SUCCESS_RETURN;
+   1082          }
+   1083          
+   1084          int iotx_dm_deprecated_get_service_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value)
+   1085          {
+   1086              int res = 0;
+   1087          
+   1088              if (devid < 0 || key == NULL || key_len <= 0 || value == NULL) {
+   1089                  return DM_INVALID_PARAMETER;
+   1090              }
+   1091          
+   1092              _dm_api_lock();
+   1093              res = dm_mgr_deprecated_get_service_output_value(devid, key, key_len, value);
+   1094              if (res != SUCCESS_RETURN) {
+   1095                  _dm_api_unlock();
+   1096                  return FAIL_RETURN;
+   1097              }
+   1098          
+   1099              _dm_api_unlock();
+   1100              return SUCCESS_RETURN;
+   1101          }
+   1102          
+   1103          int iotx_dm_deprecated_post_property_start(_IN_ int devid, _OU_ void **handle)
+   1104          {
+   1105              dm_api_property_t *dapi_property = NULL;
+   1106          
+   1107              if (devid < 0 || handle == NULL || *handle != NULL) {
+   1108                  return DM_INVALID_PARAMETER;
+   1109              }
+   1110          
+   1111              _dm_api_lock();
+   1112              dapi_property = DM_malloc(sizeof(dm_api_property_t));
+   1113              if (dapi_property == NULL) {
+   1114                  _dm_api_unlock();
+   1115                  return DM_MEMORY_NOT_ENOUGH;
+   1116              }
+   1117              memset(dapi_property, 0, sizeof(dm_api_property_t));
+   1118          
+   1119          
+   1120              /* Create Mutex */
+   1121              dapi_property->mutex = HAL_MutexCreate();
+   1122              if (dapi_property->mutex == NULL) {
+   1123                  DM_free(dapi_property);
+   1124                  _dm_api_unlock();
+   1125                  return DM_MEMORY_NOT_ENOUGH;
+   1126              }
+   1127          
+   1128              /* Set Devid */
+   1129              dapi_property->devid = devid;
+   1130          
+   1131              /* Init Json Object */
+   1132              dapi_property->lite = lite_cjson_create_object();
+   1133              if (dapi_property->lite == NULL) {
+   1134                  DM_free(dapi_property->mutex);
+   1135                  DM_free(dapi_property);
+   1136                  _dm_api_unlock();
+   1137                  return FAIL_RETURN;
+   1138              }
+   1139          
+   1140              *handle = (void *)dapi_property;
+   1141          
+   1142              _dm_api_unlock();
+   1143              return SUCCESS_RETURN;
+   1144          }
+   1145          
+   1146          static int _iotx_dm_deprecated_post_property_add(_IN_ void *handle, _IN_ char *identifier, _IN_ int identifier_len)
+   1147          {
+   1148              int res = 0;
+   1149              dm_api_property_t *dapi_property = NULL;
+   1150          
+   1151              if (handle == NULL || identifier == NULL || identifier_len <= 0) {
+   1152                  return DM_INVALID_PARAMETER;
+   1153              }
+   1154              dapi_property = (dm_api_property_t *)handle;
+   1155          
+   1156              /* Assemble Property Payload */
+   1157              res = dm_mgr_deprecated_assemble_property(dapi_property->devid, identifier, identifier_len, dapi_property->lite);
+   1158              if (res != SUCCESS_RETURN) {
+   1159                  return FAIL_RETURN;
+   1160              }
+   1161          
+   1162              return SUCCESS_RETURN;
+   1163          }
+   1164          
+   1165          int iotx_dm_deprecated_post_property_add(_IN_ void *handle, _IN_ char *identifier, _IN_ int identifier_len)
+   1166          {
+   1167              int ret = SUCCESS_RETURN, res = 0, index = 0, number = 0;
+   1168              void *property_refer = NULL;
+   1169              char *identifier_refer = NULL;
+   1170              dm_api_property_t *dapi_property = NULL;
+   1171          
+   1172              if (handle == NULL) {
+   1173                  return DM_INVALID_PARAMETER;
+   1174              }
+   1175          
+   1176              _dm_api_lock();
+   1177              dapi_property = (dm_api_property_t *)handle;
+   1178          
+   1179              if (identifier != IOTX_DM_POST_PROPERTY_ALL) {
+   1180                  if (identifier_len <= 0) {
+   1181                      _dm_api_unlock();
+   1182                      return FAIL_RETURN;
+   1183                  }
+   1184                  ret = _iotx_dm_deprecated_post_property_add(handle, identifier, identifier_len);
+   1185          
+   1186                  _dm_api_unlock();
+   1187                  return ret;
+   1188              }
+   1189          
+   1190              res = dm_mgr_deprecated_get_property_number(dapi_property->devid, &number);
+   1191              if (res != SUCCESS_RETURN) {
+   1192                  _dm_api_unlock();
+   1193                  return FAIL_RETURN;
+   1194              }
+   1195          
+   1196              for (index = 0; index < number; index++) {
+   1197                  property_refer = NULL;
+   1198                  identifier_refer = NULL;
+   1199          
+   1200                  res = dm_mgr_deprecated_get_property_by_index(dapi_property->devid, index, &property_refer);
+   1201                  if (res != SUCCESS_RETURN) {
+   1202                      continue;
+   1203                  }
+   1204          
+   1205                  res = dm_mgr_deprecated_get_property_identifier(property_refer, &identifier_refer);
+   1206                  if (res != SUCCESS_RETURN) {
+   1207                      continue;
+   1208                  }
+   1209          
+   1210                  res = _iotx_dm_deprecated_post_property_add(handle, identifier_refer, strlen(identifier_refer));
+   1211                  if (res != SUCCESS_RETURN) {
+   1212                      ret = FAIL_RETURN;
+   1213                  }
+   1214              }
+   1215          
+   1216              _dm_api_unlock();
+   1217              return ret;
+   1218          }
+   1219          
+   1220          int iotx_dm_deprecated_post_property_end(_IN_ void **handle)
+   1221          {
+   1222              int res = 0;
+   1223              char *payload = NULL;
+   1224              dm_api_property_t *dapi_property = NULL;
+   1225          
+   1226              if (handle == NULL) {
+   1227                  return DM_INVALID_PARAMETER;
+   1228              }
+   1229          
+   1230              _dm_api_lock();
+   1231              dapi_property = *((dm_api_property_t **)handle);
+   1232          
+   1233              payload = lite_cjson_print_unformatted(dapi_property->lite);
+   1234              if (payload == NULL) {
+   1235                  lite_cjson_delete(dapi_property->lite);
+   1236                  if (dapi_property->mutex) {
+   1237                      HAL_MutexDestroy(dapi_property->mutex);
+   1238                  }
+   1239                  DM_free(dapi_property);
+   1240                  _dm_api_unlock();
+   1241                  return DM_MEMORY_NOT_ENOUGH;
+   1242              }
+   1243          
+   1244              dm_log_debug("Current Property Post Payload, Length: %d, Payload: %s", strlen(payload), payload);
+   1245          
+   1246              res = dm_mgr_upstream_thing_property_post(dapi_property->devid, payload, strlen(payload));
+   1247          
+   1248              DM_free(payload);
+   1249              lite_cjson_delete(dapi_property->lite);
+   1250              if (dapi_property->mutex) {
+   1251                  HAL_MutexDestroy(dapi_property->mutex);
+   1252              }
+   1253              DM_free(dapi_property);
+   1254              *handle = NULL;
+   1255          
+   1256              _dm_api_unlock();
+   1257              return res;
+   1258          }
+   1259          
+   1260          int iotx_dm_deprecated_post_event(_IN_ int devid, _IN_ char *identifier, _IN_ int identifier_len)
+   1261          {
+   1262              int res = 0;
+   1263              void *event = NULL;
+   1264              lite_cjson_item_t *lite = NULL;
+   1265              char *method = NULL, *payload = NULL;
+   1266          
+   1267              if (devid < 0 || identifier == NULL || identifier_len <= 0) {
+   1268                  return DM_INVALID_PARAMETER;
+   1269              }
+   1270          
+   1271              _dm_api_lock();
+   1272              lite = lite_cjson_create_object();
+   1273              if (lite == NULL) {
+   1274                  _dm_api_unlock();
+   1275                  return DM_MEMORY_NOT_ENOUGH;
+   1276              }
+   1277          
+   1278              res = dm_mgr_deprecated_assemble_event_output(devid, identifier, identifier_len, lite);
+   1279              if (res != SUCCESS_RETURN) {
+   1280                  lite_cjson_delete(lite);
+   1281                  _dm_api_unlock();
+   1282                  return FAIL_RETURN;
+   1283              }
+   1284          
+   1285              payload = lite_cjson_print_unformatted(lite);
+   1286              lite_cjson_delete(lite);
+   1287              if (payload == NULL) {
+   1288                  _dm_api_unlock();
+   1289                  return DM_MEMORY_NOT_ENOUGH;
+   1290              }
+   1291          
+   1292              dm_log_debug("Current Event Post Payload, Length: %d, Payload: %s", strlen(payload), payload);
+   1293          
+   1294              res = dm_mgr_deprecated_get_event_by_identifier(devid, identifier, &event);
+   1295              if (res != SUCCESS_RETURN) {
+   1296                  DM_free(payload);
+   1297                  _dm_api_unlock();
+   1298                  return FAIL_RETURN;
+   1299              }
+   1300          
+   1301              res = dm_mgr_deprecated_get_event_method(event, &method);
+   1302              if (res != SUCCESS_RETURN) {
+   1303                  DM_free(payload);
+   1304                  _dm_api_unlock();
+   1305                  return FAIL_RETURN;
+   1306              }
+   1307          
+   1308              dm_log_debug("Current Event Method: %s", method);
+   1309          
+   1310              res = dm_mgr_upstream_thing_event_post(devid, identifier, identifier_len, method, payload, strlen(payload));
+   1311          
+   1312              DM_free(payload);
+   1313              DM_free(method);
+   1314          
+   1315              _dm_api_unlock();
+   1316              return res;
+   1317          }
+   1318          
+   1319          int iotx_dm_deprecated_legacy_set_property_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1320                  _IN_ char *value_str)
+   1321          {
+   1322              int res = 0;
+   1323              void *data = NULL;
+   1324              dm_shw_data_type_e type;
+   1325          
+   1326              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1327                  return DM_INVALID_PARAMETER;
+   1328              }
+   1329          
+   1330              _dm_api_lock();
+   1331              res = dm_mgr_deprecated_get_property_data(devid, key, key_len, &data);
+   1332              if (res != SUCCESS_RETURN) {
+   1333                  _dm_api_unlock();
+   1334                  return FAIL_RETURN;
+   1335              }
+   1336          
+   1337              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1338              if (res != SUCCESS_RETURN) {
+   1339                  _dm_api_unlock();
+   1340                  return FAIL_RETURN;
+   1341              }
+   1342          
+   1343              switch (type) {
+   1344                  case DM_SHW_DATA_TYPE_INT:
+   1345                  case DM_SHW_DATA_TYPE_ENUM:
+   1346                  case DM_SHW_DATA_TYPE_BOOL: {
+   1347                      int value_int = (value == NULL) ? (atoi(value_str)) : (*(int *)value);
+   1348                      res = dm_mgr_deprecated_set_property_value(devid, key, key_len, &value_int, sizeof(int));
+   1349                  }
+   1350                  break;
+   1351                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1352                      float value_float = (value == NULL) ? (atof(value_str)) : (*(float *)value);
+   1353                      res = dm_mgr_deprecated_set_property_value(devid, key, key_len, &value_float, sizeof(float));
+   1354                  }
+   1355                  break;
+   1356                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1357                      double value_double = (value == NULL) ? (atof(value_str)) : (*(double *)value);
+   1358                      res = dm_mgr_deprecated_set_property_value(devid, key, key_len, &value_double, sizeof(double));
+   1359                  }
+   1360                  break;
+   1361                  case DM_SHW_DATA_TYPE_TEXT:
+   1362                  case DM_SHW_DATA_TYPE_DATE: {
+   1363                      char *value_string = (value == NULL) ? (value_str) : (value);
+   1364                      res = dm_mgr_deprecated_set_property_value(devid, key, key_len, value_string, strlen(value_string));
+   1365                  }
+   1366                  break;
+   1367                  default: {
+   1368                      res =  FAIL_RETURN;
+   1369                  }
+   1370                  break;
+   1371              }
+   1372          
+   1373              if (res != SUCCESS_RETURN) {
+   1374                  _dm_api_unlock();
+   1375                  return FAIL_RETURN;
+   1376              }
+   1377          
+   1378              _dm_api_unlock();
+   1379              return SUCCESS_RETURN;
+   1380          }
+   1381          
+   1382          int iotx_dm_deprecated_legacy_get_property_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1383                  _IN_ char **value_str)
+   1384          {
+   1385              int res = 0;
+   1386              void *data = NULL;
+   1387              dm_shw_data_type_e type;
+   1388          
+   1389              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1390                  return DM_INVALID_PARAMETER;
+   1391              }
+   1392          
+   1393              _dm_api_lock();
+   1394              res = dm_mgr_deprecated_get_property_data(devid, key, key_len, &data);
+   1395              if (res != SUCCESS_RETURN) {
+   1396                  _dm_api_unlock();
+   1397                  return FAIL_RETURN;
+   1398              }
+   1399          
+   1400              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1401              if (res != SUCCESS_RETURN) {
+   1402                  _dm_api_unlock();
+   1403                  return FAIL_RETURN;
+   1404              }
+   1405          
+   1406              switch (type) {
+   1407                  case DM_SHW_DATA_TYPE_INT:
+   1408                  case DM_SHW_DATA_TYPE_ENUM:
+   1409                  case DM_SHW_DATA_TYPE_BOOL: {
+   1410                      int value_int = 0;
+   1411                      res = dm_mgr_deprecated_get_property_value(devid, key, key_len, (void *)&value_int);
+   1412                      if (res == SUCCESS_RETURN) {
+   1413                          if (value) {
+   1414                              *(int *)value = value_int;
+   1415                          }
+   1416                          if (value_str) {
+   1417                              res = dm_utils_itoa_direct(value_int, value_str);
+   1418                          }
+   1419                      }
+   1420                  }
+   1421                  break;
+   1422                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1423                      float value_float = 0;
+   1424                      res = dm_mgr_deprecated_get_property_value(devid, key, key_len, (void *)&value_float);
+   1425                      if (res == SUCCESS_RETURN) {
+   1426                          if (value) {
+   1427                              *(float *)value = value_float;
+   1428                          }
+   1429                          if (value_str) {
+   1430                              res = dm_utils_ftoa_direct(value_float, value_str);
+   1431                          }
+   1432                      }
+   1433                  }
+   1434                  break;
+   1435                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1436                      double value_double = 0;
+   1437                      res = dm_mgr_deprecated_get_property_value(devid, key, key_len, (void *)&value_double);
+   1438                      if (res == SUCCESS_RETURN) {
+   1439                          if (value) {
+   1440                              *(double *)value = value_double;
+   1441                          }
+   1442                          if (value_str) {
+   1443                              res = dm_utils_ftoa_direct(value_double, value_str);
+   1444                          }
+   1445                      }
+   1446                  }
+   1447                  break;
+   1448                  case DM_SHW_DATA_TYPE_TEXT:
+   1449                  case DM_SHW_DATA_TYPE_DATE: {
+   1450                      char *value_string = NULL;
+   1451                      res = dm_mgr_deprecated_get_property_value(devid, key, key_len, (void *)&value_string);
+   1452                      if (res == SUCCESS_RETURN) {
+   1453                          if (value) {
+   1454                              memcpy(value, value_string, strlen(value_string));
+   1455                          }
+   1456                          if (value_str) {
+   1457                              *value_str = value_string;
+   1458                          } else {
+   1459                              HAL_Free(value_string);
+   1460                          }
+   1461                      }
+   1462                  }
+   1463                  break;
+   1464                  default: {
+   1465                      res =  FAIL_RETURN;
+   1466                  }
+   1467                  break;
+   1468              }
+   1469          
+   1470              if (res != SUCCESS_RETURN) {
+   1471                  _dm_api_unlock();
+   1472                  return FAIL_RETURN;
+   1473              }
+   1474          
+   1475              _dm_api_unlock();
+   1476              return SUCCESS_RETURN;
+   1477          }
+   1478          
+   1479          int iotx_dm_deprecated_legacy_set_event_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1480                  _IN_ char *value_str)
+   1481          {
+   1482              int res = 0;
+   1483              void *data = NULL;
+   1484              dm_shw_data_type_e type;
+   1485          
+   1486              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1487                  return DM_INVALID_PARAMETER;
+   1488              }
+   1489          
+   1490              _dm_api_lock();
+   1491              res = dm_mgr_deprecated_get_event_output_data(devid, key, key_len, &data);
+   1492              if (res != SUCCESS_RETURN) {
+   1493                  _dm_api_unlock();
+   1494                  return FAIL_RETURN;
+   1495              }
+   1496          
+   1497              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1498              if (res != SUCCESS_RETURN) {
+   1499                  _dm_api_unlock();
+   1500                  return FAIL_RETURN;
+   1501              }
+   1502          
+   1503              switch (type) {
+   1504                  case DM_SHW_DATA_TYPE_INT:
+   1505                  case DM_SHW_DATA_TYPE_ENUM:
+   1506                  case DM_SHW_DATA_TYPE_BOOL: {
+   1507                      int value_int = (value == NULL) ? (atoi(value_str)) : (*(int *)value);
+   1508                      res = dm_mgr_deprecated_set_event_output_value(devid, key, key_len, &value_int, sizeof(int));
+   1509                  }
+   1510                  break;
+   1511                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1512                      float value_float = (value == NULL) ? (atof(value_str)) : (*(float *)value);
+   1513                      res = dm_mgr_deprecated_set_event_output_value(devid, key, key_len, &value_float, sizeof(float));
+   1514                  }
+   1515                  break;
+   1516                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1517                      double value_double = (value == NULL) ? (atof(value_str)) : (*(double *)value);
+   1518                      res = dm_mgr_deprecated_set_event_output_value(devid, key, key_len, &value_double, sizeof(double));
+   1519                  }
+   1520                  break;
+   1521                  case DM_SHW_DATA_TYPE_TEXT:
+   1522                  case DM_SHW_DATA_TYPE_DATE: {
+   1523                      char *value_string = (value == NULL) ? (value_str) : (value);
+   1524                      res = dm_mgr_deprecated_set_event_output_value(devid, key, key_len, value_string, strlen(value_string));
+   1525                  }
+   1526                  break;
+   1527                  default: {
+   1528                      res =  FAIL_RETURN;
+   1529                  }
+   1530                  break;
+   1531              }
+   1532          
+   1533              if (res != SUCCESS_RETURN) {
+   1534                  _dm_api_unlock();
+   1535                  return FAIL_RETURN;
+   1536              }
+   1537          
+   1538              _dm_api_unlock();
+   1539              return SUCCESS_RETURN;
+   1540          }
+   1541          
+   1542          int iotx_dm_deprecated_legacy_get_event_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len, _IN_ void *value,
+   1543                  _IN_ char **value_str)
+   1544          {
+   1545              int res = 0;
+   1546              void *data = NULL;
+   1547              dm_shw_data_type_e type;
+   1548          
+   1549              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1550                  return DM_INVALID_PARAMETER;
+   1551              }
+   1552          
+   1553              _dm_api_lock();
+   1554              res = dm_mgr_deprecated_get_event_output_data(devid, key, key_len, &data);
+   1555              if (res != SUCCESS_RETURN) {
+   1556                  _dm_api_unlock();
+   1557                  return FAIL_RETURN;
+   1558              }
+   1559          
+   1560              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1561              if (res != SUCCESS_RETURN) {
+   1562                  _dm_api_unlock();
+   1563                  return FAIL_RETURN;
+   1564              }
+   1565          
+   1566              switch (type) {
+   1567                  case DM_SHW_DATA_TYPE_INT:
+   1568                  case DM_SHW_DATA_TYPE_ENUM:
+   1569                  case DM_SHW_DATA_TYPE_BOOL: {
+   1570                      int value_int = 0;
+   1571                      res = dm_mgr_deprecated_get_event_output_value(devid, key, key_len, (void *)&value_int);
+   1572                      if (res == SUCCESS_RETURN) {
+   1573                          if (value) {
+   1574                              *(int *)value = value_int;
+   1575                          }
+   1576                          if (value_str) {
+   1577                              res = dm_utils_itoa_direct(value_int, value_str);
+   1578                          }
+   1579                      }
+   1580                  }
+   1581                  break;
+   1582                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1583                      float value_float = 0;
+   1584                      res = dm_mgr_deprecated_get_event_output_value(devid, key, key_len, (void *)&value_float);
+   1585                      if (res == SUCCESS_RETURN) {
+   1586                          if (value) {
+   1587                              *(float *)value = value_float;
+   1588                          }
+   1589                          if (value_str) {
+   1590                              res = dm_utils_ftoa_direct(value_float, value_str);
+   1591                          }
+   1592                      }
+   1593                  }
+   1594                  break;
+   1595                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1596                      double value_double = 0;
+   1597                      res = dm_mgr_deprecated_get_event_output_value(devid, key, key_len, (void *)&value_double);
+   1598                      if (res == SUCCESS_RETURN) {
+   1599                          if (value) {
+   1600                              *(double *)value = value_double;
+   1601                          }
+   1602                          if (value_str) {
+   1603                              res = dm_utils_ftoa_direct(value_double, value_str);
+   1604                          }
+   1605                      }
+   1606                  }
+   1607                  break;
+   1608                  case DM_SHW_DATA_TYPE_TEXT:
+   1609                  case DM_SHW_DATA_TYPE_DATE: {
+   1610                      char *value_string = NULL;
+   1611                      res = dm_mgr_deprecated_get_event_output_value(devid, key, key_len, (void *)&value_string);
+   1612                      if (res == SUCCESS_RETURN) {
+   1613                          if (value) {
+   1614                              memcpy(value, value_string, strlen(value_string));
+   1615                          }
+   1616                          if (value_str) {
+   1617                              *value_str = value_string;
+   1618                          } else {
+   1619                              HAL_Free(value_string);
+   1620                          }
+   1621                      }
+   1622                  }
+   1623                  break;
+   1624                  default: {
+   1625                      res =  FAIL_RETURN;
+   1626                  }
+   1627                  break;
+   1628              }
+   1629          
+   1630              if (res != SUCCESS_RETURN) {
+   1631                  _dm_api_unlock();
+   1632                  return FAIL_RETURN;
+   1633              }
+   1634          
+   1635              _dm_api_unlock();
+   1636              return SUCCESS_RETURN;
+   1637          }
+   1638          
+   1639          int iotx_dm_deprecated_legacy_get_service_input_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len,
+   1640                  _IN_ void *value,
+   1641                  _IN_ char **value_str)
+   1642          {
+   1643              int res = 0;
+   1644              void *data = NULL;
+   1645              dm_shw_data_type_e type;
+   1646          
+   1647              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1648                  return DM_INVALID_PARAMETER;
+   1649              }
+   1650          
+   1651              _dm_api_lock();
+   1652          
+   1653              res = dm_mgr_deprecated_get_service_input_data(devid, key, key_len, &data);
+   1654              if (res != SUCCESS_RETURN) {
+   1655                  _dm_api_unlock();
+   1656                  return FAIL_RETURN;
+   1657              }
+   1658          
+   1659              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1660              if (res != SUCCESS_RETURN) {
+   1661                  _dm_api_unlock();
+   1662                  return FAIL_RETURN;
+   1663              }
+   1664          
+   1665              switch (type) {
+   1666                  case DM_SHW_DATA_TYPE_INT:
+   1667                  case DM_SHW_DATA_TYPE_ENUM:
+   1668                  case DM_SHW_DATA_TYPE_BOOL: {
+   1669                      int value_int = 0;
+   1670                      res = dm_mgr_deprecated_get_service_input_value(devid, key, key_len, (void *)&value_int);
+   1671                      if (res == SUCCESS_RETURN) {
+   1672                          if (value) {
+   1673                              *(int *)value = value_int;
+   1674                          }
+   1675                          if (value_str) {
+   1676                              res = dm_utils_itoa_direct(value_int, value_str);
+   1677                          }
+   1678                      }
+   1679                  }
+   1680                  break;
+   1681                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1682                      float value_float = 0;
+   1683                      res = dm_mgr_deprecated_get_service_input_value(devid, key, key_len, (void *)&value_float);
+   1684                      if (res == SUCCESS_RETURN) {
+   1685                          if (value) {
+   1686                              *(float *)value = value_float;
+   1687                          }
+   1688                          if (value_str) {
+   1689                              res = dm_utils_ftoa_direct(value_float, value_str);
+   1690                          }
+   1691                      }
+   1692                  }
+   1693                  break;
+   1694                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1695                      double value_double = 0;
+   1696                      res = dm_mgr_deprecated_get_service_input_value(devid, key, key_len, (void *)&value_double);
+   1697                      if (res == SUCCESS_RETURN) {
+   1698                          if (value) {
+   1699                              *(double *)value = value_double;
+   1700                          }
+   1701                          if (value_str) {
+   1702                              res = dm_utils_ftoa_direct(value_double, value_str);
+   1703                          }
+   1704                      }
+   1705                  }
+   1706                  break;
+   1707                  case DM_SHW_DATA_TYPE_TEXT:
+   1708                  case DM_SHW_DATA_TYPE_DATE: {
+   1709                      char *value_string = NULL;
+   1710                      res = dm_mgr_deprecated_get_service_input_value(devid, key, key_len, (void *)&value_string);
+   1711                      if (res == SUCCESS_RETURN) {
+   1712                          if (value) {
+   1713                              memcpy(value, value_string, strlen(value_string));
+   1714                          }
+   1715                          if (value_str) {
+   1716                              *value_str = value_string;
+   1717                          } else {
+   1718                              HAL_Free(value_string);
+   1719                          }
+   1720                      }
+   1721                  }
+   1722                  break;
+   1723                  default: {
+   1724                      res =  FAIL_RETURN;
+   1725                  }
+   1726                  break;
+   1727              }
+   1728          
+   1729              if (res != SUCCESS_RETURN) {
+   1730                  _dm_api_unlock();
+   1731                  return FAIL_RETURN;
+   1732              }
+   1733          
+   1734              _dm_api_unlock();
+   1735              return SUCCESS_RETURN;
+   1736          }
+   1737          
+   1738          int iotx_dm_deprecated_legacy_set_service_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len,
+   1739                  _IN_ void *value,
+   1740                  _IN_ char *value_str)
+   1741          {
+   1742              int res = 0;
+   1743              void *data = NULL;
+   1744              dm_shw_data_type_e type;
+   1745          
+   1746              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1747                  return DM_INVALID_PARAMETER;
+   1748              }
+   1749          
+   1750              _dm_api_lock();
+   1751              res = dm_mgr_deprecated_get_service_output_data(devid, key, key_len, &data);
+   1752              if (res != SUCCESS_RETURN) {
+   1753                  _dm_api_unlock();
+   1754                  return FAIL_RETURN;
+   1755              }
+   1756          
+   1757              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1758              if (res != SUCCESS_RETURN) {
+   1759                  _dm_api_unlock();
+   1760                  return FAIL_RETURN;
+   1761              }
+   1762          
+   1763              switch (type) {
+   1764                  case DM_SHW_DATA_TYPE_INT:
+   1765                  case DM_SHW_DATA_TYPE_ENUM:
+   1766                  case DM_SHW_DATA_TYPE_BOOL: {
+   1767                      int value_int = (value == NULL) ? (atoi(value_str)) : (*(int *)value);
+   1768                      res = dm_mgr_deprecated_set_service_output_value(devid, key, key_len, &value_int, sizeof(int));
+   1769                  }
+   1770                  break;
+   1771                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1772                      float value_float = (value == NULL) ? (atof(value_str)) : (*(float *)value);
+   1773                      res = dm_mgr_deprecated_set_service_output_value(devid, key, key_len, &value_float, sizeof(float));
+   1774                  }
+   1775                  break;
+   1776                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1777                      double value_double = (value == NULL) ? (atof(value_str)) : (*(double *)value);
+   1778                      res = dm_mgr_deprecated_set_service_output_value(devid, key, key_len, &value_double, sizeof(double));
+   1779                  }
+   1780                  break;
+   1781                  case DM_SHW_DATA_TYPE_TEXT:
+   1782                  case DM_SHW_DATA_TYPE_DATE: {
+   1783                      char *value_string = (value == NULL) ? (value_str) : (value);
+   1784                      res = dm_mgr_deprecated_set_service_output_value(devid, key, key_len, value_string, strlen(value_string));
+   1785                  }
+   1786                  break;
+   1787                  default: {
+   1788                      res =  FAIL_RETURN;
+   1789                  }
+   1790                  break;
+   1791              }
+   1792          
+   1793              if (res != SUCCESS_RETURN) {
+   1794                  _dm_api_unlock();
+   1795                  return FAIL_RETURN;
+   1796              }
+   1797          
+   1798              _dm_api_unlock();
+   1799              return SUCCESS_RETURN;
+   1800          }
+   1801          
+   1802          int iotx_dm_deprecated_legacy_get_service_output_value(_IN_ int devid, _IN_ char *key, _IN_ int key_len,
+   1803                  _IN_ void *value,
+   1804                  _IN_ char **value_str)
+   1805          {
+   1806              int res = 0;
+   1807              void *data = NULL;
+   1808              dm_shw_data_type_e type;
+   1809          
+   1810              if (devid < 0 || key == NULL || key_len <= 0 || ((value == NULL) && (value_str == NULL))) {
+   1811                  return DM_INVALID_PARAMETER;
+   1812              }
+   1813          
+   1814              _dm_api_lock();
+   1815          
+   1816              res = dm_mgr_deprecated_get_service_output_data(devid, key, key_len, &data);
+   1817              if (res != SUCCESS_RETURN) {
+   1818                  _dm_api_unlock();
+   1819                  return FAIL_RETURN;
+   1820              }
+   1821          
+   1822              res = dm_mgr_deprecated_get_data_type(data, &type);
+   1823              if (res != SUCCESS_RETURN) {
+   1824                  _dm_api_unlock();
+   1825                  return FAIL_RETURN;
+   1826              }
+   1827          
+   1828              switch (type) {
+   1829                  case DM_SHW_DATA_TYPE_INT:
+   1830                  case DM_SHW_DATA_TYPE_ENUM:
+   1831                  case DM_SHW_DATA_TYPE_BOOL: {
+   1832                      int value_int = 0;
+   1833                      res = dm_mgr_deprecated_get_service_output_value(devid, key, key_len, (void *)&value_int);
+   1834                      if (res == SUCCESS_RETURN) {
+   1835                          if (value) {
+   1836                              *(int *)value = value_int;
+   1837                          }
+   1838                          if (value_str) {
+   1839                              res = dm_utils_itoa_direct(value_int, value_str);
+   1840                          }
+   1841                      }
+   1842                  }
+   1843                  break;
+   1844                  case DM_SHW_DATA_TYPE_FLOAT: {
+   1845                      float value_float = 0;
+   1846                      res = dm_mgr_deprecated_get_service_output_value(devid, key, key_len, (void *)&value_float);
+   1847                      if (res == SUCCESS_RETURN) {
+   1848                          if (value) {
+   1849                              *(float *)value = value_float;
+   1850                          }
+   1851                          if (value_str) {
+   1852                              res = dm_utils_ftoa_direct(value_float, value_str);
+   1853                          }
+   1854                      }
+   1855                  }
+   1856                  break;
+   1857                  case DM_SHW_DATA_TYPE_DOUBLE: {
+   1858                      double value_double = 0;
+   1859                      res = dm_mgr_deprecated_get_service_output_value(devid, key, key_len, (void *)&value_double);
+   1860                      if (res == SUCCESS_RETURN) {
+   1861                          if (value) {
+   1862                              *(double *)value = value_double;
+   1863                          }
+   1864                          if (value_str) {
+   1865                              res = dm_utils_ftoa_direct(value_double, value_str);
+   1866                          }
+   1867                      }
+   1868                  }
+   1869                  break;
+   1870                  case DM_SHW_DATA_TYPE_TEXT:
+   1871                  case DM_SHW_DATA_TYPE_DATE: {
+   1872                      char *value_string = NULL;
+   1873                      res = dm_mgr_deprecated_get_service_output_value(devid, key, key_len, (void *)&value_string);
+   1874                      if (res == SUCCESS_RETURN) {
+   1875                          if (value) {
+   1876                              memcpy(value, value_string, strlen(value_string));
+   1877                          }
+   1878                          if (value_str) {
+   1879                              *value_str = value_string;
+   1880                          } else {
+   1881                              HAL_Free(value_string);
+   1882                          }
+   1883                      }
+   1884                  }
+   1885                  break;
+   1886                  default: {
+   1887                      res =  FAIL_RETURN;
+   1888                  }
+   1889                  break;
+   1890              }
+   1891          
+   1892              if (res != SUCCESS_RETURN) {
+   1893                  _dm_api_unlock();
+   1894                  return FAIL_RETURN;
+   1895              }
+   1896          
+   1897              _dm_api_unlock();
+   1898              return SUCCESS_RETURN;
+   1899          }
+   1900          
+   1901          int iotx_dm_deprecated_legacy_get_pkdn_by_devid(_IN_ int devid, _OU_ char product_key[IOTX_PRODUCT_KEY_LEN + 1],
+   1902                  _OU_ char device_name[IOTX_DEVICE_NAME_LEN + 1])
+   1903          {
+   1904              int res = 0;
+   1905              char device_secret[IOTX_DEVICE_SECRET_LEN + 1] = {0};
+   1906          
+   1907              if (devid < 0 || product_key == NULL || device_name == NULL) {
+   1908                  return DM_INVALID_PARAMETER;
+   1909              }
+   1910          
+   1911              _dm_api_lock();
+   1912              res = dm_mgr_search_device_by_devid(devid, product_key, device_name, device_secret);
+   1913              if (res != SUCCESS_RETURN) {
+   1914                  _dm_api_unlock();
+   1915                  return FAIL_RETURN;
+   1916              }
+   1917          
+   1918              _dm_api_unlock();
+   1919              return SUCCESS_RETURN;
+   1920          }
+   1921          
+   1922          int iotx_dm_deprecated_legacy_get_devid_by_pkdn(_IN_ char product_key[IOTX_PRODUCT_KEY_LEN + 1],
+   1923                  _IN_ char device_name[IOTX_DEVICE_NAME_LEN + 1], _OU_ int *devid)
+   1924          {
+   1925              int res = 0;
+   1926          
+   1927              if (devid == NULL || product_key == NULL || device_name == NULL ||
+   1928                  (strlen(product_key) >= IOTX_PRODUCT_KEY_LEN + 1) ||
+   1929                  (strlen(device_name) >= IOTX_DEVICE_NAME_LEN + 1)) {
+   1930                  return DM_INVALID_PARAMETER;
+   1931              }
+   1932          
+   1933              _dm_api_lock();
+   1934              res = dm_mgr_search_device_by_pkdn(product_key, device_name, devid);
+   1935              if (res != SUCCESS_RETURN) {
+   1936                  _dm_api_unlock();
+   1937                  return FAIL_RETURN;
+   1938              }
+   1939          
+   1940              _dm_api_unlock();
+   1941              return SUCCESS_RETURN;
+   1942          }
+   1943          
+   1944          int iotx_dm_deprecated_legacy_get_thingid_by_devid(_IN_ int devid, _OU_ void **thing_id)
+   1945          {
+   1946              int res = 0;
+   1947          
+   1948              if (devid < 0 || thing_id == NULL || *thing_id != NULL) {
+   1949                  return DM_INVALID_PARAMETER;
+   1950              }
+   1951          
+   1952              _dm_api_lock();
+   1953              res = dm_mgr_search_device_node_by_devid(devid, thing_id);
+   1954              if (res != SUCCESS_RETURN) {
+   1955                  _dm_api_unlock();
+   1956                  return FAIL_RETURN;
+   1957              }
+   1958          
+   1959              _dm_api_unlock();
+   1960              return SUCCESS_RETURN;
+   1961          }
+   1962          
+   1963          int iotx_dm_deprecated_legacy_get_devid_by_thingid(_IN_ void *thing_id, _OU_ int *devid)
+   1964          {
+   1965              int res = 0;
+   1966          
+   1967              if (thing_id == NULL || devid == NULL) {
+   1968                  return DM_INVALID_PARAMETER;
+   1969              }
+   1970          
+   1971              _dm_api_lock();
+   1972              res = dm_mgr_deprecated_search_devid_by_device_node(thing_id, devid);
+   1973              if (res != SUCCESS_RETURN) {
+   1974                  _dm_api_unlock();
+   1975                  return FAIL_RETURN;
+   1976              }
+   1977          
+   1978              _dm_api_unlock();
+   1979              return SUCCESS_RETURN;
+   1980          }
+   1981          
+   1982          int iotx_dm_deprecated_legacy_get_pkdn_ptr_by_devid(_IN_ int devid, _OU_ char **product_key, _OU_ char **device_name)
+   1983          {
+   1984              int res = 0;
+   1985              dm_mgr_dev_node_t *node = NULL;
+   1986          
+   1987              if (devid < 0 || product_key == NULL || *product_key != NULL ||
+   1988                  device_name == NULL || *device_name != NULL) {
+   1989                  return DM_INVALID_PARAMETER;
+   1990              }
+   1991          
+   1992              _dm_api_lock();
+   1993              res = dm_mgr_search_device_node_by_devid(devid, (void **)&node);
+   1994              if (res != SUCCESS_RETURN) {
+   1995                  _dm_api_unlock();
+   1996                  return FAIL_RETURN;
+   1997              }
+   1998          
+   1999              *product_key = node->product_key;
+   2000              *device_name = node->device_name;
+   2001          
+   2002              _dm_api_unlock();
+   2003              return SUCCESS_RETURN;
+   2004          }
+   2005          
+   2006          int iotx_dm_deprecated_legacy_send_service_response(_IN_ int devid, _IN_ int msgid, _IN_ iotx_dm_error_code_t code,
+   2007                  _IN_ char *identifier, _IN_ int identifier_len, _IN_ char *payload, _IN_ int payload_len)
+   2008          {
+   2009              int res = 0;
+   2010          
+   2011              _dm_api_lock();
+   2012          
+   2013              res = dm_mgr_deprecated_upstream_thing_service_response(devid, msgid, code, identifier, identifier_len, payload,
+   2014                      payload_len);
+   2015          
+   2016              _dm_api_unlock();
+   2017              return res;
+   2018          }
+   2019          
+   2020          int iotx_dm_deprecated_send_service_response(_IN_ int devid, _IN_ int msgid, _IN_ iotx_dm_error_code_t code,
+   2021                  _IN_ char *identifier,
+   2022                  _IN_ int identifier_len)
+   2023          {
+   2024              int res = 0;
+   2025              lite_cjson_item_t *lite = NULL;
+   2026              char *payload = NULL;
+   2027          
+   2028              if (devid < 0 || msgid < 0 || identifier == NULL || identifier_len <= 0) {
+   2029                  return DM_INVALID_PARAMETER;
+   2030              }
+   2031          
+   2032              _dm_api_lock();
+   2033              lite = lite_cjson_create_object();
+   2034              if (lite == NULL) {
+   2035                  _dm_api_unlock();
+   2036                  return DM_MEMORY_NOT_ENOUGH;
+   2037              }
+   2038          
+   2039              res = dm_mgr_deprecated_assemble_service_output(devid, identifier, identifier_len, lite);
+   2040              if (res != SUCCESS_RETURN) {
+   2041                  lite_cjson_delete(lite);
+   2042                  _dm_api_unlock();
+   2043                  return FAIL_RETURN;
+   2044              }
+   2045          
+   2046              payload = lite_cjson_print_unformatted(lite);
+   2047              lite_cjson_delete(lite);
+   2048              if (payload == NULL) {
+   2049                  _dm_api_unlock();
+   2050                  return DM_MEMORY_NOT_ENOUGH;
+   2051              }
+   2052          
+   2053              dm_log_debug("Current Service Response Payload, Length: %d, Payload: %s", strlen(payload), payload);
+   2054          
+   2055              res = dm_mgr_deprecated_upstream_thing_service_response(devid, msgid, code, identifier, identifier_len, payload,
+   2056                      strlen(payload));
+   2057          
+   2058              DM_free(payload);
+   2059          
+   2060              _dm_api_unlock();
+   2061              return res;
+   2062          }
+   2063          
+   2064          #ifdef DEVICE_MODEL_GATEWAY
+   2065          int iotx_dm_deprecated_subdev_register(_IN_ int devid, _IN_ char device_secret[IOTX_DEVICE_SECRET_LEN + 1])
+   2066          {
+   2067              int res = 0;
+   2068              dm_mgr_dev_node_t *search_node = NULL;
+   2069          
+   2070              if (devid < 0) {
+   2071                  return DM_INVALID_PARAMETER;
+   2072              }
+   2073          
+   2074              _dm_api_lock();
+   2075              if ((device_secret != NULL) && (strlen(device_secret) > 0) && (strlen(device_secret) < IOTX_DEVICE_SECRET_LEN + 1)) {
+   2076                  res = dm_mgr_search_device_node_by_devid(devid, (void **)&search_node);
+   2077                  if (res != SUCCESS_RETURN) {
+   2078                      _dm_api_unlock();
+   2079                      return FAIL_RETURN;
+   2080                  }
+   2081                  memset(search_node->device_secret, 0, IOTX_DEVICE_SECRET_LEN + 1);
+   2082                  memcpy(search_node->device_secret, device_secret, strlen(device_secret));
+   2083                  _dm_api_unlock();
+   2084                  return SUCCESS_RETURN;
+   2085              }
+   2086          
+   2087              res = dm_mgr_upstream_thing_sub_register(devid);
+   2088          
+   2089              _dm_api_unlock();
+   2090              return res;
+   2091          }
+   2092          #endif
+   2093          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   _dm_api_get_ctx
+       8   _dm_api_lock
+         0   -> HAL_MutexLock
+         8   -> _dm_api_get_ctx
+       8   _dm_api_unlock
+         0   -> HAL_MutexUnlock
+         8   -> _dm_api_get_ctx
+       8   iotx_dm_close
+         8   -> HAL_MutexDestroy
+         8   -> _dm_api_get_ctx
+         8   -> dm_client_close
+         8   -> dm_ipc_deinit
+         8   -> dm_mgr_deinit
+         8   -> dm_msg_cache_deinit
+         8   -> dm_msg_deinit
+         8   -> remove_log_poll
+       8   iotx_dm_connect
+         8   -> _dm_api_get_ctx
+         8   -> dm_client_connect
+       0   iotx_dm_cota_get_config
+       0   iotx_dm_cota_perform_sync
+      16   iotx_dm_deviceinfo_delete
+        16   -> _dm_api_lock
+        16   -> _dm_api_unlock
+        16   -> dm_mgr_upstream_thing_deviceinfo_delete
+      16   iotx_dm_deviceinfo_update
+        16   -> _dm_api_lock
+        16   -> _dm_api_unlock
+        16   -> dm_mgr_upstream_thing_deviceinfo_update
+      24   iotx_dm_dispatch
+        24   -- Indirect call
+        24   -> HAL_Free
+        24   -> _dm_api_get_ctx
+        24   -> dm_ipc_msg_next
+        24   -> dm_msg_cache_tick
+       0   iotx_dm_fota_perform_sync
+       0   iotx_dm_fota_request_image
+       0   iotx_dm_get_opt
+         0   -> dm_opt_get
+      16   iotx_dm_log_post
+        16   -> _dm_api_lock
+        16   -> _dm_api_unlock
+        16   -> dm_mgr_upstream_thing_log_post
+       8   iotx_dm_open
+         8   -> HAL_MutexCreate
+         8   -> HAL_MutexDestroy
+         8   -> __aeabi_memset4
+         8   -> _dm_api_get_ctx
+         8   -> dm_client_close
+         8   -> dm_client_open
+         8   -> dm_ipc_deinit
+         8   -> dm_ipc_init
+         8   -> dm_mgr_deinit
+         8   -> dm_mgr_init
+         8   -> dm_msg_cache_deinit
+         8   -> dm_msg_cache_init
+         8   -> dm_msg_deinit
+         8   -> dm_msg_init
+      48   iotx_dm_post_event
+        48   -> HAL_Free
+        48   -> HAL_Malloc
+        48   -> HAL_Snprintf
+        48   -> __aeabi_memset
+        48   -> _dm_api_lock
+        48   -> _dm_api_unlock
+        48   -> dm_mgr_upstream_thing_event_post
+        48   -> strlen
+      16   iotx_dm_post_property
+        16   -> _dm_api_lock
+        16   -> _dm_api_unlock
+        16   -> dm_mgr_upstream_thing_property_post
+      16   iotx_dm_post_rawdata
+        16   -> _dm_api_lock
+        16   -> _dm_api_unlock
+        16   -> dm_mgr_upstream_thing_model_up_raw
+       8   iotx_dm_qurey_ntp
+         8   -> _dm_api_lock
+         8   -> _dm_api_unlock
+         8   -> dm_mgr_upstream_ntp_request
+     136   iotx_dm_send_aos_active
+       136   -> HAL_Free
+       136   -> HAL_Malloc
+       136   -> HAL_Random
+       136   -> HAL_Snprintf
+       136   -> HAL_Srandom
+       136   -> HAL_UptimeMs
+       136   -> __aeabi_memcpy4
+       136   -> aos_get_version_hex
+       136   -> aos_get_version_info
+       136   -> iotx_dm_deviceinfo_update
+       136   -> strlen
+      48   iotx_dm_send_property_get_response
+        48   -> _dm_api_lock
+        48   -> _dm_api_unlock
+        48   -> dm_mgr_upstream_thing_property_get_response
+      56   iotx_dm_send_rrpc_response
+        56   -> _dm_api_lock
+        56   -> _dm_api_unlock
+        56   -> dm_mgr_upstream_rrpc_response
+      64   iotx_dm_send_service_response
+        64   -> _dm_api_lock
+        64   -> _dm_api_unlock
+        64   -> dm_mgr_upstream_thing_service_response
+       0   iotx_dm_set_opt
+         0   -> dm_opt_set
+     144   iotx_dm_subscribe
+       144   -> __aeabi_memclr4
+       144   -> _dm_api_lock
+       144   -> _dm_api_unlock
+       144   -> dm_client_subscribe_all
+       144   -> dm_mgr_get_dev_type
+       144   -> dm_mgr_search_device_by_devid
+       8   iotx_dm_yield
+         8   -> dm_client_yield
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+      24  ?_0
+      36  ?_1
+      68  ?_2
+      24  ?_3
+       4  ?_4
+       8  ?_5
+       4  ?_6
+      72  ?_7
+      44  ?_8
+       6  _dm_api_get_ctx
+      24  _dm_api_lock
+      24  _dm_api_unlock
+      16  g_dm_api_ctx
+      46  iotx_dm_close
+      48  iotx_dm_connect
+       6  iotx_dm_cota_get_config
+       6  iotx_dm_cota_perform_sync
+      62  iotx_dm_deviceinfo_delete
+      62  iotx_dm_deviceinfo_update
+      80  iotx_dm_dispatch
+       6  iotx_dm_fota_perform_sync
+       6  iotx_dm_fota_request_image
+      16  iotx_dm_get_opt
+      46  iotx_dm_log_post
+     114  iotx_dm_open
+     168  iotx_dm_post_event
+      44  iotx_dm_post_property
+      62  iotx_dm_post_rawdata
+      32  iotx_dm_qurey_ntp
+     164  iotx_dm_send_aos_active
+      90  iotx_dm_send_property_get_response
+     108  iotx_dm_send_rrpc_response
+     116  iotx_dm_send_service_response
+       6  iotx_dm_set_opt
+     108  iotx_dm_subscribe
+      20  iotx_dm_yield
+
+ 
+    16 bytes in section .bss
+   284 bytes in section .rodata
+ 1 494 bytes in section .text
+ 
+ 1 494 bytes of CODE  memory
+   284 bytes of CONST memory
+    16 bytes of DATA  memory
+
+Errors: none
+Warnings: 2

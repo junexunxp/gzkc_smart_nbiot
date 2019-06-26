@@ -1,0 +1,1247 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:52
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\infra_report.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW858D.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\infra\infra_report.c -D
+#        DEBUG -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1
+#        -D CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE
+#        -D "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\infra_report.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\infra_report.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\infra\infra_report.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          #include "infra_config.h"
+      5          
+      6          #ifdef INFRA_REPORT
+      7          
+      8          #include <stdio.h>
+      9          #include <string.h>
+     10          #include "infra_types.h"
+     11          #include "infra_defs.h"
+     12          #include "infra_string.h"
+     13          #include "infra_report.h"
+     14          
+     15          void *HAL_Malloc(uint32_t size);
+     16          void HAL_Free(void *ptr);
+     17          void HAL_Printf(const char *fmt, ...);
+     18          int HAL_Snprintf(char *str, const int len, const char *fmt, ...);
+     19          int HAL_GetProductKey(char product_key[IOTX_PRODUCT_KEY_LEN]);
+     20          int HAL_GetDeviceName(char device_name[IOTX_DEVICE_NAME_LEN]);
+     21          uint64_t HAL_UptimeMs(void);
+     22          int HAL_GetFirmwareVersion(char *version);
+     23          
+     24          #ifdef INFRA_MEM_STATS
+     25              #include "infra_mem_stats.h"
+     26              #define SYS_REPORT_MALLOC(size) LITE_malloc(size, MEM_MAGIC, "sys.report")
+     27              #define SYS_REPORT_FREE(ptr)    LITE_free(ptr)
+     28          #else
+     29              #define SYS_REPORT_MALLOC(size) HAL_Malloc(size)
+     30              #define SYS_REPORT_FREE(ptr)    HAL_Free(ptr)
+     31          #endif
+     32          
+     33          #ifdef INFRA_LOG
+     34              #include "infra_log.h"
+     35              #define VERSION_DEBUG(...)  log_debug("version", __VA_ARGS__)
+     36              #define VERSION_ERR(...)    log_err("version", __VA_ARGS__)
+     37          #else
+     38              #define VERSION_DEBUG(...)  do{HAL_Printf(__VA_ARGS__);HAL_Printf("\r\n");}while(0)
+     39              #define VERSION_ERR(...)    do{HAL_Printf(__VA_ARGS__);HAL_Printf("\r\n");}while(0)
+     40          #endif
+     41          
+
+   \                                 In section .bss, align 4
+     42          static unsigned int g_report_id = 0;
+   \                     g_report_id:
+   \        0x0                      DS8 4
+     43          
+
+   \                                 In section .text, align 2, keep-with-next
+     44          int iotx_report_id(void)
+     45          {
+     46              return g_report_id++;
+   \                     iotx_report_id: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable7
+   \        0x2   0x6808             LDR      R0,[R1, #+0]
+   \        0x4   0x1C42             ADDS     R2,R0,#+1
+   \        0x6   0x600A             STR      R2,[R1, #+0]
+   \        0x8   0x4770             BX       LR               ;; return
+     47          }
+     48          
+
+   \                                 In section .bss, align 4
+     49          static info_report_func_pt info_report_func = NULL;
+   \                     info_report_func:
+   \        0x0                      DS8 4
+     50          
+
+   \                                 In section .text, align 2, keep-with-next
+     51          void iotx_set_report_func(info_report_func_pt func)
+     52          {
+     53              info_report_func = func;
+   \                     iotx_set_report_func: (+1)
+   \        0x0   0x....             LDR.N    R1,??DataTable7_1
+   \        0x2   0x6008             STR      R0,[R1, #+0]
+     54          }
+   \        0x4   0x4770             BX       LR               ;; return
+     55          /*  aos will implement this function */
+     56          #if defined(BUILD_AOS)
+     57          extern void aos_get_version_hex(unsigned char version[VERSION_NUM_SIZE]);
+     58          #else
+
+   \                                 In section .text, align 2, keep-with-next
+     59          void aos_get_version_hex(unsigned char version[VERSION_NUM_SIZE])
+     60          {
+   \                     aos_get_version_hex: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+     61              const char *p_version = IOTX_SDK_VERSION;
+   \        0x2   0x....             LDR.N    R1,??DataTable7_2
+     62              int i = 0, j = 0;
+   \        0x4   0x2200             MOVS     R2,#+0
+   \        0x6   0x4613             MOV      R3,R2
+     63              unsigned char res = 0;
+     64          
+     65              for (j = 0; j < 3; j++) {
+   \        0x8   0xE00D             B.N      ??aos_get_version_hex_0
+     66                  for (res = 0; p_version[i] <= '9' && p_version[i] >= '0'; i++) {
+     67                      res = res * 10 + p_version[i] - '0';
+   \                     ??aos_get_version_hex_1: (+1)
+   \        0xA   0xEB04 0x0584      ADD      R5,R4,R4, LSL #+2
+   \        0xE   0x5C8C             LDRB     R4,[R1, R2]
+   \       0x10   0xEB04 0x0445      ADD      R4,R4,R5, LSL #+1
+   \       0x14   0x3C30             SUBS     R4,R4,#+48
+     68                  }
+   \       0x16   0x1C52             ADDS     R2,R2,#+1
+   \                     ??aos_get_version_hex_2: (+1)
+   \       0x18   0x5C8D             LDRB     R5,[R1, R2]
+   \       0x1A   0x3D30             SUBS     R5,R5,#+48
+   \       0x1C   0x2D0A             CMP      R5,#+10
+   \       0x1E   0xD3F4             BCC.N    ??aos_get_version_hex_1
+     69                  version[j] = res;
+   \       0x20   0x54C4             STRB     R4,[R0, R3]
+     70                  i++;
+   \       0x22   0x1C52             ADDS     R2,R2,#+1
+   \       0x24   0x1C5B             ADDS     R3,R3,#+1
+   \                     ??aos_get_version_hex_0: (+1)
+   \       0x26   0x2B03             CMP      R3,#+3
+   \       0x28   0xDA01             BGE.N    ??aos_get_version_hex_3
+   \       0x2A   0x2400             MOVS     R4,#+0
+   \       0x2C   0xE7F4             B.N      ??aos_get_version_hex_2
+     71              }
+     72              version[3] = 0x00;
+   \                     ??aos_get_version_hex_3: (+1)
+   \       0x2E   0x2100             MOVS     R1,#+0
+   \       0x30   0x70C1             STRB     R1,[R0, #+3]
+     73          }
+   \       0x32   0xBC30             POP      {R4,R5}
+   \       0x34   0x4770             BX       LR               ;; return
+     74          #endif
+     75          
+     76          
+     77          
+     78          /*  aos will implement this function */
+     79          #if defined(BUILD_AOS)
+     80          extern void aos_get_mac_hex(unsigned char mac[MAC_ADDRESS_SIZE]);
+     81          #else
+
+   \                                 In section .text, align 2, keep-with-next
+     82          void aos_get_mac_hex(unsigned char mac[MAC_ADDRESS_SIZE])
+     83          {
+     84              memcpy(mac, "\x01\x02\x03\x04\x05\x06\x07\x08", MAC_ADDRESS_SIZE);
+   \                     aos_get_mac_hex: (+1)
+   \        0x0   0x2208             MOVS     R2,#+8
+   \        0x2   0x....             LDR.N    R1,??DataTable7_3
+   \        0x4   0x....'....        B.W      __aeabi_memcpy
+     85          }
+     86          #endif
+     87          
+     88          /*  aos will implement this function */
+     89          #if defined(BUILD_AOS)
+     90          extern void aos_get_chip_code(unsigned char chip_code[CHIP_CODE_SIZE]);
+     91          #else
+
+   \                                 In section .text, align 2, keep-with-next
+     92          void aos_get_chip_code(unsigned char chip_code[CHIP_CODE_SIZE])
+     93          {
+     94              memcpy(chip_code, "\x01\x02\x03\x04", CHIP_CODE_SIZE);
+   \                     aos_get_chip_code: (+1)
+   \        0x0   0x2204             MOVS     R2,#+4
+   \        0x2   0x....             LDR.N    R1,??DataTable7_4
+   \        0x4   0x....'....        B.W      __aeabi_memcpy
+     95          }
+     96          #endif
+     97          
+
+   \                                 In section .data, align 4
+     98          const char *DEVICE_INFO_UPDATE_FMT = "{\"id\":\"%d\",\"version\":\"1.0\",\"params\":["
+   \                     DEVICE_INFO_UPDATE_FMT:
+   \        0x0   0x....'....        DC32 ?_0
+     99                                               "{\"attrKey\":\"SYS_LP_SDK_VERSION\",\"attrValue\":\"%s\",\"domain\":\"SYSTEM\"},"
+    100                                               "{\"attrKey\":\"SYS_SDK_LANGUAGE\",\"attrValue\":\"C\",\"domain\":\"SYSTEM\"}"
+    101                                               "],\"method\":\"thing.deviceinfo.update\"}";
+    102          
+
+   \                                 In section .text, align 2, keep-with-next
+    103          int iotx_report_devinfo(void *pclient)
+    104          {
+   \                     iotx_report_devinfo: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0xB0B2             SUB      SP,SP,#+200
+   \        0x6   0x4605             MOV      R5,R0
+    105              int ret = 0;
+    106              char topic_name[IOTX_URI_MAX_LEN + 1] = {0};
+   \        0x8   0xA810             ADD      R0,SP,#+64
+   \        0xA   0x2188             MOVS     R1,#+136
+   \        0xC   0x....'....        BL       __aeabi_memclr4
+    107              char product_key[IOTX_PRODUCT_KEY_LEN + 1] = {0};
+   \       0x10   0xA801             ADD      R0,SP,#+4
+   \       0x12   0x2118             MOVS     R1,#+24
+   \       0x14   0x....'....        BL       __aeabi_memclr4
+    108              char device_name[IOTX_DEVICE_NAME_LEN + 1] = {0};
+   \       0x18   0xA807             ADD      R0,SP,#+28
+   \       0x1A   0x2124             MOVS     R1,#+36
+   \       0x1C   0x....'....        BL       __aeabi_memclr4
+    109              char *msg = NULL;
+    110              int  msg_len = 0;
+    111          
+    112          
+    113              if (info_report_func == NULL) {
+   \       0x20   0x....             LDR.N    R6,??DataTable7_1
+   \       0x22   0x6830             LDR      R0,[R6, #+0]
+   \       0x24   0x2800             CMP      R0,#+0
+   \       0x26   0xD102             BNE.N    ??iotx_report_devinfo_0
+    114                  VERSION_ERR("report func not register!");
+    115                  return -1;
+   \       0x28   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2C   0xE04E             B.N      ??iotx_report_devinfo_1
+    116              }
+    117          
+    118              HAL_GetProductKey(product_key);
+   \                     ??iotx_report_devinfo_0: (+1)
+   \       0x2E   0xA801             ADD      R0,SP,#+4
+   \       0x30   0x....'....        BL       HAL_GetProductKey
+    119              HAL_GetDeviceName(device_name);
+   \       0x34   0xA807             ADD      R0,SP,#+28
+   \       0x36   0x....'....        BL       HAL_GetDeviceName
+    120              VERSION_DEBUG("devinfo report");
+    121          
+    122              /* devinfo update topic name */
+    123              ret = HAL_Snprintf(topic_name,
+    124                                 IOTX_URI_MAX_LEN,
+    125                                 "/sys/%s/%s/thing/deviceinfo/update",
+    126                                 product_key,
+    127                                 device_name);
+    128              if (ret <= 0) {
+   \       0x3A   0xA807             ADD      R0,SP,#+28
+   \       0x3C   0x9000             STR      R0,[SP, #+0]
+   \       0x3E   0xAB01             ADD      R3,SP,#+4
+   \       0x40   0x....             LDR.N    R2,??DataTable7_5
+   \       0x42   0x2187             MOVS     R1,#+135
+   \       0x44   0xA810             ADD      R0,SP,#+64
+   \       0x46   0x....'....        BL       HAL_Snprintf
+   \       0x4A   0x2801             CMP      R0,#+1
+   \       0x4C   0xDA02             BGE.N    ??iotx_report_devinfo_2
+    129                  VERSION_ERR("topic generate err");
+    130                  return FAIL_RETURN;
+   \       0x4E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x52   0xE03B             B.N      ??iotx_report_devinfo_1
+    131              }
+    132              VERSION_DEBUG("devinfo report topic: %s", topic_name);
+    133          
+    134              msg_len = strlen(DEVICE_INFO_UPDATE_FMT) + 10 + strlen(IOTX_SDK_VERSION) + 1;
+   \                     ??iotx_report_devinfo_2: (+1)
+   \       0x54   0x....             LDR.N    R7,??DataTable7_6
+   \       0x56   0x6838             LDR      R0,[R7, #+0]
+   \       0x58   0x....'....        BL       strlen
+   \       0x5C   0x4680             MOV      R8,R0
+   \       0x5E   0xF108 0x0810      ADD      R8,R8,#+16
+    135              msg = (char *)SYS_REPORT_MALLOC(msg_len);
+   \       0x62   0x4640             MOV      R0,R8
+   \       0x64   0x....'....        BL       HAL_Malloc
+   \       0x68   0x0004             MOVS     R4,R0
+    136              if (msg == NULL) {
+   \       0x6A   0xD102             BNE.N    ??iotx_report_devinfo_3
+    137                  VERSION_ERR("malloc err");
+    138                  return FAIL_RETURN;
+   \       0x6C   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x70   0xE02C             B.N      ??iotx_report_devinfo_1
+    139              }
+    140              memset(msg, 0, msg_len);
+   \                     ??iotx_report_devinfo_3: (+1)
+   \       0x72   0x2200             MOVS     R2,#+0
+   \       0x74   0x4641             MOV      R1,R8
+   \       0x76   0x....'....        BL       __aeabi_memset
+    141          
+    142              /* devinfo update message */
+    143              ret = HAL_Snprintf(msg,
+    144                                 msg_len,
+    145                                 DEVICE_INFO_UPDATE_FMT,
+    146                                 iotx_report_id(),
+    147                                 IOTX_SDK_VERSION
+    148                                );
+   \       0x7A   0x....'....        BL       iotx_report_id
+   \       0x7E   0x4603             MOV      R3,R0
+   \       0x80   0x....             LDR.N    R0,??DataTable7_2
+   \       0x82   0x9000             STR      R0,[SP, #+0]
+   \       0x84   0x683A             LDR      R2,[R7, #+0]
+   \       0x86   0x4641             MOV      R1,R8
+   \       0x88   0x4620             MOV      R0,R4
+   \       0x8A   0x....'....        BL       HAL_Snprintf
+   \       0x8E   0x4607             MOV      R7,R0
+    149              if (ret <= 0) {
+   \       0x90   0x2F01             CMP      R7,#+1
+   \       0x92   0xDA05             BGE.N    ??iotx_report_devinfo_4
+    150                  VERSION_ERR("topic msg generate err");
+    151                  SYS_REPORT_FREE(msg);
+   \       0x94   0x4620             MOV      R0,R4
+   \       0x96   0x....'....        BL       HAL_Free
+    152                  return FAIL_RETURN;
+   \       0x9A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x9E   0xE015             B.N      ??iotx_report_devinfo_1
+    153              }
+    154              VERSION_DEBUG("devinfo report data: %s", msg);
+    155          
+    156              if (info_report_func != NULL) {
+   \                     ??iotx_report_devinfo_4: (+1)
+   \       0xA0   0x6830             LDR      R0,[R6, #+0]
+   \       0xA2   0x2800             CMP      R0,#+0
+   \       0xA4   0xD009             BEQ.N    ??iotx_report_devinfo_5
+    157                  info_report_func(pclient, topic_name, 1, msg, strlen(msg));
+   \       0xA6   0x4620             MOV      R0,R4
+   \       0xA8   0x....'....        BL       strlen
+   \       0xAC   0x9000             STR      R0,[SP, #+0]
+   \       0xAE   0x4623             MOV      R3,R4
+   \       0xB0   0x2201             MOVS     R2,#+1
+   \       0xB2   0xA910             ADD      R1,SP,#+64
+   \       0xB4   0x4628             MOV      R0,R5
+   \       0xB6   0x6835             LDR      R5,[R6, #+0]
+   \       0xB8   0x47A8             BLX      R5
+    158              }
+    159          
+    160              SYS_REPORT_FREE(msg);
+   \                     ??iotx_report_devinfo_5: (+1)
+   \       0xBA   0x4620             MOV      R0,R4
+   \       0xBC   0x....'....        BL       HAL_Free
+    161              if (ret < 0) {
+   \       0xC0   0x2F00             CMP      R7,#+0
+   \       0xC2   0xD502             BPL.N    ??iotx_report_devinfo_6
+    162                  VERSION_ERR("publish failed, ret = %d", ret);
+    163                  return FAIL_RETURN;
+   \       0xC4   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xC8   0xE000             B.N      ??iotx_report_devinfo_1
+    164              }
+    165              VERSION_DEBUG("devinfo report succeed");
+    166          
+    167              return SUCCESS_RETURN;
+   \                     ??iotx_report_devinfo_6: (+1)
+   \       0xCA   0x2000             MOVS     R0,#+0
+   \                     ??iotx_report_devinfo_1: (+1)
+   \       0xCC   0xB032             ADD      SP,SP,#+200
+   \       0xCE   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    168          }
+    169          
+    170          /* report Firmware version */
+
+   \                                 In section .text, align 2, keep-with-next
+    171          int iotx_report_firmware_version(void *pclient)
+    172          {
+   \                     iotx_report_firmware_version: (+1)
+   \        0x0   0xB530             PUSH     {R4,R5,LR}
+   \        0x2   0xB0CB             SUB      SP,SP,#+300
+   \        0x4   0x4604             MOV      R4,R0
+    173              int ret;
+    174              char topic_name[IOTX_URI_MAX_LEN + 1] = {0};
+   \        0x6   0xA829             ADD      R0,SP,#+164
+   \        0x8   0x2188             MOVS     R1,#+136
+   \        0xA   0x....'....        BL       __aeabi_memclr4
+    175              char msg[FIRMWARE_VERSION_MSG_LEN] = {0};
+   \        0xE   0xA819             ADD      R0,SP,#+100
+   \       0x10   0x2140             MOVS     R1,#+64
+   \       0x12   0x....'....        BL       __aeabi_memclr4
+    176              char version[IOTX_FIRMWARE_VERSION_LEN + 1] = {0};
+   \       0x16   0xA810             ADD      R0,SP,#+64
+   \       0x18   0x2124             MOVS     R1,#+36
+   \       0x1A   0x....'....        BL       __aeabi_memclr4
+    177              char product_key[IOTX_PRODUCT_KEY_LEN + 1] = {0};
+   \       0x1E   0xA801             ADD      R0,SP,#+4
+   \       0x20   0x2118             MOVS     R1,#+24
+   \       0x22   0x....'....        BL       __aeabi_memclr4
+    178              char device_name[IOTX_DEVICE_NAME_LEN + 1] = {0};
+   \       0x26   0xA807             ADD      R0,SP,#+28
+   \       0x28   0x2124             MOVS     R1,#+36
+   \       0x2A   0x....'....        BL       __aeabi_memclr4
+    179          
+    180              if (info_report_func == NULL) {
+   \       0x2E   0x....             LDR.N    R5,??DataTable7_1
+   \       0x30   0x6828             LDR      R0,[R5, #+0]
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD020             BEQ.N    ??iotx_report_firmware_version_0
+    181                  VERSION_ERR("report func not register!");
+    182                  return -1;
+    183              }
+    184          
+    185              HAL_GetProductKey(product_key);
+   \       0x36   0xA801             ADD      R0,SP,#+4
+   \       0x38   0x....'....        BL       HAL_GetProductKey
+    186              HAL_GetDeviceName(device_name);
+   \       0x3C   0xA807             ADD      R0,SP,#+28
+   \       0x3E   0x....'....        BL       HAL_GetDeviceName
+    187          
+    188              ret = HAL_GetFirmwareVersion(version);
+    189              if (ret <= 0) {
+   \       0x42   0xA810             ADD      R0,SP,#+64
+   \       0x44   0x....'....        BL       HAL_GetFirmwareVersion
+   \       0x48   0x2801             CMP      R0,#+1
+   \       0x4A   0xDB15             BLT.N    ??iotx_report_firmware_version_0
+    190                  VERSION_ERR("firmware version does not implement");
+    191                  return FAIL_RETURN;
+    192              }
+    193          
+    194              VERSION_DEBUG("firmware version report start in MQTT");
+    195          
+    196              /* firmware report topic name generate */
+    197              ret = HAL_Snprintf(topic_name,
+    198                                 IOTX_URI_MAX_LEN,
+    199                                 "/ota/device/inform/%s/%s",
+    200                                 product_key,
+    201                                 device_name
+    202                                );
+    203              if (ret <= 0) {
+   \       0x4C   0xA807             ADD      R0,SP,#+28
+   \       0x4E   0x9000             STR      R0,[SP, #+0]
+   \       0x50   0xAB01             ADD      R3,SP,#+4
+   \       0x52   0x....             LDR.N    R2,??DataTable7_7
+   \       0x54   0x2187             MOVS     R1,#+135
+   \       0x56   0xA829             ADD      R0,SP,#+164
+   \       0x58   0x....'....        BL       HAL_Snprintf
+   \       0x5C   0x2801             CMP      R0,#+1
+   \       0x5E   0xDB0B             BLT.N    ??iotx_report_firmware_version_0
+    204                  VERSION_ERR("firmware report topic generate err");
+    205                  return FAIL_RETURN;
+    206              }
+    207              VERSION_DEBUG("firmware report topic: %s", topic_name);
+    208          
+    209              /* firmware report message json data generate */
+    210              ret = HAL_Snprintf(msg,
+    211                                 FIRMWARE_VERSION_MSG_LEN,
+    212                                 "{\"id\":\"%d\",\"params\":{\"version\":\"%s\"}}",
+    213                                 iotx_report_id(),
+    214                                 version
+    215                                );
+    216              if (ret <= 0) {
+   \       0x60   0x....'....        BL       iotx_report_id
+   \       0x64   0x4603             MOV      R3,R0
+   \       0x66   0xA810             ADD      R0,SP,#+64
+   \       0x68   0x9000             STR      R0,[SP, #+0]
+   \       0x6A   0x....             LDR.N    R2,??DataTable7_8
+   \       0x6C   0x2140             MOVS     R1,#+64
+   \       0x6E   0xA819             ADD      R0,SP,#+100
+   \       0x70   0x....'....        BL       HAL_Snprintf
+   \       0x74   0x2801             CMP      R0,#+1
+   \       0x76   0xDA02             BGE.N    ??iotx_report_firmware_version_1
+    217                  VERSION_ERR("firmware report message json data generate err");
+    218                  return FAIL_RETURN;
+   \                     ??iotx_report_firmware_version_0: (+1)
+   \       0x78   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x7C   0xE00C             B.N      ??iotx_report_firmware_version_2
+    219              }
+    220              VERSION_DEBUG("firmware report data: %s", msg);
+    221          
+    222              ret = info_report_func(pclient, topic_name, 1, msg, strlen(msg));
+   \                     ??iotx_report_firmware_version_1: (+1)
+   \       0x7E   0xA819             ADD      R0,SP,#+100
+   \       0x80   0x....'....        BL       strlen
+   \       0x84   0x9000             STR      R0,[SP, #+0]
+   \       0x86   0xAB19             ADD      R3,SP,#+100
+   \       0x88   0x2201             MOVS     R2,#+1
+   \       0x8A   0xA929             ADD      R1,SP,#+164
+   \       0x8C   0x4620             MOV      R0,R4
+   \       0x8E   0x682C             LDR      R4,[R5, #+0]
+   \       0x90   0x47A0             BLX      R4
+    223          
+    224              if (ret < 0) {
+   \       0x92   0x2800             CMP      R0,#+0
+   \       0x94   0xDD00             BLE.N    ??iotx_report_firmware_version_2
+   \       0x96   0x2000             MOVS     R0,#+0
+    225                  VERSION_ERR("publish failed, ret = %d", ret);
+    226                  return ret;
+   \                     ??iotx_report_firmware_version_2: (+1)
+   \       0x98   0xB04B             ADD      SP,SP,#+300
+   \       0x9A   0xBD30             POP      {R4,R5,PC}       ;; return
+    227              }
+    228          
+    229              VERSION_DEBUG("firmware version report finished, iotx_publish() = %d", ret);
+    230              return SUCCESS_RETURN;
+    231          }
+    232          
+    233          /* report ModuleID */
+
+   \                                 In section .text, align 2, keep-with-next
+    234          int iotx_report_mid(void *pclient)
+    235          {
+    236              return SUCCESS_RETURN;
+   \                     iotx_report_mid: (+1)
+   \        0x0   0x2000             MOVS     R0,#+0
+   \        0x2   0x4770             BX       LR               ;; return
+    237          }
+    238          
+    239          #ifndef BUILD_AOS
+
+   \                                 In section .text, align 2, keep-with-next
+    240          unsigned int aos_get_version_info(unsigned char version_num[VERSION_NUM_SIZE],
+    241                                            unsigned char random_num[RANDOM_NUM_SIZE], unsigned char mac_address[MAC_ADDRESS_SIZE],
+    242                                            unsigned char chip_code[CHIP_CODE_SIZE], unsigned char *output_buffer, unsigned int output_buffer_size)
+    243          {
+   \                     aos_get_version_info: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0x4605             MOV      R5,R0
+   \        0x6   0x460E             MOV      R6,R1
+   \        0x8   0x4617             MOV      R7,R2
+   \        0xA   0x461C             MOV      R4,R3
+   \        0xC   0x9907             LDR      R1,[SP, #+28]
+    244              char *p = (char *)output_buffer;
+    245          
+    246              if (output_buffer_size < AOS_ACTIVE_INFO_LEN) {
+   \        0xE   0x2951             CMP      R1,#+81
+   \       0x10   0xD201             BCS.N    ??aos_get_version_info_0
+    247                  return 1;
+   \       0x12   0x2001             MOVS     R0,#+1
+   \       0x14   0xE023             B.N      ??aos_get_version_info_1
+    248              }
+   \                     ??aos_get_version_info_0: (+1)
+   \       0x16   0xF8DD 0x8018      LDR      R8,[SP, #+24]
+    249          
+    250              memset(p, 0, output_buffer_size);
+   \       0x1A   0x2200             MOVS     R2,#+0
+   \       0x1C   0x4640             MOV      R0,R8
+   \       0x1E   0x....'....        BL       __aeabi_memset
+    251          
+    252              infra_hex2str(version_num, VERSION_NUM_SIZE, p);
+   \       0x22   0x4642             MOV      R2,R8
+   \       0x24   0x2104             MOVS     R1,#+4
+   \       0x26   0x4628             MOV      R0,R5
+   \       0x28   0x....'....        BL       infra_hex2str
+    253              p += VERSION_NUM_SIZE * 2;
+   \       0x2C   0xF108 0x0508      ADD      R5,R8,#+8
+    254              infra_hex2str(random_num, RANDOM_NUM_SIZE, p);
+   \       0x30   0x462A             MOV      R2,R5
+   \       0x32   0x2104             MOVS     R1,#+4
+   \       0x34   0x4630             MOV      R0,R6
+   \       0x36   0x....'....        BL       infra_hex2str
+    255              p += RANDOM_NUM_SIZE * 2;
+   \       0x3A   0x3508             ADDS     R5,R5,#+8
+    256              infra_hex2str(mac_address, MAC_ADDRESS_SIZE, p);
+   \       0x3C   0x462A             MOV      R2,R5
+   \       0x3E   0x2108             MOVS     R1,#+8
+   \       0x40   0x4638             MOV      R0,R7
+   \       0x42   0x....'....        BL       infra_hex2str
+    257              p += MAC_ADDRESS_SIZE * 2;
+   \       0x46   0x3510             ADDS     R5,R5,#+16
+    258              infra_hex2str(chip_code, CHIP_CODE_SIZE, p);
+   \       0x48   0x462A             MOV      R2,R5
+   \       0x4A   0x2104             MOVS     R1,#+4
+   \       0x4C   0x4620             MOV      R0,R4
+   \       0x4E   0x....'....        BL       infra_hex2str
+    259              p += CHIP_CODE_SIZE * 2;
+    260              strcat(p, "1111111111222222222233333333334444444444");
+   \       0x52   0x....             LDR.N    R1,??DataTable7_9
+   \       0x54   0xF105 0x0008      ADD      R0,R5,#+8
+   \       0x58   0x....'....        BL       strcat
+    261          
+    262              return 0;
+   \       0x5C   0x2000             MOVS     R0,#+0
+   \                     ??aos_get_version_info_1: (+1)
+   \       0x5E   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    263          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7:
+   \        0x0   0x....'....        DC32     g_report_id
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_1:
+   \        0x0   0x....'....        DC32     info_report_func
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_2:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_3:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_4:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_5:
+   \        0x0   0x....'....        DC32     ?_7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_6:
+   \        0x0   0x....'....        DC32     DEVICE_INFO_UPDATE_FMT
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_7:
+   \        0x0   0x....'....        DC32     ?_13
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_8:
+   \        0x0   0x....'....        DC32     ?_14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7_9:
+   \        0x0   0x....'....        DC32     ?_15
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x7B 0x22          DC8 7BH, 22H, 69H, 64H, 22H, 3AH, 22H, 25H
+   \              0x69 0x64    
+   \              0x22 0x3A    
+   \              0x22 0x25    
+   \        0x8   0x64 0x22          DC8 64H, 22H, 2CH, 22H, 76H, 65H, 72H, 73H
+   \              0x2C 0x22    
+   \              0x76 0x65    
+   \              0x72 0x73    
+   \       0x10   0x69 0x6F          DC8 69H, 6FH, 6EH, 22H, 3AH, 22H, 31H, 2EH
+   \              0x6E 0x22    
+   \              0x3A 0x22    
+   \              0x31 0x2E    
+   \       0x18   0x30 0x22          DC8 30H, 22H, 2CH, 22H, 70H, 61H, 72H, 61H
+   \              0x2C 0x22    
+   \              0x70 0x61    
+   \              0x72 0x61    
+   \       0x20   0x6D 0x73          DC8 6DH, 73H, 22H, 3AH, 5BH, 7BH, 22H, 61H
+   \              0x22 0x3A    
+   \              0x5B 0x7B    
+   \              0x22 0x61    
+   \       0x28   0x74 0x74          DC8 74H, 74H, 72H, 4BH, 65H, 79H, 22H, 3AH
+   \              0x72 0x4B    
+   \              0x65 0x79    
+   \              0x22 0x3A    
+   \       0x30   0x22 0x53          DC8 22H, 53H, 59H, 53H, 5FH, 4CH, 50H, 5FH
+   \              0x59 0x53    
+   \              0x5F 0x4C    
+   \              0x50 0x5F    
+   \       0x38   0x53 0x44          DC8 53H, 44H, 4BH, 5FH, 56H, 45H, 52H, 53H
+   \              0x4B 0x5F    
+   \              0x56 0x45    
+   \              0x52 0x53    
+   \       0x40   0x49 0x4F          DC8 49H, 4FH, 4EH, 22H, 2CH, 22H, 61H, 74H
+   \              0x4E 0x22    
+   \              0x2C 0x22    
+   \              0x61 0x74    
+   \       0x48   0x74 0x72          DC8 74H, 72H, 56H, 61H, 6CH, 75H, 65H, 22H
+   \              0x56 0x61    
+   \              0x6C 0x75    
+   \              0x65 0x22    
+   \       0x50   0x3A 0x22          DC8 3AH, 22H, 25H, 73H, 22H, 2CH, 22H, 64H
+   \              0x25 0x73    
+   \              0x22 0x2C    
+   \              0x22 0x64    
+   \       0x58   0x6F 0x6D          DC8 6FH, 6DH, 61H, 69H, 6EH, 22H, 3AH, 22H
+   \              0x61 0x69    
+   \              0x6E 0x22    
+   \              0x3A 0x22    
+   \       0x60   0x53 0x59          DC8 53H, 59H, 53H, 54H, 45H, 4DH, 22H, 7DH
+   \              0x53 0x54    
+   \              0x45 0x4D    
+   \              0x22 0x7D    
+   \       0x68   0x2C 0x7B          DC8 2CH, 7BH, 22H, 61H, 74H, 74H, 72H, 4BH
+   \              0x22 0x61    
+   \              0x74 0x74    
+   \              0x72 0x4B    
+   \       0x70   0x65 0x79          DC8 65H, 79H, 22H, 3AH, 22H, 53H, 59H, 53H
+   \              0x22 0x3A    
+   \              0x22 0x53    
+   \              0x59 0x53    
+   \       0x78   0x5F 0x53          DC8 5FH, 53H, 44H, 4BH, 5FH, 4CH, 41H, 4EH
+   \              0x44 0x4B    
+   \              0x5F 0x4C    
+   \              0x41 0x4E    
+   \       0x80   0x47 0x55          DC8 47H, 55H, 41H, 47H, 45H, 22H, 2CH, 22H
+   \              0x41 0x47    
+   \              0x45 0x22    
+   \              0x2C 0x22    
+   \       0x88   0x61 0x74          DC8 61H, 74H, 74H, 72H, 56H, 61H, 6CH, 75H
+   \              0x74 0x72    
+   \              0x56 0x61    
+   \              0x6C 0x75    
+   \       0x90   0x65 0x22          DC8 65H, 22H, 3AH, 22H, 43H, 22H, 2CH, 22H
+   \              0x3A 0x22    
+   \              0x43 0x22    
+   \              0x2C 0x22    
+   \       0x98   0x64 0x6F          DC8 64H, 6FH, 6DH, 61H, 69H, 6EH, 22H, 3AH
+   \              0x6D 0x61    
+   \              0x69 0x6E    
+   \              0x22 0x3A    
+   \       0xA0   0x22 0x53          DC8 22H, 53H, 59H, 53H, 54H, 45H, 4DH, 22H
+   \              0x59 0x53    
+   \              0x54 0x45    
+   \              0x4D 0x22    
+   \       0xA8   0x7D 0x5D          DC8 7DH, 5DH, 2CH, 22H, 6DH, 65H, 74H, 68H
+   \              0x2C 0x22    
+   \              0x6D 0x65    
+   \              0x74 0x68    
+   \       0xB0   0x6F 0x64          DC8 6FH, 64H, 22H, 3AH, 22H, 74H, 68H, 69H
+   \              0x22 0x3A    
+   \              0x22 0x74    
+   \              0x68 0x69    
+   \       0xB8   0x6E 0x67          DC8 6EH, 67H, 2EH, 64H, 65H, 76H, 69H, 63H
+   \              0x2E 0x64    
+   \              0x65 0x76    
+   \              0x69 0x63    
+   \       0xC0   0x65 0x69          DC8 65H, 69H, 6EH, 66H, 6FH, 2EH, 75H, 70H
+   \              0x6E 0x66    
+   \              0x6F 0x2E    
+   \              0x75 0x70    
+   \       0xC8   0x64 0x61          DC8 64H, 61H, 74H, 65H, 22H, 7DH, 0
+   \              0x74 0x65    
+   \              0x22 0x7D    
+   \              0x00         
+   \       0xCF   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x33 0x2E          DC8 "3.0.1"
+   \              0x30 0x2E    
+   \              0x31 0x00    
+   \        0x6   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x01 0x02          DC8 "\001\002\003\004\005\006\007\010"
+   \              0x03 0x04    
+   \              0x05 0x06    
+   \              0x07 0x08    
+   \              0x00         
+   \        0x9   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_3:
+   \        0x0   0x01 0x02          DC8 "\001\002\003\004"
+   \              0x03 0x04    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x2E   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x45   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x5C   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x73   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x15   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_7:
+   \        0x0   0x2F 0x73          DC8 "/sys/%s/%s/thing/deviceinfo/update"
+   \              0x79 0x73    
+   \              0x2F 0x25    
+   \              0x73 0x2F    
+   \              0x25 0x73    
+   \              0x2F 0x74    
+   \              0x68 0x69    
+   \              0x6E 0x67    
+   \              0x2F 0x64    
+   \              0x65 0x76    
+   \              0x69 0x63    
+   \              0x65 0x69    
+   \              0x6E 0x66    
+   \              0x6F 0x2F    
+   \              0x75 0x70    
+   \              0x64 0x61    
+   \              0x74 0x65    
+   \              0x00         
+   \       0x23   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x2E   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x45   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x5C   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x73   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x2E   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x15   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_13:
+   \        0x0   0x2F 0x6F          DC8 "/ota/device/inform/%s/%s"
+   \              0x74 0x61    
+   \              0x2F 0x64    
+   \              0x65 0x76    
+   \              0x69 0x63    
+   \              0x65 0x2F    
+   \              0x69 0x6E    
+   \              0x66 0x6F    
+   \              0x72 0x6D    
+   \              0x2F 0x25    
+   \              0x73 0x2F    
+   \              0x25 0x73    
+   \              0x00         
+   \       0x19   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_14:
+   \        0x0   0x7B 0x22          DC8 "{\"id\":\"%d\",\"params\":{\"version\":\"%s\"}}"
+   \              0x69 0x64    
+   \              0x22 0x3A    
+   \              0x22 0x25    
+   \              0x64 0x22    
+   \              0x2C 0x22    
+   \              0x70 0x61    
+   \              0x72 0x61    
+   \              0x6D 0x73    
+   \              0x22 0x3A    
+   \              0x7B 0x22    
+   \              0x76 0x65    
+   \              0x72 0x73    
+   \              0x69 0x6F    
+   \              0x6E 0x22    
+   \              0x3A 0x22    
+   \              0x25 0x73    
+   \              0x22 0x7D    
+   \              0x7D 0x00    
+   \       0x26   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_15:
+   \        0x0   0x31 0x31          DC8 "1111111111222222222233333333334444444444"
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x31 0x31    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x32 0x32    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x33 0x33    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x34 0x34    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+    264          #endif
+    265          #endif
+    266          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   aos_get_chip_code
+         0   -> __aeabi_memcpy
+       0   aos_get_mac_hex
+         0   -> __aeabi_memcpy
+       8   aos_get_version_hex
+      24   aos_get_version_info
+        24   -> __aeabi_memset
+        24   -> infra_hex2str
+        24   -> strcat
+     224   iotx_report_devinfo
+       224   -- Indirect call
+       224   -> HAL_Free
+       224   -> HAL_GetDeviceName
+       224   -> HAL_GetProductKey
+       224   -> HAL_Malloc
+       224   -> HAL_Snprintf
+       224   -> __aeabi_memclr4
+       224   -> __aeabi_memset
+       224   -> iotx_report_id
+       224   -> strlen
+     312   iotx_report_firmware_version
+       312   -- Indirect call
+       312   -> HAL_GetDeviceName
+       312   -> HAL_GetFirmwareVersion
+       312   -> HAL_GetProductKey
+       312   -> HAL_Snprintf
+       312   -> __aeabi_memclr4
+       312   -> iotx_report_id
+       312   -> strlen
+       0   iotx_report_id
+       0   iotx_report_mid
+       0   iotx_set_report_func
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable7
+       4  ??DataTable7_1
+       4  ??DataTable7_2
+       4  ??DataTable7_3
+       4  ??DataTable7_4
+       4  ??DataTable7_5
+       4  ??DataTable7_6
+       4  ??DataTable7_7
+       4  ??DataTable7_8
+       4  ??DataTable7_9
+     208  ?_0
+       8  ?_1
+      36  ?_10
+      24  ?_11
+      36  ?_12
+      28  ?_13
+      40  ?_14
+      44  ?_15
+      12  ?_2
+       8  ?_3
+     136  ?_4
+      24  ?_5
+      36  ?_6
+      36  ?_7
+     136  ?_8
+      64  ?_9
+       4  DEVICE_INFO_UPDATE_FMT
+       8  aos_get_chip_code
+       8  aos_get_mac_hex
+      54  aos_get_version_hex
+      98  aos_get_version_info
+       4  g_report_id
+       4  info_report_func
+     210  iotx_report_devinfo
+     156  iotx_report_firmware_version
+      10  iotx_report_id
+       4  iotx_report_mid
+       6  iotx_set_report_func
+
+ 
+   8 bytes in section .bss
+   4 bytes in section .data
+ 876 bytes in section .rodata
+ 594 bytes in section .text
+ 
+ 594 bytes of CODE  memory
+ 876 bytes of CONST memory
+  12 bytes of DATA  memory
+
+Errors: none
+Warnings: none

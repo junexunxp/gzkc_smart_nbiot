@@ -1,0 +1,506 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:27
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_ipc.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW230B.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_ipc.c -D DEBUG
+#        -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\dm_ipc.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\dm_ipc.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\dm_ipc.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          
+      6          
+      7          #include "iotx_dm_internal.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void __dlist_add(dlist_t *, dlist_t *, dlist_t *)
+   \                     __dlist_add: (+1)
+   \        0x0   0x6042             STR      R2,[R0, #+4]
+   \        0x2   0x6001             STR      R1,[R0, #+0]
+   \        0x4   0x6048             STR      R0,[R1, #+4]
+   \        0x6   0x6010             STR      R0,[R2, #+0]
+   \        0x8   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void dlist_add_tail(dlist_t *, dlist_t *)
+   \                     dlist_add_tail: (+1)
+   \        0x0   0x460A             MOV      R2,R1
+   \        0x2   0x6811             LDR      R1,[R2, #+0]
+   \        0x4   0x....             B.N      __dlist_add
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void dlist_del(dlist_t *)
+   \                     dlist_del: (+1)
+   \        0x0   0x6801             LDR      R1,[R0, #+0]
+   \        0x2   0x6840             LDR      R0,[R0, #+4]
+   \        0x4   0x6048             STR      R0,[R1, #+4]
+   \        0x6   0x6001             STR      R1,[R0, #+0]
+   \        0x8   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void INIT_AOS_DLIST_HEAD(dlist_t *)
+   \                     INIT_AOS_DLIST_HEAD: (+1)
+   \        0x0   0x6040             STR      R0,[R0, #+4]
+   \        0x2   0x6000             STR      R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp int dlist_empty(dlist_t const *)
+   \                     dlist_empty: (+1)
+   \        0x0   0x6841             LDR      R1,[R0, #+4]
+   \        0x2   0x4281             CMP      R1,R0
+   \        0x4   0xD101             BNE.N    ??dlist_empty_0
+   \        0x6   0x2001             MOVS     R0,#+1
+   \        0x8   0x4770             BX       LR
+   \                     ??dlist_empty_0: (+1)
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0x4770             BX       LR               ;; return
+      8          
+
+   \                                 In section .bss, align 4
+      9          dm_ipc_t g_dm_ipc;
+   \                     g_dm_ipc:
+   \        0x0                      DS8 20
+     10          
+
+   \                                 In section .text, align 2, keep-with-next
+     11          static dm_ipc_t *_dm_ipc_get_ctx(void)
+     12          {
+     13              return &g_dm_ipc;
+   \                     _dm_ipc_get_ctx: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable1
+   \        0x2   0x4770             BX       LR               ;; return
+     14          }
+     15          
+
+   \                                 In section .text, align 2, keep-with-next
+     16          static void _dm_ipc_lock(void)
+     17          {
+   \                     _dm_ipc_lock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     18              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x2   0x....'....        BL       _dm_ipc_get_ctx
+     19              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_dm_ipc_lock_0
+     20                  HAL_MutexLock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexLock
+     21              }
+     22          }
+   \                     ??_dm_ipc_lock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     23          
+
+   \                                 In section .text, align 2, keep-with-next
+     24          static void _dm_ipc_unlock(void)
+     25          {
+   \                     _dm_ipc_unlock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     26              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x2   0x....'....        BL       _dm_ipc_get_ctx
+     27              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_dm_ipc_unlock_0
+     28                  HAL_MutexUnlock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexUnlock
+     29              }
+     30          }
+   \                     ??_dm_ipc_unlock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     31          
+
+   \                                 In section .text, align 2, keep-with-next
+     32          int dm_ipc_init(int max_size)
+     33          {
+   \                     dm_ipc_init: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4604             MOV      R4,R0
+     34              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x4   0x....'....        BL       _dm_ipc_get_ctx
+   \        0x8   0x4605             MOV      R5,R0
+     35          
+     36              memset(ctx, 0, sizeof(dm_ipc_t));
+   \        0xA   0x2200             MOVS     R2,#+0
+   \        0xC   0x2114             MOVS     R1,#+20
+   \        0xE   0x....'....        BL       __aeabi_memset4
+     37          
+     38              /* Create Mutex */
+     39              ctx->mutex = HAL_MutexCreate();
+   \       0x12   0x....'....        BL       HAL_MutexCreate
+   \       0x16   0x6028             STR      R0,[R5, #+0]
+     40              if (ctx->mutex == NULL) {
+   \       0x18   0x2800             CMP      R0,#+0
+   \       0x1A   0xD102             BNE.N    ??dm_ipc_init_0
+     41                  return DM_INVALID_PARAMETER;
+   \       0x1C   0xF06F 0x0001      MVN      R0,#+1
+   \       0x20   0xBD32             POP      {R1,R4,R5,PC}
+     42              }
+     43          
+     44              /* Init List */
+     45              ctx->msg_list.max_size = max_size;
+   \                     ??dm_ipc_init_0: (+1)
+   \       0x22   0x606C             STR      R4,[R5, #+4]
+     46              INIT_LIST_HEAD(&ctx->msg_list.message_list);
+   \       0x24   0xF105 0x000C      ADD      R0,R5,#+12
+   \       0x28   0x....'....        BL       INIT_AOS_DLIST_HEAD
+     47          
+     48              return SUCCESS_RETURN;
+   \       0x2C   0x2000             MOVS     R0,#+0
+   \       0x2E   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+     49          }
+     50          
+
+   \                                 In section .text, align 2, keep-with-next
+     51          void dm_ipc_deinit(void)
+     52          {
+   \                     dm_ipc_deinit: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+     53              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x2   0x....'....        BL       _dm_ipc_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+     54              dm_ipc_msg_node_t *del_node = NULL;
+     55              dm_ipc_msg_node_t *next_node = NULL;
+     56              dm_ipc_msg_t *del_msg = NULL;
+     57          
+     58              if (ctx->mutex) {
+   \        0x8   0x6820             LDR      R0,[R4, #+0]
+   \        0xA   0x2800             CMP      R0,#+0
+   \        0xC   0xD001             BEQ.N    ??dm_ipc_deinit_0
+     59                  HAL_MutexDestroy(ctx->mutex);
+   \        0xE   0x....'....        BL       HAL_MutexDestroy
+     60              }
+     61          
+     62              list_for_each_entry_safe(del_node, next_node, &ctx->msg_list.message_list, linked_list, dm_ipc_msg_node_t) {
+   \                     ??dm_ipc_deinit_0: (+1)
+   \       0x12   0x6920             LDR      R0,[R4, #+16]
+   \       0x14   0x1F05             SUBS     R5,R0,#+4
+   \       0x16   0x68A8             LDR      R0,[R5, #+8]
+   \       0x18   0x1F06             SUBS     R6,R0,#+4
+   \       0x1A   0xE013             B.N      ??dm_ipc_deinit_1
+     63                  /* Free Message */
+     64                  del_msg = (dm_ipc_msg_t *)del_node->data;
+   \                     ??dm_ipc_deinit_2: (+1)
+   \       0x1C   0x682F             LDR      R7,[R5, #+0]
+     65                  if (del_msg->data) {
+   \       0x1E   0x6878             LDR      R0,[R7, #+4]
+   \       0x20   0x2800             CMP      R0,#+0
+   \       0x22   0xD003             BEQ.N    ??dm_ipc_deinit_3
+     66                      DM_free(del_msg->data);
+   \       0x24   0x....'....        BL       HAL_Free
+   \       0x28   0x2000             MOVS     R0,#+0
+   \       0x2A   0x6078             STR      R0,[R7, #+4]
+     67                  }
+     68                  DM_free(del_msg);
+   \                     ??dm_ipc_deinit_3: (+1)
+   \       0x2C   0x4638             MOV      R0,R7
+   \       0x2E   0x....'....        BL       HAL_Free
+     69                  del_msg = NULL;
+     70          
+     71                  /* Free Node */
+     72                  list_del(&del_node->linked_list);
+   \       0x32   0x1D28             ADDS     R0,R5,#+4
+   \       0x34   0x....'....        BL       dlist_del
+     73                  DM_free(del_node);
+   \       0x38   0x4628             MOV      R0,R5
+   \       0x3A   0x....'....        BL       HAL_Free
+     74              }
+   \       0x3E   0x4635             MOV      R5,R6
+   \       0x40   0x68B0             LDR      R0,[R6, #+8]
+   \       0x42   0x1F06             SUBS     R6,R0,#+4
+   \                     ??dm_ipc_deinit_1: (+1)
+   \       0x44   0x1D28             ADDS     R0,R5,#+4
+   \       0x46   0xF104 0x010C      ADD      R1,R4,#+12
+   \       0x4A   0x4288             CMP      R0,R1
+   \       0x4C   0xD1E6             BNE.N    ??dm_ipc_deinit_2
+     75          }
+   \       0x4E   0xBDF1             POP      {R0,R4-R7,PC}    ;; return
+     76          
+
+   \                                 In section .text, align 2, keep-with-next
+     77          int dm_ipc_msg_insert(void *data)
+     78          {
+   \                     dm_ipc_msg_insert: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4605             MOV      R5,R0
+     79              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x4   0x....'....        BL       _dm_ipc_get_ctx
+   \        0x8   0x4606             MOV      R6,R0
+     80              dm_ipc_msg_node_t *node = NULL;
+     81          
+     82              if (data == NULL) {
+   \        0xA   0x2D00             CMP      R5,#+0
+   \        0xC   0xD102             BNE.N    ??dm_ipc_msg_insert_0
+     83                  return DM_INVALID_PARAMETER;
+   \        0xE   0xF06F 0x0001      MVN      R0,#+1
+   \       0x12   0xBD70             POP      {R4-R6,PC}
+     84              }
+     85          
+     86              _dm_ipc_lock();
+   \                     ??dm_ipc_msg_insert_0: (+1)
+   \       0x14   0x....'....        BL       _dm_ipc_lock
+     87              dm_log_debug("dm msg list size: %d, max size: %d", ctx->msg_list.size, ctx->msg_list.max_size);
+     88              if (ctx->msg_list.size >= ctx->msg_list.max_size) {
+   \       0x18   0x68B0             LDR      R0,[R6, #+8]
+   \       0x1A   0x6871             LDR      R1,[R6, #+4]
+   \       0x1C   0x4288             CMP      R0,R1
+   \       0x1E   0xDB04             BLT.N    ??dm_ipc_msg_insert_1
+     89                  dm_log_warning("dm ipc list full");
+     90                  _dm_ipc_unlock();
+   \       0x20   0x....'....        BL       _dm_ipc_unlock
+     91                  return FAIL_RETURN;
+   \       0x24   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x28   0xBD70             POP      {R4-R6,PC}
+     92              }
+     93          
+     94              node = DM_malloc(sizeof(dm_ipc_msg_node_t));
+   \                     ??dm_ipc_msg_insert_1: (+1)
+   \       0x2A   0x200C             MOVS     R0,#+12
+   \       0x2C   0x....'....        BL       HAL_Malloc
+   \       0x30   0x0004             MOVS     R4,R0
+     95              if (node == NULL) {
+   \       0x32   0xD104             BNE.N    ??dm_ipc_msg_insert_2
+     96                  _dm_ipc_unlock();
+   \       0x34   0x....'....        BL       _dm_ipc_unlock
+     97                  return DM_MEMORY_NOT_ENOUGH;
+   \       0x38   0xF06F 0x0002      MVN      R0,#+2
+   \       0x3C   0xBD70             POP      {R4-R6,PC}
+     98              }
+     99              memset(node, 0, sizeof(dm_ipc_msg_node_t));
+   \                     ??dm_ipc_msg_insert_2: (+1)
+   \       0x3E   0x2200             MOVS     R2,#+0
+   \       0x40   0x210C             MOVS     R1,#+12
+   \       0x42   0x....'....        BL       __aeabi_memset4
+    100          
+    101              node->data = data;
+   \       0x46   0x6025             STR      R5,[R4, #+0]
+    102              INIT_LIST_HEAD(&node->linked_list);
+   \       0x48   0x1D20             ADDS     R0,R4,#+4
+   \       0x4A   0x....'....        BL       INIT_AOS_DLIST_HEAD
+    103              ctx->msg_list.size++;
+   \       0x4E   0x68B0             LDR      R0,[R6, #+8]
+   \       0x50   0x1C40             ADDS     R0,R0,#+1
+   \       0x52   0x60B0             STR      R0,[R6, #+8]
+    104              list_add_tail(&node->linked_list, &ctx->msg_list.message_list);
+   \       0x54   0xF106 0x010C      ADD      R1,R6,#+12
+   \       0x58   0x1D20             ADDS     R0,R4,#+4
+   \       0x5A   0x....'....        BL       dlist_add_tail
+    105          
+    106              _dm_ipc_unlock();
+   \       0x5E   0x....'....        BL       _dm_ipc_unlock
+    107              return SUCCESS_RETURN;
+   \       0x62   0x2000             MOVS     R0,#+0
+   \       0x64   0xBD70             POP      {R4-R6,PC}       ;; return
+    108          }
+    109          
+
+   \                                 In section .text, align 2, keep-with-next
+    110          int dm_ipc_msg_next(void **data)
+    111          {
+   \                     dm_ipc_msg_next: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    112              dm_ipc_t *ctx = _dm_ipc_get_ctx();
+   \        0x4   0x....'....        BL       _dm_ipc_get_ctx
+   \        0x8   0x4605             MOV      R5,R0
+    113              dm_ipc_msg_node_t *node = NULL;
+    114          
+    115              if (data == NULL || *data != NULL) {
+   \        0xA   0x2C00             CMP      R4,#+0
+   \        0xC   0xD002             BEQ.N    ??dm_ipc_msg_next_0
+   \        0xE   0x6820             LDR      R0,[R4, #+0]
+   \       0x10   0x2800             CMP      R0,#+0
+   \       0x12   0xD002             BEQ.N    ??dm_ipc_msg_next_1
+    116                  return DM_INVALID_PARAMETER;
+   \                     ??dm_ipc_msg_next_0: (+1)
+   \       0x14   0xF06F 0x0001      MVN      R0,#+1
+   \       0x18   0xBD70             POP      {R4-R6,PC}
+    117              }
+    118          
+    119              _dm_ipc_lock();
+   \                     ??dm_ipc_msg_next_1: (+1)
+   \       0x1A   0x....'....        BL       _dm_ipc_lock
+    120          
+    121              if (list_empty(&ctx->msg_list.message_list)) {
+   \       0x1E   0xF105 0x000C      ADD      R0,R5,#+12
+   \       0x22   0x....'....        BL       dlist_empty
+   \       0x26   0x2800             CMP      R0,#+0
+   \       0x28   0xD004             BEQ.N    ??dm_ipc_msg_next_2
+    122                  _dm_ipc_unlock();
+   \       0x2A   0x....'....        BL       _dm_ipc_unlock
+    123                  return FAIL_RETURN;
+   \       0x2E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x32   0xBD70             POP      {R4-R6,PC}
+    124              }
+    125          
+    126              node = list_first_entry(&ctx->msg_list.message_list, dm_ipc_msg_node_t, linked_list);
+   \                     ??dm_ipc_msg_next_2: (+1)
+   \       0x34   0x692E             LDR      R6,[R5, #+16]
+   \       0x36   0x1F36             SUBS     R6,R6,#+4
+    127              list_del(&node->linked_list);
+   \       0x38   0x1D30             ADDS     R0,R6,#+4
+   \       0x3A   0x....'....        BL       dlist_del
+    128              ctx->msg_list.size--;
+   \       0x3E   0x68A8             LDR      R0,[R5, #+8]
+   \       0x40   0x1E40             SUBS     R0,R0,#+1
+   \       0x42   0x60A8             STR      R0,[R5, #+8]
+    129          
+    130              *data = node->data;
+   \       0x44   0x6830             LDR      R0,[R6, #+0]
+   \       0x46   0x6020             STR      R0,[R4, #+0]
+    131              DM_free(node);
+   \       0x48   0x4630             MOV      R0,R6
+   \       0x4A   0x....'....        BL       HAL_Free
+    132          
+    133              _dm_ipc_unlock();
+   \       0x4E   0x....'....        BL       _dm_ipc_unlock
+    134              return SUCCESS_RETURN;
+   \       0x52   0x2000             MOVS     R0,#+0
+   \       0x54   0xBD70             POP      {R4-R6,PC}       ;; return
+    135          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable1:
+   \        0x0   0x....'....        DC32     g_dm_ipc
+    136          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   INIT_AOS_DLIST_HEAD
+       0   __dlist_add
+       0   _dm_ipc_get_ctx
+       8   _dm_ipc_lock
+         0   -> HAL_MutexLock
+         8   -> _dm_ipc_get_ctx
+       8   _dm_ipc_unlock
+         0   -> HAL_MutexUnlock
+         8   -> _dm_ipc_get_ctx
+       0   dlist_add_tail
+         0   -> __dlist_add
+       0   dlist_del
+       0   dlist_empty
+      24   dm_ipc_deinit
+        24   -> HAL_Free
+        24   -> HAL_MutexDestroy
+        24   -> _dm_ipc_get_ctx
+        24   -> dlist_del
+      16   dm_ipc_init
+        16   -> HAL_MutexCreate
+        16   -> INIT_AOS_DLIST_HEAD
+        16   -> __aeabi_memset4
+        16   -> _dm_ipc_get_ctx
+      16   dm_ipc_msg_insert
+        16   -> HAL_Malloc
+        16   -> INIT_AOS_DLIST_HEAD
+        16   -> __aeabi_memset4
+        16   -> _dm_ipc_get_ctx
+        16   -> _dm_ipc_lock
+        16   -> _dm_ipc_unlock
+        16   -> dlist_add_tail
+      16   dm_ipc_msg_next
+        16   -> HAL_Free
+        16   -> _dm_ipc_get_ctx
+        16   -> _dm_ipc_lock
+        16   -> _dm_ipc_unlock
+        16   -> dlist_del
+        16   -> dlist_empty
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable1
+       6  INIT_AOS_DLIST_HEAD
+      10  __dlist_add
+       4  _dm_ipc_get_ctx
+      24  _dm_ipc_lock
+      24  _dm_ipc_unlock
+       6  dlist_add_tail
+      10  dlist_del
+      14  dlist_empty
+      80  dm_ipc_deinit
+      48  dm_ipc_init
+     102  dm_ipc_msg_insert
+      86  dm_ipc_msg_next
+      20  g_dm_ipc
+
+ 
+  20 bytes in section .bss
+ 418 bytes in section .text
+ 
+ 418 bytes of CODE memory
+  20 bytes of DATA memory
+
+Errors: none
+Warnings: none

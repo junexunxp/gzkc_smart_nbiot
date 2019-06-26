@@ -1,0 +1,1183 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:22:01
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\examples\mqtt_example_at.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWA842.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\examples\mqtt_example_at.c -D
+#        DEBUG -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1
+#        -D CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE
+#        -D "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\mqtt_example_at.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\mqtt_example_at.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\examples\mqtt_example_at.c
+      1          #include <stdio.h>
+      2          #include <string.h>
+      3          
+      4          #include "dev_sign_api.h"
+      5          #include "mqtt_api.h"
+      6          
+      7          #ifdef ATM_ENABLED
+      8              #include "at_api.h"
+      9          #include "at_wrapper.h"
+     10          #endif
+     11          
+
+   \                                 In section .bss, align 4
+     12          static char g_topic_name[CONFIG_MQTT_TOPIC_MAXLEN];
+   \                     g_topic_name:
+   \        0x0                      DS8 128
+     13          
+     14          void HAL_Printf(const char *fmt, ...);
+     15          int HAL_GetProductKey(char product_key[IOTX_PRODUCT_KEY_LEN]);
+     16          int HAL_GetDeviceName(char device_name[IOTX_DEVICE_NAME_LEN]);
+     17          int HAL_GetDeviceSecret(char device_secret[IOTX_DEVICE_SECRET_LEN]);
+     18          uint64_t HAL_UptimeMs(void);
+     19          int HAL_Snprintf(char *str, const int len, const char *fmt, ...);
+     20          
+     21          #define EXAMPLE_TRACE(fmt, ...)  \
+     22              do { \
+     23                  HAL_Printf("%s|%03d :: ", __func__, __LINE__); \
+     24                  HAL_Printf(fmt, ##__VA_ARGS__); \
+     25                  HAL_Printf("%s", "\r\n"); \
+     26              } while(0)
+     27          
+
+   \                                 In section .text, align 2, keep-with-next
+     28          void example_message_arrive(void *pcontext, void *pclient, iotx_mqtt_event_msg_pt msg)
+     29          {
+   \                     example_message_arrive: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+     30              iotx_mqtt_topic_info_t     *topic_info = (iotx_mqtt_topic_info_pt) msg->msg;
+   \        0x2   0x6854             LDR      R4,[R2, #+4]
+     31          
+     32              switch (msg->event_type) {
+   \        0x4   0x7810             LDRB     R0,[R2, #+0]
+   \        0x6   0x280C             CMP      R0,#+12
+   \        0x8   0xD111             BNE.N    ??example_message_arrive_0
+     33                  case IOTX_MQTT_EVENT_PUBLISH_RECEIVED:
+     34                      /* print topic name and topic message */
+     35                      HAL_Printf("Message Arrived: \n");
+   \        0xA   0x....             LDR.N    R0,??DataTable5_3
+   \        0xC   0x....'....        BL       HAL_Printf
+     36                      HAL_Printf("Topic  : %.*s\n", topic_info->topic_len, topic_info->ptopic);
+   \       0x10   0x68E2             LDR      R2,[R4, #+12]
+   \       0x12   0x88E1             LDRH     R1,[R4, #+6]
+   \       0x14   0x....             LDR.N    R0,??DataTable5_4
+   \       0x16   0x....'....        BL       HAL_Printf
+     37                      HAL_Printf("Payload: %.*s\n", topic_info->payload_len, topic_info->payload);
+   \       0x1A   0x6922             LDR      R2,[R4, #+16]
+   \       0x1C   0x68A1             LDR      R1,[R4, #+8]
+   \       0x1E   0x....             LDR.N    R0,??DataTable5_5
+   \       0x20   0x....'....        BL       HAL_Printf
+     38                      HAL_Printf("\n");
+   \       0x24   0x....             ADR.N    R0,??DataTable5  ;; "\n"
+   \       0x26   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x2A   0x....'....        B.W      HAL_Printf
+     39                      break;
+     40                  default:
+     41                      break;
+     42              }
+     43          }
+   \                     ??example_message_arrive_0: (+1)
+   \       0x2E   0xBD10             POP      {R4,PC}          ;; return
+     44          
+
+   \                                 In section .text, align 2, keep-with-next
+     45          int example_subscribe(void *handle)
+     46          {
+   \                     example_subscribe: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0xB08E             SUB      SP,SP,#+56
+   \        0x4   0x4604             MOV      R4,R0
+     47              int res = 0;
+     48              char product_key[IOTX_PRODUCT_KEY_LEN] = {0};
+   \        0x6   0xA809             ADD      R0,SP,#+36
+   \        0x8   0x2114             MOVS     R1,#+20
+   \        0xA   0x....'....        BL       __aeabi_memclr4
+     49              char device_name[IOTX_DEVICE_NAME_LEN] = {0};
+   \        0xE   0xA801             ADD      R0,SP,#+4
+   \       0x10   0x2120             MOVS     R1,#+32
+   \       0x12   0x....'....        BL       __aeabi_memclr4
+     50              const char *fmt = "/%s/%s/user/get";
+   \       0x16   0x....             LDR.N    R5,??DataTable5_6
+     51              char *topic = NULL;
+     52              int topic_len = 0;
+     53          
+     54              HAL_GetProductKey(product_key);
+   \       0x18   0xA809             ADD      R0,SP,#+36
+   \       0x1A   0x....'....        BL       HAL_GetProductKey
+     55              HAL_GetDeviceName(device_name);
+   \       0x1E   0xA801             ADD      R0,SP,#+4
+   \       0x20   0x....'....        BL       HAL_GetDeviceName
+     56          
+     57              topic_len = strlen(fmt) + strlen(product_key) + strlen(device_name) + 1;
+   \       0x24   0x4628             MOV      R0,R5
+   \       0x26   0x....'....        BL       strlen
+   \       0x2A   0x4606             MOV      R6,R0
+   \       0x2C   0xA809             ADD      R0,SP,#+36
+   \       0x2E   0x....'....        BL       strlen
+   \       0x32   0x1986             ADDS     R6,R0,R6
+   \       0x34   0xA801             ADD      R0,SP,#+4
+   \       0x36   0x....'....        BL       strlen
+   \       0x3A   0x1986             ADDS     R6,R0,R6
+   \       0x3C   0x1C76             ADDS     R6,R6,#+1
+     58              if (topic_len > CONFIG_MQTT_TOPIC_MAXLEN) {
+   \       0x3E   0x2E81             CMP      R6,#+129
+   \       0x40   0xDB05             BLT.N    ??example_subscribe_0
+     59                  HAL_Printf("topic too long\n");
+   \       0x42   0x....             LDR.N    R0,??DataTable5_7
+   \       0x44   0x....'....        BL       HAL_Printf
+     60                  return -1;
+   \       0x48   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x4C   0xE01E             B.N      ??example_subscribe_1
+     61              }
+     62              topic = g_topic_name;
+   \                     ??example_subscribe_0: (+1)
+   \       0x4E   0x....             LDR.N    R7,??DataTable5_8
+     63              memset(topic, 0, CONFIG_MQTT_TOPIC_MAXLEN);
+   \       0x50   0x2200             MOVS     R2,#+0
+   \       0x52   0x2180             MOVS     R1,#+128
+   \       0x54   0x4638             MOV      R0,R7
+   \       0x56   0x....'....        BL       __aeabi_memset
+     64              HAL_Snprintf(topic, topic_len, fmt, product_key, device_name);
+   \       0x5A   0xA801             ADD      R0,SP,#+4
+   \       0x5C   0x9000             STR      R0,[SP, #+0]
+   \       0x5E   0xAB09             ADD      R3,SP,#+36
+   \       0x60   0x462A             MOV      R2,R5
+   \       0x62   0x4631             MOV      R1,R6
+   \       0x64   0x4638             MOV      R0,R7
+   \       0x66   0x....'....        BL       HAL_Snprintf
+     65          
+     66              res = IOT_MQTT_Subscribe(handle, topic, IOTX_MQTT_QOS0, example_message_arrive, NULL);
+     67              if (res < 0) {
+   \       0x6A   0x2000             MOVS     R0,#+0
+   \       0x6C   0x9000             STR      R0,[SP, #+0]
+   \       0x6E   0x....             LDR.N    R3,??DataTable5_9
+   \       0x70   0x4602             MOV      R2,R0
+   \       0x72   0x4639             MOV      R1,R7
+   \       0x74   0x4620             MOV      R0,R4
+   \       0x76   0x....'....        BL       IOT_MQTT_Subscribe
+   \       0x7A   0x2800             CMP      R0,#+0
+   \       0x7C   0xD505             BPL.N    ??example_subscribe_2
+     68                  HAL_Printf("subscribe failed\n");
+   \       0x7E   0x....             LDR.N    R0,??DataTable5_10
+   \       0x80   0x....'....        BL       HAL_Printf
+     69                  return -1;
+   \       0x84   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x88   0xE000             B.N      ??example_subscribe_1
+     70              }
+     71          
+     72              return 0;
+   \                     ??example_subscribe_2: (+1)
+   \       0x8A   0x2000             MOVS     R0,#+0
+   \                     ??example_subscribe_1: (+1)
+   \       0x8C   0xB00F             ADD      SP,SP,#+60
+   \       0x8E   0xBDF0             POP      {R4-R7,PC}       ;; return
+     73          }
+     74          
+
+   \                                 In section .text, align 2, keep-with-next
+     75          int example_publish(void *handle)
+     76          {
+   \                     example_publish: (+1)
+   \        0x0   0xE92D 0x41F8      PUSH     {R3-R8,LR}
+   \        0x4   0xB093             SUB      SP,SP,#+76
+   \        0x6   0x4604             MOV      R4,R0
+     77              int res = 0;
+     78              iotx_mqtt_topic_info_t topic_msg;
+     79              char product_key[IOTX_PRODUCT_KEY_LEN] = {0};
+   \        0x8   0xA80E             ADD      R0,SP,#+56
+   \        0xA   0x2114             MOVS     R1,#+20
+   \        0xC   0x....'....        BL       __aeabi_memclr4
+     80              char device_name[IOTX_DEVICE_NAME_LEN] = {0};
+   \       0x10   0xA806             ADD      R0,SP,#+24
+   \       0x12   0x2120             MOVS     R1,#+32
+   \       0x14   0x....'....        BL       __aeabi_memclr4
+     81              const char *fmt = "/%s/%s/user/get";
+   \       0x18   0x....             LDR.N    R7,??DataTable5_6
+     82              char *topic = NULL;
+     83              int topic_len = 0;
+     84              char *payload = "hello,world";
+   \       0x1A   0x....             LDR.N    R6,??DataTable5_11
+     85          
+     86              HAL_GetProductKey(product_key);
+   \       0x1C   0xA80E             ADD      R0,SP,#+56
+   \       0x1E   0x....'....        BL       HAL_GetProductKey
+     87              HAL_GetDeviceName(device_name);
+   \       0x22   0xA806             ADD      R0,SP,#+24
+   \       0x24   0x....'....        BL       HAL_GetDeviceName
+     88          
+     89              topic_len = strlen(fmt) + strlen(product_key) + strlen(device_name) + 1;
+   \       0x28   0x4638             MOV      R0,R7
+   \       0x2A   0x....'....        BL       strlen
+   \       0x2E   0x4680             MOV      R8,R0
+   \       0x30   0xA80E             ADD      R0,SP,#+56
+   \       0x32   0x....'....        BL       strlen
+   \       0x36   0x4480             ADD      R8,R0,R8
+   \       0x38   0xA806             ADD      R0,SP,#+24
+   \       0x3A   0x....'....        BL       strlen
+   \       0x3E   0x4480             ADD      R8,R0,R8
+   \       0x40   0xF108 0x0801      ADD      R8,R8,#+1
+     90              if (topic_len > CONFIG_MQTT_TOPIC_MAXLEN) {
+   \       0x44   0xF1B8 0x0F81      CMP      R8,#+129
+   \       0x48   0xDB05             BLT.N    ??example_publish_0
+     91                  HAL_Printf("topic too long\n");
+   \       0x4A   0x....             LDR.N    R0,??DataTable5_7
+   \       0x4C   0x....'....        BL       HAL_Printf
+     92                  return -1;
+   \       0x50   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x54   0xE02A             B.N      ??example_publish_1
+     93              }
+     94              topic = g_topic_name;
+   \                     ??example_publish_0: (+1)
+   \       0x56   0x....             LDR.N    R5,??DataTable5_8
+     95              memset(topic, 0, CONFIG_MQTT_TOPIC_MAXLEN);
+   \       0x58   0x2200             MOVS     R2,#+0
+   \       0x5A   0x2180             MOVS     R1,#+128
+   \       0x5C   0x4628             MOV      R0,R5
+   \       0x5E   0x....'....        BL       __aeabi_memset
+     96              HAL_Snprintf(topic, topic_len, fmt, product_key, device_name);
+   \       0x62   0xA806             ADD      R0,SP,#+24
+   \       0x64   0x9000             STR      R0,[SP, #+0]
+   \       0x66   0xAB0E             ADD      R3,SP,#+56
+   \       0x68   0x463A             MOV      R2,R7
+   \       0x6A   0x4641             MOV      R1,R8
+   \       0x6C   0x4628             MOV      R0,R5
+   \       0x6E   0x....'....        BL       HAL_Snprintf
+     97          
+     98          
+     99              memset(&topic_msg, 0x0, sizeof(iotx_mqtt_topic_info_t));
+   \       0x72   0x2200             MOVS     R2,#+0
+   \       0x74   0x2114             MOVS     R1,#+20
+   \       0x76   0xA801             ADD      R0,SP,#+4
+   \       0x78   0x....'....        BL       __aeabi_memset4
+    100              topic_msg.qos = IOTX_MQTT_QOS0;
+   \       0x7C   0x2000             MOVS     R0,#+0
+   \       0x7E   0xF8AD 0x0006      STRH     R0,[SP, #+6]
+    101              topic_msg.retain = 0;
+   \       0x82   0xF88D 0x0008      STRB     R0,[SP, #+8]
+    102              topic_msg.dup = 0;
+    103              topic_msg.payload = (void *)payload;
+   \       0x86   0x9605             STR      R6,[SP, #+20]
+    104              topic_msg.payload_len = strlen(payload);
+   \       0x88   0x4630             MOV      R0,R6
+   \       0x8A   0x....'....        BL       strlen
+   \       0x8E   0x9003             STR      R0,[SP, #+12]
+    105          
+    106              res = IOT_MQTT_Publish(handle, topic, &topic_msg);
+    107              if (res < 0) {
+   \       0x90   0xAA01             ADD      R2,SP,#+4
+   \       0x92   0x4629             MOV      R1,R5
+   \       0x94   0x4620             MOV      R0,R4
+   \       0x96   0x....'....        BL       IOT_MQTT_Publish
+   \       0x9A   0x2800             CMP      R0,#+0
+   \       0x9C   0xD505             BPL.N    ??example_publish_2
+    108                  HAL_Printf("publish failed\n");
+   \       0x9E   0x....             LDR.N    R0,??DataTable5_12
+   \       0xA0   0x....'....        BL       HAL_Printf
+    109                  return -1;
+   \       0xA4   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xA8   0xE000             B.N      ??example_publish_1
+    110              }
+    111          
+    112              return 0;
+   \                     ??example_publish_2: (+1)
+   \       0xAA   0x2000             MOVS     R0,#+0
+   \                     ??example_publish_1: (+1)
+   \       0xAC   0xB014             ADD      SP,SP,#+80
+   \       0xAE   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    113          }
+    114          
+
+   \                                 In section .text, align 2, keep-with-next
+    115          void example_event_handle(void *pcontext, void *pclient, iotx_mqtt_event_msg_pt msg)
+    116          {
+    117              HAL_Printf("msg->event_type : %d\n", msg->event_type);
+   \                     example_event_handle: (+1)
+   \        0x0   0x7811             LDRB     R1,[R2, #+0]
+   \        0x2   0x....             LDR.N    R0,??DataTable5_13
+   \        0x4   0x....'....        B.W      HAL_Printf
+    118          }
+    119          
+    120          
+    121          
+    122          
+    123          /* Task priorities. */
+    124          #define mqtt_runTASKPRIORITY (5 - 1)
+
+   \                                 In section .text, align 2, keep-with-next
+    125          static void mqtt_task(void *params){
+   \                     mqtt_task: (+1)
+   \        0x0   0xB518             PUSH     {R3,R4,LR}
+   \        0x2   0xF5AD 0x7D1F      SUB      SP,SP,#+636
+    126            void       *pclient = NULL;
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8   0x9000             STR      R0,[SP, #+0]
+    127              int         res = 0;
+    128              int         loop_cnt = 0;
+   \        0xA   0x4604             MOV      R4,R0
+    129          
+    130              iotx_mqtt_region_types_t    region = IOTX_CLOUD_REGION_SHANGHAI;
+    131              iotx_sign_mqtt_t            sign_mqtt;
+    132              iotx_dev_meta_info_t        meta;
+    133              iotx_mqtt_param_t           mqtt_params;
+    134          
+    135          #ifdef ATM_ENABLED
+    136          	if (IOT_ATM_Init() < 0) {
+   \        0xC   0x....'....        BL       IOT_ATM_Init
+   \       0x10   0x2800             CMP      R0,#+0
+   \       0x12   0xD502             BPL.N    ??mqtt_task_0
+    137          		HAL_Printf("IOT ATM init failed!\n");
+   \       0x14   0x....             LDR.N    R0,??DataTable5_14
+   \       0x16   0x....'....        BL       HAL_Printf
+    138          	}
+    139          #endif
+    140          
+    141          
+    142          
+    143              HAL_Printf("mqtt example\n");
+   \                     ??mqtt_task_0: (+1)
+   \       0x1A   0x....             LDR.N    R0,??DataTable5_15
+   \       0x1C   0x....'....        BL       HAL_Printf
+    144              if(!HAL_Wifi_Connected()){
+                         ^
+Warning[Pe223]: function "HAL_Wifi_Connected" declared implicitly
+   \       0x20   0x....'....        BL       HAL_Wifi_Connected
+   \       0x24   0x2800             CMP      R0,#+0
+   \       0x26   0xD10F             BNE.N    ??mqtt_task_1
+    145            	HAL_Printf("Wifi not connected, join the AP first\r\n");
+   \       0x28   0x....             LDR.N    R0,??DataTable5_16
+   \       0x2A   0x....'....        BL       HAL_Printf
+    146          	HAL_SleepMs(1000);
+   \       0x2E   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x32   0x....'....        BL       HAL_SleepMs
+   \       0x36   0xE003             B.N      ??mqtt_task_2
+    147              while(!HAL_Wifi_Connected()){
+    148          	  HAL_SleepMs(500);
+   \                     ??mqtt_task_3: (+1)
+   \       0x38   0xF44F 0x70FA      MOV      R0,#+500
+   \       0x3C   0x....'....        BL       HAL_SleepMs
+    149            	}
+   \                     ??mqtt_task_2: (+1)
+   \       0x40   0x....'....        BL       HAL_Wifi_Connected
+   \       0x44   0x2800             CMP      R0,#+0
+   \       0x46   0xD0F7             BEQ.N    ??mqtt_task_3
+    150            }
+    151          
+    152              memset(&meta, 0, sizeof(iotx_dev_meta_info_t));
+   \                     ??mqtt_task_1: (+1)
+   \       0x48   0x4622             MOV      R2,R4
+   \       0x4A   0x21B8             MOVS     R1,#+184
+   \       0x4C   0xA80E             ADD      R0,SP,#+56
+   \       0x4E   0x....'....        BL       __aeabi_memset4
+    153              HAL_GetProductKey(meta.product_key);
+   \       0x52   0xA80E             ADD      R0,SP,#+56
+   \       0x54   0x....'....        BL       HAL_GetProductKey
+    154              HAL_GetDeviceName(meta.device_name);
+   \       0x58   0xF10D 0x008E      ADD      R0,SP,#+142
+   \       0x5C   0x....'....        BL       HAL_GetDeviceName
+    155              HAL_GetDeviceSecret(meta.device_secret);
+   \       0x60   0xF10D 0x00AF      ADD      R0,SP,#+175
+   \       0x64   0x....'....        BL       HAL_GetDeviceSecret
+    156          
+    157              memset(&sign_mqtt, 0x0, sizeof(iotx_sign_mqtt_t));
+   \       0x68   0x4622             MOV      R2,R4
+   \       0x6A   0xF44F 0x71C6      MOV      R1,#+396
+   \       0x6E   0xA83C             ADD      R0,SP,#+240
+   \       0x70   0x....'....        BL       __aeabi_memset4
+    158          
+    159              if (IOT_Sign_MQTT(region, &meta, &sign_mqtt) < 0) {
+   \       0x74   0xAA3C             ADD      R2,SP,#+240
+   \       0x76   0xA90E             ADD      R1,SP,#+56
+   \       0x78   0x4620             MOV      R0,R4
+   \       0x7A   0x....'....        BL       IOT_Sign_MQTT
+   \       0x7E   0x2800             CMP      R0,#+0
+   \       0x80   0xD500             BPL.N    ??mqtt_task_4
+    160                  while(1);
+   \                     ??mqtt_task_5: (+1)
+   \       0x82   0xE7FE             B.N      ??mqtt_task_5
+    161              }
+    162          
+    163          #if 0   /* Uncomment this to show more information */
+    164              HAL_Printf("sign_mqtt.hostname: %s\n", sign_mqtt.hostname);
+    165              HAL_Printf("sign_mqtt.port    : %d\n", sign_mqtt.port);
+    166              HAL_Printf("sign_mqtt.username: %s\n", sign_mqtt.username);
+    167              HAL_Printf("sign_mqtt.password: %s\n", sign_mqtt.password);
+    168              HAL_Printf("sign_mqtt.clientid: %s\n", sign_mqtt.clientid);
+    169          #endif
+    170          
+    171              /* Initialize MQTT parameter */
+    172              memset(&mqtt_params, 0x0, sizeof(mqtt_params));
+   \                     ??mqtt_task_4: (+1)
+   \       0x84   0x4622             MOV      R2,R4
+   \       0x86   0x2134             MOVS     R1,#+52
+   \       0x88   0xA801             ADD      R0,SP,#+4
+   \       0x8A   0x....'....        BL       __aeabi_memset4
+    173          
+    174              mqtt_params.port = sign_mqtt.port;
+   \       0x8E   0xF8BD 0x0130      LDRH     R0,[SP, #+304]
+   \       0x92   0xF8AD 0x0004      STRH     R0,[SP, #+4]
+    175              mqtt_params.host = sign_mqtt.hostname;
+   \       0x96   0xA83C             ADD      R0,SP,#+240
+   \       0x98   0x9002             STR      R0,[SP, #+8]
+    176              mqtt_params.client_id = sign_mqtt.clientid;
+   \       0x9A   0xF50D 0x7099      ADD      R0,SP,#+306
+   \       0x9E   0x9003             STR      R0,[SP, #+12]
+    177              mqtt_params.username = sign_mqtt.username;
+   \       0xA0   0xF50D 0x70FD      ADD      R0,SP,#+506
+   \       0xA4   0x9004             STR      R0,[SP, #+16]
+    178              mqtt_params.password = sign_mqtt.password;
+   \       0xA6   0xA88E             ADD      R0,SP,#+568
+   \       0xA8   0x1C80             ADDS     R0,R0,#+2
+   \       0xAA   0x9005             STR      R0,[SP, #+20]
+    179          
+    180              mqtt_params.request_timeout_ms = 2000;
+   \       0xAC   0xF44F 0x60FA      MOV      R0,#+2000
+   \       0xB0   0x9008             STR      R0,[SP, #+32]
+    181              mqtt_params.clean_session = 0;
+   \       0xB2   0x4620             MOV      R0,R4
+   \       0xB4   0xF88D 0x001C      STRB     R0,[SP, #+28]
+    182              mqtt_params.keepalive_interval_ms = 60000;
+   \       0xB8   0xF64E 0x2060      MOVW     R0,#+60000
+   \       0xBC   0x9009             STR      R0,[SP, #+36]
+    183              mqtt_params.read_buf_size = 1024;
+   \       0xBE   0xF44F 0x6080      MOV      R0,#+1024
+   \       0xC2   0x900B             STR      R0,[SP, #+44]
+    184              mqtt_params.write_buf_size = 1024;
+   \       0xC4   0x900A             STR      R0,[SP, #+40]
+    185          
+    186              mqtt_params.handle_event.h_fp = example_event_handle;
+   \       0xC6   0x....             LDR.N    R0,??DataTable5_17
+   \       0xC8   0x900C             STR      R0,[SP, #+48]
+    187              mqtt_params.handle_event.pcontext = NULL;
+   \       0xCA   0x4620             MOV      R0,R4
+   \       0xCC   0x900D             STR      R0,[SP, #+52]
+    188          
+    189              pclient = IOT_MQTT_Construct(&mqtt_params);
+   \       0xCE   0xA801             ADD      R0,SP,#+4
+   \       0xD0   0x....'....        BL       IOT_MQTT_Construct
+   \       0xD4   0x9000             STR      R0,[SP, #+0]
+    190              if (NULL == pclient) {
+   \       0xD6   0x2800             CMP      R0,#+0
+   \       0xD8   0xD10C             BNE.N    ??mqtt_task_6
+    191                  EXAMPLE_TRACE("MQTT construct failed");
+   \       0xDA   0x22BF             MOVS     R2,#+191
+   \       0xDC   0x....             LDR.N    R1,??DataTable5_18
+   \       0xDE   0x....             LDR.N    R0,??DataTable5_19
+   \       0xE0   0x....'....        BL       HAL_Printf
+   \       0xE4   0x....             LDR.N    R0,??DataTable5_20
+   \       0xE6   0x....'....        BL       HAL_Printf
+   \       0xEA   0x....             ADR.N    R1,??DataTable5_1  ;; 0x0D, 0x0A, 0x00, 0x00
+   \       0xEC   0x....             ADR.N    R0,??DataTable5_2  ;; 0x25, 0x73, 0x00, 0x00
+   \       0xEE   0x....'....        BL       HAL_Printf
+    192                  while(1);
+   \                     ??mqtt_task_7: (+1)
+   \       0xF2   0xE7FE             B.N      ??mqtt_task_7
+    193              }
+    194          
+    195              res = example_subscribe(pclient);
+    196              if (res < 0) {
+   \                     ??mqtt_task_6: (+1)
+   \       0xF4   0x....'....        BL       example_subscribe
+   \       0xF8   0x2800             CMP      R0,#+0
+   \       0xFA   0xD503             BPL.N    ??mqtt_task_8
+    197                  IOT_MQTT_Destroy(&pclient);
+   \       0xFC   0x4668             MOV      R0,SP
+   \       0xFE   0x....'....        BL       IOT_MQTT_Destroy
+    198                  while(1);
+   \                     ??mqtt_task_9: (+1)
+   \      0x102   0xE7FE             B.N      ??mqtt_task_9
+    199              }
+    200          
+    201              while (1) {
+    202                  if (0 == loop_cnt % 20) {
+   \                     ??mqtt_task_8: (+1)
+   \      0x104   0x2014             MOVS     R0,#+20
+   \      0x106   0xFB94 0xF0F0      SDIV     R0,R4,R0
+   \      0x10A   0xEB00 0x0180      ADD      R1,R0,R0, LSL #+2
+   \      0x10E   0xEBB4 0x0081      SUBS     R0,R4,R1, LSL #+2
+   \      0x112   0xD102             BNE.N    ??mqtt_task_10
+    203                      example_publish(pclient);
+   \      0x114   0x9800             LDR      R0,[SP, #+0]
+   \      0x116   0x....'....        BL       example_publish
+    204                  }
+    205          
+    206                  IOT_MQTT_Yield(pclient, 200);
+   \                     ??mqtt_task_10: (+1)
+   \      0x11A   0x21C8             MOVS     R1,#+200
+   \      0x11C   0x9800             LDR      R0,[SP, #+0]
+   \      0x11E   0x....'....        BL       IOT_MQTT_Yield
+    207          
+    208                  loop_cnt += 1;
+   \      0x122   0x1C64             ADDS     R4,R4,#+1
+   \      0x124   0xE7EE             B.N      ??mqtt_task_8
+    209              }
+    210          
+    211              while(1);
+                     ^
+Warning[Pe128]: loop is not reachable
+    212            
+    213            
+    214          }
+
+   \                                 In section .text, align 2, keep-with-next
+    215          void mqtt_init(void ){
+   \                     mqtt_init: (+1)
+   \        0x0   0xB5E0             PUSH     {R5-R7,LR}
+    216          
+    217          	xTaskCreate(mqtt_task, "mqtt_run", 2048 + 10, NULL, mqtt_runTASKPRIORITY, NULL);
+                 	^
+Warning[Pe223]: function "xTaskCreate" declared implicitly
+   \        0x2   0x2000             MOVS     R0,#+0
+   \        0x4   0x9001             STR      R0,[SP, #+4]
+   \        0x6   0x2004             MOVS     R0,#+4
+   \        0x8   0x9000             STR      R0,[SP, #+0]
+   \        0xA   0x2300             MOVS     R3,#+0
+   \        0xC   0xF640 0x020A      MOVW     R2,#+2058
+   \       0x10   0x....             LDR.N    R1,??DataTable5_21
+   \       0x12   0x....             LDR.N    R0,??DataTable5_22
+   \       0x14   0x....'....        BL       xTaskCreate
+    218          
+    219          }
+   \       0x18   0xBD07             POP      {R0-R2,PC}       ;; return
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5:
+   \        0x0   0x0A 0x00          DC8      "\n",0x0,0x0
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_1:
+   \        0x0   0x0D 0x0A          DC8      0x0D, 0x0A, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_2:
+   \        0x0   0x25 0x73          DC8      0x25, 0x73, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_3:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_4:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_5:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_6:
+   \        0x0   0x....'....        DC32     ?_6
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_7:
+   \        0x0   0x....'....        DC32     ?_7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_8:
+   \        0x0   0x....'....        DC32     g_topic_name
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_9:
+   \        0x0   0x....'....        DC32     example_message_arrive
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_10:
+   \        0x0   0x....'....        DC32     ?_8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_11:
+   \        0x0   0x....'....        DC32     ?_11
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_12:
+   \        0x0   0x....'....        DC32     ?_12
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_13:
+   \        0x0   0x....'....        DC32     ?_13
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_14:
+   \        0x0   0x....'....        DC32     ?_14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_15:
+   \        0x0   0x....'....        DC32     ?_15
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_16:
+   \        0x0   0x....'....        DC32     ?_16
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_17:
+   \        0x0   0x....'....        DC32     example_event_handle
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_18:
+   \        0x0   0x....'....        DC32     `mqtt_task::__func__`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_19:
+   \        0x0   0x....'....        DC32     ?_17
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_20:
+   \        0x0   0x....'....        DC32     ?_18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_21:
+   \        0x0   0x....'....        DC32     ?_21
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_22:
+   \        0x0   0x....'....        DC32     mqtt_task
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x4D 0x65          DC8 "Message Arrived: \012"
+   \              0x73 0x73    
+   \              0x61 0x67    
+   \              0x65 0x20    
+   \              0x41 0x72    
+   \              0x72 0x69    
+   \              0x76 0x65    
+   \              0x64 0x3A    
+   \              0x20 0x0A    
+   \              0x00         
+   \       0x13   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x54 0x6F          DC8 "Topic  : %.*s\012"
+   \              0x70 0x69    
+   \              0x63 0x20    
+   \              0x20 0x3A    
+   \              0x20 0x25    
+   \              0x2E 0x2A    
+   \              0x73 0x0A    
+   \              0x00         
+   \        0xF   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x50 0x61          DC8 "Payload: %.*s\012"
+   \              0x79 0x6C    
+   \              0x6F 0x61    
+   \              0x64 0x3A    
+   \              0x20 0x25    
+   \              0x2E 0x2A    
+   \              0x73 0x0A    
+   \              0x00         
+   \        0xF   0x00               DC8 0
+
+   \                                 In section .rodata, align 2
+   \        0x0   0x0A 0x00          DC8 "\012"
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_6:
+   \        0x0   0x2F 0x25          DC8 "/%s/%s/user/get"
+   \              0x73 0x2F    
+   \              0x25 0x73    
+   \              0x2F 0x75    
+   \              0x73 0x65    
+   \              0x72 0x2F    
+   \              0x67 0x65    
+   \              0x74 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_7:
+   \        0x0   0x74 0x6F          DC8 "topic too long\012"
+   \              0x70 0x69    
+   \              0x63 0x20    
+   \              0x74 0x6F    
+   \              0x6F 0x20    
+   \              0x6C 0x6F    
+   \              0x6E 0x67    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_8:
+   \        0x0   0x73 0x75          DC8 "subscribe failed\012"
+   \              0x62 0x73    
+   \              0x63 0x72    
+   \              0x69 0x62    
+   \              0x65 0x20    
+   \              0x66 0x61    
+   \              0x69 0x6C    
+   \              0x65 0x64    
+   \              0x0A 0x00    
+   \       0x12   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+   \       0x17   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_11:
+   \        0x0   0x68 0x65          DC8 "hello,world"
+   \              0x6C 0x6C    
+   \              0x6F 0x2C    
+   \              0x77 0x6F    
+   \              0x72 0x6C    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_12:
+   \        0x0   0x70 0x75          DC8 "publish failed\012"
+   \              0x62 0x6C    
+   \              0x69 0x73    
+   \              0x68 0x20    
+   \              0x66 0x61    
+   \              0x69 0x6C    
+   \              0x65 0x64    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_13:
+   \        0x0   0x6D 0x73          DC8 "msg->event_type : %d\012"
+   \              0x67 0x2D    
+   \              0x3E 0x65    
+   \              0x76 0x65    
+   \              0x6E 0x74    
+   \              0x5F 0x74    
+   \              0x79 0x70    
+   \              0x65 0x20    
+   \              0x3A 0x20    
+   \              0x25 0x64    
+   \              0x0A 0x00    
+   \       0x16   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_14:
+   \        0x0   0x49 0x4F          DC8 "IOT ATM init failed!\012"
+   \              0x54 0x20    
+   \              0x41 0x54    
+   \              0x4D 0x20    
+   \              0x69 0x6E    
+   \              0x69 0x74    
+   \              0x20 0x66    
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x21    
+   \              0x0A 0x00    
+   \       0x16   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_15:
+   \        0x0   0x6D 0x71          DC8 "mqtt example\012"
+   \              0x74 0x74    
+   \              0x20 0x65    
+   \              0x78 0x61    
+   \              0x6D 0x70    
+   \              0x6C 0x65    
+   \              0x0A 0x00    
+   \        0xE   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_16:
+   \        0x0   0x57 0x69          DC8 "Wifi not connected, join the AP first\015\012"
+   \              0x66 0x69    
+   \              0x20 0x6E    
+   \              0x6F 0x74    
+   \              0x20 0x63    
+   \              0x6F 0x6E    
+   \              0x6E 0x65    
+   \              0x63 0x74    
+   \              0x65 0x64    
+   \              0x2C 0x20    
+   \              0x6A 0x6F    
+   \              0x69 0x6E    
+   \              0x20 0x74    
+   \              0x68 0x65    
+   \              0x20 0x41    
+   \              0x50 0x20    
+   \              0x66 0x69    
+   \              0x72 0x73    
+   \              0x74 0x0D    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_17:
+   \        0x0   0x25 0x73          DC8 "%s|%03d :: "
+   \              0x7C 0x25    
+   \              0x30 0x33    
+   \              0x64 0x20    
+   \              0x3A 0x3A    
+   \              0x20 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_18:
+   \        0x0   0x4D 0x51          DC8 "MQTT construct failed"
+   \              0x54 0x54    
+   \              0x20 0x63    
+   \              0x6F 0x6E    
+   \              0x73 0x74    
+   \              0x72 0x75    
+   \              0x63 0x74    
+   \              0x20 0x66    
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x00    
+   \       0x16   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x25 0x73          DC8 "%s"
+   \              0x00         
+   \        0x3   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x0D 0x0A          DC8 "\015\012"
+   \              0x00         
+   \        0x3   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_21:
+   \        0x0   0x6D 0x71          DC8 "mqtt_run"
+   \              0x74 0x74    
+   \              0x5F 0x72    
+   \              0x75 0x6E    
+   \              0x00         
+   \        0x9   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+    220          
+    221          /*
+    222           *  NOTE: About demo topic of /${productKey}/${deviceName}/user/get
+    223           *
+    224           *  The demo device has been configured in IoT console (https://iot.console.aliyun.com)
+    225           *  so that its /${productKey}/${deviceName}/user/get can both be subscribed and published
+    226           *
+    227           *  We design this to completely demostrate publish & subscribe process, in this way
+    228           *  MQTT client can receive original packet sent by itself
+    229           *
+    230           *  For new devices created by yourself, pub/sub privilege also required to be granted
+    231           *  to its /${productKey}/${deviceName}/user/get to run whole example
+    232           */
+    233          #if 0
+    234          /* Global Variable for VFS DEBUG Output */
+    235          
+    236          
+    237          int main(int argc, char *argv[])
+    238          {
+    239              void       *pclient = NULL;
+    240              int         res = 0;
+    241              int         loop_cnt = 0;
+    242          
+    243              iotx_mqtt_region_types_t    region = IOTX_CLOUD_REGION_SHANGHAI;
+    244              iotx_sign_mqtt_t            sign_mqtt;
+    245              iotx_dev_meta_info_t        meta;
+    246              iotx_mqtt_param_t           mqtt_params;
+    247          	/* Init board hardware. */
+    248          	BOARD_ConfigMPU();
+    249          	BOARD_InitPins();
+    250          	BOARD_BootClockRUN();
+    251          	BOARD_InitDebugConsole();
+    252          	HAL_Printf("boot from here.\r\n");
+    253          	 
+    254          	HAL_AT_Uart_Init(&uart_0);
+    255          
+    256          #ifdef ATM_ENABLED
+    257              if (IOT_ATM_Init() < 0) {
+    258                  HAL_Printf("IOT ATM init failed!\n");
+    259                  return -1;
+    260              }
+    261          #endif
+    262              HAL_Printf("mqtt example\n");
+    263          
+    264              memset(&meta, 0, sizeof(iotx_dev_meta_info_t));
+    265              HAL_GetProductKey(meta.product_key);
+    266              HAL_GetDeviceName(meta.device_name);
+    267              HAL_GetDeviceSecret(meta.device_secret);
+    268          
+    269              memset(&sign_mqtt, 0x0, sizeof(iotx_sign_mqtt_t));
+    270          
+    271              if (IOT_Sign_MQTT(region, &meta, &sign_mqtt) < 0) {
+    272                  return -1;
+    273              }
+    274          
+    275          #if 0   /* Uncomment this to show more information */
+    276              HAL_Printf("sign_mqtt.hostname: %s\n", sign_mqtt.hostname);
+    277              HAL_Printf("sign_mqtt.port    : %d\n", sign_mqtt.port);
+    278              HAL_Printf("sign_mqtt.username: %s\n", sign_mqtt.username);
+    279              HAL_Printf("sign_mqtt.password: %s\n", sign_mqtt.password);
+    280              HAL_Printf("sign_mqtt.clientid: %s\n", sign_mqtt.clientid);
+    281          #endif
+    282          
+    283              /* Initialize MQTT parameter */
+    284              memset(&mqtt_params, 0x0, sizeof(mqtt_params));
+    285          
+    286              mqtt_params.port = sign_mqtt.port;
+    287              mqtt_params.host = sign_mqtt.hostname;
+    288              mqtt_params.client_id = sign_mqtt.clientid;
+    289              mqtt_params.username = sign_mqtt.username;
+    290              mqtt_params.password = sign_mqtt.password;
+    291          
+    292              mqtt_params.request_timeout_ms = 2000;
+    293              mqtt_params.clean_session = 0;
+    294              mqtt_params.keepalive_interval_ms = 60000;
+    295              mqtt_params.read_buf_size = 1024;
+    296              mqtt_params.write_buf_size = 1024;
+    297          
+    298              mqtt_params.handle_event.h_fp = example_event_handle;
+    299              mqtt_params.handle_event.pcontext = NULL;
+    300          
+    301              pclient = IOT_MQTT_Construct(&mqtt_params);
+    302              if (NULL == pclient) {
+    303                  EXAMPLE_TRACE("MQTT construct failed");
+    304                  return -1;
+    305              }
+    306          
+    307              res = example_subscribe(pclient);
+    308              if (res < 0) {
+    309                  IOT_MQTT_Destroy(&pclient);
+    310                  return -1;
+    311              }
+    312          
+    313              while (1) {
+    314                  if (0 == loop_cnt % 20) {
+    315                      example_publish(pclient);
+    316                  }
+    317          
+    318                  IOT_MQTT_Yield(pclient, 200);
+    319          
+    320                  loop_cnt += 1;
+    321              }
+    322          
+    323              return 0;
+    324          }
+    325          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   example_event_handle
+         0   -> HAL_Printf
+       8   example_message_arrive
+         0   -> HAL_Printf
+         8   -> HAL_Printf
+     104   example_publish
+       104   -> HAL_GetDeviceName
+       104   -> HAL_GetProductKey
+       104   -> HAL_Printf
+       104   -> HAL_Snprintf
+       104   -> IOT_MQTT_Publish
+       104   -> __aeabi_memclr4
+       104   -> __aeabi_memset
+       104   -> __aeabi_memset4
+       104   -> strlen
+      80   example_subscribe
+        80   -> HAL_GetDeviceName
+        80   -> HAL_GetProductKey
+        80   -> HAL_Printf
+        80   -> HAL_Snprintf
+        80   -> IOT_MQTT_Subscribe
+        80   -> __aeabi_memclr4
+        80   -> __aeabi_memset
+        80   -> strlen
+      16   mqtt_init
+        16   -> xTaskCreate
+     648   mqtt_task
+       648   -> HAL_GetDeviceName
+       648   -> HAL_GetDeviceSecret
+       648   -> HAL_GetProductKey
+       648   -> HAL_Printf
+       648   -> HAL_SleepMs
+       648   -> HAL_Wifi_Connected
+       648   -> IOT_ATM_Init
+       648   -> IOT_MQTT_Construct
+       648   -> IOT_MQTT_Destroy
+       648   -> IOT_MQTT_Yield
+       648   -> IOT_Sign_MQTT
+       648   -> __aeabi_memset4
+       648   -> example_publish
+       648   -> example_subscribe
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_10
+       4  ??DataTable5_11
+       4  ??DataTable5_12
+       4  ??DataTable5_13
+       4  ??DataTable5_14
+       4  ??DataTable5_15
+       4  ??DataTable5_16
+       4  ??DataTable5_17
+       4  ??DataTable5_18
+       4  ??DataTable5_19
+       4  ??DataTable5_2
+       4  ??DataTable5_20
+       4  ??DataTable5_21
+       4  ??DataTable5_22
+       4  ??DataTable5_3
+       4  ??DataTable5_4
+       4  ??DataTable5_5
+       4  ??DataTable5_6
+       4  ??DataTable5_7
+       4  ??DataTable5_8
+       4  ??DataTable5_9
+      20  ?_0
+      16  ?_1
+      32  ?_10
+      12  ?_11
+      16  ?_12
+      24  ?_13
+      24  ?_14
+      16  ?_15
+      40  ?_16
+      12  ?_17
+      24  ?_18
+       4  ?_19
+      16  ?_2
+       4  ?_20
+      12  ?_21
+       2  ?_3
+      20  ?_4
+      32  ?_5
+      16  ?_6
+      16  ?_7
+      20  ?_8
+      20  ?_9
+       8  example_event_handle
+      48  example_message_arrive
+     178  example_publish
+     144  example_subscribe
+     128  g_topic_name
+      26  mqtt_init
+     294  mqtt_task
+      12  -- Other
+
+ 
+ 128 bytes in section .bss
+ 410 bytes in section .rodata
+ 790 bytes in section .text
+ 
+ 790 bytes of CODE  memory
+ 410 bytes of CONST memory
+ 128 bytes of DATA  memory
+
+Errors: none
+Warnings: 3

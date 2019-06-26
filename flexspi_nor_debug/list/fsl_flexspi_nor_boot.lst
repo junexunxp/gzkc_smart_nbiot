@@ -1,0 +1,154 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:40
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\xip\fsl_flexspi_nor_boot.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW575D.tmp
+#        (C:\Development\gzkc_smart_nbiot\xip\fsl_flexspi_nor_boot.c -D DEBUG
+#        -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\fsl_flexspi_nor_boot.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\fsl_flexspi_nor_boot.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\xip\fsl_flexspi_nor_boot.c
+      1          /*
+      2           * Copyright 2017 NXP
+      3           * All rights reserved.
+      4           *
+      5           * SPDX-License-Identifier: BSD-3-Clause
+      6           */
+      7          
+      8          #include "fsl_flexspi_nor_boot.h"
+      9          
+     10          /* Component ID definition, used by tools. */
+     11          #ifndef FSL_COMPONENT_ID
+     12          #define FSL_COMPONENT_ID "platform.drivers.xip_device"
+     13          #endif
+     14          
+     15          #if defined(XIP_BOOT_HEADER_ENABLE) && (XIP_BOOT_HEADER_ENABLE == 1)
+     16          #if defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__GNUC__)
+     17              __attribute__((section(".boot_hdr.ivt")))
+     18          #elif defined(__ICCARM__)
+     19          #pragma location=".boot_hdr.ivt"
+     20          #endif
+     21          /************************************* 
+     22           *  IVT Data 
+     23           *************************************/
+
+   \                                 In section .boot_hdr.ivt, align 4
+     24          const ivt image_vector_table = {
+   \                     image_vector_table:
+   \        0x0   0x4120'00D1        DC32 1092616401, __VECTOR_TABLE, 0, dcd_data, boot_data
+   \              0x....'....  
+   \              0x0000'0000  
+   \              0x....'....  
+   \              0x....'....  
+   \       0x14   0x....'....        DC32 image_vector_table, 0, 0
+   \              0x0000'0000  
+   \              0x0000'0000  
+     25            IVT_HEADER,                         /* IVT Header */
+     26            IMAGE_ENTRY_ADDRESS,                /* Image Entry Function */
+     27            IVT_RSVD,                           /* Reserved = 0 */
+     28            (uint32_t)DCD_ADDRESS,              /* Address where DCD information is stored */
+     29            (uint32_t)BOOT_DATA_ADDRESS,        /* Address where BOOT Data Structure is stored */
+     30            (uint32_t)&image_vector_table,      /* Pointer to IVT Self (absolute address */
+     31            (uint32_t)CSF_ADDRESS,              /* Address where CSF file is stored */
+     32            IVT_RSVD                            /* Reserved = 0 */
+     33          };
+     34          
+     35          #if defined(__CC_ARM) || defined(__ARMCC_VERSION) || defined(__GNUC__)
+     36              __attribute__((section(".boot_hdr.boot_data")))
+     37          #elif defined(__ICCARM__)
+     38          #pragma location=".boot_hdr.boot_data"
+     39          #endif
+     40          /************************************* 
+     41           *  Boot Data 
+     42           *************************************/
+
+   \                                 In section .boot_hdr.boot_data, align 4
+     43          const BOOT_DATA_T boot_data = {
+   \                     boot_data:
+   \        0x0   0x....'....        DC32 m_boot_hdr_conf_start, 67108864, 0, 4294967295
+   \              0x0400'0000  
+   \              0x0000'0000  
+   \              0xFFFF'FFFF  
+     44            FLASH_BASE,                 /* boot start location */
+     45            FLASH_SIZE,                 /* size */
+     46            PLUGIN_FLAG,                /* Plugin flag*/
+     47            0xFFFFFFFF  				  /* empty - extra data word */
+     48          };
+     49          #endif
+     50          
+     51          
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+      16  boot_data
+      32  image_vector_table
+
+ 
+ 16 bytes in section .boot_hdr.boot_data
+ 32 bytes in section .boot_hdr.ivt
+ 
+ 48 bytes of CONST memory
+
+Errors: none
+Warnings: none

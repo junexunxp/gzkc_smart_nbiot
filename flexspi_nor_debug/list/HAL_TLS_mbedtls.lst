@@ -1,0 +1,3130 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:46:21
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\tls\HAL_TLS_mbedtls.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWED90.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\tls\HAL_TLS_mbedtls.c
+#        -D DEBUG -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D
+#        XIP_BOOT_HEADER_ENABLE=1 -D CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS
+#        -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\HAL_TLS_mbedtls.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\HAL_TLS_mbedtls.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\tls\HAL_TLS_mbedtls.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          
+      6          
+      7          #include <stdio.h>
+      8          #include <string.h>
+      9          #include <stdlib.h>
+     10          #include <string.h>
+     11          #if defined(_PLATFORM_IS_LINUX_)
+     12              #include <sys/socket.h>
+     13              #include <netinet/in.h>
+     14              #include <arpa/inet.h>
+     15              #include <sys/types.h>
+     16              #include <netdb.h>
+     17              #include <signal.h>
+     18              #include <unistd.h>
+     19              #include <sys/time.h>
+     20          #endif
+     21          #include "infra_config.h"
+     22          #include "mbedtls/error.h"
+     23          #include "mbedtls/ssl.h"
+     24          #include "mbedtls/net.h"
+     25          #include "mbedtls/x509_crt.h"
+     26          #include "mbedtls/pk.h"
+     27          #include "mbedtls/debug.h"
+     28          #include "mbedtls/platform.h"
+     29          
+     30          #include "wrappers_defs.h"
+     31          #include "at_conn_mgmt.h"
+     32          
+     33          #define SEND_TIMEOUT_SECONDS                (10)
+     34          #define GUIDER_ONLINE_HOSTNAME              ("iot-auth.cn-shanghai.aliyuncs.com")
+     35          #define GUIDER_PRE_ADDRESS                  ("100.67.80.107")
+     36          
+     37          #ifndef CONFIG_MBEDTLS_DEBUG_LEVEL
+     38              #define CONFIG_MBEDTLS_DEBUG_LEVEL 0
+     39          #endif
+     40          
+     41          typedef struct _TLSDataParams {
+     42              mbedtls_ssl_context ssl;          /**< mbed TLS control context. */
+     43              mbedtls_net_context fd;           /**< mbed TLS network context. */
+     44              mbedtls_ssl_config conf;          /**< mbed TLS configuration context. */
+     45              mbedtls_x509_crt cacertl;         /**< mbed TLS CA certification. */
+     46              mbedtls_x509_crt clicert;         /**< mbed TLS Client certification. */
+     47              mbedtls_pk_context pkey;          /**< mbed TLS Client key. */
+     48          } TLSDataParams_t, *TLSDataParams_pt;
+     49          
+     50          void *HAL_Malloc(uint32_t size);
+     51          void HAL_Free(void *ptr);
+     52          
+
+   \                                 In section .bss, align 4
+     53          static unsigned int mbedtls_mem_used = 0;
+   \                     mbedtls_mem_used:
+   \        0x0                      DS8 4
+
+   \                                 In section .bss, align 4
+     54          static unsigned int mbedtls_max_mem_used = 0;
+   \                     mbedtls_max_mem_used:
+   \        0x0                      DS8 4
+
+   \                                 In section .data, align 4
+     55          static ssl_hooks_t g_ssl_hooks = {HAL_Malloc, HAL_Free};
+   \                     g_ssl_hooks:
+   \        0x0   0x....'....        DC32 HAL_Malloc, HAL_Free
+   \              0x....'....  
+     56          
+     57          #define MBEDTLS_MEM_INFO_MAGIC   0x12345678
+     58          
+     59          typedef struct {
+     60              int magic;
+     61              int size;
+     62          } mbedtls_mem_info_t;
+     63          
+     64          
+     65          
+     66          #ifndef NET_OPERATION_SYSTEM
+     67          
+
+   \                                 In section .text, align 2, keep-with-next
+     68          void mbedtls_net_init( mbedtls_net_context *ctx )
+     69          {
+     70              ctx->fd = -1;
+   \                     mbedtls_net_init: (+1)
+   \        0x0   0xF04F 0x31FF      MOV      R1,#-1
+   \        0x4   0x6001             STR      R1,[R0, #+0]
+     71          }
+   \        0x6   0x4770             BX       LR               ;; return
+     72          
+
+   \                                 In section .text, align 2, keep-with-next
+     73          int mbedtls_net_connect( mbedtls_net_context *ctx, const char *host, const char *port, int proto )
+     74          {
+   \                     mbedtls_net_connect: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0xB084             SUB      SP,SP,#+16
+   \        0x4   0x4604             MOV      R4,R0
+   \        0x6   0x460D             MOV      R5,R1
+   \        0x8   0x4616             MOV      R6,R2
+   \        0xA   0x461F             MOV      R7,R3
+     75          	int fd = 0;
+     76          	int rc = 0;
+     77          	char resultip[16];
+     78          
+     79          	HAL_Printf("establish mbedtls connection with server(host='%s', port=[%u])\n", host, port);
+                 	^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \        0xC   0x....'....        LDR.W    R0,??DataTable14_1
+   \       0x10   0x....'....        BL       HAL_Printf
+     80          	HAL_SleepMs(100);
+                 	^
+Warning[Pe223]: function "HAL_SleepMs" declared implicitly
+   \       0x14   0x2064             MOVS     R0,#+100
+   \       0x16   0x....'....        BL       HAL_SleepMs
+     81          	if ((rc = at_conn_getaddrinfo(host, resultip)) != 0) {
+   \       0x1A   0x4669             MOV      R1,SP
+   \       0x1C   0x4628             MOV      R0,R5
+   \       0x1E   0x....'....        BL       at_conn_getaddrinfo
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD009             BEQ.N    ??mbedtls_net_connect_0
+     82          		HAL_Printf("getaddrinfo error(%d), host = '%s', port = [%d]\n", rc, host, port);
+   \       0x26   0x4633             MOV      R3,R6
+   \       0x28   0x462A             MOV      R2,R5
+   \       0x2A   0x4601             MOV      R1,R0
+   \       0x2C   0x....'....        LDR.W    R0,??DataTable14_2
+   \       0x30   0x....'....        BL       HAL_Printf
+     83          		return( MBEDTLS_ERR_NET_UNKNOWN_HOST );
+   \       0x34   0xF06F 0x0051      MVN      R0,#+81
+   \       0x38   0xE036             B.N      ??mbedtls_net_connect_1
+     84          	}
+     85          	netconn_type_t type = ( proto == MBEDTLS_NET_PROTO_UDP ?
+     86                    					 NETCONN_INVALID : NETCONN_TCP );
+   \                     ??mbedtls_net_connect_0: (+1)
+   \       0x3A   0x2F01             CMP      R7,#+1
+   \       0x3C   0xD101             BNE.N    ??mbedtls_net_connect_2
+   \       0x3E   0x2000             MOVS     R0,#+0
+   \       0x40   0xE000             B.N      ??mbedtls_net_connect_3
+   \                     ??mbedtls_net_connect_2: (+1)
+   \       0x42   0x2001             MOVS     R0,#+1
+     87          	fd = at_conn_setup(type);
+   \                     ??mbedtls_net_connect_3: (+1)
+   \       0x44   0x....'....        BL       at_conn_setup
+   \       0x48   0x0005             MOVS     R5,R0
+     88          	if (fd < 0) {
+   \       0x4A   0xD506             BPL.N    ??mbedtls_net_connect_4
+     89                  HAL_Printf("create at conn error\n");
+   \       0x4C   0x....'....        LDR.W    R0,??DataTable14_3
+   \       0x50   0x....'....        BL       HAL_Printf
+     90                  return (uintptr_t)(-1);
+                                ^
+Warning[Pe068]: integer conversion resulted in a change of sign
+   \       0x54   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x58   0xE026             B.N      ??mbedtls_net_connect_1
+     91              }
+     92          	
+     93          	if (at_conn_start(fd, resultip, atoi(port)) == 0) {
+   \                     ??mbedtls_net_connect_4: (+1)
+   \       0x5A   0x4630             MOV      R0,R6
+   \       0x5C   0x....'....        BL       atoi
+   \       0x60   0x4602             MOV      R2,R0
+   \       0x62   0xB292             UXTH     R2,R2
+   \       0x64   0x4669             MOV      R1,SP
+   \       0x66   0x4628             MOV      R0,R5
+   \       0x68   0x....'....        BL       at_conn_start
+   \       0x6C   0x2800             CMP      R0,#+0
+   \       0x6E   0xD102             BNE.N    ??mbedtls_net_connect_5
+     94          		ctx->fd = fd;
+   \       0x70   0x6025             STR      R5,[R4, #+0]
+     95                  rc = 0;
+   \       0x72   0x2400             MOVS     R4,#+0
+   \       0x74   0xE008             B.N      ??mbedtls_net_connect_6
+     96              } else {
+     97                  at_conn_close(fd);
+   \                     ??mbedtls_net_connect_5: (+1)
+   \       0x76   0x4628             MOV      R0,R5
+   \       0x78   0x....'....        BL       at_conn_close
+     98                  HAL_Printf("connect error\n");
+   \       0x7C   0x....'....        LDR.W    R0,??DataTable14_4
+   \       0x80   0x....'....        BL       HAL_Printf
+     99                  rc = -1;
+   \       0x84   0xF04F 0x34FF      MOV      R4,#-1
+    100              }
+    101          
+    102              if (-1 == rc) {
+   \                     ??mbedtls_net_connect_6: (+1)
+   \       0x88   0xF114 0x0F01      CMN      R4,#+1
+   \       0x8C   0xD106             BNE.N    ??mbedtls_net_connect_7
+    103                  HAL_Printf("fail to establish mbedtls\n");
+   \       0x8E   0x....'....        LDR.W    R0,??DataTable14_5
+   \       0x92   0x....'....        BL       HAL_Printf
+    104          		return( MBEDTLS_ERR_NET_CONNECT_FAILED );
+   \       0x96   0xF06F 0x0043      MVN      R0,#+67
+   \       0x9A   0xE005             B.N      ??mbedtls_net_connect_1
+    105              } else {
+    106                  HAL_Printf("success to establish mbedtls, fd=%d\n", rc);
+   \                     ??mbedtls_net_connect_7: (+1)
+   \       0x9C   0x4621             MOV      R1,R4
+   \       0x9E   0x....'....        LDR.W    R0,??DataTable14_6
+   \       0xA2   0x....'....        BL       HAL_Printf
+    107              }
+    108          
+    109              return rc;
+   \       0xA6   0x4620             MOV      R0,R4
+   \                     ??mbedtls_net_connect_1: (+1)
+   \       0xA8   0xB005             ADD      SP,SP,#+20
+   \       0xAA   0xBDF0             POP      {R4-R7,PC}       ;; return
+    110          
+    111          }
+    112          
+    113          
+
+   \                                 In section .text, align 2, keep-with-next
+    114          int mbedtls_net_send( void *ctx, const unsigned char *buf, size_t len )
+    115          {
+    116          	int fd = ((mbedtls_net_context *) ctx)->fd;
+   \                     mbedtls_net_send: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+    117          	if (fd < 0)
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD502             BPL.N    ??mbedtls_net_send_0
+    118          		return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+   \        0x6   0xF06F 0x0044      MVN      R0,#+68
+   \        0xA   0x4770             BX       LR
+    119          
+    120          	return at_conn_send(fd,buf,len);
+   \                     ??mbedtls_net_send_0: (+1)
+   \        0xC   0x....'....        B.W      at_conn_send
+    121          }
+    122          
+
+   \                                 In section .text, align 2, keep-with-next
+    123          int mbedtls_net_recv( void *ctx, unsigned char *buf, size_t len )
+    124          {
+    125          
+    126              int fd = ((mbedtls_net_context *) ctx)->fd;
+   \                     mbedtls_net_recv: (+1)
+   \        0x0   0x6800             LDR      R0,[R0, #+0]
+    127          
+    128              if (fd < 0)
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD502             BPL.N    ??mbedtls_net_recv_0
+    129                  return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+   \        0x6   0xF06F 0x0044      MVN      R0,#+68
+   \        0xA   0x4770             BX       LR
+    130          
+    131          
+    132              return at_conn_recv(fd,buf,len);
+   \                     ??mbedtls_net_recv_0: (+1)
+   \        0xC   0x....'....        B.W      at_conn_recv
+    133          }
+    134          
+
+   \                                 In section .text, align 2, keep-with-next
+    135          int mbedtls_net_recv_timeout( void *ctx, unsigned char *buf, size_t len,
+    136                                                       uint32_t timeout )
+    137          {
+   \                     mbedtls_net_recv_timeout: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x460C             MOV      R4,R1
+   \        0x4   0x4615             MOV      R5,R2
+    138              int fd = ((mbedtls_net_context *) ctx)->fd;
+   \        0x6   0x6806             LDR      R6,[R0, #+0]
+    139          
+    140              if (fd < 0)
+   \        0x8   0x2E00             CMP      R6,#+0
+   \        0xA   0xD502             BPL.N    ??mbedtls_net_recv_timeout_0
+    141                  return( MBEDTLS_ERR_NET_INVALID_CONTEXT );
+   \        0xC   0xF06F 0x0044      MVN      R0,#+68
+   \       0x10   0xBDF2             POP      {R1,R4-R7,PC}
+    142          	int ret = -1;
+    143          	int timeoutcnt = timeout/100;
+   \                     ??mbedtls_net_recv_timeout_0: (+1)
+   \       0x12   0x2064             MOVS     R0,#+100
+   \       0x14   0xFBB3 0xF7F0      UDIV     R7,R3,R0
+    144          	
+    145          	while(1){
+    146          		
+    147          		ret = at_conn_recv(fd,buf,len);
+   \                     ??mbedtls_net_recv_timeout_1: (+1)
+   \       0x18   0x462A             MOV      R2,R5
+   \       0x1A   0x4621             MOV      R1,R4
+   \       0x1C   0x4630             MOV      R0,R6
+   \       0x1E   0x....'....        BL       at_conn_recv
+    148          		if(ret != -1){
+   \       0x22   0xF110 0x0F01      CMN      R0,#+1
+   \       0x26   0xD107             BNE.N    ??mbedtls_net_recv_timeout_2
+    149          			return ret;
+    150          		}
+    151          		HAL_SleepMs(100);
+                 		^
+Warning[Pe223]: function "HAL_SleepMs" declared implicitly
+   \       0x28   0x2064             MOVS     R0,#+100
+   \       0x2A   0x....'....        BL       HAL_SleepMs
+    152          		if(timeoutcnt-- <= 0){
+   \       0x2E   0x4638             MOV      R0,R7
+   \       0x30   0x1E47             SUBS     R7,R0,#+1
+   \       0x32   0xDAF1             BGE.N    ??mbedtls_net_recv_timeout_1
+    153          			return MBEDTLS_ERR_SSL_TIMEOUT;
+   \       0x34   0x....'....        LDR.W    R0,??DataTable14_7  ;; 0xffff9800
+   \                     ??mbedtls_net_recv_timeout_2: (+1)
+   \       0x38   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    154          		}
+    155          	}
+    156          }
+    157          
+    158          
+
+   \                                 In section .text, align 2, keep-with-next
+    159          void mbedtls_net_free( mbedtls_net_context *ctx )
+    160          {
+   \                     mbedtls_net_free: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    161              if (ctx->fd == -1)
+   \        0x4   0x6820             LDR      R0,[R4, #+0]
+   \        0x6   0xF110 0x0F01      CMN      R0,#+1
+   \        0xA   0xD004             BEQ.N    ??mbedtls_net_free_0
+    162                  return;
+    163              at_conn_close((uint32_t)ctx->fd);
+   \        0xC   0x....'....        BL       at_conn_close
+    164              ctx->fd = -1;
+   \       0x10   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x14   0x6020             STR      R0,[R4, #+0]
+    165          }
+   \                     ??mbedtls_net_free_0: (+1)
+   \       0x16   0xBD10             POP      {R4,PC}          ;; return
+    166          
+    167          
+    168          #endif
+    169          
+    170          
+    171          #if defined(TLS_SAVE_TICKET)
+    172          
+    173          #define TLS_MAX_SESSION_BUF 384
+    174          #define KV_SESSION_KEY  "TLS_SESSION"
+    175          
+    176          extern int HAL_Kv_Set(const char *key, const void *val, int len, int sync);
+    177          
+    178          extern int HAL_Kv_Get(const char *key, void *val, int *buffer_len);
+    179          
+    180          static mbedtls_ssl_session *saved_session = NULL;
+    181          
+    182          
+    183          static int ssl_serialize_session(const mbedtls_ssl_session *session,
+    184                                           unsigned char *buf, size_t buf_len,
+    185                                           size_t *olen)
+    186          {
+    187              unsigned char *p = buf;
+    188              size_t left = buf_len;
+    189          
+    190              if (left < sizeof(mbedtls_ssl_session)) {
+    191                  return (MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL);
+    192              }
+    193          
+    194              memcpy(p, session, sizeof(mbedtls_ssl_session));
+    195              p += sizeof(mbedtls_ssl_session);
+    196              left -= sizeof(mbedtls_ssl_session);
+    197          #if defined(MBEDTLS_SSL_SESSION_TICKETS) && defined(MBEDTLS_SSL_CLI_C)
+    198              if (left < sizeof(mbedtls_ssl_session)) {
+    199                  return (MBEDTLS_ERR_SSL_BUFFER_TOO_SMALL);
+    200              }
+    201              memcpy(p, session->ticket, session->ticket_len);
+    202              p += session->ticket_len;
+    203              left -= session->ticket_len;
+    204          #endif
+    205          
+    206              *olen = p - buf;
+    207          
+    208              return (0);
+    209          }
+    210          
+    211          static int ssl_deserialize_session(mbedtls_ssl_session *session,
+    212                                             const unsigned char *buf, size_t len)
+    213          {
+    214              const unsigned char *p = buf;
+    215              const unsigned char *const end = buf + len;
+    216          
+    217              if (sizeof(mbedtls_ssl_session) > (size_t)(end - p)) {
+    218                  return (MBEDTLS_ERR_SSL_BAD_INPUT_DATA);
+    219              }
+    220          
+    221              memcpy(session, p, sizeof(mbedtls_ssl_session));
+    222              p += sizeof(mbedtls_ssl_session);
+    223          #if defined(MBEDTLS_X509_CRT_PARSE_C)
+    224              session->peer_cert = NULL;
+    225          #endif
+    226          
+    227          #if defined(MBEDTLS_SSL_SESSION_TICKETS) && defined(MBEDTLS_SSL_CLI_C)
+    228              if (session->ticket_len > 0) {
+    229                  if (session->ticket_len > (size_t)(end - p)) {
+    230                      return (MBEDTLS_ERR_SSL_BAD_INPUT_DATA);
+    231                  }
+    232                  session->ticket = HAL_Malloc(session->ticket_len);
+    233                  if (session->ticket == NULL) {
+    234                      return (MBEDTLS_ERR_SSL_ALLOC_FAILED);
+    235                  }
+    236                  memcpy(session->ticket, p, session->ticket_len);
+    237                  p += session->ticket_len;
+    238                  HAL_Printf("saved ticket len = %d \r\n", (int)session->ticket_len);
+    239              }
+    240          #endif
+    241          
+    242              if (p != end) {
+    243                  return (MBEDTLS_ERR_SSL_BAD_INPUT_DATA);
+    244              }
+    245          
+    246              return (0);
+    247          }
+    248          #endif
+    249          
+
+   \                                 In section .text, align 2, keep-with-next
+    250          static unsigned int _avRandom()
+    251          {
+   \                     _avRandom: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    252              return (((unsigned int)rand() << 16) + rand());
+   \        0x2   0x....'....        BL       rand
+   \        0x6   0x4604             MOV      R4,R0
+   \        0x8   0x....'....        BL       rand
+   \        0xC   0xEB00 0x4004      ADD      R0,R0,R4, LSL #+16
+   \       0x10   0xBD10             POP      {R4,PC}          ;; return
+    253          }
+    254          
+
+   \                                 In section .text, align 2, keep-with-next
+    255          static int _ssl_random(void *p_rng, unsigned char *output, size_t output_len)
+    256          {
+   \                     _ssl_random: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x460D             MOV      R5,R1
+   \        0x4   0x4614             MOV      R4,R2
+    257              uint32_t rnglen = output_len;
+    258              uint8_t   rngoffset = 0;
+   \        0x6   0x2600             MOVS     R6,#+0
+   \        0x8   0x2C00             CMP      R4,#+0
+   \        0xA   0xE006             B.N      ??_ssl_random_0
+    259          
+    260              while (rnglen > 0) {
+    261                  *(output + rngoffset) = (unsigned char)_avRandom() ;
+   \                     ??_ssl_random_1: (+1)
+   \        0xC   0x....'....        BL       _avRandom
+   \       0x10   0x4631             MOV      R1,R6
+   \       0x12   0xB2C9             UXTB     R1,R1
+   \       0x14   0x5468             STRB     R0,[R5, R1]
+    262                  rngoffset++;
+   \       0x16   0x1C76             ADDS     R6,R6,#+1
+    263                  rnglen--;
+   \       0x18   0x1E64             SUBS     R4,R4,#+1
+    264              }
+   \                     ??_ssl_random_0: (+1)
+   \       0x1A   0xD1F7             BNE.N    ??_ssl_random_1
+    265              return 0;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0xBD70             POP      {R4-R6,PC}       ;; return
+    266          }
+    267          
+
+   \                                 In section .text, align 2, keep-with-next
+    268          static void _ssl_debug(void *ctx, int level, const char *file, int line, const char *str)
+    269          {
+   \                     _ssl_debug: (+1)
+   \        0x0   0xB082             SUB      SP,SP,#+8
+    270              ((void) level);
+    271              if (NULL != ctx) {
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD004             BEQ.N    ??_ssl_debug_0
+   \        0x6   0x9902             LDR      R1,[SP, #+8]
+    272          #if 0
+    273                  fprintf((FILE *) ctx, "%s:%04d: %s", file, line, str);
+    274                  fflush((FILE *) ctx);
+    275          #endif
+    276                  HAL_Printf("%s\n", str);
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \        0x8   0x....             ADR.N    R0,??DataTable7  ;; "%s\n"
+   \        0xA   0xB002             ADD      SP,SP,#+8
+   \        0xC   0x....'....        B.W      HAL_Printf
+    277              }
+    278          }
+   \                     ??_ssl_debug_0: (+1)
+   \       0x10   0xB002             ADD      SP,SP,#+8
+   \       0x12   0x4770             BX       LR               ;; return
+    279          
+
+   \                                 In section .text, align 2, keep-with-next
+    280          static int _real_confirm(int verify_result)
+    281          {
+   \                     _real_confirm: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+   \        0x2   0x4601             MOV      R1,R0
+    282              HAL_Printf("certificate verification result: 0x%02x\n", verify_result);
+                     ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \        0x4   0x....'....        LDR.W    R0,??DataTable14_8
+   \        0x8   0x....'....        BL       HAL_Printf
+    283          
+    284          #if defined(FORCE_SSL_VERIFY)
+    285              if ((verify_result & MBEDTLS_X509_BADCERT_EXPIRED) != 0) {
+    286                  HAL_Printf("! fail ! ERROR_CERTIFICATE_EXPIRED\n");
+    287                  return -1;
+    288              }
+    289          
+    290              if ((verify_result & MBEDTLS_X509_BADCERT_REVOKED) != 0) {
+    291                  HAL_Printf("! fail ! server certificate has been revoked\n");
+    292                  return -1;
+    293              }
+    294          
+    295              if ((verify_result & MBEDTLS_X509_BADCERT_CN_MISMATCH) != 0) {
+    296                  HAL_Printf("! fail ! CN mismatch\n");
+    297                  return -1;
+    298              }
+    299          
+    300              if ((verify_result & MBEDTLS_X509_BADCERT_NOT_TRUSTED) != 0) {
+    301                  HAL_Printf("! fail ! self-signed or not signed by a trusted CA\n");
+    302                  return -1;
+    303              }
+    304          #endif
+    305          
+    306              return 0;
+   \        0xC   0x2000             MOVS     R0,#+0
+   \        0xE   0xBD02             POP      {R1,PC}          ;; return
+    307          }
+    308          
+
+   \                                 In section .text, align 2, keep-with-next
+    309          static int _ssl_client_init(mbedtls_ssl_context *ssl,
+    310                                      mbedtls_net_context *tcp_fd,
+    311                                      mbedtls_ssl_config *conf,
+    312                                      mbedtls_x509_crt *crt509_ca, const char *ca_crt, size_t ca_len,
+    313                                      mbedtls_x509_crt *crt509_cli, const char *cli_crt, size_t cli_len,
+    314                                      mbedtls_pk_context *pk_cli, const char *cli_key, size_t key_len,  const char *cli_pwd, size_t pwd_len
+    315                                     )
+    316          {
+   \                     _ssl_client_init: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0x4605             MOV      R5,R0
+   \        0x6   0x460F             MOV      R7,R1
+   \        0x8   0x4690             MOV      R8,R2
+   \        0xA   0x4699             MOV      R9,R3
+   \        0xC   0x9C08             LDR      R4,[SP, #+32]
+    317              int ret = -1;
+   \        0xE   0xF04F 0x36FF      MOV      R6,#-1
+    318          
+    319              /*
+    320               * 0. Initialize the RNG and the session data
+    321               */
+    322          #if defined(MBEDTLS_DEBUG_C)
+    323              mbedtls_debug_set_threshold((int)CONFIG_MBEDTLS_DEBUG_LEVEL);
+   \       0x12   0x2000             MOVS     R0,#+0
+   \       0x14   0x....'....        BL       mbedtls_debug_set_threshold
+    324          #endif
+    325              mbedtls_net_init(tcp_fd);
+   \       0x18   0x4638             MOV      R0,R7
+   \       0x1A   0x....'....        BL       mbedtls_net_init
+    326              mbedtls_ssl_init(ssl);
+   \       0x1E   0x4628             MOV      R0,R5
+   \       0x20   0x....'....        BL       mbedtls_ssl_init
+    327              mbedtls_ssl_config_init(conf);
+   \       0x24   0x4640             MOV      R0,R8
+   \       0x26   0x....'....        BL       mbedtls_ssl_config_init
+    328              mbedtls_x509_crt_init(crt509_ca);
+   \       0x2A   0x4648             MOV      R0,R9
+   \       0x2C   0x....'....        BL       mbedtls_x509_crt_init
+    329          
+    330              /*verify_source->trusted_ca_crt==NULL
+    331               * 0. Initialize certificates
+    332               */
+    333          
+    334              HAL_Printf("Loading the CA root certificate ...\n");
+                     ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x30   0x....'....        LDR.W    R0,??DataTable14_9
+   \       0x34   0x....'....        BL       HAL_Printf
+    335              if (NULL != ca_crt) {
+   \       0x38   0x2C00             CMP      R4,#+0
+   \       0x3A   0xD00D             BEQ.N    ??_ssl_client_init_0
+   \       0x3C   0x9A09             LDR      R2,[SP, #+36]
+    336                  if (0 != (ret = mbedtls_x509_crt_parse(crt509_ca, (const unsigned char *)ca_crt, ca_len))) {
+   \       0x3E   0x4621             MOV      R1,R4
+   \       0x40   0x4648             MOV      R0,R9
+   \       0x42   0x....'....        BL       mbedtls_x509_crt_parse
+   \       0x46   0x0006             MOVS     R6,R0
+   \       0x48   0xD006             BEQ.N    ??_ssl_client_init_0
+    337                      HAL_Printf(" failed ! x509parse_crt returned -0x%04x\n", -ret);
+   \       0x4A   0x4271             RSBS     R1,R6,#+0
+   \       0x4C   0x....'....        LDR.W    R0,??DataTable14_10
+   \       0x50   0x....'....        BL       HAL_Printf
+    338                      return ret;
+   \       0x54   0x4630             MOV      R0,R6
+   \       0x56   0xE041             B.N      ??_ssl_client_init_1
+    339                  }
+    340              }
+   \                     ??_ssl_client_init_0: (+1)
+   \       0x58   0x9F0D             LDR      R7,[SP, #+52]
+   \       0x5A   0x9D0B             LDR      R5,[SP, #+44]
+   \       0x5C   0xF8DD 0x8028      LDR      R8,[SP, #+40]
+    341              HAL_Printf(" ok (%d skipped)\n", ret);
+   \       0x60   0x4631             MOV      R1,R6
+   \       0x62   0x....'....        LDR.W    R0,??DataTable14_11
+   \       0x66   0x....'....        BL       HAL_Printf
+    342          
+    343          
+    344              /* Setup Client Cert/Key */
+    345          #if defined(MBEDTLS_X509_CRT_PARSE_C)
+    346          #if defined(MBEDTLS_CERTS_C)
+    347              mbedtls_x509_crt_init(crt509_cli);
+   \       0x6A   0x4640             MOV      R0,R8
+   \       0x6C   0x....'....        BL       mbedtls_x509_crt_init
+    348              mbedtls_pk_init(pk_cli);
+   \       0x70   0x4638             MOV      R0,R7
+   \       0x72   0x....'....        BL       mbedtls_pk_init
+    349          #endif
+    350              if (cli_crt != NULL && cli_key != NULL) {
+   \       0x76   0x2D00             CMP      R5,#+0
+   \       0x78   0xD02F             BEQ.N    ??_ssl_client_init_2
+   \       0x7A   0x9C0E             LDR      R4,[SP, #+56]
+   \       0x7C   0x2C00             CMP      R4,#+0
+   \       0x7E   0xD02C             BEQ.N    ??_ssl_client_init_2
+   \       0x80   0x9E0C             LDR      R6,[SP, #+48]
+    351          #if defined(MBEDTLS_CERTS_C)
+    352                  HAL_Printf("start prepare client cert .\n");
+   \       0x82   0x....'....        LDR.W    R0,??DataTable14_12
+   \       0x86   0x....'....        BL       HAL_Printf
+    353                  ret = mbedtls_x509_crt_parse(crt509_cli, (const unsigned char *) cli_crt, cli_len);
+   \       0x8A   0x4632             MOV      R2,R6
+   \       0x8C   0x4629             MOV      R1,R5
+   \       0x8E   0x4640             MOV      R0,R8
+   \       0x90   0x....'....        BL       mbedtls_x509_crt_parse
+   \       0x94   0x0005             MOVS     R5,R0
+    354          #else
+    355                  {
+    356                      ret = 1;
+    357                      HAL_Printf("MBEDTLS_CERTS_C not defined.\n");
+    358                  }
+    359          #endif
+    360                  if (ret != 0) {
+   \       0x96   0xD006             BEQ.N    ??_ssl_client_init_3
+    361                      HAL_Printf(" failed!  mbedtls_x509_crt_parse returned -0x%x\n", -ret);
+   \       0x98   0x4269             RSBS     R1,R5,#+0
+   \       0x9A   0x....'....        LDR.W    R0,??DataTable14_13
+   \       0x9E   0x....'....        BL       HAL_Printf
+    362                      return ret;
+   \       0xA2   0x4628             MOV      R0,R5
+   \       0xA4   0xE01A             B.N      ??_ssl_client_init_1
+    363                  }
+   \                     ??_ssl_client_init_3: (+1)
+   \       0xA6   0xF8DD 0x8044      LDR      R8,[SP, #+68]
+   \       0xAA   0x9E10             LDR      R6,[SP, #+64]
+   \       0xAC   0x9D0F             LDR      R5,[SP, #+60]
+    364          
+    365          #if defined(MBEDTLS_CERTS_C)
+    366                  HAL_Printf("start mbedtls_pk_parse_key[%s]\n", cli_pwd);
+   \       0xAE   0x4631             MOV      R1,R6
+   \       0xB0   0x....'....        LDR.W    R0,??DataTable14_14
+   \       0xB4   0x....'....        BL       HAL_Printf
+    367                  ret = mbedtls_pk_parse_key(pk_cli, (const unsigned char *) cli_key, key_len, (const unsigned char *) cli_pwd, pwd_len);
+   \       0xB8   0xF8CD 0x8000      STR      R8,[SP, #+0]
+   \       0xBC   0x4633             MOV      R3,R6
+   \       0xBE   0x462A             MOV      R2,R5
+   \       0xC0   0x4621             MOV      R1,R4
+   \       0xC2   0x4638             MOV      R0,R7
+   \       0xC4   0x....'....        BL       mbedtls_pk_parse_key
+   \       0xC8   0x0004             MOVS     R4,R0
+    368          #else
+    369                  {
+    370                      ret = 1;
+    371                      HAL_Printf("MBEDTLS_CERTS_C not defined.\n");
+    372                  }
+    373          #endif
+    374          
+    375                  if (ret != 0) {
+   \       0xCA   0xD006             BEQ.N    ??_ssl_client_init_2
+    376                      HAL_Printf(" failed\n  !  mbedtls_pk_parse_key returned -0x%x\n", -ret);
+   \       0xCC   0x4261             RSBS     R1,R4,#+0
+   \       0xCE   0x....'....        LDR.W    R0,??DataTable14_15
+   \       0xD2   0x....'....        BL       HAL_Printf
+    377                      return ret;
+   \       0xD6   0x4620             MOV      R0,R4
+   \       0xD8   0xE000             B.N      ??_ssl_client_init_1
+    378                  }
+    379              }
+    380          #endif /* MBEDTLS_X509_CRT_PARSE_C */
+    381          
+    382              return 0;
+   \                     ??_ssl_client_init_2: (+1)
+   \       0xDA   0x2000             MOVS     R0,#+0
+   \                     ??_ssl_client_init_1: (+1)
+   \       0xDC   0xE8BD 0x83F2      POP      {R1,R4-R9,PC}    ;; return
+    383          }
+    384          
+    385          #if defined(_PLATFORM_IS_LINUX_)
+    386          static int net_prepare(void)
+    387          {
+    388          #if ( defined(_WIN32) || defined(_WIN32_WCE) ) && !defined(EFIX64) && \
+    389             !defined(EFI32)
+    390              WSADATA wsaData;
+    391              static int wsa_init_done = 0;
+    392          
+    393              if (wsa_init_done == 0) {
+    394                  if (WSAStartup(MAKEWORD(2, 0), &wsaData) != 0) {
+    395                      return (MBEDTLS_ERR_NET_SOCKET_FAILED);
+    396                  }
+    397          
+    398                  wsa_init_done = 1;
+    399              }
+    400          #else
+    401          #if !defined(EFIX64) && !defined(EFI32)
+    402              signal(SIGPIPE, SIG_IGN);
+    403          #endif
+    404          #endif
+    405              return (0);
+    406          }
+    407          
+    408          
+    409          static int mbedtls_net_connect_timeout(mbedtls_net_context *ctx, const char *host,
+    410                                                 const char *port, int proto, unsigned int timeout)
+    411          {
+    412              int ret;
+    413              struct addrinfo hints, *addr_list, *cur;
+    414              struct timeval sendtimeout;
+    415          
+    416              if ((ret = net_prepare()) != 0) {
+    417                  return (ret);
+    418              }
+    419          
+    420              /* Do name resolution with both IPv6 and IPv4 */
+    421              memset(&hints, 0, sizeof(hints));
+    422              hints.ai_family = AF_UNSPEC;
+    423              hints.ai_socktype = proto == MBEDTLS_NET_PROTO_UDP ? SOCK_DGRAM : SOCK_STREAM;
+    424              hints.ai_protocol = proto == MBEDTLS_NET_PROTO_UDP ? IPPROTO_UDP : IPPROTO_TCP;
+    425          
+    426              if (getaddrinfo(host, port, &hints, &addr_list) != 0) {
+    427                  return (MBEDTLS_ERR_NET_UNKNOWN_HOST);
+    428              }
+    429          
+    430              /* Try the sockaddrs until a connection succeeds */
+    431              ret = MBEDTLS_ERR_NET_UNKNOWN_HOST;
+    432              for (cur = addr_list; cur != NULL; cur = cur->ai_next) {
+    433                  char ip4_str[INET_ADDRSTRLEN];
+    434          
+    435                  ctx->fd = (int) socket(cur->ai_family, cur->ai_socktype,
+    436                                         cur->ai_protocol);
+    437                  if (ctx->fd < 0) {
+    438                      ret = MBEDTLS_ERR_NET_SOCKET_FAILED;
+    439                      continue;
+    440                  }
+    441          
+    442                  sendtimeout.tv_sec = timeout;
+    443                  sendtimeout.tv_usec = 0;
+    444          
+    445                  if (0 != setsockopt(ctx->fd, SOL_SOCKET, SO_SNDTIMEO, &sendtimeout, sizeof(sendtimeout))) {
+    446                      perror("setsockopt");
+    447                      HAL_Printf("setsockopt error\n");
+    448                  }
+    449                  HAL_Printf("setsockopt SO_SNDTIMEO timeout: %ds\n", (int)sendtimeout.tv_sec);
+    450          
+    451                  inet_ntop(AF_INET, &((const struct sockaddr_in *)cur->ai_addr)->sin_addr, ip4_str, INET_ADDRSTRLEN);
+    452                  HAL_Printf("connecting IP_ADDRESS: %s\n", ip4_str);
+    453          
+    454                  if (connect(ctx->fd, cur->ai_addr, cur->ai_addrlen) == 0) {
+    455                      ret = 0;
+    456                      break;
+    457                  }
+    458          
+    459                  close(ctx->fd);
+    460                  ret = MBEDTLS_ERR_NET_CONNECT_FAILED;
+    461              }
+    462          
+    463              freeaddrinfo(addr_list);
+    464          
+    465              return (ret);
+    466          }
+    467          #endif
+    468          
+
+   \                                 In section .text, align 2, keep-with-next
+    469          void *_SSLCalloc_wrapper(size_t n, size_t size)
+    470          {
+   \                     _SSLCalloc_wrapper: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4606             MOV      R6,R0
+   \        0x4   0x460D             MOV      R5,R1
+    471              unsigned char *buf = NULL;
+    472              mbedtls_mem_info_t *mem_info = NULL;
+    473          
+    474              if (n == 0 || size == 0) {
+   \        0x6   0x2E00             CMP      R6,#+0
+   \        0x8   0xD00A             BEQ.N    ??_SSLCalloc_wrapper_0
+   \        0xA   0x2D00             CMP      R5,#+0
+   \        0xC   0xD008             BEQ.N    ??_SSLCalloc_wrapper_0
+    475                  return NULL;
+    476              }
+    477          
+    478              buf = (unsigned char *)(g_ssl_hooks.malloc(n * size + sizeof(mbedtls_mem_info_t)));
+   \        0xE   0xFB05 0xF006      MUL      R0,R5,R6
+   \       0x12   0x3008             ADDS     R0,R0,#+8
+   \       0x14   0x....'....        LDR.W    R1,??DataTable14_16
+   \       0x18   0x6809             LDR      R1,[R1, #+0]
+   \       0x1A   0x4788             BLX      R1
+   \       0x1C   0x0004             MOVS     R4,R0
+    479              if (NULL == buf) {
+   \       0x1E   0xD101             BNE.N    ??_SSLCalloc_wrapper_1
+    480                  return NULL;
+   \                     ??_SSLCalloc_wrapper_0: (+1)
+   \       0x20   0x2000             MOVS     R0,#+0
+   \       0x22   0xBD70             POP      {R4-R6,PC}
+    481              } else {
+    482                  memset(buf, 0, n * size + sizeof(mbedtls_mem_info_t));
+   \                     ??_SSLCalloc_wrapper_1: (+1)
+   \       0x24   0x2200             MOVS     R2,#+0
+   \       0x26   0xFB05 0xF106      MUL      R1,R5,R6
+   \       0x2A   0x3108             ADDS     R1,R1,#+8
+   \       0x2C   0x....'....        BL       __aeabi_memset
+    483              }
+    484          
+    485              mem_info = (mbedtls_mem_info_t *)buf;
+    486              mem_info->magic = MBEDTLS_MEM_INFO_MAGIC;
+   \       0x30   0x....'....        LDR.W    R0,??DataTable14_17  ;; 0x12345678
+   \       0x34   0x6020             STR      R0,[R4, #+0]
+    487              mem_info->size = n * size;
+   \       0x36   0x436E             MULS     R6,R5,R6
+   \       0x38   0x6066             STR      R6,[R4, #+4]
+    488              buf += sizeof(mbedtls_mem_info_t);
+   \       0x3A   0xF104 0x0008      ADD      R0,R4,#+8
+    489          
+    490              mbedtls_mem_used += mem_info->size;
+   \       0x3E   0x....'....        LDR.W    R2,??DataTable14_18
+   \       0x42   0x6813             LDR      R3,[R2, #+0]
+   \       0x44   0x4631             MOV      R1,R6
+   \       0x46   0x18CB             ADDS     R3,R1,R3
+   \       0x48   0x6013             STR      R3,[R2, #+0]
+    491              if (mbedtls_mem_used > mbedtls_max_mem_used) {
+   \       0x4A   0x....'....        LDR.W    R1,??DataTable14_19
+   \       0x4E   0x680B             LDR      R3,[R1, #+0]
+   \       0x50   0x6814             LDR      R4,[R2, #+0]
+   \       0x52   0x42A3             CMP      R3,R4
+   \       0x54   0xD201             BCS.N    ??_SSLCalloc_wrapper_2
+    492                  mbedtls_max_mem_used = mbedtls_mem_used;
+   \       0x56   0x4622             MOV      R2,R4
+   \       0x58   0x600A             STR      R2,[R1, #+0]
+    493              }
+    494          
+    495              /* HAL_Printf("INFO -- mbedtls malloc: %p %d  total used: %d  max used: %d\r\n",
+    496                                 buf, (int)size, mbedtls_mem_used, mbedtls_max_mem_used); */
+    497          
+    498              return buf;
+   \                     ??_SSLCalloc_wrapper_2: (+1)
+   \       0x5A   0xBD70             POP      {R4-R6,PC}       ;; return
+    499          }
+    500          
+
+   \                                 In section .text, align 2, keep-with-next
+    501          void _SSLFree_wrapper(void *ptr)
+    502          {
+    503              mbedtls_mem_info_t *mem_info = NULL;
+    504              if (NULL == ptr) {
+   \                     _SSLFree_wrapper: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD013             BEQ.N    ??_SSLFree_wrapper_0
+    505                  return;
+    506              }
+    507          
+    508              mem_info = (mbedtls_mem_info_t *)((unsigned char *)ptr - sizeof(mbedtls_mem_info_t));
+   \        0x4   0x3808             SUBS     R0,R0,#+8
+    509              if (mem_info->magic != MBEDTLS_MEM_INFO_MAGIC) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x....'....        LDR.W    R2,??DataTable14_17  ;; 0x12345678
+   \        0xC   0x4291             CMP      R1,R2
+   \        0xE   0xD003             BEQ.N    ??_SSLFree_wrapper_1
+    510                  HAL_Printf("Warning - invalid mem info magic: 0x%x\r\n", mem_info->magic);
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x10   0x....'....        LDR.W    R0,??DataTable14_20
+   \       0x14   0x....'....        B.W      HAL_Printf
+    511                  return;
+    512              }
+    513          
+    514              mbedtls_mem_used -= mem_info->size;
+   \                     ??_SSLFree_wrapper_1: (+1)
+   \       0x18   0x....'....        LDR.W    R2,??DataTable14_18
+   \       0x1C   0x6813             LDR      R3,[R2, #+0]
+   \       0x1E   0x6841             LDR      R1,[R0, #+4]
+   \       0x20   0x1A5B             SUBS     R3,R3,R1
+   \       0x22   0x6013             STR      R3,[R2, #+0]
+    515              /* HAL_Printf("INFO mbedtls free: %p %d  total used: %d  max used: %d\r\n",
+    516                                 ptr, mem_info->size, mbedtls_mem_used, mbedtls_max_mem_used);*/
+    517          
+    518              g_ssl_hooks.free(mem_info);
+   \       0x24   0x....'....        LDR.W    R1,??DataTable14_16
+   \       0x28   0x6849             LDR      R1,[R1, #+4]
+   \       0x2A   0x4708             BX       R1
+   \                     ??_SSLFree_wrapper_0: (+1)
+   \       0x2C   0x4770             BX       LR               ;; return
+    519          }
+    520          
+    521          /**
+    522           * @brief This function connects to the specific SSL server with TLS, and returns a value that indicates whether the connection is create successfully or not. Call #NewNetwork() to initialize network structure before calling this function.
+    523           * @param[in] n is the the network structure pointer.
+    524           * @param[in] addr is the Server Host name or IP address.
+    525           * @param[in] port is the Server Port.
+    526           * @param[in] ca_crt is the Server's CA certification.
+    527           * @param[in] ca_crt_len is the length of Server's CA certification.
+    528           * @param[in] client_crt is the client certification.
+    529           * @param[in] client_crt_len is the length of client certification.
+    530           * @param[in] client_key is the client key.
+    531           * @param[in] client_key_len is the length of client key.
+    532           * @param[in] client_pwd is the password of client key.
+    533           * @param[in] client_pwd_len is the length of client key's password.
+    534           * @sa #NewNetwork();
+    535           * @return If the return value is 0, the connection is created successfully. If the return value is -1, then calling lwIP #socket() has failed. If the return value is -2, then calling lwIP #connect() has failed. Any other value indicates that calling lwIP #getaddrinfo() has failed.
+    536           */
+    537          
+
+   \                                 In section .text, align 2, keep-with-next
+    538          static int _TLSConnectNetwork(TLSDataParams_t *pTlsData, const char *addr, const char *port,
+    539                                        const char *ca_crt, size_t ca_crt_len,
+    540                                        const char *client_crt,   size_t client_crt_len,
+    541                                        const char *client_key,   size_t client_key_len,
+    542                                        const char *client_pwd, size_t client_pwd_len)
+    543          {
+   \                     _TLSConnectNetwork: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0xB08A             SUB      SP,SP,#+40
+   \        0x6   0x4606             MOV      R6,R0
+   \        0x8   0x4688             MOV      R8,R1
+   \        0xA   0x4617             MOV      R7,R2
+   \        0xC   0x461C             MOV      R4,R3
+   \        0xE   0x9810             LDR      R0,[SP, #+64]
+   \       0x10   0x9911             LDR      R1,[SP, #+68]
+   \       0x12   0x9A12             LDR      R2,[SP, #+72]
+   \       0x14   0x9B13             LDR      R3,[SP, #+76]
+   \       0x16   0x9D14             LDR      R5,[SP, #+80]
+   \       0x18   0xF8DD 0xC054      LDR      R12,[SP, #+84]
+   \       0x1C   0xF8DD 0xE058      LDR      LR,[SP, #+88]
+    544              int ret = -1;
+    545              /*
+    546               * 0. Init
+    547               */
+    548              if (0 != (ret = _ssl_client_init(&(pTlsData->ssl), &(pTlsData->fd), &(pTlsData->conf),
+    549                                               &(pTlsData->cacertl), ca_crt, ca_crt_len,
+    550                                               &(pTlsData->clicert), client_crt, client_crt_len,
+    551                                               &(pTlsData->pkey), client_key, client_key_len, client_pwd, client_pwd_len))) {
+   \       0x20   0xF8CD 0xE024      STR      LR,[SP, #+36]
+   \       0x24   0xF8CD 0xC020      STR      R12,[SP, #+32]
+   \       0x28   0x9507             STR      R5,[SP, #+28]
+   \       0x2A   0x9306             STR      R3,[SP, #+24]
+   \       0x2C   0xF206 0x4354      ADDW     R3,R6,#+1108
+   \       0x30   0x9305             STR      R3,[SP, #+20]
+   \       0x32   0x9204             STR      R2,[SP, #+16]
+   \       0x34   0x9103             STR      R1,[SP, #+12]
+   \       0x36   0xF506 0x7148      ADD      R1,R6,#+800
+   \       0x3A   0x9102             STR      R1,[SP, #+8]
+   \       0x3C   0x9001             STR      R0,[SP, #+4]
+   \       0x3E   0x9400             STR      R4,[SP, #+0]
+   \       0x40   0xF506 0x73F6      ADD      R3,R6,#+492
+   \       0x44   0xF506 0x728E      ADD      R2,R6,#+284
+   \       0x48   0xF506 0x718C      ADD      R1,R6,#+280
+   \       0x4C   0x4630             MOV      R0,R6
+   \       0x4E   0x....'....        BL       _ssl_client_init
+   \       0x52   0x0005             MOVS     R5,R0
+   \       0x54   0xD006             BEQ.N    ??_TLSConnectNetwork_0
+    552                  HAL_Printf(" failed ! ssl_client_init returned -0x%04x\n", -ret);
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x56   0x4269             RSBS     R1,R5,#+0
+   \       0x58   0x....'....        LDR.W    R0,??DataTable14_21
+   \       0x5C   0x....'....        BL       HAL_Printf
+    553                  return ret;
+   \       0x60   0x4628             MOV      R0,R5
+   \       0x62   0xE0B1             B.N      ??_TLSConnectNetwork_1
+    554              }
+    555          
+    556              /*
+    557               * 1. Start the connection
+    558               */
+    559              HAL_Printf("Connecting to /%s/%s...\n", addr, port);
+                     ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \                     ??_TLSConnectNetwork_0: (+1)
+   \       0x64   0x463A             MOV      R2,R7
+   \       0x66   0x4641             MOV      R1,R8
+   \       0x68   0x....'....        LDR.W    R0,??DataTable14_22
+   \       0x6C   0x....'....        BL       HAL_Printf
+    560          #if defined(_PLATFORM_IS_LINUX_)
+    561              if (0 != (ret = mbedtls_net_connect_timeout(&(pTlsData->fd), addr, port, MBEDTLS_NET_PROTO_TCP,
+    562                              SEND_TIMEOUT_SECONDS))) {
+    563                  HAL_Printf(" failed ! net_connect returned -0x%04x\n", -ret);
+    564                  return ret;
+    565              }
+    566          #else
+    567              if (0 != (ret = mbedtls_net_connect(&(pTlsData->fd), addr, port, MBEDTLS_NET_PROTO_TCP))) {
+   \       0x70   0x2300             MOVS     R3,#+0
+   \       0x72   0x463A             MOV      R2,R7
+   \       0x74   0x4641             MOV      R1,R8
+   \       0x76   0xF506 0x708C      ADD      R0,R6,#+280
+   \       0x7A   0x....'....        BL       mbedtls_net_connect
+   \       0x7E   0x0005             MOVS     R5,R0
+   \       0x80   0xD006             BEQ.N    ??_TLSConnectNetwork_2
+    568                  HAL_Printf(" failed ! net_connect returned -0x%04x\n", -ret);
+   \       0x82   0x4269             RSBS     R1,R5,#+0
+   \       0x84   0x....'....        LDR.W    R0,??DataTable14_23
+   \       0x88   0x....'....        BL       HAL_Printf
+    569                  return ret;
+   \       0x8C   0x4628             MOV      R0,R5
+   \       0x8E   0xE09B             B.N      ??_TLSConnectNetwork_1
+    570              }
+    571          #endif
+    572              HAL_Printf(" ok\n");
+   \                     ??_TLSConnectNetwork_2: (+1)
+   \       0x90   0x....'....        LDR.W    R7,??DataTable14_24
+   \       0x94   0x4638             MOV      R0,R7
+   \       0x96   0x....'....        BL       HAL_Printf
+    573          
+    574              /*
+    575               * 2. Setup stuff
+    576               */
+    577              HAL_Printf("  . Setting up the SSL/TLS structure...\n");
+   \       0x9A   0x....'....        LDR.W    R0,??DataTable14_25
+   \       0x9E   0x....'....        BL       HAL_Printf
+    578              if ((ret = mbedtls_ssl_config_defaults(&(pTlsData->conf), MBEDTLS_SSL_IS_CLIENT, MBEDTLS_SSL_TRANSPORT_STREAM,
+    579                                                     MBEDTLS_SSL_PRESET_DEFAULT)) != 0) {
+   \       0xA2   0x2300             MOVS     R3,#+0
+   \       0xA4   0x461A             MOV      R2,R3
+   \       0xA6   0x4611             MOV      R1,R2
+   \       0xA8   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0xAC   0x....'....        BL       mbedtls_ssl_config_defaults
+   \       0xB0   0x0005             MOVS     R5,R0
+   \       0xB2   0xD006             BEQ.N    ??_TLSConnectNetwork_3
+    580                  HAL_Printf(" failed! mbedtls_ssl_config_defaults returned %d\n", ret);
+   \       0xB4   0x4629             MOV      R1,R5
+   \       0xB6   0x....'....        LDR.W    R0,??DataTable14_26
+   \       0xBA   0x....'....        BL       HAL_Printf
+    581                  return ret;
+   \       0xBE   0x4628             MOV      R0,R5
+   \       0xC0   0xE082             B.N      ??_TLSConnectNetwork_1
+    582              }
+    583          
+    584              mbedtls_ssl_conf_max_version(&pTlsData->conf, MBEDTLS_SSL_MAJOR_VERSION_3, MBEDTLS_SSL_MINOR_VERSION_3);
+   \                     ??_TLSConnectNetwork_3: (+1)
+   \       0xC2   0x2203             MOVS     R2,#+3
+   \       0xC4   0x4611             MOV      R1,R2
+   \       0xC6   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0xCA   0x....'....        BL       mbedtls_ssl_conf_max_version
+    585              mbedtls_ssl_conf_min_version(&pTlsData->conf, MBEDTLS_SSL_MAJOR_VERSION_3, MBEDTLS_SSL_MINOR_VERSION_3);
+   \       0xCE   0x2203             MOVS     R2,#+3
+   \       0xD0   0x4611             MOV      R1,R2
+   \       0xD2   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0xD6   0x....'....        BL       mbedtls_ssl_conf_min_version
+    586          
+    587              HAL_Printf(" ok\n");
+   \       0xDA   0x4638             MOV      R0,R7
+   \       0xDC   0x....'....        BL       HAL_Printf
+    588          
+    589              /* OPTIONAL is not optimal for security, but makes interop easier in this simplified example */
+    590              if (ca_crt != NULL) {
+   \       0xE0   0x2C00             CMP      R4,#+0
+   \       0xE2   0xD005             BEQ.N    ??_TLSConnectNetwork_4
+    591          #if defined(FORCE_SSL_VERIFY)
+    592                  mbedtls_ssl_conf_authmode(&(pTlsData->conf), MBEDTLS_SSL_VERIFY_REQUIRED);
+    593          #else
+    594                  mbedtls_ssl_conf_authmode(&(pTlsData->conf), MBEDTLS_SSL_VERIFY_OPTIONAL);
+   \       0xE4   0x2101             MOVS     R1,#+1
+   \       0xE6   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0xEA   0x....'....        BL       mbedtls_ssl_conf_authmode
+   \       0xEE   0xE004             B.N      ??_TLSConnectNetwork_5
+    595          #endif
+    596              } else {
+    597                  mbedtls_ssl_conf_authmode(&(pTlsData->conf), MBEDTLS_SSL_VERIFY_NONE);
+   \                     ??_TLSConnectNetwork_4: (+1)
+   \       0xF0   0x2100             MOVS     R1,#+0
+   \       0xF2   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0xF6   0x....'....        BL       mbedtls_ssl_conf_authmode
+    598              }
+    599          
+    600          #if defined(MBEDTLS_X509_CRT_PARSE_C)
+    601              mbedtls_ssl_conf_ca_chain(&(pTlsData->conf), &(pTlsData->cacertl), NULL);
+   \                     ??_TLSConnectNetwork_5: (+1)
+   \       0xFA   0x2200             MOVS     R2,#+0
+   \       0xFC   0xF506 0x71F6      ADD      R1,R6,#+492
+   \      0x100   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x104   0x....'....        BL       mbedtls_ssl_conf_ca_chain
+    602          
+    603              if ((ret = mbedtls_ssl_conf_own_cert(&(pTlsData->conf), &(pTlsData->clicert), &(pTlsData->pkey))) != 0) {
+   \      0x108   0xF206 0x4254      ADDW     R2,R6,#+1108
+   \      0x10C   0xF506 0x7148      ADD      R1,R6,#+800
+   \      0x110   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x114   0x....'....        BL       mbedtls_ssl_conf_own_cert
+   \      0x118   0x0004             MOVS     R4,R0
+   \      0x11A   0xD006             BEQ.N    ??_TLSConnectNetwork_6
+    604                  HAL_Printf(" failed\n  ! mbedtls_ssl_conf_own_cert returned %d\n", ret);
+   \      0x11C   0x4621             MOV      R1,R4
+   \      0x11E   0x....'....        LDR.W    R0,??DataTable14_27
+   \      0x122   0x....'....        BL       HAL_Printf
+    605                  return ret;
+   \      0x126   0x4620             MOV      R0,R4
+   \      0x128   0xE04E             B.N      ??_TLSConnectNetwork_1
+    606              }
+    607          #endif
+    608              mbedtls_ssl_conf_rng(&(pTlsData->conf), _ssl_random, NULL);
+   \                     ??_TLSConnectNetwork_6: (+1)
+   \      0x12A   0x2200             MOVS     R2,#+0
+   \      0x12C   0x....'....        LDR.W    R1,??DataTable14_28
+   \      0x130   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x134   0x....'....        BL       mbedtls_ssl_conf_rng
+    609              mbedtls_ssl_conf_dbg(&(pTlsData->conf), _ssl_debug, NULL);
+   \      0x138   0x....'....        LDR.W    R4,??DataTable14_29
+   \      0x13C   0x2200             MOVS     R2,#+0
+   \      0x13E   0x4621             MOV      R1,R4
+   \      0x140   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x144   0x....'....        BL       mbedtls_ssl_conf_dbg
+    610              mbedtls_ssl_conf_dbg(&(pTlsData->conf), _ssl_debug, (void *)1);
+   \      0x148   0x2201             MOVS     R2,#+1
+   \      0x14A   0x4621             MOV      R1,R4
+   \      0x14C   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x150   0x....'....        BL       mbedtls_ssl_conf_dbg
+    611          
+    612              if ((ret = mbedtls_ssl_setup(&(pTlsData->ssl), &(pTlsData->conf))) != 0) {
+   \      0x154   0xF506 0x718E      ADD      R1,R6,#+284
+   \      0x158   0x4630             MOV      R0,R6
+   \      0x15A   0x....'....        BL       mbedtls_ssl_setup
+   \      0x15E   0x0004             MOVS     R4,R0
+   \      0x160   0xD006             BEQ.N    ??_TLSConnectNetwork_7
+    613                  HAL_Printf("failed! mbedtls_ssl_setup returned %d\n", ret);
+   \      0x162   0x4621             MOV      R1,R4
+   \      0x164   0x....'....        LDR.W    R0,??DataTable14_30
+   \      0x168   0x....'....        BL       HAL_Printf
+    614                  return ret;
+   \      0x16C   0x4620             MOV      R0,R4
+   \      0x16E   0xE02B             B.N      ??_TLSConnectNetwork_1
+    615              }
+    616          #if defined(ON_PRE) || defined(ON_DAILY)
+    617              HAL_Printf("SKIPPING mbedtls_ssl_set_hostname() when ON_PRE or ON_DAILY defined!\n");
+    618          #else
+    619              mbedtls_ssl_set_hostname(&(pTlsData->ssl), addr);
+   \                     ??_TLSConnectNetwork_7: (+1)
+   \      0x170   0x4641             MOV      R1,R8
+   \      0x172   0x4630             MOV      R0,R6
+   \      0x174   0x....'....        BL       mbedtls_ssl_set_hostname
+    620          #endif
+    621              mbedtls_ssl_set_bio(&(pTlsData->ssl), &(pTlsData->fd), mbedtls_net_send, mbedtls_net_recv, mbedtls_net_recv_timeout);
+   \      0x178   0x....'....        LDR.W    R0,??DataTable14_31
+   \      0x17C   0x9000             STR      R0,[SP, #+0]
+   \      0x17E   0x....'....        LDR.W    R3,??DataTable14_32
+   \      0x182   0x....'....        LDR.W    R2,??DataTable14_33
+   \      0x186   0xF506 0x718C      ADD      R1,R6,#+280
+   \      0x18A   0x4630             MOV      R0,R6
+   \      0x18C   0x....'....        BL       mbedtls_ssl_set_bio
+    622          
+    623          #if defined(TLS_SAVE_TICKET)
+    624              if (NULL == saved_session) {
+    625                  do {
+    626                      int len = TLS_MAX_SESSION_BUF;
+    627                      unsigned char *save_buf = HAL_Malloc(TLS_MAX_SESSION_BUF);
+    628                      if (save_buf ==  NULL) {
+    629                          HAL_Printf(" malloc failed\r\n");
+    630                          break;
+    631                      }
+    632          
+    633                      saved_session = HAL_Malloc(sizeof(mbedtls_ssl_session));
+    634          
+    635                      if (saved_session == NULL) {
+    636                          HAL_Printf(" malloc failed\r\n");
+    637                          HAL_Free(save_buf);
+    638                          save_buf =  NULL;
+    639                          break;
+    640                      }
+    641          
+    642          
+    643                      memset(save_buf, 0x00, TLS_MAX_SESSION_BUF);
+    644                      memset(saved_session, 0x00, sizeof(mbedtls_ssl_session));
+    645          
+    646                      ret = HAL_Kv_Get(KV_SESSION_KEY, save_buf, &len);
+    647          
+    648                      if (ret != 0 || len == 0) {
+    649                          HAL_Printf(" kv get failed len=%d,ret = %d\r\n", len, ret);
+    650                          HAL_Free(saved_session);
+    651                          HAL_Free(save_buf);
+    652                          save_buf = NULL;
+    653                          saved_session = NULL;
+    654                          break;
+    655                      }
+    656                      ret = ssl_deserialize_session(saved_session, save_buf, len);
+    657                      if (ret < 0) {
+    658                          HAL_Printf("ssl_deserialize_session err,ret = %d\r\n", ret);
+    659                          HAL_Free(saved_session);
+    660                          HAL_Free(save_buf);
+    661                          save_buf = NULL;
+    662                          saved_session = NULL;
+    663                          break;
+    664                      }
+    665                      HAL_Free(save_buf);
+    666                  } while (0);
+    667              }
+    668          
+    669              if (NULL != saved_session) {
+    670                  mbedtls_ssl_set_session(&(pTlsData->ssl), saved_session);
+    671                  HAL_Printf("use saved session!!\r\n");
+    672              }
+    673          #endif
+    674              /*
+    675                * 4. Handshake
+    676                */
+    677              mbedtls_ssl_conf_read_timeout(&(pTlsData->conf), 10000);
+   \      0x190   0xF242 0x7110      MOVW     R1,#+10000
+   \      0x194   0xF506 0x708E      ADD      R0,R6,#+284
+   \      0x198   0x....'....        BL       mbedtls_ssl_conf_read_timeout
+    678              HAL_Printf("Performing the SSL/TLS handshake...\n");
+   \      0x19C   0x....'....        LDR.W    R0,??DataTable14_34
+   \      0x1A0   0x....'....        BL       HAL_Printf
+    679          
+    680              while ((ret = mbedtls_ssl_handshake(&(pTlsData->ssl))) != 0) {
+   \                     ??_TLSConnectNetwork_8: (+1)
+   \      0x1A4   0x4630             MOV      R0,R6
+   \      0x1A6   0x....'....        BL       mbedtls_ssl_handshake
+   \      0x1AA   0x0004             MOVS     R4,R0
+   \      0x1AC   0xD00F             BEQ.N    ??_TLSConnectNetwork_9
+    681                  if ((ret != MBEDTLS_ERR_SSL_WANT_READ) && (ret != MBEDTLS_ERR_SSL_WANT_WRITE)) {
+   \      0x1AE   0xF514 0x4FD2      CMN      R4,#+26880
+   \      0x1B2   0xD0F7             BEQ.N    ??_TLSConnectNetwork_8
+   \      0x1B4   0xF514 0x4FD1      CMN      R4,#+26752
+   \      0x1B8   0xD0F4             BEQ.N    ??_TLSConnectNetwork_8
+    682                      HAL_Printf("failed  ! mbedtls_ssl_handshake returned -0x%04x\n", -ret);
+   \      0x1BA   0x4261             RSBS     R1,R4,#+0
+   \      0x1BC   0x....             LDR.N    R0,??DataTable14_35
+   \      0x1BE   0x....'....        BL       HAL_Printf
+    683                      return ret;
+   \      0x1C2   0x4620             MOV      R0,R4
+   \      0x1C4   0xE000             B.N      ??_TLSConnectNetwork_1
+    684                  }
+    685              }
+    686              HAL_Printf(" ok\n");
+    687          
+    688          #if defined(TLS_SAVE_TICKET)
+    689              if (NULL == saved_session) {
+    690                  do {
+    691                      size_t real_session_len = 0;
+    692                      unsigned char *save_buf = HAL_Malloc(TLS_MAX_SESSION_BUF); //for test
+    693                      if (save_buf ==  NULL) {
+    694                          break;
+    695                      }
+    696          
+    697                      saved_session = HAL_Malloc(sizeof(mbedtls_ssl_session));
+    698                      if (NULL == saved_session) {
+    699                          HAL_Free(save_buf);
+    700                          break;
+    701                      }
+    702                      memset(save_buf, 0x00, sizeof(TLS_MAX_SESSION_BUF));
+    703                      memset(saved_session, 0x00, sizeof(mbedtls_ssl_session));
+    704          
+    705                      ret = mbedtls_ssl_get_session(&(pTlsData->ssl), saved_session);
+    706                      if (ret != 0) {
+    707                          HAL_Free(save_buf);
+    708                          HAL_Free(saved_session);
+    709                          saved_session = NULL;
+    710                          break;
+    711                      }
+    712                      ret = ssl_serialize_session(saved_session, save_buf, TLS_MAX_SESSION_BUF, &real_session_len);
+    713                      HAL_Printf("mbedtls_ssl_get_session_session return 0x%04x real_len=%d\r\n", ret, (int)real_session_len);
+    714                      if (ret == 0) {
+    715                          HAL_Kv_Set(KV_SESSION_KEY, (void *)save_buf, real_session_len, 1);
+    716                      }
+    717                      HAL_Free(save_buf);
+    718                  } while (0);
+    719              }
+    720          #endif
+    721          
+    722              /*
+    723               * 5. Verify the server certificate
+    724               */
+    725              HAL_Printf("  . Verifying peer X.509 certificate..\n");
+    726              if (0 != (ret = _real_confirm(mbedtls_ssl_get_verify_result(&(pTlsData->ssl))))) {
+    727                  HAL_Printf(" failed  ! verify result not confirmed.\n");
+    728                  return ret;
+    729              }
+    730              /* n->my_socket = (int)((n->tlsdataparams.fd).fd); */
+    731              /* WRITE_IOT_DEBUG_LOG("my_socket=%d", n->my_socket); */
+    732          
+    733              return 0;
+   \                     ??_TLSConnectNetwork_10: (+1)
+   \      0x1C6   0x2000             MOVS     R0,#+0
+   \                     ??_TLSConnectNetwork_1: (+1)
+   \      0x1C8   0xB00A             ADD      SP,SP,#+40
+   \      0x1CA   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+   \                     ??_TLSConnectNetwork_9: (+1)
+   \      0x1CE   0x4638             MOV      R0,R7
+   \      0x1D0   0x....'....        BL       HAL_Printf
+   \      0x1D4   0x....             LDR.N    R0,??DataTable14_36
+   \      0x1D6   0x....'....        BL       HAL_Printf
+   \      0x1DA   0x4630             MOV      R0,R6
+   \      0x1DC   0x....'....        BL       mbedtls_ssl_get_verify_result
+   \      0x1E0   0x....'....        BL       _real_confirm
+   \      0x1E4   0x0004             MOVS     R4,R0
+   \      0x1E6   0xD0EE             BEQ.N    ??_TLSConnectNetwork_10
+   \      0x1E8   0x....             LDR.N    R0,??DataTable14_37
+   \      0x1EA   0x....'....        BL       HAL_Printf
+   \      0x1EE   0x4620             MOV      R0,R4
+   \      0x1F0   0xE7EA             B.N      ??_TLSConnectNetwork_1
+    734          
+    735          }
+    736          
+
+   \                                 In section .text, align 2, keep-with-next
+    737          static int _network_ssl_read(TLSDataParams_t *pTlsData, char *buffer, int len, int timeout_ms)
+    738          {
+   \                     _network_ssl_read: (+1)
+   \        0x0   0xE92D 0x41F8      PUSH     {R3-R8,LR}
+   \        0x4   0xB089             SUB      SP,SP,#+36
+   \        0x6   0x4606             MOV      R6,R0
+   \        0x8   0x460F             MOV      R7,R1
+   \        0xA   0x4690             MOV      R8,R2
+    739              uint32_t        readLen = 0;
+   \        0xC   0x2500             MOVS     R5,#+0
+    740              static int      net_status = 0;
+    741              int             ret = -1;
+    742              char            err_str[33];
+    743          
+    744              mbedtls_ssl_conf_read_timeout(&(pTlsData->conf), timeout_ms);
+   \        0xE   0x4619             MOV      R1,R3
+   \       0x10   0xF506 0x708E      ADD      R0,R6,#+284
+   \       0x14   0x....'....        BL       mbedtls_ssl_conf_read_timeout
+   \       0x18   0xE003             B.N      ??_network_ssl_read_0
+    745              while (readLen < len) {
+    746                  ret = mbedtls_ssl_read(&(pTlsData->ssl), (unsigned char *)(buffer + readLen), (len - readLen));
+    747                  if (ret > 0) {
+    748                      readLen += ret;
+   \                     ??_network_ssl_read_1: (+1)
+   \       0x1A   0x1965             ADDS     R5,R4,R5
+    749                      net_status = 0;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0x....             LDR.N    R1,??DataTable14_38
+   \       0x20   0x6008             STR      R0,[R1, #+0]
+    750                  } else if (ret == 0) {
+   \                     ??_network_ssl_read_0: (+1)
+   \       0x22   0x4545             CMP      R5,R8
+   \       0x24   0xD224             BCS.N    ??_network_ssl_read_2
+   \       0x26   0xEBA8 0x0205      SUB      R2,R8,R5
+   \       0x2A   0x1979             ADDS     R1,R7,R5
+   \       0x2C   0x4630             MOV      R0,R6
+   \       0x2E   0x....'....        BL       mbedtls_ssl_read
+   \       0x32   0x4604             MOV      R4,R0
+   \       0x34   0x2C01             CMP      R4,#+1
+   \       0x36   0xDAF0             BGE.N    ??_network_ssl_read_1
+   \       0x38   0x2C00             CMP      R4,#+0
+   \       0x3A   0xD108             BNE.N    ??_network_ssl_read_3
+    751                      /* if ret is 0 and net_status is -2, indicate the connection is closed during last call */
+    752                      return (net_status == -2) ? net_status : readLen;
+   \       0x3C   0xF06F 0x0001      MVN      R0,#+1
+   \       0x40   0x....             LDR.N    R1,??DataTable14_38
+   \       0x42   0x6809             LDR      R1,[R1, #+0]
+   \       0x44   0x4281             CMP      R1,R0
+   \       0x46   0xD100             BNE.N    ??_network_ssl_read_4
+   \       0x48   0x4605             MOV      R5,R0
+   \                     ??_network_ssl_read_4: (+1)
+   \       0x4A   0x4628             MOV      R0,R5
+   \       0x4C   0xE032             B.N      ??_network_ssl_read_5
+    753                  } else {
+    754                      if (MBEDTLS_ERR_SSL_PEER_CLOSE_NOTIFY == ret) {
+   \                     ??_network_ssl_read_3: (+1)
+   \       0x4E   0x....             LDR.N    R6,??DataTable14_39  ;; 0xffff8780
+   \       0x50   0x42B4             CMP      R4,R6
+   \       0x52   0xD110             BNE.N    ??_network_ssl_read_6
+    755                          mbedtls_strerror(ret, err_str, sizeof(err_str));
+   \       0x54   0x2221             MOVS     R2,#+33
+   \       0x56   0x4669             MOV      R1,SP
+   \       0x58   0x4630             MOV      R0,R6
+   \       0x5A   0x....'....        BL       mbedtls_strerror
+    756                          HAL_Printf("ssl recv error: code = %d, err_str = '%s'\n", ret, err_str);
+                                 ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x5E   0x466A             MOV      R2,SP
+   \       0x60   0x4631             MOV      R1,R6
+   \       0x62   0x....             LDR.N    R0,??DataTable14_40
+   \       0x64   0x....'....        BL       HAL_Printf
+    757                          net_status = -2; /* connection is closed */
+   \       0x68   0xF06F 0x0001      MVN      R0,#+1
+   \       0x6C   0x....             LDR.N    R1,??DataTable14_38
+   \       0x6E   0x6008             STR      R0,[R1, #+0]
+    758                          break;
+    759                      } else if ((MBEDTLS_ERR_SSL_TIMEOUT == ret)
+    760                                 || (MBEDTLS_ERR_SSL_CONN_EOF == ret)
+    761                                 || (MBEDTLS_ERR_SSL_SESSION_TICKET_EXPIRED == ret)
+    762                                 || (MBEDTLS_ERR_SSL_NON_FATAL == ret)) {
+    763                          /* read already complete */
+    764                          /* if call mbedtls_ssl_read again, it will return 0 (means EOF) */
+    765          
+    766                          return readLen;
+    767                      } else {
+    768                          mbedtls_strerror(ret, err_str, sizeof(err_str));
+    769                          HAL_Printf("ssl recv error: code = %d, err_str = '%s'\n", ret, err_str);
+                                 ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+    770                          net_status = -1;
+    771                          return -1; /* Connection error */
+    772                      }
+    773                  }
+    774              }
+    775          
+    776              return (readLen > 0) ? readLen : net_status;
+   \                     ??_network_ssl_read_2: (+1)
+   \       0x70   0x2D00             CMP      R5,#+0
+   \       0x72   0xD01C             BEQ.N    ??_network_ssl_read_7
+   \       0x74   0xE01D             B.N      ??_network_ssl_read_8
+   \                     ??_network_ssl_read_6: (+1)
+   \       0x76   0xF514 0x4FD0      CMN      R4,#+26624
+   \       0x7A   0xD008             BEQ.N    ??_network_ssl_read_9
+   \       0x7C   0xF514 0x4FE5      CMN      R4,#+29312
+   \       0x80   0xD005             BEQ.N    ??_network_ssl_read_9
+   \       0x82   0xF514 0x4FDB      CMN      R4,#+28032
+   \       0x86   0xD002             BEQ.N    ??_network_ssl_read_9
+   \       0x88   0xF514 0x4FCD      CMN      R4,#+26240
+   \       0x8C   0xD101             BNE.N    ??_network_ssl_read_10
+   \                     ??_network_ssl_read_9: (+1)
+   \       0x8E   0x4628             MOV      R0,R5
+   \       0x90   0xE010             B.N      ??_network_ssl_read_5
+   \                     ??_network_ssl_read_10: (+1)
+   \       0x92   0x2221             MOVS     R2,#+33
+   \       0x94   0x4669             MOV      R1,SP
+   \       0x96   0x....'....        BL       mbedtls_strerror
+   \       0x9A   0x466A             MOV      R2,SP
+   \       0x9C   0x4621             MOV      R1,R4
+   \       0x9E   0x....             LDR.N    R0,??DataTable14_40
+   \       0xA0   0x....'....        BL       HAL_Printf
+   \       0xA4   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xA8   0x....             LDR.N    R1,??DataTable14_38
+   \       0xAA   0x6008             STR      R0,[R1, #+0]
+   \       0xAC   0xE002             B.N      ??_network_ssl_read_5
+   \                     ??_network_ssl_read_7: (+1)
+   \       0xAE   0x....             LDR.N    R0,??DataTable14_38
+   \       0xB0   0x6805             LDR      R5,[R0, #+0]
+   \                     ??_network_ssl_read_8: (+1)
+   \       0xB2   0x4628             MOV      R0,R5
+   \                     ??_network_ssl_read_5: (+1)
+   \       0xB4   0xB00A             ADD      SP,SP,#+40
+   \       0xB6   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    777          }
+
+   \                                 In section .bss, align 4
+   \                     `_network_ssl_read::net_status`:
+   \        0x0                      DS8 4
+    778          
+
+   \                                 In section .text, align 2, keep-with-next
+    779          static int _network_ssl_write(TLSDataParams_t *pTlsData, const char *buffer, int len, int timeout_ms)
+    780          {
+   \                     _network_ssl_write: (+1)
+   \        0x0   0xE92D 0x41F8      PUSH     {R3-R8,LR}
+   \        0x4   0xB089             SUB      SP,SP,#+36
+   \        0x6   0x4605             MOV      R5,R0
+   \        0x8   0x460E             MOV      R6,R1
+   \        0xA   0x4617             MOV      R7,R2
+    781          #if defined(_PLATFORM_IS_LINUX_)
+    782              int32_t res = 0;
+    783              int32_t write_bytes = 0;
+    784              uint64_t timestart_ms = 0, timenow_ms = 0;
+    785              struct timeval timestart, timenow, timeout;
+    786          
+    787              if (pTlsData == NULL) {
+    788                  return -1;
+    789              }
+    790          
+    791              /* timeout */
+    792              timeout.tv_sec = timeout_ms/1000;
+    793              timeout.tv_usec = (timeout_ms % 1000) * 1000;
+    794          
+    795              /* Start Time */
+    796              gettimeofday(&timestart, NULL);
+    797              timestart_ms = timestart.tv_sec * 1000 + timestart.tv_usec / 1000;
+    798              timenow_ms = timestart_ms;
+    799          
+    800              res = setsockopt(pTlsData->fd.fd, SOL_SOCKET, SO_SNDTIMEO, &timeout, sizeof(timeout));
+    801              if (res < 0) {
+    802                  return -1;
+    803              }
+    804          
+    805              do {
+    806                  gettimeofday(&timenow, NULL);
+    807                  timenow_ms = timenow.tv_sec * 1000 + timenow.tv_usec / 1000;
+    808          
+    809                  if (timenow_ms - timestart_ms >= timenow_ms ||
+    810                      timeout_ms - (timenow_ms - timestart_ms) > timeout_ms) {
+    811                      break;
+    812                  }
+    813          
+    814                  res = mbedtls_ssl_write(&(pTlsData->ssl), (unsigned char *)buffer + write_bytes, len - write_bytes);
+    815                  if (res < 0) {
+    816                      if (res != MBEDTLS_ERR_SSL_WANT_READ &&
+    817                          res != MBEDTLS_ERR_SSL_WANT_WRITE) {
+    818                          break;
+    819                      }
+    820                  }else if (res == 0) {
+    821                      break;
+    822                  }else{
+    823                      write_bytes += res;
+    824                  }
+    825              }while(((timenow_ms - timestart_ms) < timeout_ms) && (write_bytes < len));
+    826          
+    827              return write_bytes;
+    828          #else
+    829              uint32_t writtenLen = 0;
+   \        0xC   0xF04F 0x0800      MOV      R8,#+0
+    830              int ret = -1;
+    831          
+    832              if (pTlsData == NULL) {
+   \       0x10   0x2D00             CMP      R5,#+0
+   \       0x12   0xD103             BNE.N    ??_network_ssl_write_0
+    833                  return -1;
+   \       0x14   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x18   0xE020             B.N      ??_network_ssl_write_1
+    834              }
+    835          
+    836              while (writtenLen < len) {
+    837                  ret = mbedtls_ssl_write(&(pTlsData->ssl), (unsigned char *)(buffer + writtenLen), (len - writtenLen));
+    838                  if (ret > 0) {
+    839                      writtenLen += ret;
+   \                     ??_network_ssl_write_2: (+1)
+   \       0x1A   0x44A0             ADD      R8,R4,R8
+    840                      continue;
+    841                  } else if (ret == 0) {
+   \                     ??_network_ssl_write_0: (+1)
+   \       0x1C   0x45B8             CMP      R8,R7
+   \       0x1E   0xD21C             BCS.N    ??_network_ssl_write_3
+   \       0x20   0xEBA7 0x0208      SUB      R2,R7,R8
+   \       0x24   0xEB06 0x0108      ADD      R1,R6,R8
+   \       0x28   0x4628             MOV      R0,R5
+   \       0x2A   0x....'....        BL       mbedtls_ssl_write
+   \       0x2E   0x4604             MOV      R4,R0
+   \       0x30   0x2C01             CMP      R4,#+1
+   \       0x32   0xDAF2             BGE.N    ??_network_ssl_write_2
+   \       0x34   0x2C00             CMP      R4,#+0
+   \       0x36   0xD104             BNE.N    ??_network_ssl_write_4
+    842                      HAL_Printf("ssl write timeout\n");
+                             ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x38   0x....             LDR.N    R0,??DataTable14_41
+   \       0x3A   0x....'....        BL       HAL_Printf
+    843                      return 0;
+   \       0x3E   0x2000             MOVS     R0,#+0
+   \       0x40   0xE00C             B.N      ??_network_ssl_write_1
+    844                  } else {
+    845                      char err_str[33];
+    846                      mbedtls_strerror(ret, err_str, sizeof(err_str));
+   \                     ??_network_ssl_write_4: (+1)
+   \       0x42   0x2221             MOVS     R2,#+33
+   \       0x44   0x4669             MOV      R1,SP
+   \       0x46   0x....'....        BL       mbedtls_strerror
+    847                      HAL_Printf("ssl write fail, code=%d, str=%s\n", ret, err_str);
+                             ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x4A   0x466A             MOV      R2,SP
+   \       0x4C   0x4621             MOV      R1,R4
+   \       0x4E   0x....             LDR.N    R0,??DataTable14_42
+   \       0x50   0x....'....        BL       HAL_Printf
+    848                      return -1; /* Connnection error */
+   \       0x54   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x58   0xE000             B.N      ??_network_ssl_write_1
+    849                  }
+    850              }
+    851          
+    852              return writtenLen;
+   \                     ??_network_ssl_write_3: (+1)
+   \       0x5A   0x4640             MOV      R0,R8
+   \                     ??_network_ssl_write_1: (+1)
+   \       0x5C   0xB00A             ADD      SP,SP,#+40
+   \       0x5E   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    853          #endif
+    854          }
+    855          
+
+   \                                 In section .text, align 2, keep-with-next
+    856          static void _network_ssl_disconnect(TLSDataParams_t *pTlsData)
+    857          {
+   \                     _network_ssl_disconnect: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    858              mbedtls_ssl_close_notify(&(pTlsData->ssl));
+   \        0x4   0x....'....        BL       mbedtls_ssl_close_notify
+    859              mbedtls_net_free(&(pTlsData->fd));
+   \        0x8   0xF504 0x708C      ADD      R0,R4,#+280
+   \        0xC   0x....'....        BL       mbedtls_net_free
+    860          #if defined(MBEDTLS_X509_CRT_PARSE_C)
+    861              mbedtls_x509_crt_free(&(pTlsData->cacertl));
+   \       0x10   0xF504 0x70F6      ADD      R0,R4,#+492
+   \       0x14   0x....'....        BL       mbedtls_x509_crt_free
+    862              if ((pTlsData->pkey).pk_info != NULL) {
+   \       0x18   0xF8D4 0x0454      LDR      R0,[R4, #+1108]
+   \       0x1C   0x2800             CMP      R0,#+0
+   \       0x1E   0xD00A             BEQ.N    ??_network_ssl_disconnect_0
+    863                  HAL_Printf("need release client crt&key\n");
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x20   0x....             LDR.N    R0,??DataTable14_43
+   \       0x22   0x....'....        BL       HAL_Printf
+    864          #if defined(MBEDTLS_CERTS_C)
+    865                  mbedtls_x509_crt_free(&(pTlsData->clicert));
+   \       0x26   0xF504 0x7048      ADD      R0,R4,#+800
+   \       0x2A   0x....'....        BL       mbedtls_x509_crt_free
+    866                  mbedtls_pk_free(&(pTlsData->pkey));
+   \       0x2E   0xF204 0x4054      ADDW     R0,R4,#+1108
+   \       0x32   0x....'....        BL       mbedtls_pk_free
+    867          #endif
+    868              }
+    869          #endif
+    870              mbedtls_ssl_free(&(pTlsData->ssl));
+   \                     ??_network_ssl_disconnect_0: (+1)
+   \       0x36   0x4620             MOV      R0,R4
+   \       0x38   0x....'....        BL       mbedtls_ssl_free
+    871              mbedtls_ssl_config_free(&(pTlsData->conf));
+   \       0x3C   0xF504 0x708E      ADD      R0,R4,#+284
+   \       0x40   0x....'....        BL       mbedtls_ssl_config_free
+    872              HAL_Printf("ssl_disconnect\n");
+                     ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \       0x44   0x....             LDR.N    R0,??DataTable14_44
+   \       0x46   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x4A   0x....'....        B.W      HAL_Printf
+    873          }
+    874          
+
+   \                                 In section .text, align 2, keep-with-next
+    875          int HAL_SSL_Read(uintptr_t handle, char *buf, int len, int timeout_ms)
+    876          {
+    877          
+    878              return _network_ssl_read((TLSDataParams_t *)handle, buf, len, timeout_ms);;
+   \                     HAL_SSL_Read: (+1)
+   \        0x0   0x....             B.N      _network_ssl_read
+    879          }
+    880          
+
+   \                                 In section .text, align 2, keep-with-next
+    881          int HAL_SSL_Write(uintptr_t handle, const char *buf, int len, int timeout_ms)
+    882          {
+    883              return _network_ssl_write((TLSDataParams_t *)handle, buf, len, timeout_ms);
+   \                     HAL_SSL_Write: (+1)
+   \        0x0   0x....             B.N      _network_ssl_write
+    884          }
+    885          
+
+   \                                 In section .text, align 2, keep-with-next
+    886          int32_t HAL_SSL_Destroy(uintptr_t handle)
+    887          {
+   \                     HAL_SSL_Destroy: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    888              if ((uintptr_t)NULL == handle) {
+   \        0x4   0xD104             BNE.N    ??HAL_SSL_Destroy_0
+    889                  HAL_Printf("handle is NULL\n");
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \        0x6   0x....             LDR.N    R0,??DataTable14_45
+   \        0x8   0x....'....        BL       HAL_Printf
+    890                  return 0;
+   \        0xC   0x2000             MOVS     R0,#+0
+   \        0xE   0xBD10             POP      {R4,PC}
+    891              }
+    892          
+    893              _network_ssl_disconnect((TLSDataParams_t *)handle);
+   \                     ??HAL_SSL_Destroy_0: (+1)
+   \       0x10   0x....'....        BL       _network_ssl_disconnect
+    894              g_ssl_hooks.free((void *)handle);
+   \       0x14   0x4620             MOV      R0,R4
+   \       0x16   0x....             LDR.N    R1,??DataTable14_16
+   \       0x18   0x6849             LDR      R1,[R1, #+4]
+   \       0x1A   0x4788             BLX      R1
+    895              return 0;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0xBD10             POP      {R4,PC}          ;; return
+    896          }
+    897          
+
+   \                                 In section .text, align 2, keep-with-next
+    898          int ssl_hooks_set(ssl_hooks_t *hooks)
+    899          {
+    900              if (hooks == NULL || hooks->malloc == NULL || hooks->free == NULL) {
+   \                     ssl_hooks_set: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD005             BEQ.N    ??ssl_hooks_set_0
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x2900             CMP      R1,#+0
+   \        0x8   0xD002             BEQ.N    ??ssl_hooks_set_0
+   \        0xA   0x6841             LDR      R1,[R0, #+4]
+   \        0xC   0x2900             CMP      R1,#+0
+   \        0xE   0xD102             BNE.N    ??ssl_hooks_set_1
+    901                  return -1;
+   \                     ??ssl_hooks_set_0: (+1)
+   \       0x10   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x14   0x4770             BX       LR
+    902              }
+    903          
+    904              g_ssl_hooks.malloc = hooks->malloc;
+   \                     ??ssl_hooks_set_1: (+1)
+   \       0x16   0x....             LDR.N    R1,??DataTable14_16
+   \       0x18   0x6802             LDR      R2,[R0, #+0]
+   \       0x1A   0x600A             STR      R2,[R1, #+0]
+    905              g_ssl_hooks.free = hooks->free;
+   \       0x1C   0x6840             LDR      R0,[R0, #+4]
+   \       0x1E   0x6048             STR      R0,[R1, #+4]
+    906          
+    907              return 0;
+   \       0x20   0x2000             MOVS     R0,#+0
+   \       0x22   0x4770             BX       LR               ;; return
+    908          }
+    909          
+
+   \                                 In section .text, align 2, keep-with-next
+    910          uintptr_t HAL_SSL_Establish(const char *host,
+    911                                      uint16_t port,
+    912                                      const char *ca_crt,
+    913                                      uint32_t ca_crt_len)
+    914          {
+   \                     HAL_SSL_Establish: (+1)
+   \        0x0   0xE92D 0x43F0      PUSH     {R4-R9,LR}
+   \        0x4   0xB089             SUB      SP,SP,#+36
+   \        0x6   0x4604             MOV      R4,R0
+   \        0x8   0x4689             MOV      R9,R1
+   \        0xA   0x4615             MOV      R5,R2
+   \        0xC   0x4698             MOV      R8,R3
+    915              char                port_str[6];
+    916              const char         *alter = host;
+    917              TLSDataParams_pt    pTlsData;
+    918          
+    919              if (host == NULL || ca_crt == NULL) {
+   \        0xE   0x2C00             CMP      R4,#+0
+   \       0x10   0xD001             BEQ.N    ??HAL_SSL_Establish_0
+   \       0x12   0x2D00             CMP      R5,#+0
+   \       0x14   0xD104             BNE.N    ??HAL_SSL_Establish_1
+    920                  HAL_Printf("input params are NULL, abort\n");
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \                     ??HAL_SSL_Establish_0: (+1)
+   \       0x16   0x....             LDR.N    R0,??DataTable14_46
+   \       0x18   0x....'....        BL       HAL_Printf
+    921                  return 0;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0xE041             B.N      ??HAL_SSL_Establish_2
+    922              }
+    923          
+    924              if (!strlen(host) || (strlen(host) < 8)) {
+   \                     ??HAL_SSL_Establish_1: (+1)
+   \       0x20   0x....'....        BL       strlen
+   \       0x24   0x2800             CMP      R0,#+0
+   \       0x26   0xD004             BEQ.N    ??HAL_SSL_Establish_3
+   \       0x28   0x4620             MOV      R0,R4
+   \       0x2A   0x....'....        BL       strlen
+   \       0x2E   0x2808             CMP      R0,#+8
+   \       0x30   0xD209             BCS.N    ??HAL_SSL_Establish_4
+    925                  HAL_Printf("invalid host: '%s'(len=%d), abort\n", host, (int)strlen(host));
+                         ^
+Warning[Pe223]: function "HAL_Printf" declared implicitly
+   \                     ??HAL_SSL_Establish_3: (+1)
+   \       0x32   0x4620             MOV      R0,R4
+   \       0x34   0x....'....        BL       strlen
+   \       0x38   0x4602             MOV      R2,R0
+   \       0x3A   0x4621             MOV      R1,R4
+   \       0x3C   0x....             LDR.N    R0,??DataTable14_47
+   \       0x3E   0x....'....        BL       HAL_Printf
+    926                  return 0;
+   \       0x42   0x2000             MOVS     R0,#+0
+   \       0x44   0xE02E             B.N      ??HAL_SSL_Establish_2
+    927              }
+    928          
+    929              pTlsData = g_ssl_hooks.malloc(sizeof(TLSDataParams_t));
+   \                     ??HAL_SSL_Establish_4: (+1)
+   \       0x46   0x....             LDR.N    R7,??DataTable14_16
+   \       0x48   0xF44F 0x608C      MOV      R0,#+1120
+   \       0x4C   0x6839             LDR      R1,[R7, #+0]
+   \       0x4E   0x4788             BLX      R1
+   \       0x50   0x0006             MOVS     R6,R0
+    930              if (NULL == pTlsData) {
+   \       0x52   0xD101             BNE.N    ??HAL_SSL_Establish_5
+    931                  return (uintptr_t)NULL;
+   \       0x54   0x2000             MOVS     R0,#+0
+   \       0x56   0xE025             B.N      ??HAL_SSL_Establish_2
+    932              }
+    933              memset(pTlsData, 0x0, sizeof(TLSDataParams_t));
+   \                     ??HAL_SSL_Establish_5: (+1)
+   \       0x58   0x2200             MOVS     R2,#+0
+   \       0x5A   0xF44F 0x618C      MOV      R1,#+1120
+   \       0x5E   0x....'....        BL       __aeabi_memset4
+    934          
+    935              sprintf(port_str, "%u", port);
+   \       0x62   0x464A             MOV      R2,R9
+   \       0x64   0x....             ADR.N    R1,??DataTable14  ;; 0x25, 0x75, 0x00, 0x00
+   \       0x66   0xA807             ADD      R0,SP,#+28
+   \       0x68   0x....'....        BL       sprintf
+    936          
+    937          #if defined(ON_PRE)
+    938              if (!strcmp(GUIDER_ONLINE_HOSTNAME, host)) {
+    939                  HAL_Printf("ALTERING '%s' to '%s' since ON_PRE defined!\n", host, GUIDER_PRE_ADDRESS);
+    940                  alter = GUIDER_PRE_ADDRESS;
+    941              }
+    942          #endif
+    943          
+    944              mbedtls_platform_set_calloc_free(_SSLCalloc_wrapper, _SSLFree_wrapper);
+   \       0x6C   0x....             LDR.N    R1,??DataTable14_48
+   \       0x6E   0x....             LDR.N    R0,??DataTable14_49
+   \       0x70   0x....'....        BL       mbedtls_platform_set_calloc_free
+    945          
+    946              if (0 != _TLSConnectNetwork(pTlsData, alter, port_str, ca_crt, ca_crt_len, NULL, 0, NULL, 0, NULL, 0)) {
+   \       0x74   0x2000             MOVS     R0,#+0
+   \       0x76   0x9006             STR      R0,[SP, #+24]
+   \       0x78   0x9005             STR      R0,[SP, #+20]
+   \       0x7A   0x9004             STR      R0,[SP, #+16]
+   \       0x7C   0x9003             STR      R0,[SP, #+12]
+   \       0x7E   0x9002             STR      R0,[SP, #+8]
+   \       0x80   0x9001             STR      R0,[SP, #+4]
+   \       0x82   0xF8CD 0x8000      STR      R8,[SP, #+0]
+   \       0x86   0x462B             MOV      R3,R5
+   \       0x88   0xAA07             ADD      R2,SP,#+28
+   \       0x8A   0x4621             MOV      R1,R4
+   \       0x8C   0x4630             MOV      R0,R6
+   \       0x8E   0x....'....        BL       _TLSConnectNetwork
+   \       0x92   0x2800             CMP      R0,#+0
+   \       0x94   0x4630             MOV      R0,R6
+   \       0x96   0xD005             BEQ.N    ??HAL_SSL_Establish_2
+    947                  _network_ssl_disconnect(pTlsData);
+   \       0x98   0x....'....        BL       _network_ssl_disconnect
+    948                  g_ssl_hooks.free((void *)pTlsData);
+   \       0x9C   0x4630             MOV      R0,R6
+   \       0x9E   0x6879             LDR      R1,[R7, #+4]
+   \       0xA0   0x4788             BLX      R1
+    949                  return (uintptr_t)NULL;
+   \       0xA2   0x2000             MOVS     R0,#+0
+    950              }
+    951          
+    952              return (uintptr_t)pTlsData;
+   \                     ??HAL_SSL_Establish_2: (+1)
+   \       0xA4   0xB009             ADD      SP,SP,#+36
+   \       0xA6   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+    953          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable7:
+   \        0x0   0x25 0x73          DC8      "%s\n"
+   \              0x0A 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14:
+   \        0x0   0x25 0x75          DC8      0x25, 0x75, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_1:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_2:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_3:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_4:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_5:
+   \        0x0   0x....'....        DC32     ?_4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_6:
+   \        0x0   0x....'....        DC32     ?_5
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_7:
+   \        0x0   0xFFFF'9800        DC32     0xffff9800
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_8:
+   \        0x0   0x....'....        DC32     ?_7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_9:
+   \        0x0   0x....'....        DC32     ?_8
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_10:
+   \        0x0   0x....'....        DC32     ?_9
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_11:
+   \        0x0   0x....'....        DC32     ?_10
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_12:
+   \        0x0   0x....'....        DC32     ?_11
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_13:
+   \        0x0   0x....'....        DC32     ?_12
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_14:
+   \        0x0   0x....'....        DC32     ?_13
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_15:
+   \        0x0   0x....'....        DC32     ?_14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_16:
+   \        0x0   0x....'....        DC32     g_ssl_hooks
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_17:
+   \        0x0   0x1234'5678        DC32     0x12345678
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_18:
+   \        0x0   0x....'....        DC32     mbedtls_mem_used
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_19:
+   \        0x0   0x....'....        DC32     mbedtls_max_mem_used
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_20:
+   \        0x0   0x....'....        DC32     ?_15
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_21:
+   \        0x0   0x....'....        DC32     ?_16
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_22:
+   \        0x0   0x....'....        DC32     ?_17
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_23:
+   \        0x0   0x....'....        DC32     ?_18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_24:
+   \        0x0   0x....'....        DC32     ?_19
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_25:
+   \        0x0   0x....'....        DC32     ?_20
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_26:
+   \        0x0   0x....'....        DC32     ?_21
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_27:
+   \        0x0   0x....'....        DC32     ?_22
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_28:
+   \        0x0   0x....'....        DC32     _ssl_random
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_29:
+   \        0x0   0x....'....        DC32     _ssl_debug
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_30:
+   \        0x0   0x....'....        DC32     ?_23
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_31:
+   \        0x0   0x....'....        DC32     mbedtls_net_recv_timeout
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_32:
+   \        0x0   0x....'....        DC32     mbedtls_net_recv
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_33:
+   \        0x0   0x....'....        DC32     mbedtls_net_send
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_34:
+   \        0x0   0x....'....        DC32     ?_24
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_35:
+   \        0x0   0x....'....        DC32     ?_25
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_36:
+   \        0x0   0x....'....        DC32     ?_26
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_37:
+   \        0x0   0x....'....        DC32     ?_27
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_38:
+   \        0x0   0x....'....        DC32     `_network_ssl_read::net_status`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_39:
+   \        0x0   0xFFFF'8780        DC32     0xffff8780
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_40:
+   \        0x0   0x....'....        DC32     ?_28
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_41:
+   \        0x0   0x....'....        DC32     ?_29
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_42:
+   \        0x0   0x....'....        DC32     ?_30
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_43:
+   \        0x0   0x....'....        DC32     ?_31
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_44:
+   \        0x0   0x....'....        DC32     ?_32
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_45:
+   \        0x0   0x....'....        DC32     ?_33
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_46:
+   \        0x0   0x....'....        DC32     ?_34
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_47:
+   \        0x0   0x....'....        DC32     ?_35
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_48:
+   \        0x0   0x....'....        DC32     _SSLFree_wrapper
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable14_49:
+   \        0x0   0x....'....        DC32     _SSLCalloc_wrapper
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x65 0x73          DC8 65H, 73H, 74H, 61H, 62H, 6CH, 69H, 73H
+   \              0x74 0x61    
+   \              0x62 0x6C    
+   \              0x69 0x73    
+   \        0x8   0x68 0x20          DC8 68H, 20H, 6DH, 62H, 65H, 64H, 74H, 6CH
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \       0x10   0x73 0x20          DC8 73H, 20H, 63H, 6FH, 6EH, 6EH, 65H, 63H
+   \              0x63 0x6F    
+   \              0x6E 0x6E    
+   \              0x65 0x63    
+   \       0x18   0x74 0x69          DC8 74H, 69H, 6FH, 6EH, 20H, 77H, 69H, 74H
+   \              0x6F 0x6E    
+   \              0x20 0x77    
+   \              0x69 0x74    
+   \       0x20   0x68 0x20          DC8 68H, 20H, 73H, 65H, 72H, 76H, 65H, 72H
+   \              0x73 0x65    
+   \              0x72 0x76    
+   \              0x65 0x72    
+   \       0x28   0x28 0x68          DC8 28H, 68H, 6FH, 73H, 74H, 3DH, 27H, 25H
+   \              0x6F 0x73    
+   \              0x74 0x3D    
+   \              0x27 0x25    
+   \       0x30   0x73 0x27          DC8 73H, 27H, 2CH, 20H, 70H, 6FH, 72H, 74H
+   \              0x2C 0x20    
+   \              0x70 0x6F    
+   \              0x72 0x74    
+   \       0x38   0x3D 0x5B          DC8 3DH, 5BH, 25H, 75H, 5DH, 29H, 0AH, 0
+   \              0x25 0x75    
+   \              0x5D 0x29    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x67 0x65          DC8 "getaddrinfo error(%d), host = '%s', port = [%d]\012"
+   \              0x74 0x61    
+   \              0x64 0x64    
+   \              0x72 0x69    
+   \              0x6E 0x66    
+   \              0x6F 0x20    
+   \              0x65 0x72    
+   \              0x72 0x6F    
+   \              0x72 0x28    
+   \              0x25 0x64    
+   \              0x29 0x2C    
+   \              0x20 0x68    
+   \              0x6F 0x73    
+   \              0x74 0x20    
+   \              0x3D 0x20    
+   \              0x27 0x25    
+   \              0x73 0x27    
+   \              0x2C 0x20    
+   \              0x70 0x6F    
+   \              0x72 0x74    
+   \              0x20 0x3D    
+   \              0x20 0x5B    
+   \              0x25 0x64    
+   \              0x5D 0x0A    
+   \              0x00         
+   \       0x31   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x63 0x72          DC8 "create at conn error\012"
+   \              0x65 0x61    
+   \              0x74 0x65    
+   \              0x20 0x61    
+   \              0x74 0x20    
+   \              0x63 0x6F    
+   \              0x6E 0x6E    
+   \              0x20 0x65    
+   \              0x72 0x72    
+   \              0x6F 0x72    
+   \              0x0A 0x00    
+   \       0x16   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_3:
+   \        0x0   0x63 0x6F          DC8 "connect error\012"
+   \              0x6E 0x6E    
+   \              0x65 0x63    
+   \              0x74 0x20    
+   \              0x65 0x72    
+   \              0x72 0x6F    
+   \              0x72 0x0A    
+   \              0x00         
+   \        0xF   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_4:
+   \        0x0   0x66 0x61          DC8 "fail to establish mbedtls\012"
+   \              0x69 0x6C    
+   \              0x20 0x74    
+   \              0x6F 0x20    
+   \              0x65 0x73    
+   \              0x74 0x61    
+   \              0x62 0x6C    
+   \              0x69 0x73    
+   \              0x68 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \              0x73 0x0A    
+   \              0x00         
+   \       0x1B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_5:
+   \        0x0   0x73 0x75          DC8 "success to establish mbedtls, fd=%d\012"
+   \              0x63 0x63    
+   \              0x65 0x73    
+   \              0x73 0x20    
+   \              0x74 0x6F    
+   \              0x20 0x65    
+   \              0x73 0x74    
+   \              0x61 0x62    
+   \              0x6C 0x69    
+   \              0x73 0x68    
+   \              0x20 0x6D    
+   \              0x62 0x65    
+   \              0x64 0x74    
+   \              0x6C 0x73    
+   \              0x2C 0x20    
+   \              0x66 0x64    
+   \              0x3D 0x25    
+   \              0x64 0x0A    
+   \              0x00         
+   \       0x25   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x25 0x73          DC8 "%s\012"
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_7:
+   \        0x0   0x63 0x65          DC8 "certificate verification result: 0x%02x\012"
+   \              0x72 0x74    
+   \              0x69 0x66    
+   \              0x69 0x63    
+   \              0x61 0x74    
+   \              0x65 0x20    
+   \              0x76 0x65    
+   \              0x72 0x69    
+   \              0x66 0x69    
+   \              0x63 0x61    
+   \              0x74 0x69    
+   \              0x6F 0x6E    
+   \              0x20 0x72    
+   \              0x65 0x73    
+   \              0x75 0x6C    
+   \              0x74 0x3A    
+   \              0x20 0x30    
+   \              0x78 0x25    
+   \              0x30 0x32    
+   \              0x78 0x0A    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_8:
+   \        0x0   0x4C 0x6F          DC8 "Loading the CA root certificate ...\012"
+   \              0x61 0x64    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x74 0x68    
+   \              0x65 0x20    
+   \              0x43 0x41    
+   \              0x20 0x72    
+   \              0x6F 0x6F    
+   \              0x74 0x20    
+   \              0x63 0x65    
+   \              0x72 0x74    
+   \              0x69 0x66    
+   \              0x69 0x63    
+   \              0x61 0x74    
+   \              0x65 0x20    
+   \              0x2E 0x2E    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x25   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_9:
+   \        0x0   0x20 0x66          DC8 " failed ! x509parse_crt returned -0x%04x\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x20    
+   \              0x21 0x20    
+   \              0x78 0x35    
+   \              0x30 0x39    
+   \              0x70 0x61    
+   \              0x72 0x73    
+   \              0x65 0x5F    
+   \              0x63 0x72    
+   \              0x74 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x2D    
+   \              0x30 0x78    
+   \              0x25 0x30    
+   \              0x34 0x78    
+   \              0x0A 0x00    
+   \       0x2A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_10:
+   \        0x0   0x20 0x6F          DC8 " ok (%d skipped)\012"
+   \              0x6B 0x20    
+   \              0x28 0x25    
+   \              0x64 0x20    
+   \              0x73 0x6B    
+   \              0x69 0x70    
+   \              0x70 0x65    
+   \              0x64 0x29    
+   \              0x0A 0x00    
+   \       0x12   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_11:
+   \        0x0   0x73 0x74          DC8 "start prepare client cert .\012"
+   \              0x61 0x72    
+   \              0x74 0x20    
+   \              0x70 0x72    
+   \              0x65 0x70    
+   \              0x61 0x72    
+   \              0x65 0x20    
+   \              0x63 0x6C    
+   \              0x69 0x65    
+   \              0x6E 0x74    
+   \              0x20 0x63    
+   \              0x65 0x72    
+   \              0x74 0x20    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x1D   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_12:
+   \        0x0   0x20 0x66          DC8 " failed!  mbedtls_x509_crt_parse returned -0x%x\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x21    
+   \              0x20 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \              0x73 0x5F    
+   \              0x78 0x35    
+   \              0x30 0x39    
+   \              0x5F 0x63    
+   \              0x72 0x74    
+   \              0x5F 0x70    
+   \              0x61 0x72    
+   \              0x73 0x65    
+   \              0x20 0x72    
+   \              0x65 0x74    
+   \              0x75 0x72    
+   \              0x6E 0x65    
+   \              0x64 0x20    
+   \              0x2D 0x30    
+   \              0x78 0x25    
+   \              0x78 0x0A    
+   \              0x00         
+   \       0x31   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_13:
+   \        0x0   0x73 0x74          DC8 "start mbedtls_pk_parse_key[%s]\012"
+   \              0x61 0x72    
+   \              0x74 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \              0x73 0x5F    
+   \              0x70 0x6B    
+   \              0x5F 0x70    
+   \              0x61 0x72    
+   \              0x73 0x65    
+   \              0x5F 0x6B    
+   \              0x65 0x79    
+   \              0x5B 0x25    
+   \              0x73 0x5D    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_14:
+   \        0x0   0x20 0x66          DC8 " failed\012  !  mbedtls_pk_parse_key returned -0x%x\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x0A    
+   \              0x20 0x20    
+   \              0x21 0x20    
+   \              0x20 0x6D    
+   \              0x62 0x65    
+   \              0x64 0x74    
+   \              0x6C 0x73    
+   \              0x5F 0x70    
+   \              0x6B 0x5F    
+   \              0x70 0x61    
+   \              0x72 0x73    
+   \              0x65 0x5F    
+   \              0x6B 0x65    
+   \              0x79 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x2D    
+   \              0x30 0x78    
+   \              0x25 0x78    
+   \              0x0A 0x00    
+   \       0x32   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_15:
+   \        0x0   0x57 0x61          DC8 "Warning - invalid mem info magic: 0x%x\015\012"
+   \              0x72 0x6E    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x2D 0x20    
+   \              0x69 0x6E    
+   \              0x76 0x61    
+   \              0x6C 0x69    
+   \              0x64 0x20    
+   \              0x6D 0x65    
+   \              0x6D 0x20    
+   \              0x69 0x6E    
+   \              0x66 0x6F    
+   \              0x20 0x6D    
+   \              0x61 0x67    
+   \              0x69 0x63    
+   \              0x3A 0x20    
+   \              0x30 0x78    
+   \              0x25 0x78    
+   \              0x0D 0x0A    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_16:
+   \        0x0   0x20 0x66          DC8 " failed ! ssl_client_init returned -0x%04x\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x20    
+   \              0x21 0x20    
+   \              0x73 0x73    
+   \              0x6C 0x5F    
+   \              0x63 0x6C    
+   \              0x69 0x65    
+   \              0x6E 0x74    
+   \              0x5F 0x69    
+   \              0x6E 0x69    
+   \              0x74 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x2D    
+   \              0x30 0x78    
+   \              0x25 0x30    
+   \              0x34 0x78    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_17:
+   \        0x0   0x43 0x6F          DC8 "Connecting to /%s/%s...\012"
+   \              0x6E 0x6E    
+   \              0x65 0x63    
+   \              0x74 0x69    
+   \              0x6E 0x67    
+   \              0x20 0x74    
+   \              0x6F 0x20    
+   \              0x2F 0x25    
+   \              0x73 0x2F    
+   \              0x25 0x73    
+   \              0x2E 0x2E    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x19   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_18:
+   \        0x0   0x20 0x66          DC8 " failed ! net_connect returned -0x%04x\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x20    
+   \              0x21 0x20    
+   \              0x6E 0x65    
+   \              0x74 0x5F    
+   \              0x63 0x6F    
+   \              0x6E 0x6E    
+   \              0x65 0x63    
+   \              0x74 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x2D    
+   \              0x30 0x78    
+   \              0x25 0x30    
+   \              0x34 0x78    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_19:
+   \        0x0   0x20 0x6F          DC8 " ok\012"
+   \              0x6B 0x0A    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_20:
+   \        0x0   0x20 0x20          DC8 "  . Setting up the SSL/TLS structure...\012"
+   \              0x2E 0x20    
+   \              0x53 0x65    
+   \              0x74 0x74    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x75 0x70    
+   \              0x20 0x74    
+   \              0x68 0x65    
+   \              0x20 0x53    
+   \              0x53 0x4C    
+   \              0x2F 0x54    
+   \              0x4C 0x53    
+   \              0x20 0x73    
+   \              0x74 0x72    
+   \              0x75 0x63    
+   \              0x74 0x75    
+   \              0x72 0x65    
+   \              0x2E 0x2E    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_21:
+   \        0x0   0x20 0x66          DC8 " failed! mbedtls_ssl_config_defaults returned %d\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x21    
+   \              0x20 0x6D    
+   \              0x62 0x65    
+   \              0x64 0x74    
+   \              0x6C 0x73    
+   \              0x5F 0x73    
+   \              0x73 0x6C    
+   \              0x5F 0x63    
+   \              0x6F 0x6E    
+   \              0x66 0x69    
+   \              0x67 0x5F    
+   \              0x64 0x65    
+   \              0x66 0x61    
+   \              0x75 0x6C    
+   \              0x74 0x73    
+   \              0x20 0x72    
+   \              0x65 0x74    
+   \              0x75 0x72    
+   \              0x6E 0x65    
+   \              0x64 0x20    
+   \              0x25 0x64    
+   \              0x0A 0x00    
+   \       0x32   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_22:
+   \        0x0   0x20 0x66          DC8 20H, 66H, 61H, 69H, 6CH, 65H, 64H, 0AH
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x0A    
+   \        0x8   0x20 0x20          DC8 20H, 20H, 21H, 20H, 6DH, 62H, 65H, 64H
+   \              0x21 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \       0x10   0x74 0x6C          DC8 74H, 6CH, 73H, 5FH, 73H, 73H, 6CH, 5FH
+   \              0x73 0x5F    
+   \              0x73 0x73    
+   \              0x6C 0x5F    
+   \       0x18   0x63 0x6F          DC8 63H, 6FH, 6EH, 66H, 5FH, 6FH, 77H, 6EH
+   \              0x6E 0x66    
+   \              0x5F 0x6F    
+   \              0x77 0x6E    
+   \       0x20   0x5F 0x63          DC8 5FH, 63H, 65H, 72H, 74H, 20H, 72H, 65H
+   \              0x65 0x72    
+   \              0x74 0x20    
+   \              0x72 0x65    
+   \       0x28   0x74 0x75          DC8 74H, 75H, 72H, 6EH, 65H, 64H, 20H, 25H
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x25    
+   \       0x30   0x64 0x0A          DC8 64H, 0AH, 0
+   \              0x00         
+   \       0x33   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_23:
+   \        0x0   0x66 0x61          DC8 "failed! mbedtls_ssl_setup returned %d\012"
+   \              0x69 0x6C    
+   \              0x65 0x64    
+   \              0x21 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \              0x73 0x5F    
+   \              0x73 0x73    
+   \              0x6C 0x5F    
+   \              0x73 0x65    
+   \              0x74 0x75    
+   \              0x70 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x25    
+   \              0x64 0x0A    
+   \              0x00         
+   \       0x27   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_24:
+   \        0x0   0x50 0x65          DC8 "Performing the SSL/TLS handshake...\012"
+   \              0x72 0x66    
+   \              0x6F 0x72    
+   \              0x6D 0x69    
+   \              0x6E 0x67    
+   \              0x20 0x74    
+   \              0x68 0x65    
+   \              0x20 0x53    
+   \              0x53 0x4C    
+   \              0x2F 0x54    
+   \              0x4C 0x53    
+   \              0x20 0x68    
+   \              0x61 0x6E    
+   \              0x64 0x73    
+   \              0x68 0x61    
+   \              0x6B 0x65    
+   \              0x2E 0x2E    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x25   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_25:
+   \        0x0   0x66 0x61          DC8 "failed  ! mbedtls_ssl_handshake returned -0x%04x\012"
+   \              0x69 0x6C    
+   \              0x65 0x64    
+   \              0x20 0x20    
+   \              0x21 0x20    
+   \              0x6D 0x62    
+   \              0x65 0x64    
+   \              0x74 0x6C    
+   \              0x73 0x5F    
+   \              0x73 0x73    
+   \              0x6C 0x5F    
+   \              0x68 0x61    
+   \              0x6E 0x64    
+   \              0x73 0x68    
+   \              0x61 0x6B    
+   \              0x65 0x20    
+   \              0x72 0x65    
+   \              0x74 0x75    
+   \              0x72 0x6E    
+   \              0x65 0x64    
+   \              0x20 0x2D    
+   \              0x30 0x78    
+   \              0x25 0x30    
+   \              0x34 0x78    
+   \              0x0A 0x00    
+   \       0x32   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_26:
+   \        0x0   0x20 0x20          DC8 "  . Verifying peer X.509 certificate..\012"
+   \              0x2E 0x20    
+   \              0x56 0x65    
+   \              0x72 0x69    
+   \              0x66 0x79    
+   \              0x69 0x6E    
+   \              0x67 0x20    
+   \              0x70 0x65    
+   \              0x65 0x72    
+   \              0x20 0x58    
+   \              0x2E 0x35    
+   \              0x30 0x39    
+   \              0x20 0x63    
+   \              0x65 0x72    
+   \              0x74 0x69    
+   \              0x66 0x69    
+   \              0x63 0x61    
+   \              0x74 0x65    
+   \              0x2E 0x2E    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_27:
+   \        0x0   0x20 0x66          DC8 " failed  ! verify result not confirmed.\012"
+   \              0x61 0x69    
+   \              0x6C 0x65    
+   \              0x64 0x20    
+   \              0x20 0x21    
+   \              0x20 0x76    
+   \              0x65 0x72    
+   \              0x69 0x66    
+   \              0x79 0x20    
+   \              0x72 0x65    
+   \              0x73 0x75    
+   \              0x6C 0x74    
+   \              0x20 0x6E    
+   \              0x6F 0x74    
+   \              0x20 0x63    
+   \              0x6F 0x6E    
+   \              0x66 0x69    
+   \              0x72 0x6D    
+   \              0x65 0x64    
+   \              0x2E 0x0A    
+   \              0x00         
+   \       0x29   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_28:
+   \        0x0   0x73 0x73          DC8 "ssl recv error: code = %d, err_str = '%s'\012"
+   \              0x6C 0x20    
+   \              0x72 0x65    
+   \              0x63 0x76    
+   \              0x20 0x65    
+   \              0x72 0x72    
+   \              0x6F 0x72    
+   \              0x3A 0x20    
+   \              0x63 0x6F    
+   \              0x64 0x65    
+   \              0x20 0x3D    
+   \              0x20 0x25    
+   \              0x64 0x2C    
+   \              0x20 0x65    
+   \              0x72 0x72    
+   \              0x5F 0x73    
+   \              0x74 0x72    
+   \              0x20 0x3D    
+   \              0x20 0x27    
+   \              0x25 0x73    
+   \              0x27 0x0A    
+   \              0x00         
+   \       0x2B   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_29:
+   \        0x0   0x73 0x73          DC8 "ssl write timeout\012"
+   \              0x6C 0x20    
+   \              0x77 0x72    
+   \              0x69 0x74    
+   \              0x65 0x20    
+   \              0x74 0x69    
+   \              0x6D 0x65    
+   \              0x6F 0x75    
+   \              0x74 0x0A    
+   \              0x00         
+   \       0x13   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_30:
+   \        0x0   0x73 0x73          DC8 "ssl write fail, code=%d, str=%s\012"
+   \              0x6C 0x20    
+   \              0x77 0x72    
+   \              0x69 0x74    
+   \              0x65 0x20    
+   \              0x66 0x61    
+   \              0x69 0x6C    
+   \              0x2C 0x20    
+   \              0x63 0x6F    
+   \              0x64 0x65    
+   \              0x3D 0x25    
+   \              0x64 0x2C    
+   \              0x20 0x73    
+   \              0x74 0x72    
+   \              0x3D 0x25    
+   \              0x73 0x0A    
+   \              0x00         
+   \       0x21   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_31:
+   \        0x0   0x6E 0x65          DC8 "need release client crt&key\012"
+   \              0x65 0x64    
+   \              0x20 0x72    
+   \              0x65 0x6C    
+   \              0x65 0x61    
+   \              0x73 0x65    
+   \              0x20 0x63    
+   \              0x6C 0x69    
+   \              0x65 0x6E    
+   \              0x74 0x20    
+   \              0x63 0x72    
+   \              0x74 0x26    
+   \              0x6B 0x65    
+   \              0x79 0x0A    
+   \              0x00         
+   \       0x1D   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_32:
+   \        0x0   0x73 0x73          DC8 "ssl_disconnect\012"
+   \              0x6C 0x5F    
+   \              0x64 0x69    
+   \              0x73 0x63    
+   \              0x6F 0x6E    
+   \              0x6E 0x65    
+   \              0x63 0x74    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_33:
+   \        0x0   0x68 0x61          DC8 "handle is NULL\012"
+   \              0x6E 0x64    
+   \              0x6C 0x65    
+   \              0x20 0x69    
+   \              0x73 0x20    
+   \              0x4E 0x55    
+   \              0x4C 0x4C    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_34:
+   \        0x0   0x69 0x6E          DC8 "input params are NULL, abort\012"
+   \              0x70 0x75    
+   \              0x74 0x20    
+   \              0x70 0x61    
+   \              0x72 0x61    
+   \              0x6D 0x73    
+   \              0x20 0x61    
+   \              0x72 0x65    
+   \              0x20 0x4E    
+   \              0x55 0x4C    
+   \              0x4C 0x2C    
+   \              0x20 0x61    
+   \              0x62 0x6F    
+   \              0x72 0x74    
+   \              0x0A 0x00    
+   \       0x1E   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_35:
+   \        0x0   0x69 0x6E          DC8 "invalid host: '%s'(len=%d), abort\012"
+   \              0x76 0x61    
+   \              0x6C 0x69    
+   \              0x64 0x20    
+   \              0x68 0x6F    
+   \              0x73 0x74    
+   \              0x3A 0x20    
+   \              0x27 0x25    
+   \              0x73 0x27    
+   \              0x28 0x6C    
+   \              0x65 0x6E    
+   \              0x3D 0x25    
+   \              0x64 0x29    
+   \              0x2C 0x20    
+   \              0x61 0x62    
+   \              0x6F 0x72    
+   \              0x74 0x0A    
+   \              0x00         
+   \       0x23   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x25 0x75          DC8 "%u"
+   \              0x00         
+   \        0x3   0x00               DC8 0
+    954          
+    955          
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   HAL_SSL_Destroy
+         8   -- Indirect call
+         8   -> HAL_Printf
+         8   -> _network_ssl_disconnect
+      64   HAL_SSL_Establish
+        64   -- Indirect call
+        64   -> HAL_Printf
+        64   -> _TLSConnectNetwork
+        64   -> __aeabi_memset4
+        64   -> _network_ssl_disconnect
+        64   -> mbedtls_platform_set_calloc_free
+        64   -> sprintf
+        64   -> strlen
+       0   HAL_SSL_Read
+         0   -> _network_ssl_read
+       0   HAL_SSL_Write
+         0   -> _network_ssl_write
+      16   _SSLCalloc_wrapper
+        16   -- Indirect call
+        16   -> __aeabi_memset
+       0   _SSLFree_wrapper
+         0   -- Indirect call
+         0   -> HAL_Printf
+      64   _TLSConnectNetwork
+        64   -> HAL_Printf
+        64   -> _real_confirm
+        64   -> _ssl_client_init
+        64   -> mbedtls_net_connect
+        64   -> mbedtls_ssl_conf_authmode
+        64   -> mbedtls_ssl_conf_ca_chain
+        64   -> mbedtls_ssl_conf_dbg
+        64   -> mbedtls_ssl_conf_max_version
+        64   -> mbedtls_ssl_conf_min_version
+        64   -> mbedtls_ssl_conf_own_cert
+        64   -> mbedtls_ssl_conf_read_timeout
+        64   -> mbedtls_ssl_conf_rng
+        64   -> mbedtls_ssl_config_defaults
+        64   -> mbedtls_ssl_get_verify_result
+        64   -> mbedtls_ssl_handshake
+        64   -> mbedtls_ssl_set_bio
+        64   -> mbedtls_ssl_set_hostname
+        64   -> mbedtls_ssl_setup
+       8   _avRandom
+         8   -> rand
+       8   _network_ssl_disconnect
+         0   -> HAL_Printf
+         8   -> HAL_Printf
+         8   -> mbedtls_net_free
+         8   -> mbedtls_pk_free
+         8   -> mbedtls_ssl_close_notify
+         8   -> mbedtls_ssl_config_free
+         8   -> mbedtls_ssl_free
+         8   -> mbedtls_x509_crt_free
+      64   _network_ssl_read
+        64   -> HAL_Printf
+        64   -> mbedtls_ssl_conf_read_timeout
+        64   -> mbedtls_ssl_read
+        64   -> mbedtls_strerror
+      64   _network_ssl_write
+        64   -> HAL_Printf
+        64   -> mbedtls_ssl_write
+        64   -> mbedtls_strerror
+       8   _real_confirm
+         8   -> HAL_Printf
+      32   _ssl_client_init
+        32   -> HAL_Printf
+        32   -> mbedtls_debug_set_threshold
+        32   -> mbedtls_net_init
+        32   -> mbedtls_pk_init
+        32   -> mbedtls_pk_parse_key
+        32   -> mbedtls_ssl_config_init
+        32   -> mbedtls_ssl_init
+        32   -> mbedtls_x509_crt_init
+        32   -> mbedtls_x509_crt_parse
+       8   _ssl_debug
+         0   -> HAL_Printf
+      16   _ssl_random
+        16   -> _avRandom
+      40   mbedtls_net_connect
+        40   -> HAL_Printf
+        40   -> HAL_SleepMs
+        40   -> at_conn_close
+        40   -> at_conn_getaddrinfo
+        40   -> at_conn_setup
+        40   -> at_conn_start
+        40   -> atoi
+       8   mbedtls_net_free
+         8   -> at_conn_close
+       0   mbedtls_net_init
+       0   mbedtls_net_recv
+         0   -> at_conn_recv
+      24   mbedtls_net_recv_timeout
+        24   -> HAL_SleepMs
+        24   -> at_conn_recv
+       0   mbedtls_net_send
+         0   -> at_conn_send
+       0   ssl_hooks_set
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable14
+       4  ??DataTable14_1
+       4  ??DataTable14_10
+       4  ??DataTable14_11
+       4  ??DataTable14_12
+       4  ??DataTable14_13
+       4  ??DataTable14_14
+       4  ??DataTable14_15
+       4  ??DataTable14_16
+       4  ??DataTable14_17
+       4  ??DataTable14_18
+       4  ??DataTable14_19
+       4  ??DataTable14_2
+       4  ??DataTable14_20
+       4  ??DataTable14_21
+       4  ??DataTable14_22
+       4  ??DataTable14_23
+       4  ??DataTable14_24
+       4  ??DataTable14_25
+       4  ??DataTable14_26
+       4  ??DataTable14_27
+       4  ??DataTable14_28
+       4  ??DataTable14_29
+       4  ??DataTable14_3
+       4  ??DataTable14_30
+       4  ??DataTable14_31
+       4  ??DataTable14_32
+       4  ??DataTable14_33
+       4  ??DataTable14_34
+       4  ??DataTable14_35
+       4  ??DataTable14_36
+       4  ??DataTable14_37
+       4  ??DataTable14_38
+       4  ??DataTable14_39
+       4  ??DataTable14_4
+       4  ??DataTable14_40
+       4  ??DataTable14_41
+       4  ??DataTable14_42
+       4  ??DataTable14_43
+       4  ??DataTable14_44
+       4  ??DataTable14_45
+       4  ??DataTable14_46
+       4  ??DataTable14_47
+       4  ??DataTable14_48
+       4  ??DataTable14_49
+       4  ??DataTable14_5
+       4  ??DataTable14_6
+       4  ??DataTable14_7
+       4  ??DataTable14_8
+       4  ??DataTable14_9
+       4  ??DataTable7
+      64  ?_0
+      52  ?_1
+      20  ?_10
+      32  ?_11
+      52  ?_12
+      32  ?_13
+      52  ?_14
+      44  ?_15
+      44  ?_16
+      28  ?_17
+      40  ?_18
+       8  ?_19
+      24  ?_2
+      44  ?_20
+      52  ?_21
+      52  ?_22
+      40  ?_23
+      40  ?_24
+      52  ?_25
+      40  ?_26
+      44  ?_27
+      44  ?_28
+      20  ?_29
+      16  ?_3
+      36  ?_30
+      32  ?_31
+      16  ?_32
+      16  ?_33
+      32  ?_34
+      36  ?_35
+       4  ?_36
+      28  ?_4
+      40  ?_5
+       4  ?_6
+      44  ?_7
+      40  ?_8
+      44  ?_9
+      32  HAL_SSL_Destroy
+     170  HAL_SSL_Establish
+       2  HAL_SSL_Read
+       2  HAL_SSL_Write
+      92  _SSLCalloc_wrapper
+      46  _SSLFree_wrapper
+     498  _TLSConnectNetwork
+      18  _avRandom
+      78  _network_ssl_disconnect
+     186  _network_ssl_read
+      98  _network_ssl_write
+      16  _real_confirm
+     224  _ssl_client_init
+      20  _ssl_debug
+      32  _ssl_random
+       8  g_ssl_hooks
+       4  mbedtls_max_mem_used
+       4  mbedtls_mem_used
+     172  mbedtls_net_connect
+      24  mbedtls_net_free
+       8  mbedtls_net_init
+      16  mbedtls_net_recv
+      58  mbedtls_net_recv_timeout
+      16  mbedtls_net_send
+       4  net_status
+      36  ssl_hooks_set
+
+ 
+    12 bytes in section .bss
+     8 bytes in section .data
+ 1 308 bytes in section .rodata
+ 2 048 bytes in section .text
+ 
+ 2 048 bytes of CODE  memory
+ 1 308 bytes of CONST memory
+    20 bytes of DATA  memory
+
+Errors: none
+Warnings: 19

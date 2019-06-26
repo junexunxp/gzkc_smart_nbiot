@@ -1,0 +1,1786 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:23
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\mbedtls\library\ctr_drbg.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW1013.tmp
+#        (C:\Development\gzkc_smart_nbiot\mbedtls\library\ctr_drbg.c -D DEBUG
+#        -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\ctr_drbg.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\ctr_drbg.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\mbedtls\library\ctr_drbg.c
+      1          /*
+      2           *  CTR_DRBG implementation based on AES-256 (NIST SP 800-90)
+      3           *
+      4           *  Copyright (C) 2006-2015, ARM Limited, All Rights Reserved
+      5           *  SPDX-License-Identifier: Apache-2.0
+      6           *
+      7           *  Licensed under the Apache License, Version 2.0 (the "License"); you may
+      8           *  not use this file except in compliance with the License.
+      9           *  You may obtain a copy of the License at
+     10           *
+     11           *  http://www.apache.org/licenses/LICENSE-2.0
+     12           *
+     13           *  Unless required by applicable law or agreed to in writing, software
+     14           *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     15           *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     16           *  See the License for the specific language governing permissions and
+     17           *  limitations under the License.
+     18           *
+     19           *  This file is part of mbed TLS (https://tls.mbed.org)
+     20           */
+     21          /*
+     22           *  The NIST SP 800-90 DRBGs are described in the following publication.
+     23           *
+     24           *  http://csrc.nist.gov/publications/nistpubs/800-90/SP800-90revised_March2007.pdf
+     25           */
+     26          
+     27          #if !defined(MBEDTLS_CONFIG_FILE)
+     28          #include "mbedtls/config.h"
+     29          #else
+     30          #include MBEDTLS_CONFIG_FILE
+     31          #endif
+     32          
+     33          #if defined(MBEDTLS_CTR_DRBG_C)
+     34          
+     35          #include "mbedtls/ctr_drbg.h"
+     36          #include "mbedtls/platform_util.h"
+     37          
+     38          #include <string.h>
+     39          
+     40          #if defined(MBEDTLS_FS_IO)
+     41          #include <stdio.h>
+     42          #endif
+     43          
+     44          #if defined(MBEDTLS_SELF_TEST)
+     45          #if defined(MBEDTLS_PLATFORM_C)
+     46          #include "mbedtls/platform.h"
+     47          #else
+     48          #include <stdio.h>
+     49          #define mbedtls_printf printf
+     50          #endif /* MBEDTLS_PLATFORM_C */
+     51          #endif /* MBEDTLS_SELF_TEST */
+     52          
+     53          /*
+     54           * CTR_DRBG context initialization
+     55           */
+
+   \                                 In section .text, align 2, keep-with-next
+     56          void mbedtls_ctr_drbg_init( mbedtls_ctr_drbg_context *ctx )
+     57          {
+     58              memset( ctx, 0, sizeof( mbedtls_ctr_drbg_context ) );
+   \                     mbedtls_ctr_drbg_init: (+1)
+   \        0x0   0x2200             MOVS     R2,#+0
+   \        0x2   0xF44F 0x71A0      MOV      R1,#+320
+   \        0x6   0x....'....        B.W      __aeabi_memset4
+     59          
+     60          #if defined(MBEDTLS_THREADING_C)
+     61              mbedtls_mutex_init( &ctx->mutex );
+     62          #endif
+     63          }
+     64          
+     65          /*
+     66           * Non-public function wrapped by mbedtls_ctr_drbg_seed(). Necessary to allow
+     67           * NIST tests to succeed (which require known length fixed entropy)
+     68           */
+
+   \                                 In section .text, align 2, keep-with-next
+     69          int mbedtls_ctr_drbg_seed_entropy_len(
+     70                             mbedtls_ctr_drbg_context *ctx,
+     71                             int (*f_entropy)(void *, unsigned char *, size_t),
+     72                             void *p_entropy,
+     73                             const unsigned char *custom,
+     74                             size_t len,
+     75                             size_t entropy_len )
+     76          {
+   \                     mbedtls_ctr_drbg_seed_entropy_len: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0xB088             SUB      SP,SP,#+32
+   \        0x6   0x4604             MOV      R4,R0
+   \        0x8   0x460D             MOV      R5,R1
+   \        0xA   0x4616             MOV      R6,R2
+   \        0xC   0x461F             MOV      R7,R3
+   \        0xE   0xF8DD 0x803C      LDR      R8,[SP, #+60]
+     77              int ret;
+     78              unsigned char key[MBEDTLS_CTR_DRBG_KEYSIZE];
+     79          
+     80              memset( key, 0, MBEDTLS_CTR_DRBG_KEYSIZE );
+   \       0x12   0x2200             MOVS     R2,#+0
+   \       0x14   0x2120             MOVS     R1,#+32
+   \       0x16   0x4668             MOV      R0,SP
+   \       0x18   0x....'....        BL       __aeabi_memset4
+     81          
+     82              mbedtls_aes_init( &ctx->aes_ctx );
+   \       0x1C   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x20   0x....'....        BL       mbedtls_aes_init
+     83          
+     84              ctx->f_entropy = f_entropy;
+   \       0x24   0xF8C4 0x5138      STR      R5,[R4, #+312]
+     85              ctx->p_entropy = p_entropy;
+   \       0x28   0xF8C4 0x613C      STR      R6,[R4, #+316]
+     86          
+     87              ctx->entropy_len = entropy_len;
+   \       0x2C   0xF8C4 0x8018      STR      R8,[R4, #+24]
+     88              ctx->reseed_interval = MBEDTLS_CTR_DRBG_RESEED_INTERVAL;
+   \       0x30   0xF242 0x7010      MOVW     R0,#+10000
+   \       0x34   0x61E0             STR      R0,[R4, #+28]
+     89          
+     90              /*
+     91               * Initialize with an empty key
+     92               */
+     93              if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
+   \       0x36   0xF44F 0x7280      MOV      R2,#+256
+   \       0x3A   0x4669             MOV      R1,SP
+   \       0x3C   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x40   0x....'....        BL       mbedtls_aes_setkey_enc
+   \       0x44   0x2800             CMP      R0,#+0
+   \       0x46   0xD107             BNE.N    ??mbedtls_ctr_drbg_seed_entropy_len_0
+     94              {
+     95                  return( ret );
+   \       0x48   0x9A0E             LDR      R2,[SP, #+56]
+     96              }
+     97          
+     98              if( ( ret = mbedtls_ctr_drbg_reseed( ctx, custom, len ) ) != 0 )
+   \       0x4A   0x4639             MOV      R1,R7
+   \       0x4C   0x4620             MOV      R0,R4
+   \       0x4E   0x....'....        BL       mbedtls_ctr_drbg_reseed
+   \       0x52   0x2800             CMP      R0,#+0
+   \       0x54   0xD100             BNE.N    ??mbedtls_ctr_drbg_seed_entropy_len_0
+     99              {
+    100                  return( ret );
+    101              }
+    102              return( 0 );
+   \       0x56   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_ctr_drbg_seed_entropy_len_0: (+1)
+   \       0x58   0xB008             ADD      SP,SP,#+32
+   \       0x5A   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+    103          }
+    104          
+
+   \                                 In section .text, align 2, keep-with-next
+    105          int mbedtls_ctr_drbg_seed( mbedtls_ctr_drbg_context *ctx,
+    106                             int (*f_entropy)(void *, unsigned char *, size_t),
+    107                             void *p_entropy,
+    108                             const unsigned char *custom,
+    109                             size_t len )
+    110          {
+   \                     mbedtls_ctr_drbg_seed: (+1)
+   \        0x0   0xB53E             PUSH     {R1-R5,LR}
+   \        0x2   0x9C06             LDR      R4,[SP, #+24]
+    111              return( mbedtls_ctr_drbg_seed_entropy_len( ctx, f_entropy, p_entropy, custom, len,
+    112                                                 MBEDTLS_CTR_DRBG_ENTROPY_LEN ) );
+   \        0x4   0x2530             MOVS     R5,#+48
+   \        0x6   0x9501             STR      R5,[SP, #+4]
+   \        0x8   0x9400             STR      R4,[SP, #+0]
+   \        0xA   0x....'....        BL       mbedtls_ctr_drbg_seed_entropy_len
+   \        0xE   0xBD3E             POP      {R1-R5,PC}       ;; return
+    113          }
+    114          
+
+   \                                 In section .text, align 2, keep-with-next
+    115          void mbedtls_ctr_drbg_free( mbedtls_ctr_drbg_context *ctx )
+    116          {
+   \                     mbedtls_ctr_drbg_free: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    117              if( ctx == NULL )
+   \        0x4   0xD00A             BEQ.N    ??mbedtls_ctr_drbg_free_0
+    118                  return;
+    119          
+    120          #if defined(MBEDTLS_THREADING_C)
+    121              mbedtls_mutex_free( &ctx->mutex );
+    122          #endif
+    123              mbedtls_aes_free( &ctx->aes_ctx );
+   \        0x6   0xF104 0x0020      ADD      R0,R4,#+32
+   \        0xA   0x....'....        BL       mbedtls_aes_free
+    124              mbedtls_platform_zeroize( ctx, sizeof( mbedtls_ctr_drbg_context ) );
+   \        0xE   0xF44F 0x71A0      MOV      R1,#+320
+   \       0x12   0x4620             MOV      R0,R4
+   \       0x14   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x18   0x....'....        B.W      mbedtls_platform_zeroize
+   \                     ??mbedtls_ctr_drbg_free_0: (+1)
+   \       0x1C   0xBD10             POP      {R4,PC}          ;; return
+    125          }
+    126          
+
+   \                                 In section .text, align 2, keep-with-next
+    127          void mbedtls_ctr_drbg_set_prediction_resistance( mbedtls_ctr_drbg_context *ctx, int resistance )
+    128          {
+    129              ctx->prediction_resistance = resistance;
+   \                     mbedtls_ctr_drbg_set_prediction_resistance: (+1)
+   \        0x0   0x6141             STR      R1,[R0, #+20]
+    130          }
+   \        0x2   0x4770             BX       LR               ;; return
+    131          
+
+   \                                 In section .text, align 2, keep-with-next
+    132          void mbedtls_ctr_drbg_set_entropy_len( mbedtls_ctr_drbg_context *ctx, size_t len )
+    133          {
+    134              ctx->entropy_len = len;
+   \                     mbedtls_ctr_drbg_set_entropy_len: (+1)
+   \        0x0   0x6181             STR      R1,[R0, #+24]
+    135          }
+   \        0x2   0x4770             BX       LR               ;; return
+    136          
+
+   \                                 In section .text, align 2, keep-with-next
+    137          void mbedtls_ctr_drbg_set_reseed_interval( mbedtls_ctr_drbg_context *ctx, int interval )
+    138          {
+    139              ctx->reseed_interval = interval;
+   \                     mbedtls_ctr_drbg_set_reseed_interval: (+1)
+   \        0x0   0x61C1             STR      R1,[R0, #+28]
+    140          }
+   \        0x2   0x4770             BX       LR               ;; return
+    141          
+
+   \                                 In section .text, align 2, keep-with-next
+    142          static int block_cipher_df( unsigned char *output,
+    143                                      const unsigned char *data, size_t data_len )
+    144          {
+   \                     block_cipher_df: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0xF5AD 0x7D46      SUB      SP,SP,#+792
+   \        0x8   0x4606             MOV      R6,R0
+   \        0xA   0x460C             MOV      R4,R1
+   \        0xC   0x4617             MOV      R7,R2
+    145              unsigned char buf[MBEDTLS_CTR_DRBG_MAX_SEED_INPUT + MBEDTLS_CTR_DRBG_BLOCKSIZE + 16];
+    146              unsigned char tmp[MBEDTLS_CTR_DRBG_SEEDLEN];
+    147              unsigned char key[MBEDTLS_CTR_DRBG_KEYSIZE];
+    148              unsigned char chain[MBEDTLS_CTR_DRBG_BLOCKSIZE];
+    149              unsigned char *p, *iv;
+    150              mbedtls_aes_context aes_ctx;
+    151              int ret = 0;
+    152          
+    153              int i, j;
+    154              size_t buf_len, use_len;
+    155          
+    156              if( data_len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT )
+   \        0xE   0xF240 0x1081      MOVW     R0,#+385
+   \       0x12   0x4287             CMP      R7,R0
+   \       0x14   0xD302             BCC.N    ??block_cipher_df_0
+    157                  return( MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG );
+   \       0x16   0xF06F 0x0037      MVN      R0,#+55
+   \       0x1A   0xE07E             B.N      ??block_cipher_df_1
+    158          
+    159              memset( buf, 0, MBEDTLS_CTR_DRBG_MAX_SEED_INPUT + MBEDTLS_CTR_DRBG_BLOCKSIZE + 16 );
+   \                     ??block_cipher_df_0: (+1)
+   \       0x1C   0x2200             MOVS     R2,#+0
+   \       0x1E   0xF44F 0x71D0      MOV      R1,#+416
+   \       0x22   0xA85E             ADD      R0,SP,#+376
+   \       0x24   0x....'....        BL       __aeabi_memset4
+    160              mbedtls_aes_init( &aes_ctx );
+   \       0x28   0xA818             ADD      R0,SP,#+96
+   \       0x2A   0x....'....        BL       mbedtls_aes_init
+    161          
+    162              /*
+    163               * Construct IV (16 bytes) and S in buffer
+    164               * IV = Counter (in 32-bits) padded to 16 with zeroes
+    165               * S = Length input string (in 32-bits) || Length of output (in 32-bits) ||
+    166               *     data || 0x80
+    167               *     (Total is padded to a multiple of 16-bytes with zeroes)
+    168               */
+    169              p = buf + MBEDTLS_CTR_DRBG_BLOCKSIZE;
+   \       0x2E   0xA862             ADD      R0,SP,#+392
+    170              *p++ = ( data_len >> 24 ) & 0xff;
+   \       0x30   0x4639             MOV      R1,R7
+   \       0x32   0x0E09             LSRS     R1,R1,#+24
+   \       0x34   0x7001             STRB     R1,[R0, #+0]
+    171              *p++ = ( data_len >> 16 ) & 0xff;
+   \       0x36   0x4639             MOV      R1,R7
+   \       0x38   0x0C09             LSRS     R1,R1,#+16
+   \       0x3A   0x7041             STRB     R1,[R0, #+1]
+    172              *p++ = ( data_len >> 8  ) & 0xff;
+   \       0x3C   0x4639             MOV      R1,R7
+   \       0x3E   0x0A09             LSRS     R1,R1,#+8
+   \       0x40   0x7081             STRB     R1,[R0, #+2]
+    173              *p++ = ( data_len       ) & 0xff;
+   \       0x42   0x70C7             STRB     R7,[R0, #+3]
+    174              p += 3;
+    175              *p++ = MBEDTLS_CTR_DRBG_SEEDLEN;
+   \       0x44   0x2130             MOVS     R1,#+48
+   \       0x46   0x71C1             STRB     R1,[R0, #+7]
+   \       0x48   0xF100 0x0508      ADD      R5,R0,#+8
+    176              memcpy( p, data, data_len );
+   \       0x4C   0x463A             MOV      R2,R7
+   \       0x4E   0x4621             MOV      R1,R4
+   \       0x50   0x4628             MOV      R0,R5
+   \       0x52   0x....'....        BL       __aeabi_memcpy
+    177              p[data_len] = 0x80;
+   \       0x56   0x2080             MOVS     R0,#+128
+   \       0x58   0x55E8             STRB     R0,[R5, R7]
+    178          
+    179              buf_len = MBEDTLS_CTR_DRBG_BLOCKSIZE + 8 + data_len + 1;
+   \       0x5A   0x3719             ADDS     R7,R7,#+25
+    180          
+    181              for( i = 0; i < MBEDTLS_CTR_DRBG_KEYSIZE; i++ )
+   \       0x5C   0x2000             MOVS     R0,#+0
+   \       0x5E   0xA904             ADD      R1,SP,#+16
+   \       0x60   0xE001             B.N      ??block_cipher_df_2
+    182                  key[i] = i;
+   \                     ??block_cipher_df_3: (+1)
+   \       0x62   0x5408             STRB     R0,[R1, R0]
+   \       0x64   0x1C40             ADDS     R0,R0,#+1
+   \                     ??block_cipher_df_2: (+1)
+   \       0x66   0x2820             CMP      R0,#+32
+   \       0x68   0xDBFB             BLT.N    ??block_cipher_df_3
+    183          
+    184              if( ( ret = mbedtls_aes_setkey_enc( &aes_ctx, key, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
+   \       0x6A   0xF44F 0x7280      MOV      R2,#+256
+   \       0x6E   0xA818             ADD      R0,SP,#+96
+   \       0x70   0x....'....        BL       mbedtls_aes_setkey_enc
+   \       0x74   0x0004             MOVS     R4,R0
+   \       0x76   0xD135             BNE.N    ??block_cipher_df_4
+    185              {
+    186                  goto exit;
+    187              }
+    188          
+    189              /*
+    190               * Reduce data to MBEDTLS_CTR_DRBG_SEEDLEN bytes of data
+    191               */
+    192              for( j = 0; j < MBEDTLS_CTR_DRBG_SEEDLEN; j += MBEDTLS_CTR_DRBG_BLOCKSIZE )
+   \       0x78   0xF04F 0x0800      MOV      R8,#+0
+   \       0x7C   0xE00B             B.N      ??block_cipher_df_5
+    193              {
+    194                  p = buf;
+    195                  memset( chain, 0, MBEDTLS_CTR_DRBG_BLOCKSIZE );
+    196                  use_len = buf_len;
+    197          
+    198                  while( use_len > 0 )
+    199                  {
+    200                      for( i = 0; i < MBEDTLS_CTR_DRBG_BLOCKSIZE; i++ )
+    201                          chain[i] ^= p[i];
+    202                      p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
+    203                      use_len -= ( use_len >= MBEDTLS_CTR_DRBG_BLOCKSIZE ) ?
+    204                                 MBEDTLS_CTR_DRBG_BLOCKSIZE : use_len;
+    205          
+    206                      if( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, chain, chain ) ) != 0 )
+    207                      {
+    208                          goto exit;
+    209                      }
+    210                  }
+    211          
+    212                  memcpy( tmp + j, chain, MBEDTLS_CTR_DRBG_BLOCKSIZE );
+   \                     ??block_cipher_df_6: (+1)
+   \       0x7E   0x2210             MOVS     R2,#+16
+   \       0x80   0x4669             MOV      R1,SP
+   \       0x82   0xA80C             ADD      R0,SP,#+48
+   \       0x84   0x4440             ADD      R0,R0,R8
+   \       0x86   0x....'....        BL       __aeabi_memcpy
+    213          
+    214                  /*
+    215                   * Update IV
+    216                   */
+    217                  buf[3]++;
+   \       0x8A   0xA85E             ADD      R0,SP,#+376
+   \       0x8C   0x78C1             LDRB     R1,[R0, #+3]
+   \       0x8E   0x1C49             ADDS     R1,R1,#+1
+   \       0x90   0x70C1             STRB     R1,[R0, #+3]
+   \       0x92   0xF108 0x0810      ADD      R8,R8,#+16
+   \                     ??block_cipher_df_5: (+1)
+   \       0x96   0xF1B8 0x0F30      CMP      R8,#+48
+   \       0x9A   0xDA42             BGE.N    ??block_cipher_df_7
+   \       0x9C   0xF50D 0x79BC      ADD      R9,SP,#+376
+   \       0xA0   0x2200             MOVS     R2,#+0
+   \       0xA2   0x2110             MOVS     R1,#+16
+   \       0xA4   0x4668             MOV      R0,SP
+   \       0xA6   0x....'....        BL       __aeabi_memset4
+   \       0xAA   0x463D             MOV      R5,R7
+   \                     ??block_cipher_df_8: (+1)
+   \       0xAC   0x2D00             CMP      R5,#+0
+   \       0xAE   0xD0E6             BEQ.N    ??block_cipher_df_6
+   \       0xB0   0x2000             MOVS     R0,#+0
+   \       0xB2   0x4669             MOV      R1,SP
+   \       0xB4   0xE005             B.N      ??block_cipher_df_9
+   \                     ??block_cipher_df_10: (+1)
+   \       0xB6   0x5C0A             LDRB     R2,[R1, R0]
+   \       0xB8   0xF819 0x3000      LDRB     R3,[R9, R0]
+   \       0xBC   0x405A             EORS     R2,R3,R2
+   \       0xBE   0x540A             STRB     R2,[R1, R0]
+   \       0xC0   0x1C40             ADDS     R0,R0,#+1
+   \                     ??block_cipher_df_9: (+1)
+   \       0xC2   0x2810             CMP      R0,#+16
+   \       0xC4   0xDBF7             BLT.N    ??block_cipher_df_10
+   \       0xC6   0xF109 0x0910      ADD      R9,R9,#+16
+   \       0xCA   0x2010             MOVS     R0,#+16
+   \       0xCC   0x42A8             CMP      R0,R5
+   \       0xCE   0xD900             BLS.N    ??block_cipher_df_11
+   \       0xD0   0x4628             MOV      R0,R5
+   \                     ??block_cipher_df_11: (+1)
+   \       0xD2   0x1A2D             SUBS     R5,R5,R0
+   \       0xD4   0x466B             MOV      R3,SP
+   \       0xD6   0x466A             MOV      R2,SP
+   \       0xD8   0x2101             MOVS     R1,#+1
+   \       0xDA   0xA818             ADD      R0,SP,#+96
+   \       0xDC   0x....'....        BL       mbedtls_aes_crypt_ecb
+   \       0xE0   0x0004             MOVS     R4,R0
+   \       0xE2   0xD0E3             BEQ.N    ??block_cipher_df_8
+    218              }
+    219          
+    220              /*
+    221               * Do final encryption with reduced data
+    222               */
+    223              if( ( ret = mbedtls_aes_setkey_enc( &aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
+    224              {
+    225                  goto exit;
+    226              }
+    227              iv = tmp + MBEDTLS_CTR_DRBG_KEYSIZE;
+    228              p = output;
+    229          
+    230              for( j = 0; j < MBEDTLS_CTR_DRBG_SEEDLEN; j += MBEDTLS_CTR_DRBG_BLOCKSIZE )
+    231              {
+    232                  if( ( ret = mbedtls_aes_crypt_ecb( &aes_ctx, MBEDTLS_AES_ENCRYPT, iv, iv ) ) != 0 )
+    233                  {
+    234                      goto exit;
+    235                  }
+    236                  memcpy( p, iv, MBEDTLS_CTR_DRBG_BLOCKSIZE );
+    237                  p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
+    238              }
+    239          exit:
+    240              mbedtls_aes_free( &aes_ctx );
+   \                     ??block_cipher_df_4: (+1)
+   \       0xE4   0xA818             ADD      R0,SP,#+96
+   \       0xE6   0x....'....        BL       mbedtls_aes_free
+    241              /*
+    242              * tidy up the stack
+    243              */
+    244              mbedtls_platform_zeroize( buf, sizeof( buf ) );
+   \       0xEA   0xF44F 0x71D0      MOV      R1,#+416
+   \       0xEE   0xA85E             ADD      R0,SP,#+376
+   \       0xF0   0x....'....        BL       mbedtls_platform_zeroize
+    245              mbedtls_platform_zeroize( tmp, sizeof( tmp ) );
+   \       0xF4   0x2130             MOVS     R1,#+48
+   \       0xF6   0xA80C             ADD      R0,SP,#+48
+   \       0xF8   0x....'....        BL       mbedtls_platform_zeroize
+    246              mbedtls_platform_zeroize( key, sizeof( key ) );
+   \       0xFC   0x2120             MOVS     R1,#+32
+   \       0xFE   0xA804             ADD      R0,SP,#+16
+   \      0x100   0x....'....        BL       mbedtls_platform_zeroize
+    247              mbedtls_platform_zeroize( chain, sizeof( chain ) );
+   \      0x104   0x2110             MOVS     R1,#+16
+   \      0x106   0x4668             MOV      R0,SP
+   \      0x108   0x....'....        BL       mbedtls_platform_zeroize
+    248              if( 0 != ret )
+   \      0x10C   0x2C00             CMP      R4,#+0
+   \      0x10E   0xD003             BEQ.N    ??block_cipher_df_12
+    249              {
+    250                  /*
+    251                  * wipe partial seed from memory
+    252                  */
+    253                  mbedtls_platform_zeroize( output, MBEDTLS_CTR_DRBG_SEEDLEN );
+   \      0x110   0x2130             MOVS     R1,#+48
+   \      0x112   0x4630             MOV      R0,R6
+   \      0x114   0x....'....        BL       mbedtls_platform_zeroize
+    254              }
+    255          
+    256              return( ret );
+   \                     ??block_cipher_df_12: (+1)
+   \      0x118   0x4620             MOV      R0,R4
+   \                     ??block_cipher_df_1: (+1)
+   \      0x11A   0xF50D 0x7D47      ADD      SP,SP,#+796
+   \      0x11E   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+   \                     ??block_cipher_df_7: (+1)
+   \      0x122   0xF44F 0x7280      MOV      R2,#+256
+   \      0x126   0xA90C             ADD      R1,SP,#+48
+   \      0x128   0xA818             ADD      R0,SP,#+96
+   \      0x12A   0x....'....        BL       mbedtls_aes_setkey_enc
+   \      0x12E   0x0004             MOVS     R4,R0
+   \      0x130   0xD1D8             BNE.N    ??block_cipher_df_4
+   \      0x132   0xF10D 0x0850      ADD      R8,SP,#+80
+   \      0x136   0x4635             MOV      R5,R6
+   \      0x138   0x2700             MOVS     R7,#+0
+   \                     ??block_cipher_df_13: (+1)
+   \      0x13A   0x2F30             CMP      R7,#+48
+   \      0x13C   0xDAD2             BGE.N    ??block_cipher_df_4
+   \      0x13E   0x4643             MOV      R3,R8
+   \      0x140   0x4642             MOV      R2,R8
+   \      0x142   0x2101             MOVS     R1,#+1
+   \      0x144   0xA818             ADD      R0,SP,#+96
+   \      0x146   0x....'....        BL       mbedtls_aes_crypt_ecb
+   \      0x14A   0x0004             MOVS     R4,R0
+   \      0x14C   0xD1CA             BNE.N    ??block_cipher_df_4
+   \      0x14E   0x2210             MOVS     R2,#+16
+   \      0x150   0x4641             MOV      R1,R8
+   \      0x152   0x4628             MOV      R0,R5
+   \      0x154   0x....'....        BL       __aeabi_memcpy
+   \      0x158   0x3510             ADDS     R5,R5,#+16
+   \      0x15A   0x3710             ADDS     R7,R7,#+16
+   \      0x15C   0xE7ED             B.N      ??block_cipher_df_13
+    257          }
+    258          
+
+   \                                 In section .text, align 2, keep-with-next
+    259          static int ctr_drbg_update_internal( mbedtls_ctr_drbg_context *ctx,
+    260                                        const unsigned char data[MBEDTLS_CTR_DRBG_SEEDLEN] )
+    261          {
+   \                     ctr_drbg_update_internal: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0xB08C             SUB      SP,SP,#+48
+   \        0x4   0x4604             MOV      R4,R0
+   \        0x6   0x460D             MOV      R5,R1
+    262              unsigned char tmp[MBEDTLS_CTR_DRBG_SEEDLEN];
+    263              unsigned char *p = tmp;
+   \        0x8   0x466E             MOV      R6,SP
+    264              int i, j;
+    265              int ret = 0;
+    266          
+    267              memset( tmp, 0, MBEDTLS_CTR_DRBG_SEEDLEN );
+   \        0xA   0x2200             MOVS     R2,#+0
+   \        0xC   0x2130             MOVS     R1,#+48
+   \        0xE   0x4668             MOV      R0,SP
+   \       0x10   0x....'....        BL       __aeabi_memset4
+    268          
+    269              for( j = 0; j < MBEDTLS_CTR_DRBG_SEEDLEN; j += MBEDTLS_CTR_DRBG_BLOCKSIZE )
+   \       0x14   0x2700             MOVS     R7,#+0
+   \       0x16   0xE00A             B.N      ??ctr_drbg_update_internal_0
+    270              {
+    271                  /*
+    272                   * Increase counter
+    273                   */
+    274                  for( i = MBEDTLS_CTR_DRBG_BLOCKSIZE; i > 0; i-- )
+    275                      if( ++ctx->counter[i - 1] != 0 )
+    276                          break;
+    277          
+    278                  /*
+    279                   * Crypt counter block
+    280                   */
+    281                  if( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, p ) ) != 0 )
+   \                     ??ctr_drbg_update_internal_1: (+1)
+   \       0x18   0x4633             MOV      R3,R6
+   \       0x1A   0x4622             MOV      R2,R4
+   \       0x1C   0x2101             MOVS     R1,#+1
+   \       0x1E   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x22   0x....'....        BL       mbedtls_aes_crypt_ecb
+   \       0x26   0x2800             CMP      R0,#+0
+   \       0x28   0xD12C             BNE.N    ??ctr_drbg_update_internal_2
+    282                  {
+    283                      return( ret );
+    284                  }
+    285          
+    286                  p += MBEDTLS_CTR_DRBG_BLOCKSIZE;
+   \       0x2A   0x3610             ADDS     R6,R6,#+16
+   \       0x2C   0x3710             ADDS     R7,R7,#+16
+   \                     ??ctr_drbg_update_internal_0: (+1)
+   \       0x2E   0x2F30             CMP      R7,#+48
+   \       0x30   0xDA10             BGE.N    ??ctr_drbg_update_internal_3
+   \       0x32   0x2110             MOVS     R1,#+16
+   \                     ??ctr_drbg_update_internal_4: (+1)
+   \       0x34   0x2901             CMP      R1,#+1
+   \       0x36   0xDBEF             BLT.N    ??ctr_drbg_update_internal_1
+   \       0x38   0x1860             ADDS     R0,R4,R1
+   \       0x3A   0xF810 0x0C01      LDRB     R0,[R0, #-1]
+   \       0x3E   0x1C40             ADDS     R0,R0,#+1
+   \       0x40   0x1862             ADDS     R2,R4,R1
+   \       0x42   0xF802 0x0C01      STRB     R0,[R2, #-1]
+   \       0x46   0x1860             ADDS     R0,R4,R1
+   \       0x48   0xF810 0x0C01      LDRB     R0,[R0, #-1]
+   \       0x4C   0x2800             CMP      R0,#+0
+   \       0x4E   0xD1E3             BNE.N    ??ctr_drbg_update_internal_1
+   \       0x50   0x1E49             SUBS     R1,R1,#+1
+   \       0x52   0xE7EF             B.N      ??ctr_drbg_update_internal_4
+    287              }
+    288          
+    289              for( i = 0; i < MBEDTLS_CTR_DRBG_SEEDLEN; i++ )
+   \                     ??ctr_drbg_update_internal_3: (+1)
+   \       0x54   0x2000             MOVS     R0,#+0
+   \       0x56   0x4669             MOV      R1,SP
+   \       0x58   0xE004             B.N      ??ctr_drbg_update_internal_5
+    290                  tmp[i] ^= data[i];
+   \                     ??ctr_drbg_update_internal_6: (+1)
+   \       0x5A   0x5C0A             LDRB     R2,[R1, R0]
+   \       0x5C   0x5C2B             LDRB     R3,[R5, R0]
+   \       0x5E   0x405A             EORS     R2,R3,R2
+   \       0x60   0x540A             STRB     R2,[R1, R0]
+   \       0x62   0x1C40             ADDS     R0,R0,#+1
+   \                     ??ctr_drbg_update_internal_5: (+1)
+   \       0x64   0x2830             CMP      R0,#+48
+   \       0x66   0xDBF8             BLT.N    ??ctr_drbg_update_internal_6
+    291          
+    292              /*
+    293               * Update key and counter
+    294               */
+    295              if( ( ret = mbedtls_aes_setkey_enc( &ctx->aes_ctx, tmp, MBEDTLS_CTR_DRBG_KEYBITS ) ) != 0 )
+   \       0x68   0xF44F 0x7280      MOV      R2,#+256
+   \       0x6C   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x70   0x....'....        BL       mbedtls_aes_setkey_enc
+   \       0x74   0x2800             CMP      R0,#+0
+   \       0x76   0xD105             BNE.N    ??ctr_drbg_update_internal_2
+    296              {
+    297                  return( ret );
+    298              }
+    299              memcpy( ctx->counter, tmp + MBEDTLS_CTR_DRBG_KEYSIZE, MBEDTLS_CTR_DRBG_BLOCKSIZE );
+   \       0x78   0x2210             MOVS     R2,#+16
+   \       0x7A   0xA908             ADD      R1,SP,#+32
+   \       0x7C   0x4620             MOV      R0,R4
+   \       0x7E   0x....'....        BL       __aeabi_memcpy4
+    300          
+    301              return( 0 );
+   \       0x82   0x2000             MOVS     R0,#+0
+   \                     ??ctr_drbg_update_internal_2: (+1)
+   \       0x84   0xB00D             ADD      SP,SP,#+52
+   \       0x86   0xBDF0             POP      {R4-R7,PC}       ;; return
+    302          }
+    303          
+
+   \                                 In section .text, align 2, keep-with-next
+    304          void mbedtls_ctr_drbg_update( mbedtls_ctr_drbg_context *ctx,
+    305                                const unsigned char *additional, size_t add_len )
+    306          {
+   \                     mbedtls_ctr_drbg_update: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0xB08C             SUB      SP,SP,#+48
+   \        0x4   0x4604             MOV      R4,R0
+    307              unsigned char add_input[MBEDTLS_CTR_DRBG_SEEDLEN];
+    308          
+    309              if( add_len > 0 )
+   \        0x6   0x2A00             CMP      R2,#+0
+   \        0x8   0xD00C             BEQ.N    ??mbedtls_ctr_drbg_update_0
+    310              {
+    311                  /* MAX_INPUT would be more logical here, but we have to match
+    312                   * block_cipher_df()'s limits since we can't propagate errors */
+    313                  if( add_len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT )
+   \        0xA   0xF240 0x1081      MOVW     R0,#+385
+   \        0xE   0x4282             CMP      R2,R0
+   \       0x10   0xD301             BCC.N    ??mbedtls_ctr_drbg_update_1
+    314                      add_len = MBEDTLS_CTR_DRBG_MAX_SEED_INPUT;
+   \       0x12   0xF44F 0x72C0      MOV      R2,#+384
+    315          
+    316                  block_cipher_df( add_input, additional, add_len );
+   \                     ??mbedtls_ctr_drbg_update_1: (+1)
+   \       0x16   0x4668             MOV      R0,SP
+   \       0x18   0x....'....        BL       block_cipher_df
+    317                  ctr_drbg_update_internal( ctx, add_input );
+   \       0x1C   0x4669             MOV      R1,SP
+   \       0x1E   0x4620             MOV      R0,R4
+   \       0x20   0x....'....        BL       ctr_drbg_update_internal
+    318              }
+    319          }
+   \                     ??mbedtls_ctr_drbg_update_0: (+1)
+   \       0x24   0xB00C             ADD      SP,SP,#+48
+   \       0x26   0xBD10             POP      {R4,PC}          ;; return
+    320          
+
+   \                                 In section .text, align 2, keep-with-next
+    321          int mbedtls_ctr_drbg_reseed( mbedtls_ctr_drbg_context *ctx,
+    322                               const unsigned char *additional, size_t len )
+    323          {
+   \                     mbedtls_ctr_drbg_reseed: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0xB0E0             SUB      SP,SP,#+384
+   \        0x4   0x4606             MOV      R6,R0
+   \        0x6   0x460D             MOV      R5,R1
+   \        0x8   0x4614             MOV      R4,R2
+    324              unsigned char seed[MBEDTLS_CTR_DRBG_MAX_SEED_INPUT];
+    325              size_t seedlen = 0;
+    326              int ret;
+    327          
+    328              if( ctx->entropy_len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT ||
+    329                  len > MBEDTLS_CTR_DRBG_MAX_SEED_INPUT - ctx->entropy_len )
+   \        0xA   0x69B0             LDR      R0,[R6, #+24]
+   \        0xC   0xF240 0x1181      MOVW     R1,#+385
+   \       0x10   0x4288             CMP      R0,R1
+   \       0x12   0xD203             BCS.N    ??mbedtls_ctr_drbg_reseed_0
+   \       0x14   0xF5C0 0x70C0      RSB      R0,R0,#+384
+   \       0x18   0x42A0             CMP      R0,R4
+   \       0x1A   0xD202             BCS.N    ??mbedtls_ctr_drbg_reseed_1
+    330                  return( MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG );
+   \                     ??mbedtls_ctr_drbg_reseed_0: (+1)
+   \       0x1C   0xF06F 0x0037      MVN      R0,#+55
+   \       0x20   0xE02E             B.N      ??mbedtls_ctr_drbg_reseed_2
+    331          
+    332              memset( seed, 0, MBEDTLS_CTR_DRBG_MAX_SEED_INPUT );
+   \                     ??mbedtls_ctr_drbg_reseed_1: (+1)
+   \       0x22   0x2200             MOVS     R2,#+0
+   \       0x24   0xF44F 0x71C0      MOV      R1,#+384
+   \       0x28   0x4668             MOV      R0,SP
+   \       0x2A   0x....'....        BL       __aeabi_memset4
+    333          
+    334              /*
+    335               * Gather entropy_len bytes of entropy to seed state
+    336               */
+    337              if( 0 != ctx->f_entropy( ctx->p_entropy, seed,
+    338                                       ctx->entropy_len ) )
+   \       0x2E   0x69B2             LDR      R2,[R6, #+24]
+   \       0x30   0x4669             MOV      R1,SP
+   \       0x32   0xF8D6 0x013C      LDR      R0,[R6, #+316]
+   \       0x36   0xF8D6 0x3138      LDR      R3,[R6, #+312]
+   \       0x3A   0x4798             BLX      R3
+   \       0x3C   0x2800             CMP      R0,#+0
+   \       0x3E   0xD002             BEQ.N    ??mbedtls_ctr_drbg_reseed_3
+    339              {
+    340                  return( MBEDTLS_ERR_CTR_DRBG_ENTROPY_SOURCE_FAILED );
+   \       0x40   0xF06F 0x0033      MVN      R0,#+51
+   \       0x44   0xE01C             B.N      ??mbedtls_ctr_drbg_reseed_2
+    341              }
+    342          
+    343              seedlen += ctx->entropy_len;
+   \                     ??mbedtls_ctr_drbg_reseed_3: (+1)
+   \       0x46   0x69B7             LDR      R7,[R6, #+24]
+    344          
+    345              /*
+    346               * Add additional data
+    347               */
+    348              if( additional && len )
+   \       0x48   0x2D00             CMP      R5,#+0
+   \       0x4A   0xD009             BEQ.N    ??mbedtls_ctr_drbg_reseed_4
+   \       0x4C   0x2C00             CMP      R4,#+0
+   \       0x4E   0xD007             BEQ.N    ??mbedtls_ctr_drbg_reseed_4
+    349              {
+    350                  memcpy( seed + seedlen, additional, len );
+   \       0x50   0x4622             MOV      R2,R4
+   \       0x52   0x4629             MOV      R1,R5
+   \       0x54   0x4668             MOV      R0,SP
+   \       0x56   0x4438             ADD      R0,R0,R7
+   \       0x58   0x....'....        BL       __aeabi_memcpy
+    351                  seedlen += len;
+   \       0x5C   0x19E4             ADDS     R4,R4,R7
+   \       0x5E   0x4627             MOV      R7,R4
+    352              }
+    353          
+    354              /*
+    355               * Reduce to 384 bits
+    356               */
+    357              if( ( ret = block_cipher_df( seed, seed, seedlen ) ) != 0 )
+   \                     ??mbedtls_ctr_drbg_reseed_4: (+1)
+   \       0x60   0x463A             MOV      R2,R7
+   \       0x62   0x4669             MOV      R1,SP
+   \       0x64   0x4668             MOV      R0,SP
+   \       0x66   0x....'....        BL       block_cipher_df
+   \       0x6A   0x2800             CMP      R0,#+0
+   \       0x6C   0xD108             BNE.N    ??mbedtls_ctr_drbg_reseed_2
+    358              {
+    359                  return( ret );
+    360              }
+    361          
+    362              /*
+    363               * Update state
+    364               */
+    365              if( ( ret = ctr_drbg_update_internal( ctx, seed ) ) != 0 )
+   \       0x6E   0x4669             MOV      R1,SP
+   \       0x70   0x4630             MOV      R0,R6
+   \       0x72   0x....'....        BL       ctr_drbg_update_internal
+   \       0x76   0x2800             CMP      R0,#+0
+   \       0x78   0xD102             BNE.N    ??mbedtls_ctr_drbg_reseed_2
+    366              {
+    367                  return( ret );
+    368              }
+    369              ctx->reseed_counter = 1;
+   \       0x7A   0x2001             MOVS     R0,#+1
+   \       0x7C   0x6130             STR      R0,[R6, #+16]
+    370          
+    371              return( 0 );
+   \       0x7E   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_ctr_drbg_reseed_2: (+1)
+   \       0x80   0xB061             ADD      SP,SP,#+388
+   \       0x82   0xBDF0             POP      {R4-R7,PC}       ;; return
+    372          }
+    373          
+
+   \                                 In section .text, align 2, keep-with-next
+    374          int mbedtls_ctr_drbg_random_with_add( void *p_rng,
+    375                                        unsigned char *output, size_t output_len,
+    376                                        const unsigned char *additional, size_t add_len )
+    377          {
+   \                     mbedtls_ctr_drbg_random_with_add: (+1)
+   \        0x0   0xE92D 0x41F0      PUSH     {R4-R8,LR}
+   \        0x4   0xB090             SUB      SP,SP,#+64
+   \        0x6   0x4605             MOV      R5,R0
+   \        0x8   0x460E             MOV      R6,R1
+   \        0xA   0x4614             MOV      R4,R2
+   \        0xC   0x4698             MOV      R8,R3
+    378              int ret = 0;
+    379              mbedtls_ctr_drbg_context *ctx = (mbedtls_ctr_drbg_context *) p_rng;
+    380              unsigned char add_input[MBEDTLS_CTR_DRBG_SEEDLEN];
+    381              unsigned char *p = output;
+    382              unsigned char tmp[MBEDTLS_CTR_DRBG_BLOCKSIZE];
+    383              int i;
+    384              size_t use_len;
+    385          
+    386              if( output_len > MBEDTLS_CTR_DRBG_MAX_REQUEST )
+   \        0xE   0xF240 0x4001      MOVW     R0,#+1025
+   \       0x12   0x4284             CMP      R4,R0
+   \       0x14   0xD302             BCC.N    ??mbedtls_ctr_drbg_random_with_add_0
+    387                  return( MBEDTLS_ERR_CTR_DRBG_REQUEST_TOO_BIG );
+   \       0x16   0xF06F 0x0035      MVN      R0,#+53
+   \       0x1A   0xE054             B.N      ??mbedtls_ctr_drbg_random_with_add_1
+   \                     ??mbedtls_ctr_drbg_random_with_add_0: (+1)
+   \       0x1C   0x9F16             LDR      R7,[SP, #+88]
+    388          
+    389              if( add_len > MBEDTLS_CTR_DRBG_MAX_INPUT )
+   \       0x1E   0xF240 0x1001      MOVW     R0,#+257
+   \       0x22   0x4287             CMP      R7,R0
+   \       0x24   0xD302             BCC.N    ??mbedtls_ctr_drbg_random_with_add_2
+    390                  return( MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG );
+   \       0x26   0xF06F 0x0037      MVN      R0,#+55
+   \       0x2A   0xE04C             B.N      ??mbedtls_ctr_drbg_random_with_add_1
+    391          
+    392              memset( add_input, 0, MBEDTLS_CTR_DRBG_SEEDLEN );
+   \                     ??mbedtls_ctr_drbg_random_with_add_2: (+1)
+   \       0x2C   0x2200             MOVS     R2,#+0
+   \       0x2E   0x2130             MOVS     R1,#+48
+   \       0x30   0xA804             ADD      R0,SP,#+16
+   \       0x32   0x....'....        BL       __aeabi_memset4
+    393          
+    394              if( ctx->reseed_counter > ctx->reseed_interval ||
+    395                  ctx->prediction_resistance )
+   \       0x36   0x69E8             LDR      R0,[R5, #+28]
+   \       0x38   0x6929             LDR      R1,[R5, #+16]
+   \       0x3A   0x4288             CMP      R0,R1
+   \       0x3C   0xDB02             BLT.N    ??mbedtls_ctr_drbg_random_with_add_3
+   \       0x3E   0x6968             LDR      R0,[R5, #+20]
+   \       0x40   0x2800             CMP      R0,#+0
+   \       0x42   0xD007             BEQ.N    ??mbedtls_ctr_drbg_random_with_add_4
+    396              {
+    397                  if( ( ret = mbedtls_ctr_drbg_reseed( ctx, additional, add_len ) ) != 0 )
+   \                     ??mbedtls_ctr_drbg_random_with_add_3: (+1)
+   \       0x44   0x463A             MOV      R2,R7
+   \       0x46   0x4641             MOV      R1,R8
+   \       0x48   0x4628             MOV      R0,R5
+   \       0x4A   0x....'....        BL       mbedtls_ctr_drbg_reseed
+   \       0x4E   0x2800             CMP      R0,#+0
+   \       0x50   0xD139             BNE.N    ??mbedtls_ctr_drbg_random_with_add_1
+    398                  {
+    399                      return( ret );
+    400                  }
+    401                  add_len = 0;
+   \       0x52   0x2700             MOVS     R7,#+0
+    402              }
+    403          
+    404              if( add_len > 0 )
+   \                     ??mbedtls_ctr_drbg_random_with_add_4: (+1)
+   \       0x54   0x2F00             CMP      R7,#+0
+   \       0x56   0xD019             BEQ.N    ??mbedtls_ctr_drbg_random_with_add_5
+    405              {
+    406                  if( ( ret = block_cipher_df( add_input, additional, add_len ) ) != 0 )
+   \       0x58   0x463A             MOV      R2,R7
+   \       0x5A   0x4641             MOV      R1,R8
+   \       0x5C   0xA804             ADD      R0,SP,#+16
+   \       0x5E   0x....'....        BL       block_cipher_df
+   \       0x62   0x2800             CMP      R0,#+0
+   \       0x64   0xD12F             BNE.N    ??mbedtls_ctr_drbg_random_with_add_1
+    407                  {
+    408                      return( ret );
+    409                  }
+    410                  if( ( ret = ctr_drbg_update_internal( ctx, add_input ) ) != 0 )
+   \       0x66   0xA904             ADD      R1,SP,#+16
+   \       0x68   0x4628             MOV      R0,R5
+   \       0x6A   0x....'....        BL       ctr_drbg_update_internal
+   \       0x6E   0x2800             CMP      R0,#+0
+   \       0x70   0xD00C             BEQ.N    ??mbedtls_ctr_drbg_random_with_add_5
+    411                  {
+    412                      return( ret );
+   \       0x72   0xE028             B.N      ??mbedtls_ctr_drbg_random_with_add_1
+    413                  }
+    414              }
+    415          
+    416              while( output_len > 0 )
+    417              {
+    418                  /*
+    419                   * Increase counter
+    420                   */
+    421                  for( i = MBEDTLS_CTR_DRBG_BLOCKSIZE; i > 0; i-- )
+    422                      if( ++ctx->counter[i - 1] != 0 )
+    423                          break;
+    424          
+    425                  /*
+    426                   * Crypt counter block
+    427                   */
+    428                  if( ( ret = mbedtls_aes_crypt_ecb( &ctx->aes_ctx, MBEDTLS_AES_ENCRYPT, ctx->counter, tmp ) ) != 0 )
+    429                  {
+    430                      return( ret );
+    431                  }
+    432          
+    433                  use_len = ( output_len > MBEDTLS_CTR_DRBG_BLOCKSIZE ) ? MBEDTLS_CTR_DRBG_BLOCKSIZE :
+    434                                                                 output_len;
+   \                     ??mbedtls_ctr_drbg_random_with_add_6: (+1)
+   \       0x74   0x4627             MOV      R7,R4
+   \       0x76   0xE002             B.N      ??mbedtls_ctr_drbg_random_with_add_7
+   \                     ??mbedtls_ctr_drbg_random_with_add_8: (+1)
+   \       0x78   0x2C11             CMP      R4,#+17
+   \       0x7A   0xD3FB             BCC.N    ??mbedtls_ctr_drbg_random_with_add_6
+   \       0x7C   0x2710             MOVS     R7,#+16
+    435                  /*
+    436                   * Copy random block to destination
+    437                   */
+    438                  memcpy( p, tmp, use_len );
+   \                     ??mbedtls_ctr_drbg_random_with_add_7: (+1)
+   \       0x7E   0x463A             MOV      R2,R7
+   \       0x80   0x4669             MOV      R1,SP
+   \       0x82   0x4630             MOV      R0,R6
+   \       0x84   0x....'....        BL       __aeabi_memcpy
+    439                  p += use_len;
+   \       0x88   0x443E             ADD      R6,R6,R7
+    440                  output_len -= use_len;
+   \       0x8A   0x1BE4             SUBS     R4,R4,R7
+   \                     ??mbedtls_ctr_drbg_random_with_add_5: (+1)
+   \       0x8C   0x2C00             CMP      R4,#+0
+   \       0x8E   0xD010             BEQ.N    ??mbedtls_ctr_drbg_random_with_add_9
+   \       0x90   0x2110             MOVS     R1,#+16
+   \                     ??mbedtls_ctr_drbg_random_with_add_10: (+1)
+   \       0x92   0x2901             CMP      R1,#+1
+   \       0x94   0xDB1A             BLT.N    ??mbedtls_ctr_drbg_random_with_add_11
+   \       0x96   0x1868             ADDS     R0,R5,R1
+   \       0x98   0xF810 0x0C01      LDRB     R0,[R0, #-1]
+   \       0x9C   0x1C40             ADDS     R0,R0,#+1
+   \       0x9E   0x186A             ADDS     R2,R5,R1
+   \       0xA0   0xF802 0x0C01      STRB     R0,[R2, #-1]
+   \       0xA4   0x1868             ADDS     R0,R5,R1
+   \       0xA6   0xF810 0x0C01      LDRB     R0,[R0, #-1]
+   \       0xAA   0x2800             CMP      R0,#+0
+   \       0xAC   0xD10E             BNE.N    ??mbedtls_ctr_drbg_random_with_add_11
+   \       0xAE   0x1E49             SUBS     R1,R1,#+1
+   \       0xB0   0xE7EF             B.N      ??mbedtls_ctr_drbg_random_with_add_10
+    441              }
+    442          
+    443              if( ( ret = ctr_drbg_update_internal( ctx, add_input ) ) != 0 )
+   \                     ??mbedtls_ctr_drbg_random_with_add_9: (+1)
+   \       0xB2   0xA904             ADD      R1,SP,#+16
+   \       0xB4   0x4628             MOV      R0,R5
+   \       0xB6   0x....'....        BL       ctr_drbg_update_internal
+   \       0xBA   0x2800             CMP      R0,#+0
+   \       0xBC   0xD103             BNE.N    ??mbedtls_ctr_drbg_random_with_add_1
+    444              {
+    445                  return( ret );
+    446              }
+    447          
+    448              ctx->reseed_counter++;
+   \       0xBE   0x6928             LDR      R0,[R5, #+16]
+   \       0xC0   0x1C40             ADDS     R0,R0,#+1
+   \       0xC2   0x6128             STR      R0,[R5, #+16]
+    449          
+    450              return( 0 );
+   \       0xC4   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_ctr_drbg_random_with_add_1: (+1)
+   \       0xC6   0xB010             ADD      SP,SP,#+64
+   \       0xC8   0xE8BD 0x81F0      POP      {R4-R8,PC}       ;; return
+   \                     ??mbedtls_ctr_drbg_random_with_add_11: (+1)
+   \       0xCC   0x466B             MOV      R3,SP
+   \       0xCE   0x462A             MOV      R2,R5
+   \       0xD0   0x2101             MOVS     R1,#+1
+   \       0xD2   0xF105 0x0020      ADD      R0,R5,#+32
+   \       0xD6   0x....'....        BL       mbedtls_aes_crypt_ecb
+   \       0xDA   0x2800             CMP      R0,#+0
+   \       0xDC   0xD0CC             BEQ.N    ??mbedtls_ctr_drbg_random_with_add_8
+   \       0xDE   0xE7F2             B.N      ??mbedtls_ctr_drbg_random_with_add_1
+    451          }
+    452          
+
+   \                                 In section .text, align 2, keep-with-next
+    453          int mbedtls_ctr_drbg_random( void *p_rng, unsigned char *output, size_t output_len )
+    454          {
+   \                     mbedtls_ctr_drbg_random: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+    455              int ret;
+    456              mbedtls_ctr_drbg_context *ctx = (mbedtls_ctr_drbg_context *) p_rng;
+    457          
+    458          #if defined(MBEDTLS_THREADING_C)
+    459              if( ( ret = mbedtls_mutex_lock( &ctx->mutex ) ) != 0 )
+    460                  return( ret );
+    461          #endif
+    462          
+    463              ret = mbedtls_ctr_drbg_random_with_add( ctx, output, output_len, NULL, 0 );
+    464          
+    465          #if defined(MBEDTLS_THREADING_C)
+    466              if( mbedtls_mutex_unlock( &ctx->mutex ) != 0 )
+    467                  return( MBEDTLS_ERR_THREADING_MUTEX_ERROR );
+    468          #endif
+    469          
+    470              return( ret );
+   \        0x2   0x2300             MOVS     R3,#+0
+   \        0x4   0x9300             STR      R3,[SP, #+0]
+   \        0x6   0x....'....        BL       mbedtls_ctr_drbg_random_with_add
+   \        0xA   0xBD02             POP      {R1,PC}          ;; return
+    471          }
+    472          
+    473          #if defined(MBEDTLS_FS_IO)
+    474          int mbedtls_ctr_drbg_write_seed_file( mbedtls_ctr_drbg_context *ctx, const char *path )
+    475          {
+    476              int ret = MBEDTLS_ERR_CTR_DRBG_FILE_IO_ERROR;
+    477              FILE *f;
+    478              unsigned char buf[ MBEDTLS_CTR_DRBG_MAX_INPUT ];
+    479          
+    480              if( ( f = fopen( path, "wb" ) ) == NULL )
+    481                  return( MBEDTLS_ERR_CTR_DRBG_FILE_IO_ERROR );
+    482          
+    483              if( ( ret = mbedtls_ctr_drbg_random( ctx, buf, MBEDTLS_CTR_DRBG_MAX_INPUT ) ) != 0 )
+    484                  goto exit;
+    485          
+    486              if( fwrite( buf, 1, MBEDTLS_CTR_DRBG_MAX_INPUT, f ) != MBEDTLS_CTR_DRBG_MAX_INPUT )
+    487                  ret = MBEDTLS_ERR_CTR_DRBG_FILE_IO_ERROR;
+    488              else
+    489                  ret = 0;
+    490          
+    491          exit:
+    492              mbedtls_platform_zeroize( buf, sizeof( buf ) );
+    493          
+    494              fclose( f );
+    495              return( ret );
+    496          }
+    497          
+    498          int mbedtls_ctr_drbg_update_seed_file( mbedtls_ctr_drbg_context *ctx, const char *path )
+    499          {
+    500              int ret = 0;
+    501              FILE *f;
+    502              size_t n;
+    503              unsigned char buf[ MBEDTLS_CTR_DRBG_MAX_INPUT ];
+    504          
+    505              if( ( f = fopen( path, "rb" ) ) == NULL )
+    506                  return( MBEDTLS_ERR_CTR_DRBG_FILE_IO_ERROR );
+    507          
+    508              fseek( f, 0, SEEK_END );
+    509              n = (size_t) ftell( f );
+    510              fseek( f, 0, SEEK_SET );
+    511          
+    512              if( n > MBEDTLS_CTR_DRBG_MAX_INPUT )
+    513              {
+    514                  fclose( f );
+    515                  return( MBEDTLS_ERR_CTR_DRBG_INPUT_TOO_BIG );
+    516              }
+    517          
+    518              if( fread( buf, 1, n, f ) != n )
+    519                  ret = MBEDTLS_ERR_CTR_DRBG_FILE_IO_ERROR;
+    520              else
+    521                  mbedtls_ctr_drbg_update( ctx, buf, n );
+    522          
+    523              fclose( f );
+    524          
+    525              mbedtls_platform_zeroize( buf, sizeof( buf ) );
+    526          
+    527              if( ret != 0 )
+    528                  return( ret );
+    529          
+    530              return( mbedtls_ctr_drbg_write_seed_file( ctx, path ) );
+    531          }
+    532          #endif /* MBEDTLS_FS_IO */
+    533          
+    534          #if defined(MBEDTLS_SELF_TEST)
+    535          
+
+   \                                 In section .rodata, align 4
+    536          static const unsigned char entropy_source_pr[96] =
+   \                     entropy_source_pr:
+   \        0x0   0xC1 0x80          DC8 193, 128, 129, 166, 93, 68, 2, 22, 25, 179, 241, 128, 177, 201, 32
+   \              0x81 0xA6    
+   \              0x5D 0x44    
+   \              0x02 0x16    
+   \              0x19 0xB3    
+   \              0xF1 0x80    
+   \              0xB1 0xC9    
+   \              0x20         
+   \        0xF   0x02 0x6A          DC8 2, 106, 84, 111, 12, 112, 129, 73, 139, 110, 166, 98, 82, 109, 81
+   \              0x54 0x6F    
+   \              0x0C 0x70    
+   \              0x81 0x49    
+   \              0x8B 0x6E    
+   \              0xA6 0x62    
+   \              0x52 0x6D    
+   \              0x51         
+   \       0x1E   0xB1 0xCB          DC8 177, 203, 88, 59, 250, 213, 55, 95, 251, 201, 255, 70, 210, 25, 199
+   \              0x58 0x3B    
+   \              0xFA 0xD5    
+   \              0x37 0x5F    
+   \              0xFB 0xC9    
+   \              0xFF 0x46    
+   \              0xD2 0x19    
+   \              0xC7         
+   \       0x2D   0x22 0x3E          DC8 34, 62, 149, 69, 157, 130, 225, 231, 34, 159, 99, 49, 105, 210, 107
+   \              0x95 0x45    
+   \              0x9D 0x82    
+   \              0xE1 0xE7    
+   \              0x22 0x9F    
+   \              0x63 0x31    
+   \              0x69 0xD2    
+   \              0x6B         
+   \       0x3C   0x57 0x47          DC8 87, 71, 79, 163, 55, 201, 152, 28, 11, 251, 145, 49, 77, 85, 185
+   \              0x4F 0xA3    
+   \              0x37 0xC9    
+   \              0x98 0x1C    
+   \              0x0B 0xFB    
+   \              0x91 0x31    
+   \              0x4D 0x55    
+   \              0xB9         
+   \       0x4B   0xE9 0x1C          DC8 233, 28, 90, 94, 228, 147, 146, 207, 197, 35, 18, 213, 86, 44, 74
+   \              0x5A 0x5E    
+   \              0xE4 0x93    
+   \              0x92 0xCF    
+   \              0xC5 0x23    
+   \              0x12 0xD5    
+   \              0x56 0x2C    
+   \              0x4A         
+   \       0x5A   0x6E 0xFF          DC8 110, 255, 220, 16, 208, 104
+   \              0xDC 0x10    
+   \              0xD0 0x68    
+    537              { 0xc1, 0x80, 0x81, 0xa6, 0x5d, 0x44, 0x02, 0x16,
+    538                0x19, 0xb3, 0xf1, 0x80, 0xb1, 0xc9, 0x20, 0x02,
+    539                0x6a, 0x54, 0x6f, 0x0c, 0x70, 0x81, 0x49, 0x8b,
+    540                0x6e, 0xa6, 0x62, 0x52, 0x6d, 0x51, 0xb1, 0xcb,
+    541                0x58, 0x3b, 0xfa, 0xd5, 0x37, 0x5f, 0xfb, 0xc9,
+    542                0xff, 0x46, 0xd2, 0x19, 0xc7, 0x22, 0x3e, 0x95,
+    543                0x45, 0x9d, 0x82, 0xe1, 0xe7, 0x22, 0x9f, 0x63,
+    544                0x31, 0x69, 0xd2, 0x6b, 0x57, 0x47, 0x4f, 0xa3,
+    545                0x37, 0xc9, 0x98, 0x1c, 0x0b, 0xfb, 0x91, 0x31,
+    546                0x4d, 0x55, 0xb9, 0xe9, 0x1c, 0x5a, 0x5e, 0xe4,
+    547                0x93, 0x92, 0xcf, 0xc5, 0x23, 0x12, 0xd5, 0x56,
+    548                0x2c, 0x4a, 0x6e, 0xff, 0xdc, 0x10, 0xd0, 0x68 };
+    549          
+
+   \                                 In section .rodata, align 4
+    550          static const unsigned char entropy_source_nopr[64] =
+   \                     entropy_source_nopr:
+   \        0x0   0x5A 0x19          DC8 90, 25, 77, 94, 43, 49, 88, 20, 84, 222, 246, 117, 251, 121, 88
+   \              0x4D 0x5E    
+   \              0x2B 0x31    
+   \              0x58 0x14    
+   \              0x54 0xDE    
+   \              0xF6 0x75    
+   \              0xFB 0x79    
+   \              0x58         
+   \        0xF   0xFE 0xC7          DC8 254, 199, 219, 135, 62, 86, 137, 252, 157, 3, 33, 124, 104, 216, 3
+   \              0xDB 0x87    
+   \              0x3E 0x56    
+   \              0x89 0xFC    
+   \              0x9D 0x03    
+   \              0x21 0x7C    
+   \              0x68 0xD8    
+   \              0x03         
+   \       0x1E   0x38 0x20          DC8 56, 32, 249, 230, 94, 4, 216, 86, 243, 169, 196, 74, 76, 189, 193
+   \              0xF9 0xE6    
+   \              0x5E 0x04    
+   \              0xD8 0x56    
+   \              0xF3 0xA9    
+   \              0xC4 0x4A    
+   \              0x4C 0xBD    
+   \              0xC1         
+   \       0x2D   0xD0 0x08          DC8 208, 8, 70, 245, 152, 61, 119, 28, 27, 19, 126, 78, 15, 157, 142
+   \              0x46 0xF5    
+   \              0x98 0x3D    
+   \              0x77 0x1C    
+   \              0x1B 0x13    
+   \              0x7E 0x4E    
+   \              0x0F 0x9D    
+   \              0x8E         
+   \       0x3C   0xF4 0x09          DC8 244, 9, 249, 46
+   \              0xF9 0x2E    
+    551              { 0x5a, 0x19, 0x4d, 0x5e, 0x2b, 0x31, 0x58, 0x14,
+    552                0x54, 0xde, 0xf6, 0x75, 0xfb, 0x79, 0x58, 0xfe,
+    553                0xc7, 0xdb, 0x87, 0x3e, 0x56, 0x89, 0xfc, 0x9d,
+    554                0x03, 0x21, 0x7c, 0x68, 0xd8, 0x03, 0x38, 0x20,
+    555                0xf9, 0xe6, 0x5e, 0x04, 0xd8, 0x56, 0xf3, 0xa9,
+    556                0xc4, 0x4a, 0x4c, 0xbd, 0xc1, 0xd0, 0x08, 0x46,
+    557                0xf5, 0x98, 0x3d, 0x77, 0x1c, 0x1b, 0x13, 0x7e,
+    558                0x4e, 0x0f, 0x9d, 0x8e, 0xf4, 0x09, 0xf9, 0x2e };
+    559          
+
+   \                                 In section .rodata, align 4
+    560          static const unsigned char nonce_pers_pr[16] =
+   \                     nonce_pers_pr:
+   \        0x0   0xD2 0x54          DC8 210, 84, 252, 255, 2, 30, 105, 210, 41, 201, 207, 173, 133, 250, 72
+   \              0xFC 0xFF    
+   \              0x02 0x1E    
+   \              0x69 0xD2    
+   \              0x29 0xC9    
+   \              0xCF 0xAD    
+   \              0x85 0xFA    
+   \              0x48         
+   \        0xF   0x6C               DC8 108
+    561              { 0xd2, 0x54, 0xfc, 0xff, 0x02, 0x1e, 0x69, 0xd2,
+    562                0x29, 0xc9, 0xcf, 0xad, 0x85, 0xfa, 0x48, 0x6c };
+    563          
+
+   \                                 In section .rodata, align 4
+    564          static const unsigned char nonce_pers_nopr[16] =
+   \                     nonce_pers_nopr:
+   \        0x0   0x1B 0x54          DC8 27, 84, 184, 255, 6, 66, 191, 245, 33, 241, 92, 28, 11, 102, 95, 63
+   \              0xB8 0xFF    
+   \              0x06 0x42    
+   \              0xBF 0xF5    
+   \              0x21 0xF1    
+   \              0x5C 0x1C    
+   \              0x0B 0x66    
+   \              0x5F 0x3F    
+    565              { 0x1b, 0x54, 0xb8, 0xff, 0x06, 0x42, 0xbf, 0xf5,
+    566                0x21, 0xf1, 0x5c, 0x1c, 0x0b, 0x66, 0x5f, 0x3f };
+    567          
+
+   \                                 In section .rodata, align 4
+    568          static const unsigned char result_pr[16] =
+   \                     result_pr:
+   \        0x0   0x34 0x01          DC8 52, 1, 22, 86, 180, 41, 0, 143, 53, 99, 236, 181, 242, 89, 7, 35
+   \              0x16 0x56    
+   \              0xB4 0x29    
+   \              0x00 0x8F    
+   \              0x35 0x63    
+   \              0xEC 0xB5    
+   \              0xF2 0x59    
+   \              0x07 0x23    
+    569              { 0x34, 0x01, 0x16, 0x56, 0xb4, 0x29, 0x00, 0x8f,
+    570                0x35, 0x63, 0xec, 0xb5, 0xf2, 0x59, 0x07, 0x23 };
+    571          
+
+   \                                 In section .rodata, align 4
+    572          static const unsigned char result_nopr[16] =
+   \                     result_nopr:
+   \        0x0   0xA0 0x54          DC8 160, 84, 48, 61, 138, 126, 169, 136, 157, 144, 62, 7, 124, 111, 33
+   \              0x30 0x3D    
+   \              0x8A 0x7E    
+   \              0xA9 0x88    
+   \              0x9D 0x90    
+   \              0x3E 0x07    
+   \              0x7C 0x6F    
+   \              0x21         
+   \        0xF   0x8F               DC8 143
+    573              { 0xa0, 0x54, 0x30, 0x3d, 0x8a, 0x7e, 0xa9, 0x88,
+    574                0x9d, 0x90, 0x3e, 0x07, 0x7c, 0x6f, 0x21, 0x8f };
+    575          
+
+   \                                 In section .bss, align 4
+    576          static size_t test_offset;
+   \                     test_offset:
+   \        0x0                      DS8 4
+
+   \                                 In section .text, align 2, keep-with-next
+    577          static int ctr_drbg_self_test_entropy( void *data, unsigned char *buf,
+    578                                                 size_t len )
+    579          {
+   \                     ctr_drbg_self_test_entropy: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x460B             MOV      R3,R1
+   \        0x4   0x4614             MOV      R4,R2
+    580              const unsigned char *p = data;
+    581              memcpy( buf, p + test_offset, len );
+   \        0x6   0x....             LDR.N    R5,??DataTable2_1
+   \        0x8   0x6829             LDR      R1,[R5, #+0]
+   \        0xA   0x4401             ADD      R1,R0,R1
+   \        0xC   0x4618             MOV      R0,R3
+   \        0xE   0x....'....        BL       __aeabi_memcpy
+    582              test_offset += len;
+   \       0x12   0x6828             LDR      R0,[R5, #+0]
+   \       0x14   0x1824             ADDS     R4,R4,R0
+   \       0x16   0x602C             STR      R4,[R5, #+0]
+    583              return( 0 );
+   \       0x18   0x2000             MOVS     R0,#+0
+   \       0x1A   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    584          }
+    585          
+    586          #define CHK( c )    if( (c) != 0 )                          \
+    587                              {                                       \
+    588                                  if( verbose != 0 )                  \
+    589                                      mbedtls_printf( "failed\n" );  \
+    590                                  return( 1 );                        \
+    591                              }
+    592          
+    593          /*
+    594           * Checkup routine
+    595           */
+
+   \                                 In section .text, align 2, keep-with-next
+    596          int mbedtls_ctr_drbg_self_test( int verbose )
+    597          {
+   \                     mbedtls_ctr_drbg_self_test: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0xB0D6             SUB      SP,SP,#+344
+   \        0x4   0x4604             MOV      R4,R0
+    598              mbedtls_ctr_drbg_context ctx;
+    599              unsigned char buf[16];
+    600          
+    601              mbedtls_ctr_drbg_init( &ctx );
+   \        0x6   0xA806             ADD      R0,SP,#+24
+   \        0x8   0x....'....        BL       mbedtls_ctr_drbg_init
+    602          
+    603              /*
+    604               * Based on a NIST CTR_DRBG test vector (PR = True)
+    605               */
+    606              if( verbose != 0 )
+   \        0xC   0x2C00             CMP      R4,#+0
+   \        0xE   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_0
+    607                  mbedtls_printf( "  CTR_DRBG (PR = TRUE) : " );
+   \       0x10   0x....             LDR.N    R0,??DataTable2_2
+   \       0x12   0x....'....        BL       DbgConsole_Printf
+    608          
+    609              test_offset = 0;
+   \                     ??mbedtls_ctr_drbg_self_test_0: (+1)
+   \       0x16   0x....             LDR.N    R5,??DataTable2_1
+   \       0x18   0x2000             MOVS     R0,#+0
+   \       0x1A   0x6028             STR      R0,[R5, #+0]
+    610              CHK( mbedtls_ctr_drbg_seed_entropy_len( &ctx, ctr_drbg_self_test_entropy,
+    611                                          (void *) entropy_source_pr, nonce_pers_pr, 16, 32 ) );
+   \       0x1C   0x....             LDR.N    R6,??DataTable2_3
+   \       0x1E   0x2020             MOVS     R0,#+32
+   \       0x20   0x9001             STR      R0,[SP, #+4]
+   \       0x22   0x2010             MOVS     R0,#+16
+   \       0x24   0x9000             STR      R0,[SP, #+0]
+   \       0x26   0x....             LDR.N    R3,??DataTable2_4
+   \       0x28   0x....             LDR.N    R2,??DataTable2_5
+   \       0x2A   0x4631             MOV      R1,R6
+   \       0x2C   0xA806             ADD      R0,SP,#+24
+   \       0x2E   0x....'....        BL       mbedtls_ctr_drbg_seed_entropy_len
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD006             BEQ.N    ??mbedtls_ctr_drbg_self_test_1
+   \       0x36   0x2C00             CMP      R4,#+0
+   \       0x38   0xF000 0x8086      BEQ.W    ??mbedtls_ctr_drbg_self_test_2
+   \       0x3C   0x....             LDR.N    R0,??DataTable2_6
+   \       0x3E   0x....'....        BL       DbgConsole_Printf
+   \       0x42   0xE081             B.N      ??mbedtls_ctr_drbg_self_test_2
+    612              mbedtls_ctr_drbg_set_prediction_resistance( &ctx, MBEDTLS_CTR_DRBG_PR_ON );
+   \                     ??mbedtls_ctr_drbg_self_test_1: (+1)
+   \       0x44   0x2101             MOVS     R1,#+1
+   \       0x46   0xA806             ADD      R0,SP,#+24
+   \       0x48   0x....'....        BL       mbedtls_ctr_drbg_set_prediction_resistance
+    613              CHK( mbedtls_ctr_drbg_random( &ctx, buf, MBEDTLS_CTR_DRBG_BLOCKSIZE ) );
+   \       0x4C   0x2210             MOVS     R2,#+16
+   \       0x4E   0xA902             ADD      R1,SP,#+8
+   \       0x50   0xA806             ADD      R0,SP,#+24
+   \       0x52   0x....'....        BL       mbedtls_ctr_drbg_random
+   \       0x56   0x2800             CMP      R0,#+0
+   \       0x58   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_3
+   \       0x5A   0x2C00             CMP      R4,#+0
+   \       0x5C   0xD074             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \       0x5E   0x....             LDR.N    R0,??DataTable2_6
+   \       0x60   0x....'....        BL       DbgConsole_Printf
+   \       0x64   0xE070             B.N      ??mbedtls_ctr_drbg_self_test_2
+    614              CHK( mbedtls_ctr_drbg_random( &ctx, buf, MBEDTLS_CTR_DRBG_BLOCKSIZE ) );
+   \                     ??mbedtls_ctr_drbg_self_test_3: (+1)
+   \       0x66   0x2210             MOVS     R2,#+16
+   \       0x68   0xA902             ADD      R1,SP,#+8
+   \       0x6A   0xA806             ADD      R0,SP,#+24
+   \       0x6C   0x....'....        BL       mbedtls_ctr_drbg_random
+   \       0x70   0x2800             CMP      R0,#+0
+   \       0x72   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_4
+   \       0x74   0x2C00             CMP      R4,#+0
+   \       0x76   0xD067             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \       0x78   0x....             LDR.N    R0,??DataTable2_6
+   \       0x7A   0x....'....        BL       DbgConsole_Printf
+   \       0x7E   0xE063             B.N      ??mbedtls_ctr_drbg_self_test_2
+    615              CHK( memcmp( buf, result_pr, MBEDTLS_CTR_DRBG_BLOCKSIZE ) );
+   \                     ??mbedtls_ctr_drbg_self_test_4: (+1)
+   \       0x80   0x2210             MOVS     R2,#+16
+   \       0x82   0x....             LDR.N    R1,??DataTable2_7
+   \       0x84   0xA802             ADD      R0,SP,#+8
+   \       0x86   0x....'....        BL       memcmp
+   \       0x8A   0x2800             CMP      R0,#+0
+   \       0x8C   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_5
+   \       0x8E   0x2C00             CMP      R4,#+0
+   \       0x90   0xD05A             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \       0x92   0x....             LDR.N    R0,??DataTable2_6
+   \       0x94   0x....'....        BL       DbgConsole_Printf
+   \       0x98   0xE056             B.N      ??mbedtls_ctr_drbg_self_test_2
+    616          
+    617              mbedtls_ctr_drbg_free( &ctx );
+   \                     ??mbedtls_ctr_drbg_self_test_5: (+1)
+   \       0x9A   0xA806             ADD      R0,SP,#+24
+   \       0x9C   0x....'....        BL       mbedtls_ctr_drbg_free
+    618          
+    619              if( verbose != 0 )
+   \       0xA0   0x2C00             CMP      R4,#+0
+   \       0xA2   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_6
+    620                  mbedtls_printf( "passed\n\r" );
+   \       0xA4   0x....             LDR.N    R0,??DataTable2_8
+   \       0xA6   0x....'....        BL       DbgConsole_Printf
+    621          
+    622              /*
+    623               * Based on a NIST CTR_DRBG test vector (PR = FALSE)
+    624               */
+    625              if( verbose != 0 )
+   \                     ??mbedtls_ctr_drbg_self_test_6: (+1)
+   \       0xAA   0x2C00             CMP      R4,#+0
+   \       0xAC   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_7
+    626                  mbedtls_printf( "  CTR_DRBG (PR = FALSE): " );
+   \       0xAE   0x....             LDR.N    R0,??DataTable2_9
+   \       0xB0   0x....'....        BL       DbgConsole_Printf
+    627          
+    628              mbedtls_ctr_drbg_init( &ctx );
+   \                     ??mbedtls_ctr_drbg_self_test_7: (+1)
+   \       0xB4   0xA806             ADD      R0,SP,#+24
+   \       0xB6   0x....'....        BL       mbedtls_ctr_drbg_init
+    629          
+    630              test_offset = 0;
+   \       0xBA   0x2000             MOVS     R0,#+0
+   \       0xBC   0x6028             STR      R0,[R5, #+0]
+    631              CHK( mbedtls_ctr_drbg_seed_entropy_len( &ctx, ctr_drbg_self_test_entropy,
+    632                                      (void *) entropy_source_nopr, nonce_pers_nopr, 16, 32 ) );
+   \       0xBE   0x2020             MOVS     R0,#+32
+   \       0xC0   0x9001             STR      R0,[SP, #+4]
+   \       0xC2   0x2010             MOVS     R0,#+16
+   \       0xC4   0x9000             STR      R0,[SP, #+0]
+   \       0xC6   0x....             LDR.N    R3,??DataTable2_10
+   \       0xC8   0x....             LDR.N    R2,??DataTable2_11
+   \       0xCA   0x4631             MOV      R1,R6
+   \       0xCC   0xA806             ADD      R0,SP,#+24
+   \       0xCE   0x....'....        BL       mbedtls_ctr_drbg_seed_entropy_len
+   \       0xD2   0x2800             CMP      R0,#+0
+   \       0xD4   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_8
+   \       0xD6   0x2C00             CMP      R4,#+0
+   \       0xD8   0xD036             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \       0xDA   0x....             LDR.N    R0,??DataTable2_6
+   \       0xDC   0x....'....        BL       DbgConsole_Printf
+   \       0xE0   0xE032             B.N      ??mbedtls_ctr_drbg_self_test_2
+    633              CHK( mbedtls_ctr_drbg_random( &ctx, buf, 16 ) );
+   \                     ??mbedtls_ctr_drbg_self_test_8: (+1)
+   \       0xE2   0x2210             MOVS     R2,#+16
+   \       0xE4   0xA902             ADD      R1,SP,#+8
+   \       0xE6   0xA806             ADD      R0,SP,#+24
+   \       0xE8   0x....'....        BL       mbedtls_ctr_drbg_random
+   \       0xEC   0x2800             CMP      R0,#+0
+   \       0xEE   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_9
+   \       0xF0   0x2C00             CMP      R4,#+0
+   \       0xF2   0xD029             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \       0xF4   0x....             LDR.N    R0,??DataTable2_6
+   \       0xF6   0x....'....        BL       DbgConsole_Printf
+   \       0xFA   0xE025             B.N      ??mbedtls_ctr_drbg_self_test_2
+    634              CHK( mbedtls_ctr_drbg_reseed( &ctx, NULL, 0 ) );
+   \                     ??mbedtls_ctr_drbg_self_test_9: (+1)
+   \       0xFC   0x2200             MOVS     R2,#+0
+   \       0xFE   0x4611             MOV      R1,R2
+   \      0x100   0xA806             ADD      R0,SP,#+24
+   \      0x102   0x....'....        BL       mbedtls_ctr_drbg_reseed
+   \      0x106   0x2800             CMP      R0,#+0
+   \      0x108   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_10
+   \      0x10A   0x2C00             CMP      R4,#+0
+   \      0x10C   0xD01C             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \      0x10E   0x....             LDR.N    R0,??DataTable2_6
+   \      0x110   0x....'....        BL       DbgConsole_Printf
+   \      0x114   0xE018             B.N      ??mbedtls_ctr_drbg_self_test_2
+    635              CHK( mbedtls_ctr_drbg_random( &ctx, buf, 16 ) );
+   \                     ??mbedtls_ctr_drbg_self_test_10: (+1)
+   \      0x116   0x2210             MOVS     R2,#+16
+   \      0x118   0xA902             ADD      R1,SP,#+8
+   \      0x11A   0xA806             ADD      R0,SP,#+24
+   \      0x11C   0x....'....        BL       mbedtls_ctr_drbg_random
+   \      0x120   0x2800             CMP      R0,#+0
+   \      0x122   0xD005             BEQ.N    ??mbedtls_ctr_drbg_self_test_11
+   \      0x124   0x2C00             CMP      R4,#+0
+   \      0x126   0xD00F             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \      0x128   0x....             LDR.N    R0,??DataTable2_6
+   \      0x12A   0x....'....        BL       DbgConsole_Printf
+   \      0x12E   0xE00B             B.N      ??mbedtls_ctr_drbg_self_test_2
+    636              CHK( memcmp( buf, result_nopr, 16 ) );
+   \                     ??mbedtls_ctr_drbg_self_test_11: (+1)
+   \      0x130   0x2210             MOVS     R2,#+16
+   \      0x132   0x....             LDR.N    R1,??DataTable2_12
+   \      0x134   0xA802             ADD      R0,SP,#+8
+   \      0x136   0x....'....        BL       memcmp
+   \      0x13A   0x2800             CMP      R0,#+0
+   \      0x13C   0xD006             BEQ.N    ??mbedtls_ctr_drbg_self_test_12
+   \      0x13E   0x2C00             CMP      R4,#+0
+   \      0x140   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_2
+   \      0x142   0x....             LDR.N    R0,??DataTable2_6
+   \      0x144   0x....'....        BL       DbgConsole_Printf
+   \                     ??mbedtls_ctr_drbg_self_test_2: (+1)
+   \      0x148   0x2001             MOVS     R0,#+1
+   \      0x14A   0xE00D             B.N      ??mbedtls_ctr_drbg_self_test_13
+    637          
+    638              mbedtls_ctr_drbg_free( &ctx );
+   \                     ??mbedtls_ctr_drbg_self_test_12: (+1)
+   \      0x14C   0xA806             ADD      R0,SP,#+24
+   \      0x14E   0x....'....        BL       mbedtls_ctr_drbg_free
+    639          
+    640              if( verbose != 0 )
+   \      0x152   0x2C00             CMP      R4,#+0
+   \      0x154   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_14
+    641                  mbedtls_printf( "passed\n\r" );
+   \      0x156   0x....             LDR.N    R0,??DataTable2_8
+   \      0x158   0x....'....        BL       DbgConsole_Printf
+    642          
+    643              if( verbose != 0 )
+   \                     ??mbedtls_ctr_drbg_self_test_14: (+1)
+   \      0x15C   0x2C00             CMP      R4,#+0
+   \      0x15E   0xD002             BEQ.N    ??mbedtls_ctr_drbg_self_test_15
+    644                      mbedtls_printf( "\n\r" );
+   \      0x160   0x....             ADR.N    R0,??DataTable2  ;; 0x0A, 0x0D, 0x00, 0x00
+   \      0x162   0x....'....        BL       DbgConsole_Printf
+    645          
+    646              return( 0 );
+   \                     ??mbedtls_ctr_drbg_self_test_15: (+1)
+   \      0x166   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_ctr_drbg_self_test_13: (+1)
+   \      0x168   0xB056             ADD      SP,SP,#+344
+   \      0x16A   0xBD70             POP      {R4-R6,PC}       ;; return
+    647          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x0A 0x0D          DC8      0x0A, 0x0D, 0x00, 0x00
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     test_offset
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_3:
+   \        0x0   0x....'....        DC32     ctr_drbg_self_test_entropy
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_4:
+   \        0x0   0x....'....        DC32     nonce_pers_pr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_5:
+   \        0x0   0x....'....        DC32     entropy_source_pr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_6:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_7:
+   \        0x0   0x....'....        DC32     result_pr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_8:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_9:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_10:
+   \        0x0   0x....'....        DC32     nonce_pers_nopr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_11:
+   \        0x0   0x....'....        DC32     entropy_source_nopr
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_12:
+   \        0x0   0x....'....        DC32     result_nopr
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x20 0x20          DC8 "  CTR_DRBG (PR = TRUE) : "
+   \              0x43 0x54    
+   \              0x52 0x5F    
+   \              0x44 0x52    
+   \              0x42 0x47    
+   \              0x20 0x28    
+   \              0x50 0x52    
+   \              0x20 0x3D    
+   \              0x20 0x54    
+   \              0x52 0x55    
+   \              0x45 0x29    
+   \              0x20 0x3A    
+   \              0x20 0x00    
+   \       0x1A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x66 0x61          DC8 "failed\012"
+   \              0x69 0x6C    
+   \              0x65 0x64    
+   \              0x0A 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x70 0x61          DC8 "passed\012\015"
+   \              0x73 0x73    
+   \              0x65 0x64    
+   \              0x0A 0x0D    
+   \              0x00         
+   \        0x9   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_3:
+   \        0x0   0x20 0x20          DC8 "  CTR_DRBG (PR = FALSE): "
+   \              0x43 0x54    
+   \              0x52 0x5F    
+   \              0x44 0x52    
+   \              0x42 0x47    
+   \              0x20 0x28    
+   \              0x50 0x52    
+   \              0x20 0x3D    
+   \              0x20 0x46    
+   \              0x41 0x4C    
+   \              0x53 0x45    
+   \              0x29 0x3A    
+   \              0x20 0x00    
+   \       0x1A   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x0A 0x0D          DC8 "\012\015"
+   \              0x00         
+   \        0x3   0x00               DC8 0
+    648          #endif /* MBEDTLS_SELF_TEST */
+    649          
+    650          #endif /* MBEDTLS_CTR_DRBG_C */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+     824   block_cipher_df
+       824   -> __aeabi_memcpy
+       824   -> __aeabi_memset4
+       824   -> mbedtls_aes_crypt_ecb
+       824   -> mbedtls_aes_free
+       824   -> mbedtls_aes_init
+       824   -> mbedtls_aes_setkey_enc
+       824   -> mbedtls_platform_zeroize
+      16   ctr_drbg_self_test_entropy
+        16   -> __aeabi_memcpy
+      72   ctr_drbg_update_internal
+        72   -> __aeabi_memcpy4
+        72   -> __aeabi_memset4
+        72   -> mbedtls_aes_crypt_ecb
+        72   -> mbedtls_aes_setkey_enc
+       8   mbedtls_ctr_drbg_free
+         8   -> mbedtls_aes_free
+         0   -> mbedtls_platform_zeroize
+       0   mbedtls_ctr_drbg_init
+         0   -> __aeabi_memset4
+       8   mbedtls_ctr_drbg_random
+         8   -> mbedtls_ctr_drbg_random_with_add
+      88   mbedtls_ctr_drbg_random_with_add
+        88   -> __aeabi_memcpy
+        88   -> __aeabi_memset4
+        88   -> block_cipher_df
+        88   -> ctr_drbg_update_internal
+        88   -> mbedtls_aes_crypt_ecb
+        88   -> mbedtls_ctr_drbg_reseed
+     408   mbedtls_ctr_drbg_reseed
+       408   -- Indirect call
+       408   -> __aeabi_memcpy
+       408   -> __aeabi_memset4
+       408   -> block_cipher_df
+       408   -> ctr_drbg_update_internal
+      24   mbedtls_ctr_drbg_seed
+        24   -> mbedtls_ctr_drbg_seed_entropy_len
+      56   mbedtls_ctr_drbg_seed_entropy_len
+        56   -> __aeabi_memset4
+        56   -> mbedtls_aes_init
+        56   -> mbedtls_aes_setkey_enc
+        56   -> mbedtls_ctr_drbg_reseed
+     360   mbedtls_ctr_drbg_self_test
+       360   -> DbgConsole_Printf
+       360   -> mbedtls_ctr_drbg_free
+       360   -> mbedtls_ctr_drbg_init
+       360   -> mbedtls_ctr_drbg_random
+       360   -> mbedtls_ctr_drbg_reseed
+       360   -> mbedtls_ctr_drbg_seed_entropy_len
+       360   -> mbedtls_ctr_drbg_set_prediction_resistance
+       360   -> memcmp
+       0   mbedtls_ctr_drbg_set_entropy_len
+       0   mbedtls_ctr_drbg_set_prediction_resistance
+       0   mbedtls_ctr_drbg_set_reseed_interval
+      56   mbedtls_ctr_drbg_update
+        56   -> block_cipher_df
+        56   -> ctr_drbg_update_internal
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_10
+       4  ??DataTable2_11
+       4  ??DataTable2_12
+       4  ??DataTable2_2
+       4  ??DataTable2_3
+       4  ??DataTable2_4
+       4  ??DataTable2_5
+       4  ??DataTable2_6
+       4  ??DataTable2_7
+       4  ??DataTable2_8
+       4  ??DataTable2_9
+      28  ?_0
+       8  ?_1
+      12  ?_2
+      28  ?_3
+       4  ?_4
+     350  block_cipher_df
+      28  ctr_drbg_self_test_entropy
+     136  ctr_drbg_update_internal
+      64  entropy_source_nopr
+      96  entropy_source_pr
+      30  mbedtls_ctr_drbg_free
+      10  mbedtls_ctr_drbg_init
+      12  mbedtls_ctr_drbg_random
+     224  mbedtls_ctr_drbg_random_with_add
+     132  mbedtls_ctr_drbg_reseed
+      16  mbedtls_ctr_drbg_seed
+      94  mbedtls_ctr_drbg_seed_entropy_len
+     364  mbedtls_ctr_drbg_self_test
+       4  mbedtls_ctr_drbg_set_entropy_len
+       4  mbedtls_ctr_drbg_set_prediction_resistance
+       4  mbedtls_ctr_drbg_set_reseed_interval
+      40  mbedtls_ctr_drbg_update
+      16  nonce_pers_nopr
+      16  nonce_pers_pr
+      16  result_nopr
+      16  result_pr
+       4  test_offset
+
+ 
+     4 bytes in section .bss
+   304 bytes in section .rodata
+ 1 500 bytes in section .text
+ 
+ 1 500 bytes of CODE  memory
+   304 bytes of CONST memory
+     4 bytes of DATA  memory
+
+Errors: none
+Warnings: none

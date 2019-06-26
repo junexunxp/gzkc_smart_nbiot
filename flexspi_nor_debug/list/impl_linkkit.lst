@@ -1,0 +1,3610 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:48
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\impl_linkkit.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW743C.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\impl_linkkit.c -D
+#        DEBUG -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1
+#        -D CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE
+#        -D "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\impl_linkkit.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\impl_linkkit.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\impl_linkkit.c
+      1          /*
+      2           * Copyright (C) 2015-2018 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          #include "iotx_dm_internal.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp void INIT_AOS_DLIST_HEAD(dlist_t *)
+   \                     INIT_AOS_DLIST_HEAD: (+1)
+   \        0x0   0x6040             STR      R0,[R0, #+4]
+   \        0x2   0x6000             STR      R0,[R0, #+0]
+   \        0x4   0x4770             BX       LR               ;; return
+      6          
+      7          #if defined(DEVICE_MODEL_ENABLED) && !defined(DEPRECATED_LINKKIT)
+      8          #include "dev_model_api.h"
+      9          
+     10          #ifdef LOG_REPORT_TO_CLOUD
+     11              #include "iotx_log_report.h"
+     12          #endif
+     13          
+     14          #ifdef INFRA_MEM_STATS
+     15              #include "infra_mem_stats.h"
+     16              #define IMPL_LINKKIT_MALLOC(size)            LITE_malloc(size, MEM_MAGIC, "impl.linkkit")
+     17              #define IMPL_LINKKIT_FREE(ptr)               LITE_free(ptr)
+     18          #else
+     19              #define IMPL_LINKKIT_MALLOC(size)            HAL_Malloc(size)
+     20              #define IMPL_LINKKIT_FREE(ptr)               {HAL_Free((void *)ptr);ptr = NULL;}
+     21          #endif
+     22          
+     23          #ifdef DEV_BIND_ENABLED
+     24              #include "dev_bind_api.h"
+     25          #endif
+     26          
+     27          #define IOTX_LINKKIT_KEY_ID          "id"
+     28          #define IOTX_LINKKIT_KEY_CODE        "code"
+     29          #define IOTX_LINKKIT_KEY_DEVID       "devid"
+     30          #define IOTX_LINKKIT_KEY_SERVICEID   "serviceid"
+     31          #define IOTX_LINKKIT_KEY_PROPERTYID  "propertyid"
+     32          #define IOTX_LINKKIT_KEY_EVENTID     "eventid"
+     33          #define IOTX_LINKKIT_KEY_PAYLOAD     "payload"
+     34          #define IOTX_LINKKIT_KEY_CONFIG_ID   "configId"
+     35          #define IOTX_LINKKIT_KEY_CONFIG_SIZE "configSize"
+     36          #define IOTX_LINKKIT_KEY_GET_TYPE    "getType"
+     37          #define IOTX_LINKKIT_KEY_SIGN        "sign"
+     38          #define IOTX_LINKKIT_KEY_SIGN_METHOD "signMethod"
+     39          #define IOTX_LINKKIT_KEY_URL         "url"
+     40          #define IOTX_LINKKIT_KEY_VERSION     "version"
+     41          #define IOTX_LINKKIT_KEY_UTC         "utc"
+     42          #define IOTX_LINKKIT_KEY_RRPCID      "rrpcid"
+     43          #define IOTX_LINKKIT_KEY_CTX         "ctx"
+     44          #define IOTX_LINKKIT_KEY_TOPO        "topo"
+     45          #define IOTX_LINKKIT_KEY_PRODUCT_KEY "productKey"
+     46          #define IOTX_LINKKIT_KEY_TIME        "time"
+     47          #define IOTX_LINKKIT_KEY_DATA        "data"
+     48          
+     49          #define IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS 10000
+     50          
+     51          typedef struct {
+     52              int msgid;
+     53              void *semaphore;
+     54              int code;
+     55              struct list_head linked_list;
+     56          } iotx_linkkit_upstream_sync_callback_node_t;
+     57          
+     58          typedef struct {
+     59              void *mutex;
+     60              void *upstream_mutex;
+     61              int is_opened;
+     62              int is_connected;
+     63              struct list_head upstream_sync_callback_list;
+     64          } iotx_linkkit_ctx_t;
+     65          
+
+   \                                 In section .bss, align 4
+     66          static iotx_linkkit_ctx_t g_iotx_linkkit_ctx = {0};
+   \                     g_iotx_linkkit_ctx:
+   \        0x0                      DS8 24
+     67          
+
+   \                                 In section .text, align 2, keep-with-next
+     68          static iotx_linkkit_ctx_t *_iotx_linkkit_get_ctx(void)
+     69          {
+     70              return &g_iotx_linkkit_ctx;
+   \                     _iotx_linkkit_get_ctx: (+1)
+   \        0x0   0x....'....        LDR.W    R0,??DataTable5
+   \        0x4   0x4770             BX       LR               ;; return
+     71          }
+     72          
+
+   \                                 In section .text, align 2, keep-with-next
+     73          static void _iotx_linkkit_mutex_lock(void)
+     74          {
+   \                     _iotx_linkkit_mutex_lock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     75              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x2   0x....'....        BL       _iotx_linkkit_get_ctx
+     76              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_iotx_linkkit_mutex_lock_0
+     77                  HAL_MutexLock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexLock
+     78              }
+     79          }
+   \                     ??_iotx_linkkit_mutex_lock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     80          
+
+   \                                 In section .text, align 2, keep-with-next
+     81          static void _iotx_linkkit_mutex_unlock(void)
+     82          {
+   \                     _iotx_linkkit_mutex_unlock: (+1)
+   \        0x0   0xB580             PUSH     {R7,LR}
+     83              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x2   0x....'....        BL       _iotx_linkkit_get_ctx
+     84              if (ctx->mutex) {
+   \        0x6   0x6801             LDR      R1,[R0, #+0]
+   \        0x8   0x2900             CMP      R1,#+0
+   \        0xA   0xD004             BEQ.N    ??_iotx_linkkit_mutex_unlock_0
+     85                  HAL_MutexUnlock(ctx->mutex);
+   \        0xC   0x4608             MOV      R0,R1
+   \        0xE   0xE8BD 0x4002      POP      {R1,LR}
+   \       0x12   0x....'....        B.W      HAL_MutexUnlock
+     86              }
+     87          }
+   \                     ??_iotx_linkkit_mutex_unlock_0: (+1)
+   \       0x16   0xBD01             POP      {R0,PC}          ;; return
+     88          
+
+   \                                 In section .text, align 2, keep-with-next
+     89          static int _impl_copy(_IN_ void *input, _IN_ int input_len, _OU_ void **output, _IN_ int output_len)
+     90          {
+   \                     _impl_copy: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460E             MOV      R6,R1
+   \        0x6   0x4614             MOV      R4,R2
+   \        0x8   0x461F             MOV      R7,R3
+     91              if (input == NULL || output == NULL || *output != NULL) {
+   \        0xA   0x2D00             CMP      R5,#+0
+   \        0xC   0xD004             BEQ.N    ??_impl_copy_0
+   \        0xE   0x2C00             CMP      R4,#+0
+   \       0x10   0xD002             BEQ.N    ??_impl_copy_0
+   \       0x12   0x6820             LDR      R0,[R4, #+0]
+   \       0x14   0x2800             CMP      R0,#+0
+   \       0x16   0xD002             BEQ.N    ??_impl_copy_1
+     92                  return DM_INVALID_PARAMETER;
+   \                     ??_impl_copy_0: (+1)
+   \       0x18   0xF06F 0x0001      MVN      R0,#+1
+   \       0x1C   0xBDF2             POP      {R1,R4-R7,PC}
+     93              }
+     94          
+     95              *output = IMPL_LINKKIT_MALLOC(output_len);
+   \                     ??_impl_copy_1: (+1)
+   \       0x1E   0x4638             MOV      R0,R7
+   \       0x20   0x....'....        BL       HAL_Malloc
+   \       0x24   0x6020             STR      R0,[R4, #+0]
+     96              if (*output == NULL) {
+   \       0x26   0x2800             CMP      R0,#+0
+   \       0x28   0xD102             BNE.N    ??_impl_copy_2
+     97                  return DM_MEMORY_NOT_ENOUGH;
+   \       0x2A   0xF06F 0x0002      MVN      R0,#+2
+   \       0x2E   0xBDF2             POP      {R1,R4-R7,PC}
+     98              }
+     99              memset(*output, 0, output_len);
+   \                     ??_impl_copy_2: (+1)
+   \       0x30   0x2200             MOVS     R2,#+0
+   \       0x32   0x4639             MOV      R1,R7
+   \       0x34   0x....'....        BL       __aeabi_memset
+    100              memcpy(*output, input, input_len);
+   \       0x38   0x4632             MOV      R2,R6
+   \       0x3A   0x4629             MOV      R1,R5
+   \       0x3C   0x6820             LDR      R0,[R4, #+0]
+   \       0x3E   0x....'....        BL       __aeabi_memcpy
+    101          
+    102              return SUCCESS_RETURN;
+   \       0x42   0x2000             MOVS     R0,#+0
+   \       0x44   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+    103          }
+    104          
+    105          #ifdef DEVICE_MODEL_GATEWAY
+    106          static void _iotx_linkkit_upstream_mutex_lock(void)
+    107          {
+    108              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    109              if (ctx->upstream_mutex) {
+    110                  HAL_MutexLock(ctx->upstream_mutex);
+    111              }
+    112          }
+    113          
+    114          static void _iotx_linkkit_upstream_mutex_unlock(void)
+    115          {
+    116              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    117              if (ctx->upstream_mutex) {
+    118                  HAL_MutexUnlock(ctx->upstream_mutex);
+    119              }
+    120          }
+    121          
+    122          
+    123          static int _iotx_linkkit_upstream_sync_callback_list_insert(int msgid, void *semaphore,
+    124                  iotx_linkkit_upstream_sync_callback_node_t **node)
+    125          {
+    126              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    127              iotx_linkkit_upstream_sync_callback_node_t *search_node = NULL;
+    128          
+    129              list_for_each_entry(search_node, &ctx->upstream_sync_callback_list, linked_list,
+    130                                  iotx_linkkit_upstream_sync_callback_node_t) {
+    131                  if (search_node->msgid == msgid) {
+    132                      dm_log_debug("Message Already Exist: %d", msgid);
+    133                      return FAIL_RETURN;
+    134                  }
+    135              }
+    136          
+    137              search_node = IMPL_LINKKIT_MALLOC(sizeof(iotx_linkkit_upstream_sync_callback_node_t));
+    138              if (search_node == NULL) {
+    139                  dm_log_debug("malloc error");
+    140                  return FAIL_RETURN;
+    141              }
+    142              memset(search_node, 0, sizeof(iotx_linkkit_upstream_sync_callback_node_t));
+    143              search_node->msgid = msgid;
+    144              search_node->semaphore = semaphore;
+    145              INIT_LIST_HEAD(&search_node->linked_list);
+    146          
+    147              list_add(&search_node->linked_list, &ctx->upstream_sync_callback_list);
+    148              dm_log_debug("New Message, msgid: %d", msgid);
+    149          
+    150              *node = search_node;
+    151              return SUCCESS_RETURN;
+    152          }
+    153          
+    154          static int _iotx_linkkit_upstream_sync_callback_list_remove(int msgid)
+    155          {
+    156              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    157              iotx_linkkit_upstream_sync_callback_node_t *search_node = NULL;
+    158          
+    159              list_for_each_entry(search_node, &ctx->upstream_sync_callback_list, linked_list,
+    160                                  iotx_linkkit_upstream_sync_callback_node_t) {
+    161                  if (search_node->msgid == msgid) {
+    162                      dm_log_debug("Message Found: %d, Delete It", msgid);
+    163                      HAL_SemaphoreDestroy(search_node->semaphore);
+    164                      list_del(&search_node->linked_list);
+    165                      IMPL_LINKKIT_FREE(search_node);
+    166                      return SUCCESS_RETURN;
+    167                  }
+    168              }
+    169          
+    170              return FAIL_RETURN;
+    171          }
+    172          
+    173          static int _iotx_linkkit_upstream_sync_callback_list_search(int msgid,
+    174                  iotx_linkkit_upstream_sync_callback_node_t **node)
+    175          {
+    176              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    177              iotx_linkkit_upstream_sync_callback_node_t *search_node = NULL;
+    178          
+    179              if (node == NULL || *node != NULL) {
+    180                  dm_log_debug("invalid param");
+    181                  return FAIL_RETURN;
+    182              }
+    183          
+    184              list_for_each_entry(search_node, &ctx->upstream_sync_callback_list, linked_list,
+    185                                  iotx_linkkit_upstream_sync_callback_node_t) {
+    186                  if (search_node->msgid == msgid) {
+    187                      dm_log_debug("Sync Message Found: %d", msgid);
+    188                      *node = search_node;
+    189                      return SUCCESS_RETURN;
+    190                  }
+    191              }
+    192          
+    193              return FAIL_RETURN;
+    194          }
+    195          
+    196          static void _iotx_linkkit_upstream_sync_callback_list_destroy(void)
+    197          {
+    198              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    199              iotx_linkkit_upstream_sync_callback_node_t *search_node = NULL, *next_node = NULL;
+    200          
+    201              list_for_each_entry_safe(search_node, next_node, &ctx->upstream_sync_callback_list, linked_list,
+    202                                       iotx_linkkit_upstream_sync_callback_node_t) {
+    203                  list_del(&search_node->linked_list);
+    204                  HAL_SemaphoreDestroy(search_node->semaphore);
+    205                  IMPL_LINKKIT_FREE(search_node);
+    206              }
+    207          }
+    208          
+    209          
+    210          static void _iotx_linkkit_upstream_callback_remove(int msgid, int code)
+    211          {
+    212              int res = 0;
+    213              iotx_linkkit_upstream_sync_callback_node_t *sync_node = NULL;
+    214              res = _iotx_linkkit_upstream_sync_callback_list_search(msgid, &sync_node);
+    215              if (res == SUCCESS_RETURN) {
+    216                  sync_node->code = (code == IOTX_DM_ERR_CODE_SUCCESS) ? (SUCCESS_RETURN) : (FAIL_RETURN);
+    217                  dm_log_debug("Sync Message %d Result: %d", msgid, sync_node->code);
+    218                  HAL_SemaphorePost(sync_node->semaphore);
+    219              }
+    220          }
+    221          #endif
+    222          
+    223          #ifdef LOG_REPORT_TO_CLOUD
+
+   \                                 In section .bss, align 4
+    224              int  report_sample = 0;
+   \                     report_sample:
+   \        0x0                      DS8 4
+    225          #endif
+    226          #ifdef ALCS_ENABLED
+    227              extern void dm_server_free_context(_IN_ void *ctx);
+    228          #endif
+    229          
+
+   \                                 In section .text, align 4, keep-with-next
+    230          static void _iotx_linkkit_event_callback(iotx_dm_event_types_t type, char *payload)
+    231          {
+   \                     _iotx_linkkit_event_callback: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0xF5AD 0x7D30      SUB      SP,SP,#+704
+   \        0x6   0x4605             MOV      R5,R0
+   \        0x8   0x000C             MOVS     R4,R1
+    232              int res = 0;
+    233              void *callback;
+    234          #ifdef LOG_REPORT_TO_CLOUD
+    235              lite_cjson_t msg_id;
+    236          #endif
+    237              lite_cjson_t lite, lite_item_id, lite_item_devid, lite_item_serviceid, lite_item_payload, lite_item_ctx;
+    238              lite_cjson_t lite_item_code, lite_item_eventid, lite_item_utc, lite_item_rrpcid, lite_item_topo;
+    239              lite_cjson_t lite_item_pk, lite_item_time;
+    240              lite_cjson_t lite_item_version, lite_item_configid, lite_item_configsize, lite_item_gettype, lite_item_sign,
+    241                           lite_item_signmethod, lite_item_url;
+    242          
+    243              dm_log_info("Receive Message Type: %d", type);
+    244              if (payload) {
+   \        0xA   0xF000 0x80BC      BEQ.W    ??_iotx_linkkit_event_callback_2
+    245                  dm_log_info("Receive Message: %s", payload);
+    246                  res = dm_utils_json_parse(payload, strlen(payload), cJSON_Invalid, &lite);
+    247                  if (res != SUCCESS_RETURN) {
+   \        0xE   0x4620             MOV      R0,R4
+   \       0x10   0x....'....        BL       strlen
+   \       0x14   0xAB18             ADD      R3,SP,#+96
+   \       0x16   0x2200             MOVS     R2,#+0
+   \       0x18   0x4601             MOV      R1,R0
+   \       0x1A   0x4620             MOV      R0,R4
+   \       0x1C   0x....'....        BL       dm_utils_json_parse
+   \       0x20   0x2800             CMP      R0,#+0
+   \       0x22   0xF040 0x8444      BNE.W    ??_iotx_linkkit_event_callback_3
+    248                      return;
+    249                  }
+    250          #ifdef LOG_REPORT_TO_CLOUD
+    251                  dm_utils_json_object_item(&lite, "msgid", 5, cJSON_Invalid, &msg_id);
+   \       0x26   0xA890             ADD      R0,SP,#+576
+   \       0x28   0x9000             STR      R0,[SP, #+0]
+   \       0x2A   0x2300             MOVS     R3,#+0
+   \       0x2C   0x2205             MOVS     R2,#+5
+   \       0x2E   0x....'....        LDR.W    R1,??DataTable5_1
+   \       0x32   0xA818             ADD      R0,SP,#+96
+   \       0x34   0x....'....        BL       dm_utils_json_object_item
+    252          #endif
+    253                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_ID, strlen(IOTX_LINKKIT_KEY_ID), cJSON_Invalid, &lite_item_id);
+   \       0x38   0xA820             ADD      R0,SP,#+128
+   \       0x3A   0x9000             STR      R0,[SP, #+0]
+   \       0x3C   0x2300             MOVS     R3,#+0
+   \       0x3E   0x2202             MOVS     R2,#+2
+   \       0x40   0xA1AC             ADR.N    R1,??_iotx_linkkit_event_callback_0  ;; 0x69, 0x64, 0x00, 0x00
+   \       0x42   0xA818             ADD      R0,SP,#+96
+   \       0x44   0x....'....        BL       dm_utils_json_object_item
+    254                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_DEVID, strlen(IOTX_LINKKIT_KEY_DEVID), cJSON_Invalid,
+    255                                            &lite_item_devid);
+   \       0x48   0xA810             ADD      R0,SP,#+64
+   \       0x4A   0x9000             STR      R0,[SP, #+0]
+   \       0x4C   0x2300             MOVS     R3,#+0
+   \       0x4E   0x2205             MOVS     R2,#+5
+   \       0x50   0x....'....        LDR.W    R1,??DataTable5_2
+   \       0x54   0xA818             ADD      R0,SP,#+96
+   \       0x56   0x....'....        BL       dm_utils_json_object_item
+    256                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_SERVICEID, strlen(IOTX_LINKKIT_KEY_SERVICEID), cJSON_Invalid,
+    257                                            &lite_item_serviceid);
+   \       0x5A   0xA830             ADD      R0,SP,#+192
+   \       0x5C   0x9000             STR      R0,[SP, #+0]
+   \       0x5E   0x2300             MOVS     R3,#+0
+   \       0x60   0x2209             MOVS     R2,#+9
+   \       0x62   0x....'....        LDR.W    R1,??DataTable5_3
+   \       0x66   0xA818             ADD      R0,SP,#+96
+   \       0x68   0x....'....        BL       dm_utils_json_object_item
+    258                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_PAYLOAD, strlen(IOTX_LINKKIT_KEY_PAYLOAD), cJSON_Invalid,
+    259                                            &lite_item_payload);
+   \       0x6C   0xA808             ADD      R0,SP,#+32
+   \       0x6E   0x9000             STR      R0,[SP, #+0]
+   \       0x70   0x2300             MOVS     R3,#+0
+   \       0x72   0x2207             MOVS     R2,#+7
+   \       0x74   0x....'....        LDR.W    R1,??DataTable5_4
+   \       0x78   0xA818             ADD      R0,SP,#+96
+   \       0x7A   0x....'....        BL       dm_utils_json_object_item
+    260                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_CTX, strlen(IOTX_LINKKIT_KEY_CTX), cJSON_Invalid, &lite_item_ctx);
+   \       0x7E   0xA888             ADD      R0,SP,#+544
+   \       0x80   0x9000             STR      R0,[SP, #+0]
+   \       0x82   0x2300             MOVS     R3,#+0
+   \       0x84   0x2203             MOVS     R2,#+3
+   \       0x86   0xA19C             ADR.N    R1,??_iotx_linkkit_event_callback_0+0x4  ;; "ctx"
+   \       0x88   0xA818             ADD      R0,SP,#+96
+   \       0x8A   0x....'....        BL       dm_utils_json_object_item
+    261                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_CODE, strlen(IOTX_LINKKIT_KEY_CODE), cJSON_Invalid, &lite_item_code);
+   \       0x8E   0xA880             ADD      R0,SP,#+512
+   \       0x90   0x9000             STR      R0,[SP, #+0]
+   \       0x92   0x2300             MOVS     R3,#+0
+   \       0x94   0x2204             MOVS     R2,#+4
+   \       0x96   0x....'....        LDR.W    R1,??DataTable5_5
+   \       0x9A   0xA818             ADD      R0,SP,#+96
+   \       0x9C   0x....'....        BL       dm_utils_json_object_item
+    262                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_EVENTID, strlen(IOTX_LINKKIT_KEY_EVENTID), cJSON_Invalid,
+    263                                            &lite_item_eventid);
+   \       0xA0   0xA828             ADD      R0,SP,#+160
+   \       0xA2   0x9000             STR      R0,[SP, #+0]
+   \       0xA4   0x2300             MOVS     R3,#+0
+   \       0xA6   0x2207             MOVS     R2,#+7
+   \       0xA8   0x....'....        LDR.W    R1,??DataTable5_6
+   \       0xAC   0xA818             ADD      R0,SP,#+96
+   \       0xAE   0x....'....        BL       dm_utils_json_object_item
+    264                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_UTC, strlen(IOTX_LINKKIT_KEY_UTC), cJSON_Invalid, &lite_item_utc);
+   \       0xB2   0xA878             ADD      R0,SP,#+480
+   \       0xB4   0x9000             STR      R0,[SP, #+0]
+   \       0xB6   0x2300             MOVS     R3,#+0
+   \       0xB8   0x2203             MOVS     R2,#+3
+   \       0xBA   0xA190             ADR.N    R1,??_iotx_linkkit_event_callback_0+0x8  ;; "utc"
+   \       0xBC   0xA818             ADD      R0,SP,#+96
+   \       0xBE   0x....'....        BL       dm_utils_json_object_item
+    265                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_RRPCID, strlen(IOTX_LINKKIT_KEY_RRPCID), cJSON_Invalid,
+    266                                            &lite_item_rrpcid);
+   \       0xC2   0xA870             ADD      R0,SP,#+448
+   \       0xC4   0x9000             STR      R0,[SP, #+0]
+   \       0xC6   0x2300             MOVS     R3,#+0
+   \       0xC8   0x2206             MOVS     R2,#+6
+   \       0xCA   0x....'....        LDR.W    R1,??DataTable5_8
+   \       0xCE   0xA818             ADD      R0,SP,#+96
+   \       0xD0   0x....'....        BL       dm_utils_json_object_item
+    267                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_TOPO, strlen(IOTX_LINKKIT_KEY_TOPO), cJSON_Invalid,
+    268                                            &lite_item_topo);
+   \       0xD4   0xA8A8             ADD      R0,SP,#+672
+   \       0xD6   0x9000             STR      R0,[SP, #+0]
+   \       0xD8   0x2300             MOVS     R3,#+0
+   \       0xDA   0x2204             MOVS     R2,#+4
+   \       0xDC   0x....'....        LDR.W    R1,??DataTable5_9
+   \       0xE0   0xA818             ADD      R0,SP,#+96
+   \       0xE2   0x....'....        BL       dm_utils_json_object_item
+    269                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_PRODUCT_KEY, strlen(IOTX_LINKKIT_KEY_PRODUCT_KEY), cJSON_Invalid,
+    270                                            &lite_item_pk);
+   \       0xE6   0xA8A0             ADD      R0,SP,#+640
+   \       0xE8   0x9000             STR      R0,[SP, #+0]
+   \       0xEA   0x2300             MOVS     R3,#+0
+   \       0xEC   0x220A             MOVS     R2,#+10
+   \       0xEE   0x....'....        LDR.W    R1,??DataTable5_10
+   \       0xF2   0xA818             ADD      R0,SP,#+96
+   \       0xF4   0x....'....        BL       dm_utils_json_object_item
+    271                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_TIME, strlen(IOTX_LINKKIT_KEY_TIME), cJSON_Invalid,
+    272                                            &lite_item_time);
+   \       0xF8   0xA898             ADD      R0,SP,#+608
+   \       0xFA   0x9000             STR      R0,[SP, #+0]
+   \       0xFC   0x2300             MOVS     R3,#+0
+   \       0xFE   0x2204             MOVS     R2,#+4
+   \      0x100   0x....'....        LDR.W    R1,??DataTable5_11
+   \      0x104   0xA818             ADD      R0,SP,#+96
+   \      0x106   0x....'....        BL       dm_utils_json_object_item
+    273                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_VERSION, strlen(IOTX_LINKKIT_KEY_VERSION), cJSON_Invalid,
+    274                                            &lite_item_version);
+   \      0x10A   0xA868             ADD      R0,SP,#+416
+   \      0x10C   0x9000             STR      R0,[SP, #+0]
+   \      0x10E   0x2300             MOVS     R3,#+0
+   \      0x110   0x2207             MOVS     R2,#+7
+   \      0x112   0x....'....        LDR.W    R1,??DataTable5_12
+   \      0x116   0xA818             ADD      R0,SP,#+96
+   \      0x118   0x....'....        BL       dm_utils_json_object_item
+    275                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_CONFIG_ID, strlen(IOTX_LINKKIT_KEY_CONFIG_ID), cJSON_Invalid,
+    276                                            &lite_item_configid);
+   \      0x11C   0xA860             ADD      R0,SP,#+384
+   \      0x11E   0x9000             STR      R0,[SP, #+0]
+   \      0x120   0x2300             MOVS     R3,#+0
+   \      0x122   0x2208             MOVS     R2,#+8
+   \      0x124   0x....'....        LDR.W    R1,??DataTable5_13
+   \      0x128   0xA818             ADD      R0,SP,#+96
+   \      0x12A   0x....'....        BL       dm_utils_json_object_item
+    277                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_CONFIG_SIZE, strlen(IOTX_LINKKIT_KEY_CONFIG_SIZE), cJSON_Invalid,
+    278                                            &lite_item_configsize);
+   \      0x12E   0xA858             ADD      R0,SP,#+352
+   \      0x130   0x9000             STR      R0,[SP, #+0]
+   \      0x132   0x2300             MOVS     R3,#+0
+   \      0x134   0x220A             MOVS     R2,#+10
+   \      0x136   0x....'....        LDR.W    R1,??DataTable5_14
+   \      0x13A   0xA818             ADD      R0,SP,#+96
+   \      0x13C   0x....'....        BL       dm_utils_json_object_item
+    279                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_GET_TYPE, strlen(IOTX_LINKKIT_KEY_GET_TYPE), cJSON_Invalid,
+    280                                            &lite_item_gettype);
+   \      0x140   0xA850             ADD      R0,SP,#+320
+   \      0x142   0x9000             STR      R0,[SP, #+0]
+   \      0x144   0x2300             MOVS     R3,#+0
+   \      0x146   0x2207             MOVS     R2,#+7
+   \      0x148   0x....'....        LDR.W    R1,??DataTable5_15
+   \      0x14C   0xA818             ADD      R0,SP,#+96
+   \      0x14E   0x....'....        BL       dm_utils_json_object_item
+    281                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_SIGN, strlen(IOTX_LINKKIT_KEY_SIGN), cJSON_Invalid,
+    282                                            &lite_item_sign);
+   \      0x152   0xA848             ADD      R0,SP,#+288
+   \      0x154   0x9000             STR      R0,[SP, #+0]
+   \      0x156   0x2300             MOVS     R3,#+0
+   \      0x158   0x2204             MOVS     R2,#+4
+   \      0x15A   0x....'....        LDR.W    R1,??DataTable5_16
+   \      0x15E   0xA818             ADD      R0,SP,#+96
+   \      0x160   0x....'....        BL       dm_utils_json_object_item
+    283                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_SIGN_METHOD, strlen(IOTX_LINKKIT_KEY_SIGN_METHOD), cJSON_Invalid,
+    284                                            &lite_item_signmethod);
+   \      0x164   0xA840             ADD      R0,SP,#+256
+   \      0x166   0x9000             STR      R0,[SP, #+0]
+   \      0x168   0x2300             MOVS     R3,#+0
+   \      0x16A   0x220A             MOVS     R2,#+10
+   \      0x16C   0x....'....        LDR.W    R1,??DataTable5_17
+   \      0x170   0xA818             ADD      R0,SP,#+96
+   \      0x172   0x....'....        BL       dm_utils_json_object_item
+    285                  dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_URL, strlen(IOTX_LINKKIT_KEY_URL), cJSON_Invalid,
+    286                                            &lite_item_url);
+   \      0x176   0xA838             ADD      R0,SP,#+224
+   \      0x178   0x9000             STR      R0,[SP, #+0]
+   \      0x17A   0x2300             MOVS     R3,#+0
+   \      0x17C   0x2203             MOVS     R2,#+3
+   \      0x17E   0xA1B3             ADR.N    R1,??_iotx_linkkit_event_callback_1  ;; "url"
+   \      0x180   0xA818             ADD      R0,SP,#+96
+   \      0x182   0x....'....        BL       dm_utils_json_object_item
+    287          
+    288              }
+    289          
+    290              switch (type) {
+   \                     ??_iotx_linkkit_event_callback_2: (+1)
+   \      0x186   0x2D00             CMP      R5,#+0
+   \      0x188   0xD029             BEQ.N    ??_iotx_linkkit_event_callback_4
+   \      0x18A   0x2D01             CMP      R5,#+1
+   \      0x18C   0xD02F             BEQ.N    ??_iotx_linkkit_event_callback_5
+   \      0x18E   0x2D0A             CMP      R5,#+10
+   \      0x190   0xD035             BEQ.N    ??_iotx_linkkit_event_callback_6
+   \      0x192   0x2D0F             CMP      R5,#+15
+   \      0x194   0xF000 0x8114      BEQ.W    ??_iotx_linkkit_event_callback_7
+   \      0x198   0x2D10             CMP      R5,#+16
+   \      0x19A   0xF000 0x815D      BEQ.W    ??_iotx_linkkit_event_callback_8
+   \      0x19E   0x2D14             CMP      R5,#+20
+   \      0x1A0   0xF000 0x80AE      BEQ.W    ??_iotx_linkkit_event_callback_9
+   \      0x1A4   0x2D18             CMP      R5,#+24
+   \      0x1A6   0xD03A             BEQ.N    ??_iotx_linkkit_event_callback_10
+   \      0x1A8   0x2D20             CMP      R5,#+32
+   \      0x1AA   0xF000 0x81A9      BEQ.W    ??_iotx_linkkit_event_callback_11
+   \      0x1AE   0x2D21             CMP      R5,#+33
+   \      0x1B0   0xF000 0x81E0      BEQ.W    ??_iotx_linkkit_event_callback_12
+   \      0x1B4   0x2D22             CMP      R5,#+34
+   \      0x1B6   0xF000 0x81A3      BEQ.W    ??_iotx_linkkit_event_callback_11
+   \      0x1BA   0x2D23             CMP      R5,#+35
+   \      0x1BC   0xF000 0x81A0      BEQ.W    ??_iotx_linkkit_event_callback_11
+   \      0x1C0   0x2D27             CMP      R5,#+39
+   \      0x1C2   0xD05F             BEQ.N    ??_iotx_linkkit_event_callback_13
+   \      0x1C4   0x2D29             CMP      R5,#+41
+   \      0x1C6   0xF000 0x82CC      BEQ.W    ??_iotx_linkkit_event_callback_14
+   \      0x1CA   0x2D2A             CMP      R5,#+42
+   \      0x1CC   0xF000 0x82A2      BEQ.W    ??_iotx_linkkit_event_callback_15
+   \      0x1D0   0x2D2B             CMP      R5,#+43
+   \      0x1D2   0xF000 0x8221      BEQ.W    ??_iotx_linkkit_event_callback_16
+   \      0x1D6   0x2D2C             CMP      R5,#+44
+   \      0x1D8   0xF000 0x8241      BEQ.W    ??_iotx_linkkit_event_callback_17
+   \      0x1DC   0xE367             B.N      ??_iotx_linkkit_event_callback_3
+    291                  case IOTX_DM_EVENT_CLOUD_CONNECTED: {
+    292                      callback = iotx_event_callback(ITE_CONNECT_SUCC);
+   \                     ??_iotx_linkkit_event_callback_4: (+1)
+   \      0x1DE   0x2001             MOVS     R0,#+1
+   \      0x1E0   0x....'....        BL       iotx_event_callback
+    293                      if (callback) {
+   \      0x1E4   0x2800             CMP      R0,#+0
+   \      0x1E6   0xF000 0x8362      BEQ.W    ??_iotx_linkkit_event_callback_3
+    294                          ((int (*)(void))callback)();
+   \      0x1EA   0x4780             BLX      R0
+   \      0x1EC   0xE35F             B.N      ??_iotx_linkkit_event_callback_3
+    295                      }
+    296                  }
+    297                  break;
+    298                  case IOTX_DM_EVENT_CLOUD_DISCONNECT: {
+    299                      callback = iotx_event_callback(ITE_DISCONNECTED);
+   \                     ??_iotx_linkkit_event_callback_5: (+1)
+   \      0x1EE   0x2003             MOVS     R0,#+3
+   \      0x1F0   0x....'....        BL       iotx_event_callback
+    300                      if (callback) {
+   \      0x1F4   0x2800             CMP      R0,#+0
+   \      0x1F6   0xF000 0x835A      BEQ.W    ??_iotx_linkkit_event_callback_3
+    301                          ((int (*)(void))callback)();
+   \      0x1FA   0x4780             BLX      R0
+   \      0x1FC   0xE357             B.N      ??_iotx_linkkit_event_callback_3
+    302                      }
+    303                  }
+    304                  break;
+    305                  case IOTX_DM_EVENT_INITIALIZED: {
+    306                      if (payload == NULL || lite_item_devid.type != cJSON_Number) {
+   \                     ??_iotx_linkkit_event_callback_6: (+1)
+   \      0x1FE   0x2C00             CMP      R4,#+0
+   \      0x200   0xF000 0x8355      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x204   0x9810             LDR      R0,[SP, #+64]
+   \      0x206   0x2808             CMP      R0,#+8
+   \      0x208   0xF040 0x8351      BNE.W    ??_iotx_linkkit_event_callback_3
+    307                          return;
+    308                      }
+    309          
+    310                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    311          
+    312                      callback = iotx_event_callback(ITE_INITIALIZE_COMPLETED);
+   \      0x20C   0x200D             MOVS     R0,#+13
+   \      0x20E   0x....'....        BL       iotx_event_callback
+   \      0x212   0x0001             MOVS     R1,R0
+    313                      if (callback) {
+   \      0x214   0xF000 0x834B      BEQ.W    ??_iotx_linkkit_event_callback_3
+    314                          ((int (*)(const int))callback)(lite_item_devid.value_int);
+   \      0x218   0x9816             LDR      R0,[SP, #+88]
+   \      0x21A   0x4788             BLX      R1
+   \      0x21C   0xE347             B.N      ??_iotx_linkkit_event_callback_3
+    315                      }
+    316                  }
+    317                  break;
+    318                  case IOTX_DM_EVENT_MODEL_DOWN_RAW: {
+    319                      int raw_data_len = 0;
+    320                      unsigned char *raw_data = NULL;
+    321          
+    322                      if (payload == NULL || lite_item_devid.type != cJSON_Number || lite_item_payload.type != cJSON_String) {
+   \                     ??_iotx_linkkit_event_callback_10: (+1)
+   \      0x21E   0x2C00             CMP      R4,#+0
+   \      0x220   0xF000 0x8345      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x224   0x9810             LDR      R0,[SP, #+64]
+   \      0x226   0x2808             CMP      R0,#+8
+   \      0x228   0xF040 0x8341      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x22C   0x9808             LDR      R0,[SP, #+32]
+   \      0x22E   0x2810             CMP      R0,#+16
+   \      0x230   0xF040 0x833D      BNE.W    ??_iotx_linkkit_event_callback_3
+    323                          return;
+    324                      }
+    325          
+    326                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    327                      dm_log_debug("Current Raw Data: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    328          
+    329                      raw_data_len = lite_item_payload.value_length / 2;
+   \      0x234   0x9D0A             LDR      R5,[SP, #+40]
+   \      0x236   0xEB05 0x75D5      ADD      R5,R5,R5, LSR #+31
+   \      0x23A   0x106D             ASRS     R5,R5,#+1
+    330                      raw_data = IMPL_LINKKIT_MALLOC(raw_data_len);
+   \      0x23C   0x4628             MOV      R0,R5
+   \      0x23E   0x....'....        BL       HAL_Malloc
+   \      0x242   0x0004             MOVS     R4,R0
+    331                      if (raw_data == NULL) {
+   \      0x244   0xF000 0x8333      BEQ.W    ??_iotx_linkkit_event_callback_3
+    332                          dm_log_err("No Enough Memory");
+    333                          return;
+    334                      }
+    335                      LITE_hexstr_convert(lite_item_payload.value, lite_item_payload.value_length, raw_data, raw_data_len);
+   \      0x248   0x462B             MOV      R3,R5
+   \      0x24A   0x4622             MOV      R2,R4
+   \      0x24C   0x990A             LDR      R1,[SP, #+40]
+   \      0x24E   0x9809             LDR      R0,[SP, #+36]
+   \      0x250   0x....'....        BL       LITE_hexstr_convert
+    336          
+    337                      HEXDUMP_DEBUG(raw_data, raw_data_len);
+                             ^
+Warning[Pe191]: type qualifier is meaningless on cast type
+   \      0x254   0x9501             STR      R5,[SP, #+4]
+   \      0x256   0x9400             STR      R4,[SP, #+0]
+   \      0x258   0x....'....        LDR.W    R3,??DataTable5_19
+   \      0x25C   0x2205             MOVS     R2,#+5
+   \      0x25E   0xF240 0x1151      MOVW     R1,#+337
+   \      0x262   0x....'....        LDR.W    R0,??DataTable5_20
+   \      0x266   0x....'....        BL       LITE_rich_hexdump
+    338                      callback = iotx_event_callback(ITE_RAWDATA_ARRIVED);
+   \      0x26A   0x2004             MOVS     R0,#+4
+   \      0x26C   0x....'....        BL       iotx_event_callback
+   \      0x270   0x0003             MOVS     R3,R0
+    339                      if (callback) {
+   \      0x272   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_18
+    340                          ((int (*)(const int, const unsigned char *, const int))callback)(lite_item_devid.value_int, raw_data, raw_data_len);
+   \      0x274   0x462A             MOV      R2,R5
+   \      0x276   0x4621             MOV      R1,R4
+   \      0x278   0x9816             LDR      R0,[SP, #+88]
+   \      0x27A   0x4798             BLX      R3
+    341                      }
+    342          
+    343                      IMPL_LINKKIT_FREE(raw_data);
+   \                     ??_iotx_linkkit_event_callback_18: (+1)
+   \      0x27C   0x4620             MOV      R0,R4
+   \      0x27E   0x....'....        BL       HAL_Free
+    344                  }
+    345                  break;
+   \      0x282   0xE314             B.N      ??_iotx_linkkit_event_callback_3
+    346                  case IOTX_DM_EVENT_MODEL_UP_RAW_REPLY: {
+    347                      int raw_data_len = 0;
+    348                      unsigned char *raw_data = NULL;
+    349          
+    350                      if (payload == NULL || lite_item_devid.type != cJSON_Number || lite_item_payload.type != cJSON_String) {
+   \                     ??_iotx_linkkit_event_callback_13: (+1)
+   \      0x284   0x2C00             CMP      R4,#+0
+   \      0x286   0xF000 0x8312      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x28A   0x9810             LDR      R0,[SP, #+64]
+   \      0x28C   0x2808             CMP      R0,#+8
+   \      0x28E   0xF040 0x830E      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x292   0x9808             LDR      R0,[SP, #+32]
+   \      0x294   0x2810             CMP      R0,#+16
+   \      0x296   0xF040 0x830A      BNE.W    ??_iotx_linkkit_event_callback_3
+    351                          return;
+    352                      }
+    353          
+    354                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    355                      dm_log_debug("Current Raw Data: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    356          
+    357                      raw_data_len = lite_item_payload.value_length / 2;
+   \      0x29A   0x9D0A             LDR      R5,[SP, #+40]
+   \      0x29C   0xEB05 0x75D5      ADD      R5,R5,R5, LSR #+31
+   \      0x2A0   0x106D             ASRS     R5,R5,#+1
+    358                      raw_data = IMPL_LINKKIT_MALLOC(raw_data_len);
+   \      0x2A2   0x4628             MOV      R0,R5
+   \      0x2A4   0x....'....        BL       HAL_Malloc
+   \      0x2A8   0x0004             MOVS     R4,R0
+    359                      if (raw_data == NULL) {
+   \      0x2AA   0xF000 0x8300      BEQ.W    ??_iotx_linkkit_event_callback_3
+    360                          dm_log_err("No Enough Memory");
+    361                          return;
+    362                      }
+    363                      memset(raw_data, 0, raw_data_len);
+   \      0x2AE   0x2200             MOVS     R2,#+0
+   \      0x2B0   0x4629             MOV      R1,R5
+   \      0x2B2   0x....'....        BL       __aeabi_memset
+    364                      LITE_hexstr_convert(lite_item_payload.value, lite_item_payload.value_length, raw_data, raw_data_len);
+   \      0x2B6   0x462B             MOV      R3,R5
+   \      0x2B8   0x4622             MOV      R2,R4
+   \      0x2BA   0x990A             LDR      R1,[SP, #+40]
+   \      0x2BC   0x9809             LDR      R0,[SP, #+36]
+   \      0x2BE   0x....'....        BL       LITE_hexstr_convert
+    365          
+    366                      HEXDUMP_DEBUG(raw_data, raw_data_len);
+                             ^
+Warning[Pe191]: type qualifier is meaningless on cast type
+   \      0x2C2   0x9501             STR      R5,[SP, #+4]
+   \      0x2C4   0x9400             STR      R4,[SP, #+0]
+   \      0x2C6   0x....'....        LDR.W    R3,??DataTable5_19
+   \      0x2CA   0x2205             MOVS     R2,#+5
+   \      0x2CC   0xF44F 0x71B7      MOV      R1,#+366
+   \      0x2D0   0x....'....        LDR.W    R0,??DataTable5_20
+   \      0x2D4   0x....'....        BL       LITE_rich_hexdump
+    367          
+    368                      callback = iotx_event_callback(ITE_RAWDATA_ARRIVED);
+   \      0x2D8   0x2004             MOVS     R0,#+4
+   \      0x2DA   0x....'....        BL       iotx_event_callback
+   \      0x2DE   0x0003             MOVS     R3,R0
+    369                      if (callback) {
+   \      0x2E0   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_19
+    370                          ((int (*)(const int, const unsigned char *, const int))callback)(lite_item_devid.value_int, raw_data, raw_data_len);
+   \      0x2E2   0x462A             MOV      R2,R5
+   \      0x2E4   0x4621             MOV      R1,R4
+   \      0x2E6   0x9816             LDR      R0,[SP, #+88]
+   \      0x2E8   0x4798             BLX      R3
+    371                      }
+    372          
+    373                      IMPL_LINKKIT_FREE(raw_data);
+   \                     ??_iotx_linkkit_event_callback_19: (+1)
+   \      0x2EA   0x4620             MOV      R0,R4
+   \      0x2EC   0x....'....        BL       HAL_Free
+    374                  }
+    375                  break;
+   \      0x2F0   0xE2DD             B.N      ??_iotx_linkkit_event_callback_3
+   \      0x2F2   0xBF00             Nop      
+   \                     ??_iotx_linkkit_event_callback_0:
+   \      0x2F4   0x69 0x64          DC8      0x69, 0x64, 0x00, 0x00
+   \              0x00 0x00    
+   \      0x2F8   0x63 0x74          DC8      "ctx"
+   \              0x78 0x00    
+   \      0x2FC   0x75 0x74          DC8      "utc"
+   \              0x63 0x00    
+    376          #if !defined(DEVICE_MODEL_RAWDATA_SOLO)
+    377                  case IOTX_DM_EVENT_THING_SERVICE_REQUEST: {
+    378                      int response_len = 0;
+   \                     ??_iotx_linkkit_event_callback_9: (+1)
+   \      0x300   0x2000             MOVS     R0,#+0
+   \      0x302   0x9006             STR      R0,[SP, #+24]
+    379                      char *request = NULL, *response = NULL;
+   \      0x304   0x9005             STR      R0,[SP, #+20]
+    380          
+    381                      uintptr_t property_get_ctx_num = 0;
+   \      0x306   0x9007             STR      R0,[SP, #+28]
+    382                      void *property_get_ctx = NULL;
+    383          
+    384                      if (payload == NULL || lite_item_id.type != cJSON_String || lite_item_devid.type != cJSON_Number ||
+    385                          lite_item_serviceid.type != cJSON_String || lite_item_payload.type != cJSON_Object) {
+   \      0x308   0x2C00             CMP      R4,#+0
+   \      0x30A   0xF000 0x82D0      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x30E   0x9820             LDR      R0,[SP, #+128]
+   \      0x310   0x2810             CMP      R0,#+16
+   \      0x312   0xF040 0x82CC      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x316   0x9810             LDR      R0,[SP, #+64]
+   \      0x318   0x2808             CMP      R0,#+8
+   \      0x31A   0xF040 0x82C8      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x31E   0x9830             LDR      R0,[SP, #+192]
+   \      0x320   0x2810             CMP      R0,#+16
+   \      0x322   0xF040 0x82C4      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x326   0x9808             LDR      R0,[SP, #+32]
+   \      0x328   0x2840             CMP      R0,#+64
+   \      0x32A   0xF040 0x82C0      BNE.W    ??_iotx_linkkit_event_callback_3
+    386                          return;
+    387                      }
+    388          
+    389                      dm_log_debug("Current Id: %.*s", lite_item_id.value_length, lite_item_id.value);
+    390                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    391                      dm_log_debug("Current ServiceID: %.*s", lite_item_serviceid.value_length, lite_item_serviceid.value);
+    392                      dm_log_debug("Current Payload: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    393                      dm_log_debug("Current Ctx: %.*s", lite_item_ctx.value_length, lite_item_ctx.value);
+    394          
+    395                      LITE_hexstr_convert(lite_item_ctx.value, lite_item_ctx.value_length, (unsigned char *)&property_get_ctx_num,
+    396                                          sizeof(uintptr_t));
+   \      0x32E   0x2304             MOVS     R3,#+4
+   \      0x330   0xAA07             ADD      R2,SP,#+28
+   \      0x332   0x998A             LDR      R1,[SP, #+552]
+   \      0x334   0x9889             LDR      R0,[SP, #+548]
+   \      0x336   0x....'....        BL       LITE_hexstr_convert
+    397                      property_get_ctx = (void *)property_get_ctx_num;
+   \      0x33A   0x9E07             LDR      R6,[SP, #+28]
+    398          
+    399                      request = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x33C   0x980A             LDR      R0,[SP, #+40]
+   \      0x33E   0x1C40             ADDS     R0,R0,#+1
+   \      0x340   0x....'....        BL       HAL_Malloc
+   \      0x344   0x0004             MOVS     R4,R0
+    400                      if (request == NULL) {
+   \      0x346   0xF000 0x82B2      BEQ.W    ??_iotx_linkkit_event_callback_3
+    401                          dm_log_err("Not Enough Memory");
+    402                          return;
+    403                      }
+    404                      memset(request, 0, lite_item_payload.value_length + 1);
+   \      0x34A   0x2200             MOVS     R2,#+0
+   \      0x34C   0x990A             LDR      R1,[SP, #+40]
+   \      0x34E   0x1C49             ADDS     R1,R1,#+1
+   \      0x350   0x....'....        BL       __aeabi_memset
+    405                      memcpy(request, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x354   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x356   0x9909             LDR      R1,[SP, #+36]
+   \      0x358   0x4620             MOV      R0,R4
+   \      0x35A   0x....'....        BL       __aeabi_memcpy
+    406          
+    407                      callback = iotx_event_callback(ITE_SERVICE_REQUEST);
+   \      0x35E   0x2005             MOVS     R0,#+5
+   \      0x360   0x....'....        BL       iotx_event_callback
+   \      0x364   0x0005             MOVS     R5,R0
+    408                      if (callback) {
+   \      0x366   0xD027             BEQ.N    ??_iotx_linkkit_event_callback_20
+    409                          res = ((int (*)(const int, const char *, const int, const char *, const int, char **,
+    410                                          int *))callback)(lite_item_devid.value_int, lite_item_serviceid.value,
+    411                                                           lite_item_serviceid.value_length, request, lite_item_payload.value_length, &response, &response_len);
+   \      0x368   0xA806             ADD      R0,SP,#+24
+   \      0x36A   0x9002             STR      R0,[SP, #+8]
+   \      0x36C   0xA805             ADD      R0,SP,#+20
+   \      0x36E   0x9001             STR      R0,[SP, #+4]
+   \      0x370   0x980A             LDR      R0,[SP, #+40]
+   \      0x372   0x9000             STR      R0,[SP, #+0]
+   \      0x374   0x4623             MOV      R3,R4
+   \      0x376   0x9A32             LDR      R2,[SP, #+200]
+   \      0x378   0x9931             LDR      R1,[SP, #+196]
+   \      0x37A   0x9816             LDR      R0,[SP, #+88]
+   \      0x37C   0x47A8             BLX      R5
+    412                          if (response != NULL && response_len > 0) {
+   \      0x37E   0x9905             LDR      R1,[SP, #+20]
+   \      0x380   0x2900             CMP      R1,#+0
+   \      0x382   0xD019             BEQ.N    ??_iotx_linkkit_event_callback_20
+   \      0x384   0x9906             LDR      R1,[SP, #+24]
+   \      0x386   0x2901             CMP      R1,#+1
+   \      0x388   0xDB16             BLT.N    ??_iotx_linkkit_event_callback_20
+    413                              /* service response exist */
+    414                              iotx_dm_error_code_t code = (res == 0) ? (IOTX_DM_ERR_CODE_SUCCESS) : (IOTX_DM_ERR_CODE_REQUEST_ERROR);
+   \      0x38A   0x2800             CMP      R0,#+0
+   \      0x38C   0xD101             BNE.N    ??_iotx_linkkit_event_callback_21
+   \      0x38E   0x23C8             MOVS     R3,#+200
+   \      0x390   0xE001             B.N      ??_iotx_linkkit_event_callback_22
+   \                     ??_iotx_linkkit_event_callback_21: (+1)
+   \      0x392   0xF44F 0x73C8      MOV      R3,#+400
+    415                              iotx_dm_send_service_response(lite_item_devid.value_int, lite_item_id.value, lite_item_id.value_length, code,
+    416                                                            lite_item_serviceid.value,
+    417                                                            lite_item_serviceid.value_length,
+    418                                                            response, response_len, property_get_ctx);
+   \                     ??_iotx_linkkit_event_callback_22: (+1)
+   \      0x396   0x9604             STR      R6,[SP, #+16]
+   \      0x398   0x9806             LDR      R0,[SP, #+24]
+   \      0x39A   0x9003             STR      R0,[SP, #+12]
+   \      0x39C   0x9805             LDR      R0,[SP, #+20]
+   \      0x39E   0x9002             STR      R0,[SP, #+8]
+   \      0x3A0   0x9832             LDR      R0,[SP, #+200]
+   \      0x3A2   0x9001             STR      R0,[SP, #+4]
+   \      0x3A4   0x9831             LDR      R0,[SP, #+196]
+   \      0x3A6   0x9000             STR      R0,[SP, #+0]
+   \      0x3A8   0x9A22             LDR      R2,[SP, #+136]
+   \      0x3AA   0x9921             LDR      R1,[SP, #+132]
+   \      0x3AC   0x9816             LDR      R0,[SP, #+88]
+   \      0x3AE   0x....'....        BL       iotx_dm_send_service_response
+    419                              HAL_Free(response);
+   \      0x3B2   0x9805             LDR      R0,[SP, #+20]
+   \      0x3B4   0x....'....        BL       HAL_Free
+    420                          }
+    421                      }
+    422          #ifdef ALCS_ENABLED
+    423                      if (property_get_ctx) {
+    424                          dm_server_free_context(property_get_ctx);
+    425                      }
+    426          #endif
+    427                      IMPL_LINKKIT_FREE(request);
+   \                     ??_iotx_linkkit_event_callback_20: (+1)
+   \      0x3B8   0x4620             MOV      R0,R4
+   \      0x3BA   0x....'....        BL       HAL_Free
+    428                  }
+    429                  break;
+   \      0x3BE   0xE276             B.N      ??_iotx_linkkit_event_callback_3
+    430                  case IOTX_DM_EVENT_PROPERTY_SET: {
+    431                      char *property_payload = NULL;
+    432          
+    433                      if (payload == NULL || lite_item_devid.type != cJSON_Number || lite_item_payload.type != cJSON_Object) {
+   \                     ??_iotx_linkkit_event_callback_7: (+1)
+   \      0x3C0   0x2C00             CMP      R4,#+0
+   \      0x3C2   0xF000 0x8274      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x3C6   0x9810             LDR      R0,[SP, #+64]
+   \      0x3C8   0x2808             CMP      R0,#+8
+   \      0x3CA   0xF040 0x8270      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x3CE   0x9808             LDR      R0,[SP, #+32]
+   \      0x3D0   0x2840             CMP      R0,#+64
+   \      0x3D2   0xF040 0x826C      BNE.W    ??_iotx_linkkit_event_callback_3
+    434                          return;
+    435                      }
+    436          
+    437                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    438                      dm_log_debug("Current Payload: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    439          
+    440                      property_payload = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x3D6   0x980A             LDR      R0,[SP, #+40]
+   \      0x3D8   0x1C40             ADDS     R0,R0,#+1
+   \      0x3DA   0x....'....        BL       HAL_Malloc
+   \      0x3DE   0x0004             MOVS     R4,R0
+    441                      if (property_payload == NULL) {
+   \      0x3E0   0xF000 0x8265      BEQ.W    ??_iotx_linkkit_event_callback_3
+    442                          dm_log_err("No Enough Memory");
+    443                          return;
+    444                      }
+    445                      memset(property_payload, 0, lite_item_payload.value_length + 1);
+   \      0x3E4   0x2200             MOVS     R2,#+0
+   \      0x3E6   0x990A             LDR      R1,[SP, #+40]
+   \      0x3E8   0x1C49             ADDS     R1,R1,#+1
+   \      0x3EA   0x....'....        BL       __aeabi_memset
+    446                      memcpy(property_payload, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x3EE   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x3F0   0x9909             LDR      R1,[SP, #+36]
+   \      0x3F2   0x4620             MOV      R0,R4
+   \      0x3F4   0x....'....        BL       __aeabi_memcpy
+    447          #ifdef LOG_REPORT_TO_CLOUD
+    448                      if (SUCCESS_RETURN == check_target_msg(msg_id.value, msg_id.value_length)) {
+   \      0x3F8   0x9992             LDR      R1,[SP, #+584]
+   \      0x3FA   0x9891             LDR      R0,[SP, #+580]
+   \      0x3FC   0x....'....        BL       check_target_msg
+   \      0x400   0x2800             CMP      R0,#+0
+   \      0x402   0xD109             BNE.N    ??_iotx_linkkit_event_callback_23
+    449                          report_sample = 1;
+   \      0x404   0x2001             MOVS     R0,#+1
+   \      0x406   0x....'....        LDR.W    R1,??DataTable5_21
+   \      0x40A   0x6008             STR      R0,[R1, #+0]
+    450                          send_permance_info(msg_id.value, msg_id.value_length, "3", 1);
+   \      0x40C   0x4603             MOV      R3,R0
+   \      0x40E   0xA210             ADR.N    R2,??_iotx_linkkit_event_callback_1+0x4  ;; "3"
+   \      0x410   0x9992             LDR      R1,[SP, #+584]
+   \      0x412   0x9891             LDR      R0,[SP, #+580]
+   \      0x414   0x....'....        BL       send_permance_info
+    451                      }
+    452          #endif
+    453                      callback = iotx_event_callback(ITE_PROPERTY_SET);
+   \                     ??_iotx_linkkit_event_callback_23: (+1)
+   \      0x418   0x2006             MOVS     R0,#+6
+   \      0x41A   0x....'....        BL       iotx_event_callback
+   \      0x41E   0x0003             MOVS     R3,R0
+    454                      if (callback) {
+   \      0x420   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_24
+    455                          ((int (*)(const int, const char *, const int))callback)(lite_item_devid.value_int, property_payload,
+    456                                  lite_item_payload.value_length);
+   \      0x422   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x424   0x4621             MOV      R1,R4
+   \      0x426   0x9816             LDR      R0,[SP, #+88]
+   \      0x428   0x4798             BLX      R3
+    457                      }
+    458          #ifdef LOG_REPORT_TO_CLOUD
+    459                      if (1 == report_sample) {
+   \                     ??_iotx_linkkit_event_callback_24: (+1)
+   \      0x42A   0x....'....        LDR.W    R5,??DataTable5_21
+   \      0x42E   0x6828             LDR      R0,[R5, #+0]
+   \      0x430   0x2801             CMP      R0,#+1
+   \      0x432   0xD107             BNE.N    ??_iotx_linkkit_event_callback_25
+    460                          send_permance_info(NULL, 0, "5", 2);
+   \      0x434   0x2302             MOVS     R3,#+2
+   \      0x436   0xA207             ADR.N    R2,??_iotx_linkkit_event_callback_1+0x8  ;; "5"
+   \      0x438   0x2100             MOVS     R1,#+0
+   \      0x43A   0x4608             MOV      R0,R1
+   \      0x43C   0x....'....        BL       send_permance_info
+    461                          report_sample = 0;
+   \      0x440   0x2000             MOVS     R0,#+0
+   \      0x442   0x6028             STR      R0,[R5, #+0]
+    462                      }
+    463          #endif
+    464          
+    465                      IMPL_LINKKIT_FREE(property_payload);
+   \                     ??_iotx_linkkit_event_callback_25: (+1)
+   \      0x444   0x4620             MOV      R0,R4
+   \      0x446   0x....'....        BL       HAL_Free
+    466                  }
+    467                  break;
+   \      0x44A   0xE230             B.N      ??_iotx_linkkit_event_callback_3
+   \                     ??_iotx_linkkit_event_callback_1:
+   \      0x44C   0x75 0x72          DC8      "url"
+   \              0x6C 0x00    
+   \      0x450   0x33 0x00          DC8      "3",0x0,0x0
+   \              0x00 0x00    
+   \      0x454   0x35 0x00          DC8      "5",0x0,0x0
+   \              0x00 0x00    
+    468          #ifdef DEVICE_MODEL_SHADOW
+    469                  case IOTX_DM_EVENT_PROPERTY_DESIRED_GET_REPLY: {
+    470                      char *property_data = NULL;
+    471                      lite_cjson_t lite_item_data;
+    472          
+    473                      memset(&lite_item_data, 0, sizeof(lite_cjson_t));
+    474                      dm_utils_json_object_item(&lite, IOTX_LINKKIT_KEY_DATA, strlen(IOTX_LINKKIT_KEY_DATA), cJSON_Invalid,
+    475                                                &lite_item_data);
+    476                      if (payload == NULL || lite_item_data.type != cJSON_Object) {
+    477                          return;
+    478                      }
+    479                      dm_log_debug("Current Data: %.*s", lite_item_data.value_length, lite_item_data.value);
+    480          
+    481                      property_data = IMPL_LINKKIT_MALLOC(lite_item_data.value_length + 1);
+    482                      if (property_data == NULL) {
+    483                          dm_log_err("No Enough Memory");
+    484                          return;
+    485                      }
+    486                      memset(property_data, 0, lite_item_data.value_length + 1);
+    487                      memcpy(property_data, lite_item_data.value, lite_item_data.value_length);
+    488          
+    489                      callback = iotx_event_callback(ITE_PROPERTY_DESIRED_GET_REPLY);
+    490                      if (callback) {
+    491                          ((int (*)(const char *, const int))callback)(property_data,
+    492                                  lite_item_data.value_length);
+    493                      }
+    494          
+    495                      IMPL_LINKKIT_FREE(property_data);
+    496                  }
+    497                  break;
+    498          #endif
+    499                  case IOTX_DM_EVENT_PROPERTY_GET: {
+    500                      int response_len = 0;
+   \                     ??_iotx_linkkit_event_callback_8: (+1)
+   \      0x458   0x2000             MOVS     R0,#+0
+   \      0x45A   0x9004             STR      R0,[SP, #+16]
+    501                      char *request = NULL, *response = NULL;
+   \      0x45C   0x9003             STR      R0,[SP, #+12]
+    502                      uintptr_t property_get_ctx_num = 0;
+   \      0x45E   0x9005             STR      R0,[SP, #+20]
+    503                      void *property_get_ctx = NULL;
+    504          
+    505                      if (payload == NULL || lite_item_id.type != cJSON_String || lite_item_devid.type != cJSON_Number ||
+    506                          lite_item_payload.type != cJSON_Array) {
+   \      0x460   0x2C00             CMP      R4,#+0
+   \      0x462   0xF000 0x8224      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x466   0x9820             LDR      R0,[SP, #+128]
+   \      0x468   0x2810             CMP      R0,#+16
+   \      0x46A   0xF040 0x8220      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x46E   0x9810             LDR      R0,[SP, #+64]
+   \      0x470   0x2808             CMP      R0,#+8
+   \      0x472   0xF040 0x821C      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x476   0x9808             LDR      R0,[SP, #+32]
+   \      0x478   0x2820             CMP      R0,#+32
+   \      0x47A   0xF040 0x8218      BNE.W    ??_iotx_linkkit_event_callback_3
+    507                          return;
+    508                      }
+    509          
+    510                      dm_log_debug("Current Id: %.*s", lite_item_id.value_length, lite_item_id.value);
+    511                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    512                      dm_log_debug("Current Payload: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    513                      dm_log_debug("Current Ctx: %.*s", lite_item_ctx.value_length, lite_item_ctx.value);
+    514          
+    515                      LITE_hexstr_convert(lite_item_ctx.value, lite_item_ctx.value_length, (unsigned char *)&property_get_ctx_num,
+    516                                          sizeof(uintptr_t));
+   \      0x47E   0x2304             MOVS     R3,#+4
+   \      0x480   0xAA05             ADD      R2,SP,#+20
+   \      0x482   0x998A             LDR      R1,[SP, #+552]
+   \      0x484   0x9889             LDR      R0,[SP, #+548]
+   \      0x486   0x....'....        BL       LITE_hexstr_convert
+    517                      property_get_ctx = (void *)property_get_ctx_num;
+   \      0x48A   0x9E05             LDR      R6,[SP, #+20]
+    518                      dm_log_debug("property_get_ctx_num: %0x016llX", (unsigned int)property_get_ctx_num);
+    519                      dm_log_debug("property_get_ctx: %p", property_get_ctx);
+    520          
+    521                      request = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x48C   0x980A             LDR      R0,[SP, #+40]
+   \      0x48E   0x1C40             ADDS     R0,R0,#+1
+   \      0x490   0x....'....        BL       HAL_Malloc
+   \      0x494   0x0004             MOVS     R4,R0
+    522                      if (request == NULL) {
+   \      0x496   0xF000 0x820A      BEQ.W    ??_iotx_linkkit_event_callback_3
+    523                          dm_log_err("No Enough Memory");
+    524                          return;
+    525                      }
+    526                      memset(request, 0, lite_item_payload.value_length + 1);
+   \      0x49A   0x2200             MOVS     R2,#+0
+   \      0x49C   0x990A             LDR      R1,[SP, #+40]
+   \      0x49E   0x1C49             ADDS     R1,R1,#+1
+   \      0x4A0   0x....'....        BL       __aeabi_memset
+    527                      memcpy(request, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x4A4   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x4A6   0x9909             LDR      R1,[SP, #+36]
+   \      0x4A8   0x4620             MOV      R0,R4
+   \      0x4AA   0x....'....        BL       __aeabi_memcpy
+    528          
+    529                      callback = iotx_event_callback(ITE_PROPERTY_GET);
+   \      0x4AE   0x2007             MOVS     R0,#+7
+   \      0x4B0   0x....'....        BL       iotx_event_callback
+   \      0x4B4   0x0005             MOVS     R5,R0
+    530                      if (callback) {
+   \      0x4B6   0xD01F             BEQ.N    ??_iotx_linkkit_event_callback_26
+    531                          res = ((int (*)(const int, const char *, const int, char **, int *))callback)(lite_item_devid.value_int, request,
+    532                                  lite_item_payload.value_length, &response, &response_len);
+   \      0x4B8   0xA804             ADD      R0,SP,#+16
+   \      0x4BA   0x9000             STR      R0,[SP, #+0]
+   \      0x4BC   0xAB03             ADD      R3,SP,#+12
+   \      0x4BE   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x4C0   0x4621             MOV      R1,R4
+   \      0x4C2   0x9816             LDR      R0,[SP, #+88]
+   \      0x4C4   0x47A8             BLX      R5
+    533          
+    534                          if (response != NULL && response_len > 0) {
+   \      0x4C6   0x9903             LDR      R1,[SP, #+12]
+   \      0x4C8   0x2900             CMP      R1,#+0
+   \      0x4CA   0xD015             BEQ.N    ??_iotx_linkkit_event_callback_26
+   \      0x4CC   0x9904             LDR      R1,[SP, #+16]
+   \      0x4CE   0x2901             CMP      R1,#+1
+   \      0x4D0   0xDB12             BLT.N    ??_iotx_linkkit_event_callback_26
+    535                              /* property get response exist */
+    536                              iotx_dm_error_code_t code = (res == 0) ? (IOTX_DM_ERR_CODE_SUCCESS) : (IOTX_DM_ERR_CODE_REQUEST_ERROR);
+   \      0x4D2   0x2800             CMP      R0,#+0
+   \      0x4D4   0xD101             BNE.N    ??_iotx_linkkit_event_callback_27
+   \      0x4D6   0x23C8             MOVS     R3,#+200
+   \      0x4D8   0xE001             B.N      ??_iotx_linkkit_event_callback_28
+   \                     ??_iotx_linkkit_event_callback_27: (+1)
+   \      0x4DA   0xF44F 0x73C8      MOV      R3,#+400
+    537                              iotx_dm_send_property_get_response(lite_item_devid.value_int, lite_item_id.value, lite_item_id.value_length, code,
+    538                                                                 response, response_len, property_get_ctx);
+   \                     ??_iotx_linkkit_event_callback_28: (+1)
+   \      0x4DE   0x9602             STR      R6,[SP, #+8]
+   \      0x4E0   0x9804             LDR      R0,[SP, #+16]
+   \      0x4E2   0x9001             STR      R0,[SP, #+4]
+   \      0x4E4   0x9803             LDR      R0,[SP, #+12]
+   \      0x4E6   0x9000             STR      R0,[SP, #+0]
+   \      0x4E8   0x9A22             LDR      R2,[SP, #+136]
+   \      0x4EA   0x9921             LDR      R1,[SP, #+132]
+   \      0x4EC   0x9816             LDR      R0,[SP, #+88]
+   \      0x4EE   0x....'....        BL       iotx_dm_send_property_get_response
+    539                              HAL_Free(response);
+   \      0x4F2   0x9803             LDR      R0,[SP, #+12]
+   \      0x4F4   0x....'....        BL       HAL_Free
+    540                          }
+    541                      }
+    542          
+    543                      IMPL_LINKKIT_FREE(request);
+   \                     ??_iotx_linkkit_event_callback_26: (+1)
+   \      0x4F8   0x4620             MOV      R0,R4
+   \      0x4FA   0x....'....        BL       HAL_Free
+    544                  }
+    545                  break;
+   \      0x4FE   0xE1D6             B.N      ??_iotx_linkkit_event_callback_3
+    546                  case IOTX_DM_EVENT_EVENT_PROPERTY_POST_REPLY:
+    547                  case IOTX_DM_EVENT_DEVICEINFO_UPDATE_REPLY:
+    548          #ifdef DEVICE_MODEL_SHADOW
+    549                  case IOTX_DM_EVENT_PROPERTY_DESIRED_DELETE_REPLY:
+    550          #endif
+    551                  case IOTX_DM_EVENT_DEVICEINFO_DELETE_REPLY: {
+    552                      char *user_payload = NULL;
+   \                     ??_iotx_linkkit_event_callback_11: (+1)
+   \      0x500   0x2500             MOVS     R5,#+0
+    553                      int user_payload_length = 0;
+   \      0x502   0x462E             MOV      R6,R5
+    554          
+    555                      if (payload == NULL || lite_item_id.type != cJSON_Number || lite_item_code.type != cJSON_Number
+    556                          || lite_item_devid.type != cJSON_Number) {
+   \      0x504   0x2C00             CMP      R4,#+0
+   \      0x506   0xF000 0x81D2      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x50A   0x9820             LDR      R0,[SP, #+128]
+   \      0x50C   0x2808             CMP      R0,#+8
+   \      0x50E   0xF040 0x81CE      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x512   0x9880             LDR      R0,[SP, #+512]
+   \      0x514   0x2808             CMP      R0,#+8
+   \      0x516   0xF040 0x81CA      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x51A   0x9810             LDR      R0,[SP, #+64]
+   \      0x51C   0x2808             CMP      R0,#+8
+   \      0x51E   0xF040 0x81C6      BNE.W    ??_iotx_linkkit_event_callback_3
+    557                          return;
+    558                      }
+    559                      dm_log_debug("Current Id: %d", lite_item_id.value_int);
+    560                      dm_log_debug("Current Code: %d", lite_item_code.value_int);
+    561                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    562          
+    563                      if (lite_item_payload.type == cJSON_Object && lite_item_payload.value_length > 0) {
+   \      0x522   0x9808             LDR      R0,[SP, #+32]
+   \      0x524   0x2840             CMP      R0,#+64
+   \      0x526   0xD113             BNE.N    ??_iotx_linkkit_event_callback_29
+   \      0x528   0x980A             LDR      R0,[SP, #+40]
+   \      0x52A   0x2801             CMP      R0,#+1
+   \      0x52C   0xDB10             BLT.N    ??_iotx_linkkit_event_callback_29
+    564                          user_payload = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x52E   0x1C40             ADDS     R0,R0,#+1
+   \      0x530   0x....'....        BL       HAL_Malloc
+   \      0x534   0x0005             MOVS     R5,R0
+    565                          if (user_payload == NULL) {
+   \      0x536   0xF000 0x81BA      BEQ.W    ??_iotx_linkkit_event_callback_3
+    566                              dm_log_err("No Enough Memory");
+    567                              return;
+    568                          }
+    569                          memset(user_payload, 0, lite_item_payload.value_length + 1);
+   \      0x53A   0x4632             MOV      R2,R6
+   \      0x53C   0x990A             LDR      R1,[SP, #+40]
+   \      0x53E   0x1C49             ADDS     R1,R1,#+1
+   \      0x540   0x....'....        BL       __aeabi_memset
+    570                          memcpy(user_payload, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x544   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x546   0x9909             LDR      R1,[SP, #+36]
+   \      0x548   0x4628             MOV      R0,R5
+   \      0x54A   0x....'....        BL       __aeabi_memcpy
+    571                          user_payload_length = lite_item_payload.value_length;
+   \      0x54E   0x9E0A             LDR      R6,[SP, #+40]
+    572                      }
+    573          
+    574                      callback = iotx_event_callback(ITE_REPORT_REPLY);
+   \                     ??_iotx_linkkit_event_callback_29: (+1)
+   \      0x550   0x2008             MOVS     R0,#+8
+   \      0x552   0x....'....        BL       iotx_event_callback
+   \      0x556   0x0004             MOVS     R4,R0
+    575                      if (callback) {
+   \      0x558   0xD005             BEQ.N    ??_iotx_linkkit_event_callback_30
+    576                          ((int (*)(const int, const int, const int, const char *, const int))callback)(lite_item_devid.value_int,
+    577                                  lite_item_id.value_int, lite_item_code.value_int, user_payload,
+    578                                  user_payload_length);
+   \      0x55A   0x9600             STR      R6,[SP, #+0]
+   \      0x55C   0x462B             MOV      R3,R5
+   \      0x55E   0x9A86             LDR      R2,[SP, #+536]
+   \      0x560   0x9926             LDR      R1,[SP, #+152]
+   \      0x562   0x9816             LDR      R0,[SP, #+88]
+   \      0x564   0x47A0             BLX      R4
+    579                      }
+    580          
+    581                      if (user_payload) {
+   \                     ??_iotx_linkkit_event_callback_30: (+1)
+   \      0x566   0x2D00             CMP      R5,#+0
+   \      0x568   0xF000 0x81A1      BEQ.W    ??_iotx_linkkit_event_callback_3
+    582                          IMPL_LINKKIT_FREE(user_payload);
+   \      0x56C   0x4628             MOV      R0,R5
+   \      0x56E   0x....'....        BL       HAL_Free
+   \      0x572   0xE19C             B.N      ??_iotx_linkkit_event_callback_3
+    583                      }
+    584                  }
+    585                  break;
+    586                  case IOTX_DM_EVENT_EVENT_SPECIFIC_POST_REPLY: {
+    587                      char *user_eventid = NULL;
+    588                      char *user_payload = NULL;
+    589          
+    590                      if (payload == NULL || lite_item_id.type != cJSON_Number || lite_item_code.type != cJSON_Number ||
+    591                          lite_item_devid.type != cJSON_Number || lite_item_eventid.type != cJSON_String
+    592                          || lite_item_payload.type != cJSON_String) {
+   \                     ??_iotx_linkkit_event_callback_12: (+1)
+   \      0x574   0x2C00             CMP      R4,#+0
+   \      0x576   0xF000 0x819A      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x57A   0x9820             LDR      R0,[SP, #+128]
+   \      0x57C   0x2808             CMP      R0,#+8
+   \      0x57E   0xF040 0x8196      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x582   0x9880             LDR      R0,[SP, #+512]
+   \      0x584   0x2808             CMP      R0,#+8
+   \      0x586   0xF040 0x8192      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x58A   0x9810             LDR      R0,[SP, #+64]
+   \      0x58C   0x2808             CMP      R0,#+8
+   \      0x58E   0xF040 0x818E      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x592   0x9828             LDR      R0,[SP, #+160]
+   \      0x594   0x2810             CMP      R0,#+16
+   \      0x596   0xF040 0x818A      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x59A   0x9808             LDR      R0,[SP, #+32]
+   \      0x59C   0x2810             CMP      R0,#+16
+   \      0x59E   0xF040 0x8186      BNE.W    ??_iotx_linkkit_event_callback_3
+    593                          return;
+    594                      }
+    595          
+    596                      dm_log_debug("Current Id: %d", lite_item_id.value_int);
+    597                      dm_log_debug("Current Code: %d", lite_item_code.value_int);
+    598                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    599                      dm_log_debug("Current EventID: %.*s", lite_item_eventid.value_length, lite_item_eventid.value);
+    600                      dm_log_debug("Current Message: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    601          
+    602                      user_eventid = IMPL_LINKKIT_MALLOC(lite_item_eventid.value_length + 1);
+   \      0x5A2   0x982A             LDR      R0,[SP, #+168]
+   \      0x5A4   0x1C40             ADDS     R0,R0,#+1
+   \      0x5A6   0x....'....        BL       HAL_Malloc
+   \      0x5AA   0x0005             MOVS     R5,R0
+    603                      if (user_eventid == NULL) {
+   \      0x5AC   0xF000 0x817F      BEQ.W    ??_iotx_linkkit_event_callback_3
+    604                          dm_log_err("Not Enough Memory");
+    605                          return;
+    606                      }
+    607                      memset(user_eventid, 0, lite_item_eventid.value_length + 1);
+   \      0x5B0   0x2200             MOVS     R2,#+0
+   \      0x5B2   0x992A             LDR      R1,[SP, #+168]
+   \      0x5B4   0x1C49             ADDS     R1,R1,#+1
+   \      0x5B6   0x....'....        BL       __aeabi_memset
+    608                      memcpy(user_eventid, lite_item_eventid.value, lite_item_eventid.value_length);
+   \      0x5BA   0x9A2A             LDR      R2,[SP, #+168]
+   \      0x5BC   0x9929             LDR      R1,[SP, #+164]
+   \      0x5BE   0x4628             MOV      R0,R5
+   \      0x5C0   0x....'....        BL       __aeabi_memcpy
+    609          
+    610                      user_payload = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x5C4   0x980A             LDR      R0,[SP, #+40]
+   \      0x5C6   0x1C40             ADDS     R0,R0,#+1
+   \      0x5C8   0x....'....        BL       HAL_Malloc
+   \      0x5CC   0x0004             MOVS     R4,R0
+    611                      if (user_payload == NULL) {
+   \      0x5CE   0xD103             BNE.N    ??_iotx_linkkit_event_callback_31
+    612                          dm_log_err("Not Enough Memory");
+    613                          IMPL_LINKKIT_FREE(user_eventid);
+   \      0x5D0   0x4628             MOV      R0,R5
+   \      0x5D2   0x....'....        BL       HAL_Free
+    614                          return;
+   \      0x5D6   0xE16A             B.N      ??_iotx_linkkit_event_callback_3
+    615                      }
+    616                      memset(user_payload, 0, lite_item_payload.value_length + 1);
+   \                     ??_iotx_linkkit_event_callback_31: (+1)
+   \      0x5D8   0x2200             MOVS     R2,#+0
+   \      0x5DA   0x990A             LDR      R1,[SP, #+40]
+   \      0x5DC   0x1C49             ADDS     R1,R1,#+1
+   \      0x5DE   0x....'....        BL       __aeabi_memset
+    617                      memcpy(user_payload, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x5E2   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x5E4   0x9909             LDR      R1,[SP, #+36]
+   \      0x5E6   0x4620             MOV      R0,R4
+   \      0x5E8   0x....'....        BL       __aeabi_memcpy
+    618          
+    619          
+    620                      callback = iotx_event_callback(ITE_TRIGGER_EVENT_REPLY);
+   \      0x5EC   0x2009             MOVS     R0,#+9
+   \      0x5EE   0x....'....        BL       iotx_event_callback
+   \      0x5F2   0x0006             MOVS     R6,R0
+    621                      if (callback) {
+   \      0x5F4   0xD009             BEQ.N    ??_iotx_linkkit_event_callback_32
+    622                          ((int (*)(const int, const int, const int, const char *, const int, const char *,
+    623                                    const int))callback)(lite_item_devid.value_int,
+    624                                                         lite_item_id.value_int, lite_item_code.value_int,
+    625                                                         user_eventid, lite_item_eventid.value_length, user_payload, lite_item_payload.value_length);
+   \      0x5F6   0x980A             LDR      R0,[SP, #+40]
+   \      0x5F8   0x9002             STR      R0,[SP, #+8]
+   \      0x5FA   0x9401             STR      R4,[SP, #+4]
+   \      0x5FC   0x982A             LDR      R0,[SP, #+168]
+   \      0x5FE   0x9000             STR      R0,[SP, #+0]
+   \      0x600   0x462B             MOV      R3,R5
+   \      0x602   0x9A86             LDR      R2,[SP, #+536]
+   \      0x604   0x9926             LDR      R1,[SP, #+152]
+   \      0x606   0x9816             LDR      R0,[SP, #+88]
+   \      0x608   0x47B0             BLX      R6
+    626                      }
+    627          
+    628                      IMPL_LINKKIT_FREE(user_eventid);
+   \                     ??_iotx_linkkit_event_callback_32: (+1)
+   \      0x60A   0x4628             MOV      R0,R5
+   \      0x60C   0x....'....        BL       HAL_Free
+    629                      IMPL_LINKKIT_FREE(user_payload);
+   \      0x610   0x4620             MOV      R0,R4
+   \      0x612   0x....'....        BL       HAL_Free
+    630                  }
+    631                  break;
+   \      0x616   0xE14A             B.N      ??_iotx_linkkit_event_callback_3
+    632                  case IOTX_DM_EVENT_NTP_RESPONSE: {
+    633                      char *utc_payload = NULL;
+    634          
+    635                      if (payload == NULL || lite_item_utc.type != cJSON_String) {
+   \                     ??_iotx_linkkit_event_callback_16: (+1)
+   \      0x618   0x2C00             CMP      R4,#+0
+   \      0x61A   0xF000 0x8148      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x61E   0x9878             LDR      R0,[SP, #+480]
+   \      0x620   0x2810             CMP      R0,#+16
+   \      0x622   0xF040 0x8144      BNE.W    ??_iotx_linkkit_event_callback_3
+    636                          return;
+    637                      }
+    638          
+    639                      dm_log_debug("Current UTC: %.*s", lite_item_utc.value_length, lite_item_utc.value);
+    640          
+    641                      utc_payload = IMPL_LINKKIT_MALLOC(lite_item_utc.value_length + 1);
+   \      0x626   0x987A             LDR      R0,[SP, #+488]
+   \      0x628   0x1C40             ADDS     R0,R0,#+1
+   \      0x62A   0x....'....        BL       HAL_Malloc
+   \      0x62E   0x0004             MOVS     R4,R0
+    642                      if (utc_payload == NULL) {
+   \      0x630   0xF000 0x813D      BEQ.W    ??_iotx_linkkit_event_callback_3
+    643                          dm_log_err("Not Enough Memory");
+    644                          return;
+    645                      }
+    646                      memset(utc_payload, 0, lite_item_utc.value_length + 1);
+   \      0x634   0x2200             MOVS     R2,#+0
+   \      0x636   0x997A             LDR      R1,[SP, #+488]
+   \      0x638   0x1C49             ADDS     R1,R1,#+1
+   \      0x63A   0x....'....        BL       __aeabi_memset
+    647                      memcpy(utc_payload, lite_item_utc.value, lite_item_utc.value_length);
+   \      0x63E   0x9A7A             LDR      R2,[SP, #+488]
+   \      0x640   0x9979             LDR      R1,[SP, #+484]
+   \      0x642   0x4620             MOV      R0,R4
+   \      0x644   0x....'....        BL       __aeabi_memcpy
+    648          
+    649                      callback = iotx_event_callback(ITE_TIMESTAMP_REPLY);
+   \      0x648   0x200A             MOVS     R0,#+10
+   \      0x64A   0x....'....        BL       iotx_event_callback
+   \      0x64E   0x0001             MOVS     R1,R0
+    650                      if (callback) {
+   \      0x650   0xD001             BEQ.N    ??_iotx_linkkit_event_callback_33
+    651                          ((int (*)(const char *))callback)(utc_payload);
+   \      0x652   0x4620             MOV      R0,R4
+   \      0x654   0x4788             BLX      R1
+    652                      }
+    653          
+    654                      IMPL_LINKKIT_FREE(utc_payload);
+   \                     ??_iotx_linkkit_event_callback_33: (+1)
+   \      0x656   0x4620             MOV      R0,R4
+   \      0x658   0x....'....        BL       HAL_Free
+    655                  }
+    656                  break;
+   \      0x65C   0xE127             B.N      ??_iotx_linkkit_event_callback_3
+    657                  case IOTX_DM_EVENT_RRPC_REQUEST: {
+    658                      int rrpc_response_len = 0;
+   \                     ??_iotx_linkkit_event_callback_17: (+1)
+   \      0x65E   0x2000             MOVS     R0,#+0
+   \      0x660   0x9005             STR      R0,[SP, #+20]
+    659                      char *rrpc_request = NULL, *rrpc_response = NULL;
+   \      0x662   0x9004             STR      R0,[SP, #+16]
+    660          
+    661                      if (payload == NULL || lite_item_id.type != cJSON_String || lite_item_devid.type != cJSON_Number ||
+    662                          lite_item_serviceid.type != cJSON_String || lite_item_rrpcid.type != cJSON_String
+    663                          || lite_item_payload.type != cJSON_Object) {
+   \      0x664   0x2C00             CMP      R4,#+0
+   \      0x666   0xF000 0x8122      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x66A   0x9820             LDR      R0,[SP, #+128]
+   \      0x66C   0x2810             CMP      R0,#+16
+   \      0x66E   0xF040 0x811E      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x672   0x9810             LDR      R0,[SP, #+64]
+   \      0x674   0x2808             CMP      R0,#+8
+   \      0x676   0xF040 0x811A      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x67A   0x9830             LDR      R0,[SP, #+192]
+   \      0x67C   0x2810             CMP      R0,#+16
+   \      0x67E   0xF040 0x8116      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x682   0x9870             LDR      R0,[SP, #+448]
+   \      0x684   0x2810             CMP      R0,#+16
+   \      0x686   0xF040 0x8112      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x68A   0x9808             LDR      R0,[SP, #+32]
+   \      0x68C   0x2840             CMP      R0,#+64
+   \      0x68E   0xF040 0x810E      BNE.W    ??_iotx_linkkit_event_callback_3
+    664                          return;
+    665                      }
+    666          
+    667                      dm_log_debug("Current Id: %.*s", lite_item_id.value_length, lite_item_id.value);
+    668                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    669                      dm_log_debug("Current ServiceID: %.*s", lite_item_serviceid.value_length, lite_item_serviceid.value);
+    670                      dm_log_debug("Current RRPC ID: %.*s", lite_item_rrpcid.value_length, lite_item_rrpcid.value);
+    671                      dm_log_debug("Current Payload: %.*s", lite_item_payload.value_length, lite_item_payload.value);
+    672          
+    673                      rrpc_request = IMPL_LINKKIT_MALLOC(lite_item_payload.value_length + 1);
+   \      0x692   0x980A             LDR      R0,[SP, #+40]
+   \      0x694   0x1C40             ADDS     R0,R0,#+1
+   \      0x696   0x....'....        BL       HAL_Malloc
+   \      0x69A   0x0004             MOVS     R4,R0
+    674                      if (rrpc_request == NULL) {
+   \      0x69C   0xF000 0x8107      BEQ.W    ??_iotx_linkkit_event_callback_3
+    675                          dm_log_err("Not Enough Memory");
+    676                          return;
+    677                      }
+    678                      memset(rrpc_request, 0, lite_item_payload.value_length + 1);
+   \      0x6A0   0x2200             MOVS     R2,#+0
+   \      0x6A2   0x990A             LDR      R1,[SP, #+40]
+   \      0x6A4   0x1C49             ADDS     R1,R1,#+1
+   \      0x6A6   0x....'....        BL       __aeabi_memset
+    679                      memcpy(rrpc_request, lite_item_payload.value, lite_item_payload.value_length);
+   \      0x6AA   0x9A0A             LDR      R2,[SP, #+40]
+   \      0x6AC   0x9909             LDR      R1,[SP, #+36]
+   \      0x6AE   0x4620             MOV      R0,R4
+   \      0x6B0   0x....'....        BL       __aeabi_memcpy
+    680          
+    681                      callback = iotx_event_callback(ITE_SERVICE_REQUEST);
+   \      0x6B4   0x2005             MOVS     R0,#+5
+   \      0x6B6   0x....'....        BL       iotx_event_callback
+   \      0x6BA   0x0005             MOVS     R5,R0
+    682                      if (callback) {
+   \      0x6BC   0xD026             BEQ.N    ??_iotx_linkkit_event_callback_34
+    683                          res = ((int (*)(const int, const char *, const int, const char *, const int, char **,
+    684                                          int *))callback)(lite_item_devid.value_int, lite_item_serviceid.value,
+    685                                                           lite_item_serviceid.value_length,
+    686                                                           rrpc_request, lite_item_payload.value_length, &rrpc_response, &rrpc_response_len);
+   \      0x6BE   0xA805             ADD      R0,SP,#+20
+   \      0x6C0   0x9002             STR      R0,[SP, #+8]
+   \      0x6C2   0xA804             ADD      R0,SP,#+16
+   \      0x6C4   0x9001             STR      R0,[SP, #+4]
+   \      0x6C6   0x980A             LDR      R0,[SP, #+40]
+   \      0x6C8   0x9000             STR      R0,[SP, #+0]
+   \      0x6CA   0x4623             MOV      R3,R4
+   \      0x6CC   0x9A32             LDR      R2,[SP, #+200]
+   \      0x6CE   0x9931             LDR      R1,[SP, #+196]
+   \      0x6D0   0x9816             LDR      R0,[SP, #+88]
+   \      0x6D2   0x47A8             BLX      R5
+    687                          if (rrpc_response != NULL && rrpc_response_len > 0) {
+   \      0x6D4   0x9904             LDR      R1,[SP, #+16]
+   \      0x6D6   0x2900             CMP      R1,#+0
+   \      0x6D8   0xD018             BEQ.N    ??_iotx_linkkit_event_callback_34
+   \      0x6DA   0x9905             LDR      R1,[SP, #+20]
+   \      0x6DC   0x2901             CMP      R1,#+1
+   \      0x6DE   0xDB15             BLT.N    ??_iotx_linkkit_event_callback_34
+    688                              iotx_dm_error_code_t code = (res == 0) ? (IOTX_DM_ERR_CODE_SUCCESS) : (IOTX_DM_ERR_CODE_REQUEST_ERROR);
+   \      0x6E0   0x2800             CMP      R0,#+0
+   \      0x6E2   0xD101             BNE.N    ??_iotx_linkkit_event_callback_35
+   \      0x6E4   0x23C8             MOVS     R3,#+200
+   \      0x6E6   0xE001             B.N      ??_iotx_linkkit_event_callback_36
+   \                     ??_iotx_linkkit_event_callback_35: (+1)
+   \      0x6E8   0xF44F 0x73C8      MOV      R3,#+400
+    689                              iotx_dm_send_rrpc_response(lite_item_devid.value_int, lite_item_id.value, lite_item_id.value_length, code,
+    690                                                         lite_item_rrpcid.value,
+    691                                                         lite_item_rrpcid.value_length,
+    692                                                         rrpc_response, rrpc_response_len);
+   \                     ??_iotx_linkkit_event_callback_36: (+1)
+   \      0x6EC   0x4608             MOV      R0,R1
+   \      0x6EE   0x9003             STR      R0,[SP, #+12]
+   \      0x6F0   0x9804             LDR      R0,[SP, #+16]
+   \      0x6F2   0x9002             STR      R0,[SP, #+8]
+   \      0x6F4   0x9872             LDR      R0,[SP, #+456]
+   \      0x6F6   0x9001             STR      R0,[SP, #+4]
+   \      0x6F8   0x9871             LDR      R0,[SP, #+452]
+   \      0x6FA   0x9000             STR      R0,[SP, #+0]
+   \      0x6FC   0x9A22             LDR      R2,[SP, #+136]
+   \      0x6FE   0x9921             LDR      R1,[SP, #+132]
+   \      0x700   0x9816             LDR      R0,[SP, #+88]
+   \      0x702   0x....'....        BL       iotx_dm_send_rrpc_response
+    693                              HAL_Free(rrpc_response);
+   \      0x706   0x9804             LDR      R0,[SP, #+16]
+   \      0x708   0x....'....        BL       HAL_Free
+    694                          }
+    695                      }
+    696          
+    697                      IMPL_LINKKIT_FREE(rrpc_request);
+   \                     ??_iotx_linkkit_event_callback_34: (+1)
+   \      0x70C   0x4620             MOV      R0,R4
+   \      0x70E   0x....'....        BL       HAL_Free
+    698                  }
+    699                  break;
+   \      0x712   0xE0CC             B.N      ??_iotx_linkkit_event_callback_3
+    700          #endif
+    701                  case IOTX_DM_EVENT_FOTA_NEW_FIRMWARE: {
+    702                      char *version = NULL;
+    703          
+    704                      if (payload == NULL || lite_item_version.type != cJSON_String) {
+   \                     ??_iotx_linkkit_event_callback_15: (+1)
+   \      0x714   0x2C00             CMP      R4,#+0
+   \      0x716   0xF000 0x80CA      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x71A   0x9868             LDR      R0,[SP, #+416]
+   \      0x71C   0x2810             CMP      R0,#+16
+   \      0x71E   0xF040 0x80C6      BNE.W    ??_iotx_linkkit_event_callback_3
+    705                          return;
+    706                      }
+    707          
+    708                      dm_log_debug("Current Firmware Version: %.*s", lite_item_version.value_length, lite_item_version.value);
+    709          
+    710                      version = IMPL_LINKKIT_MALLOC(lite_item_version.value_length + 1);
+   \      0x722   0x986A             LDR      R0,[SP, #+424]
+   \      0x724   0x1C40             ADDS     R0,R0,#+1
+   \      0x726   0x....'....        BL       HAL_Malloc
+   \      0x72A   0x0004             MOVS     R4,R0
+    711                      if (version == NULL) {
+   \      0x72C   0xF000 0x80BF      BEQ.W    ??_iotx_linkkit_event_callback_3
+    712                          return;
+    713                      }
+    714                      memset(version, 0, lite_item_version.value_length + 1);
+   \      0x730   0x2200             MOVS     R2,#+0
+   \      0x732   0x996A             LDR      R1,[SP, #+424]
+   \      0x734   0x1C49             ADDS     R1,R1,#+1
+   \      0x736   0x....'....        BL       __aeabi_memset
+    715                      memcpy(version, lite_item_version.value, lite_item_version.value_length);
+   \      0x73A   0x9A6A             LDR      R2,[SP, #+424]
+   \      0x73C   0x9969             LDR      R1,[SP, #+420]
+   \      0x73E   0x4620             MOV      R0,R4
+   \      0x740   0x....'....        BL       __aeabi_memcpy
+    716          
+    717                      callback = iotx_event_callback(ITE_FOTA);
+   \      0x744   0x200E             MOVS     R0,#+14
+   \      0x746   0x....'....        BL       iotx_event_callback
+   \      0x74A   0x0002             MOVS     R2,R0
+    718                      if (callback) {
+   \      0x74C   0xD002             BEQ.N    ??_iotx_linkkit_event_callback_37
+    719                          ((int (*)(const int, const char *))callback)(0, version);
+   \      0x74E   0x4621             MOV      R1,R4
+   \      0x750   0x2000             MOVS     R0,#+0
+   \      0x752   0x4790             BLX      R2
+    720                      }
+    721          
+    722                      if (version) {
+   \                     ??_iotx_linkkit_event_callback_37: (+1)
+   \      0x754   0x2C00             CMP      R4,#+0
+   \      0x756   0xF000 0x80AA      BEQ.W    ??_iotx_linkkit_event_callback_3
+    723                          IMPL_LINKKIT_FREE(version);
+   \      0x75A   0x4620             MOV      R0,R4
+   \      0x75C   0x....'....        BL       HAL_Free
+   \      0x760   0xE0A5             B.N      ??_iotx_linkkit_event_callback_3
+    724                      }
+    725                  }
+    726                  break;
+    727                  case IOTX_DM_EVENT_COTA_NEW_CONFIG: {
+    728                      char *config_id = NULL, *get_type = NULL, *sign = NULL, *sign_method = NULL, *url = NULL;
+   \                     ??_iotx_linkkit_event_callback_14: (+1)
+   \      0x762   0x2000             MOVS     R0,#+0
+   \      0x764   0x9006             STR      R0,[SP, #+24]
+   \      0x766   0x9005             STR      R0,[SP, #+20]
+   \      0x768   0x9004             STR      R0,[SP, #+16]
+   \      0x76A   0x9003             STR      R0,[SP, #+12]
+   \      0x76C   0x9007             STR      R0,[SP, #+28]
+    729          
+    730                      if (payload == NULL || lite_item_configid.type != cJSON_String || lite_item_configsize.type != cJSON_Number ||
+    731                          lite_item_gettype.type != cJSON_String || lite_item_sign.type != cJSON_String
+    732                          || lite_item_signmethod.type != cJSON_String ||
+    733                          lite_item_url.type != cJSON_String) {
+   \      0x76E   0x2C00             CMP      R4,#+0
+   \      0x770   0xF000 0x809D      BEQ.W    ??_iotx_linkkit_event_callback_3
+   \      0x774   0x9860             LDR      R0,[SP, #+384]
+   \      0x776   0x2810             CMP      R0,#+16
+   \      0x778   0xF040 0x8099      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x77C   0x9858             LDR      R0,[SP, #+352]
+   \      0x77E   0x2808             CMP      R0,#+8
+   \      0x780   0xF040 0x8095      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x784   0x9850             LDR      R0,[SP, #+320]
+   \      0x786   0x2810             CMP      R0,#+16
+   \      0x788   0xF040 0x8091      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x78C   0x9848             LDR      R0,[SP, #+288]
+   \      0x78E   0x2810             CMP      R0,#+16
+   \      0x790   0xF040 0x808D      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x794   0x9840             LDR      R0,[SP, #+256]
+   \      0x796   0x2810             CMP      R0,#+16
+   \      0x798   0xF040 0x8089      BNE.W    ??_iotx_linkkit_event_callback_3
+   \      0x79C   0x9838             LDR      R0,[SP, #+224]
+   \      0x79E   0x2810             CMP      R0,#+16
+   \      0x7A0   0xF040 0x8085      BNE.W    ??_iotx_linkkit_event_callback_3
+    734                          return;
+    735                      }
+    736          
+    737                      dm_log_debug("Current Config ID: %.*s", lite_item_configid.value_length, lite_item_configid.value);
+    738                      dm_log_debug("Current Config Size: %d", lite_item_configsize.value_int);
+    739                      dm_log_debug("Current Get Type: %.*s", lite_item_gettype.value_length, lite_item_gettype.value);
+    740                      dm_log_debug("Current Sign: %.*s", lite_item_sign.value_length, lite_item_sign.value);
+    741                      dm_log_debug("Current Sign Method: %.*s", lite_item_signmethod.value_length, lite_item_signmethod.value);
+    742                      dm_log_debug("Current URL: %.*s", lite_item_url.value_length, lite_item_url.value);
+    743          
+    744                      _impl_copy(lite_item_configid.value, lite_item_configid.value_length, (void **)&config_id,
+    745                                 lite_item_configid.value_length + 1);
+   \      0x7A4   0x9B62             LDR      R3,[SP, #+392]
+   \      0x7A6   0x1C5B             ADDS     R3,R3,#+1
+   \      0x7A8   0xAA06             ADD      R2,SP,#+24
+   \      0x7AA   0x9962             LDR      R1,[SP, #+392]
+   \      0x7AC   0x9861             LDR      R0,[SP, #+388]
+   \      0x7AE   0x....'....        BL       _impl_copy
+    746                      _impl_copy(lite_item_gettype.value, lite_item_gettype.value_length, (void **)&get_type,
+    747                                 lite_item_gettype.value_length + 1);
+   \      0x7B2   0x9B52             LDR      R3,[SP, #+328]
+   \      0x7B4   0x1C5B             ADDS     R3,R3,#+1
+   \      0x7B6   0xAA05             ADD      R2,SP,#+20
+   \      0x7B8   0x9952             LDR      R1,[SP, #+328]
+   \      0x7BA   0x9851             LDR      R0,[SP, #+324]
+   \      0x7BC   0x....'....        BL       _impl_copy
+    748                      _impl_copy(lite_item_sign.value, lite_item_sign.value_length, (void **)&sign, lite_item_sign.value_length + 1);
+   \      0x7C0   0x9B4A             LDR      R3,[SP, #+296]
+   \      0x7C2   0x1C5B             ADDS     R3,R3,#+1
+   \      0x7C4   0xAA04             ADD      R2,SP,#+16
+   \      0x7C6   0x994A             LDR      R1,[SP, #+296]
+   \      0x7C8   0x9849             LDR      R0,[SP, #+292]
+   \      0x7CA   0x....'....        BL       _impl_copy
+    749                      _impl_copy(lite_item_signmethod.value, lite_item_signmethod.value_length, (void **)&sign_method,
+    750                                 lite_item_signmethod.value_length + 1);
+   \      0x7CE   0x9B42             LDR      R3,[SP, #+264]
+   \      0x7D0   0x1C5B             ADDS     R3,R3,#+1
+   \      0x7D2   0xAA03             ADD      R2,SP,#+12
+   \      0x7D4   0x9942             LDR      R1,[SP, #+264]
+   \      0x7D6   0x9841             LDR      R0,[SP, #+260]
+   \      0x7D8   0x....'....        BL       _impl_copy
+    751                      _impl_copy(lite_item_url.value, lite_item_url.value_length, (void **)&url, lite_item_url.value_length + 1);
+   \      0x7DC   0x9B3A             LDR      R3,[SP, #+232]
+   \      0x7DE   0x1C5B             ADDS     R3,R3,#+1
+   \      0x7E0   0xAA07             ADD      R2,SP,#+28
+   \      0x7E2   0x993A             LDR      R1,[SP, #+232]
+   \      0x7E4   0x9839             LDR      R0,[SP, #+228]
+   \      0x7E6   0x....'....        BL       _impl_copy
+    752          
+    753                      if (config_id == NULL || get_type == NULL || sign == NULL || sign_method == NULL || url == NULL) {
+   \      0x7EA   0x9806             LDR      R0,[SP, #+24]
+   \      0x7EC   0x2800             CMP      R0,#+0
+   \      0x7EE   0xD00B             BEQ.N    ??_iotx_linkkit_event_callback_38
+   \      0x7F0   0x9805             LDR      R0,[SP, #+20]
+   \      0x7F2   0x2800             CMP      R0,#+0
+   \      0x7F4   0xD008             BEQ.N    ??_iotx_linkkit_event_callback_38
+   \      0x7F6   0x9804             LDR      R0,[SP, #+16]
+   \      0x7F8   0x2800             CMP      R0,#+0
+   \      0x7FA   0xD005             BEQ.N    ??_iotx_linkkit_event_callback_38
+   \      0x7FC   0x9803             LDR      R0,[SP, #+12]
+   \      0x7FE   0x2800             CMP      R0,#+0
+   \      0x800   0xD002             BEQ.N    ??_iotx_linkkit_event_callback_38
+   \      0x802   0x9807             LDR      R0,[SP, #+28]
+   \      0x804   0x2800             CMP      R0,#+0
+   \      0x806   0xD121             BNE.N    ??_iotx_linkkit_event_callback_39
+    754                          if (config_id) {
+   \                     ??_iotx_linkkit_event_callback_38: (+1)
+   \      0x808   0x9806             LDR      R0,[SP, #+24]
+   \      0x80A   0x2800             CMP      R0,#+0
+   \      0x80C   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_40
+    755                              IMPL_LINKKIT_FREE(config_id);
+   \      0x80E   0x....'....        BL       HAL_Free
+   \      0x812   0x2000             MOVS     R0,#+0
+   \      0x814   0x9006             STR      R0,[SP, #+24]
+    756                          }
+    757                          if (get_type) {
+   \                     ??_iotx_linkkit_event_callback_40: (+1)
+   \      0x816   0x9805             LDR      R0,[SP, #+20]
+   \      0x818   0x2800             CMP      R0,#+0
+   \      0x81A   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_41
+    758                              IMPL_LINKKIT_FREE(get_type);
+   \      0x81C   0x....'....        BL       HAL_Free
+   \      0x820   0x2000             MOVS     R0,#+0
+   \      0x822   0x9005             STR      R0,[SP, #+20]
+    759                          }
+    760                          if (sign) {
+   \                     ??_iotx_linkkit_event_callback_41: (+1)
+   \      0x824   0x9804             LDR      R0,[SP, #+16]
+   \      0x826   0x2800             CMP      R0,#+0
+   \      0x828   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_42
+    761                              IMPL_LINKKIT_FREE(sign);
+   \      0x82A   0x....'....        BL       HAL_Free
+   \      0x82E   0x2000             MOVS     R0,#+0
+   \      0x830   0x9004             STR      R0,[SP, #+16]
+    762                          }
+    763                          if (sign_method) {
+   \                     ??_iotx_linkkit_event_callback_42: (+1)
+   \      0x832   0x9803             LDR      R0,[SP, #+12]
+   \      0x834   0x2800             CMP      R0,#+0
+   \      0x836   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_43
+    764                              IMPL_LINKKIT_FREE(sign_method);
+   \      0x838   0x....'....        BL       HAL_Free
+   \      0x83C   0x2000             MOVS     R0,#+0
+   \      0x83E   0x9003             STR      R0,[SP, #+12]
+    765                          }
+    766                          if (url) {
+   \                     ??_iotx_linkkit_event_callback_43: (+1)
+   \      0x840   0x9807             LDR      R0,[SP, #+28]
+   \      0x842   0x2800             CMP      R0,#+0
+   \      0x844   0xD033             BEQ.N    ??_iotx_linkkit_event_callback_3
+    767                              IMPL_LINKKIT_FREE(url);
+   \      0x846   0x....'....        BL       HAL_Free
+    768                          }
+    769                          return;
+   \      0x84A   0xE030             B.N      ??_iotx_linkkit_event_callback_3
+    770                      }
+    771          
+    772                      callback = iotx_event_callback(ITE_COTA);
+   \                     ??_iotx_linkkit_event_callback_39: (+1)
+   \      0x84C   0x200F             MOVS     R0,#+15
+   \      0x84E   0x....'....        BL       iotx_event_callback
+   \      0x852   0x0004             MOVS     R4,R0
+    773                      if (callback) {
+   \      0x854   0xD00A             BEQ.N    ??_iotx_linkkit_event_callback_44
+    774                          ((int (*)(const int, const char *, int, const char *, const char *, const char *, const char *))callback)(0, config_id,
+    775                                  lite_item_configsize.value_int, get_type, sign, sign_method, url);
+   \      0x856   0x9807             LDR      R0,[SP, #+28]
+   \      0x858   0x9002             STR      R0,[SP, #+8]
+   \      0x85A   0x9803             LDR      R0,[SP, #+12]
+   \      0x85C   0x9001             STR      R0,[SP, #+4]
+   \      0x85E   0x9804             LDR      R0,[SP, #+16]
+   \      0x860   0x9000             STR      R0,[SP, #+0]
+   \      0x862   0x9B05             LDR      R3,[SP, #+20]
+   \      0x864   0x9A5E             LDR      R2,[SP, #+376]
+   \      0x866   0x9906             LDR      R1,[SP, #+24]
+   \      0x868   0x2000             MOVS     R0,#+0
+   \      0x86A   0x47A0             BLX      R4
+    776                      }
+    777          
+    778                      if (config_id) {
+   \                     ??_iotx_linkkit_event_callback_44: (+1)
+   \      0x86C   0x9806             LDR      R0,[SP, #+24]
+   \      0x86E   0x2800             CMP      R0,#+0
+   \      0x870   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_45
+    779                          IMPL_LINKKIT_FREE(config_id);
+   \      0x872   0x....'....        BL       HAL_Free
+   \      0x876   0x2000             MOVS     R0,#+0
+   \      0x878   0x9006             STR      R0,[SP, #+24]
+    780                      }
+    781                      if (get_type) {
+   \                     ??_iotx_linkkit_event_callback_45: (+1)
+   \      0x87A   0x9805             LDR      R0,[SP, #+20]
+   \      0x87C   0x2800             CMP      R0,#+0
+   \      0x87E   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_46
+    782                          IMPL_LINKKIT_FREE(get_type);
+   \      0x880   0x....'....        BL       HAL_Free
+   \      0x884   0x2000             MOVS     R0,#+0
+   \      0x886   0x9005             STR      R0,[SP, #+20]
+    783                      }
+    784                      if (sign) {
+   \                     ??_iotx_linkkit_event_callback_46: (+1)
+   \      0x888   0x9804             LDR      R0,[SP, #+16]
+   \      0x88A   0x2800             CMP      R0,#+0
+   \      0x88C   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_47
+    785                          IMPL_LINKKIT_FREE(sign);
+   \      0x88E   0x....'....        BL       HAL_Free
+   \      0x892   0x2000             MOVS     R0,#+0
+   \      0x894   0x9004             STR      R0,[SP, #+16]
+    786                      }
+    787                      if (sign_method) {
+   \                     ??_iotx_linkkit_event_callback_47: (+1)
+   \      0x896   0x9803             LDR      R0,[SP, #+12]
+   \      0x898   0x2800             CMP      R0,#+0
+   \      0x89A   0xD003             BEQ.N    ??_iotx_linkkit_event_callback_48
+    788                          IMPL_LINKKIT_FREE(sign_method);
+   \      0x89C   0x....'....        BL       HAL_Free
+   \      0x8A0   0x2000             MOVS     R0,#+0
+   \      0x8A2   0x9003             STR      R0,[SP, #+12]
+    789                      }
+    790                      if (url) {
+   \                     ??_iotx_linkkit_event_callback_48: (+1)
+   \      0x8A4   0x9807             LDR      R0,[SP, #+28]
+   \      0x8A6   0x2800             CMP      R0,#+0
+   \      0x8A8   0xD001             BEQ.N    ??_iotx_linkkit_event_callback_3
+    791                          IMPL_LINKKIT_FREE(url);
+   \      0x8AA   0x....'....        BL       HAL_Free
+    792                      }
+    793                  }
+    794                  break;
+    795          #ifdef DEVICE_MODEL_GATEWAY
+    796                  case IOTX_DM_EVENT_TOPO_GET_REPLY: {
+    797                      char *topo_list = NULL;
+    798          
+    799                      if (payload == NULL || lite_item_id.type != cJSON_Number || lite_item_devid.type != cJSON_Number ||
+    800                          lite_item_code.type != cJSON_Number || lite_item_topo.type != cJSON_Array) {
+    801                          return;
+    802                      }
+    803                      dm_log_debug("Current Id: %d", lite_item_id.value_int);
+    804                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    805                      dm_log_debug("Current Code: %d", lite_item_code.value_int);
+    806                      dm_log_debug("Current Topo List: %.*s", lite_item_topo.value_length, lite_item_topo.value);
+    807          
+    808                      topo_list = IMPL_LINKKIT_MALLOC(lite_item_topo.value_length + 1);
+    809                      if (topo_list == NULL) {
+    810                          dm_log_err("Not Enough Memory");
+    811                          return;
+    812                      }
+    813                      memset(topo_list, 0, lite_item_topo.value_length + 1);
+    814                      memcpy(topo_list, lite_item_topo.value, lite_item_topo.value_length);
+    815          
+    816                      callback = iotx_event_callback(ITE_TOPOLIST_REPLY);
+    817                      if (callback) {
+    818                          ((int (*)(const int, const int, const int, const char *, const int))callback)(lite_item_devid.value_int,
+    819                                  lite_item_id.value_int,
+    820                                  lite_item_code.value_int, topo_list, lite_item_topo.value_length);
+    821                      }
+    822          
+    823                      IMPL_LINKKIT_FREE(topo_list);
+    824                  }
+    825                  break;
+    826                  case IOTX_DM_EVENT_TOPO_DELETE_REPLY:
+    827                  case IOTX_DM_EVENT_TOPO_ADD_REPLY:
+    828                  case IOTX_DM_EVENT_SUBDEV_REGISTER_REPLY:
+    829                  case IOTX_DM_EVENT_COMBINE_LOGIN_REPLY:
+    830                  case IOTX_DM_EVENT_COMBINE_LOGOUT_REPLY: {
+    831                      if (payload == NULL || lite_item_id.type != cJSON_Number || lite_item_devid.type != cJSON_Number ||
+    832                          lite_item_code.type != cJSON_Number) {
+    833                          return;
+    834                      }
+    835                      dm_log_debug("Current Id: %d", lite_item_id.value_int);
+    836                      dm_log_debug("Current Code: %d", lite_item_code.value_int);
+    837                      dm_log_debug("Current Devid: %d", lite_item_devid.value_int);
+    838          
+    839                      _iotx_linkkit_upstream_mutex_lock();
+    840                      _iotx_linkkit_upstream_callback_remove(lite_item_id.value_int, lite_item_code.value_int);
+    841                      _iotx_linkkit_upstream_mutex_unlock();
+    842                  }
+    843                  break;
+    844                  case IOTX_DM_EVENT_GATEWAY_PERMIT: {
+    845                      char *product_key = "";
+    846          
+    847                      if (payload == NULL || lite_item_time.type != cJSON_Number) {
+    848                          return;
+    849                      }
+    850                      dm_log_debug("Current Time: %d", lite_item_time.value_int);
+    851          
+    852                      if (lite_item_pk.type == cJSON_String) {
+    853                          dm_log_debug("Current Product Key: %.*s", lite_item_pk.value_length, lite_item_pk.value);
+    854                          product_key = IMPL_LINKKIT_MALLOC(lite_item_pk.value_length + 1);
+    855                          if (product_key == NULL) {
+    856                              dm_log_err("Not Enough Memory");
+    857                              return;
+    858                          }
+    859                          memset(product_key, 0, lite_item_pk.value_length + 1);
+    860                          memcpy(product_key, lite_item_pk.value, lite_item_pk.value_length);
+    861                      }
+    862          
+    863                      callback = iotx_event_callback(ITE_PERMIT_JOIN);
+    864                      if (callback) {
+    865                          ((int (*)(const char *, int))callback)((const char *)product_key, (const int)lite_item_time.value_int);
+    866                      }
+    867          
+    868                      if (lite_item_pk.type == cJSON_String) {
+    869                          IMPL_LINKKIT_FREE(product_key);
+    870                      }
+    871                  }
+    872                  break;
+    873          #endif
+    874                  default: {
+    875                  }
+    876                  break;
+    877              }
+    878          }
+   \                     ??_iotx_linkkit_event_callback_3: (+1)
+   \      0x8AE   0xF50D 0x7D30      ADD      SP,SP,#+704
+   \      0x8B2   0xBD70             POP      {R4-R6,PC}       ;; return
+    879          
+
+   \                                 In section .text, align 2, keep-with-next
+    880          static int _iotx_linkkit_master_open(iotx_linkkit_dev_meta_info_t *meta_info)
+    881          {
+   \                     _iotx_linkkit_master_open: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    882              int res = 0;
+    883              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x2   0x....'....        BL       _iotx_linkkit_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+    884          
+    885              if (ctx->is_opened) {
+   \        0x8   0x68A0             LDR      R0,[R4, #+8]
+   \        0xA   0x2800             CMP      R0,#+0
+   \        0xC   0xD002             BEQ.N    ??_iotx_linkkit_master_open_0
+    886                  return FAIL_RETURN;
+   \        0xE   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x12   0xBD10             POP      {R4,PC}
+    887              }
+    888              ctx->is_opened = 1;
+   \                     ??_iotx_linkkit_master_open_0: (+1)
+   \       0x14   0x2001             MOVS     R0,#+1
+   \       0x16   0x60A0             STR      R0,[R4, #+8]
+    889          
+    890              /* Create Mutex */
+    891              ctx->mutex = HAL_MutexCreate();
+   \       0x18   0x....'....        BL       HAL_MutexCreate
+   \       0x1C   0x6020             STR      R0,[R4, #+0]
+    892              if (ctx->mutex == NULL) {
+   \       0x1E   0x2800             CMP      R0,#+0
+   \       0x20   0xD104             BNE.N    ??_iotx_linkkit_master_open_1
+    893                  dm_log_err("Not Enough Memory");
+    894                  ctx->is_opened = 0;
+   \       0x22   0x2000             MOVS     R0,#+0
+   \       0x24   0x60A0             STR      R0,[R4, #+8]
+    895                  return FAIL_RETURN;
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xBD10             POP      {R4,PC}
+    896              }
+    897          
+    898          #ifdef DEVICE_MODEL_GATEWAY
+    899              ctx->upstream_mutex = HAL_MutexCreate();
+    900              if (ctx->upstream_mutex == NULL) {
+    901                  HAL_MutexDestroy(ctx->mutex);
+    902                  dm_log_err("Not Enough Memory");
+    903                  ctx->is_opened = 0;
+    904                  return FAIL_RETURN;
+    905              }
+    906          #endif
+    907          
+    908              res = iotx_dm_open();
+    909              if (res != SUCCESS_RETURN) {
+   \                     ??_iotx_linkkit_master_open_1: (+1)
+   \       0x2C   0x....'....        BL       iotx_dm_open
+   \       0x30   0x2800             CMP      R0,#+0
+   \       0x32   0xD007             BEQ.N    ??_iotx_linkkit_master_open_2
+    910          #ifdef DEVICE_MODEL_GATEWAY
+    911                  HAL_MutexDestroy(ctx->upstream_mutex);
+    912          #endif
+    913                  HAL_MutexDestroy(ctx->mutex);
+   \       0x34   0x6820             LDR      R0,[R4, #+0]
+   \       0x36   0x....'....        BL       HAL_MutexDestroy
+    914                  ctx->is_opened = 0;
+   \       0x3A   0x2000             MOVS     R0,#+0
+   \       0x3C   0x60A0             STR      R0,[R4, #+8]
+    915                  return FAIL_RETURN;
+   \       0x3E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x42   0xBD10             POP      {R4,PC}
+    916              }
+    917          
+    918              INIT_LIST_HEAD(&ctx->upstream_sync_callback_list);
+   \                     ??_iotx_linkkit_master_open_2: (+1)
+   \       0x44   0xF104 0x0010      ADD      R0,R4,#+16
+   \       0x48   0x....'....        BL       INIT_AOS_DLIST_HEAD
+    919          
+    920              return SUCCESS_RETURN;
+   \       0x4C   0x2000             MOVS     R0,#+0
+   \       0x4E   0xBD10             POP      {R4,PC}          ;; return
+    921          }
+    922          
+    923          #ifdef DEVICE_MODEL_GATEWAY
+    924          static int _iotx_linkkit_slave_open(iotx_linkkit_dev_meta_info_t *meta_info)
+    925          {
+    926              int res = 0, devid;
+    927              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    928          
+    929              if (!ctx->is_opened) {
+    930                  return FAIL_RETURN;
+    931              }
+    932          
+    933              res = iotx_dm_subdev_create(meta_info->product_key, meta_info->device_name, meta_info->device_secret, &devid);
+    934              if (res != SUCCESS_RETURN) {
+    935                  return FAIL_RETURN;
+    936              }
+    937          
+    938              return devid;
+    939          }
+    940          #endif
+    941          
+
+   \                                 In section .text, align 2, keep-with-next
+    942          static int _iotx_linkkit_master_connect(void)
+    943          {
+   \                     _iotx_linkkit_master_connect: (+1)
+   \        0x0   0xB51C             PUSH     {R2-R4,LR}
+    944              int res = 0;
+    945              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x2   0x....'....        BL       _iotx_linkkit_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+    946              iotx_dm_init_params_t dm_init_params;
+    947              iotx_dm_event_types_t type;
+    948          
+    949              if (ctx->is_connected) {
+   \        0x8   0x68E0             LDR      R0,[R4, #+12]
+   \        0xA   0x2800             CMP      R0,#+0
+   \        0xC   0xD002             BEQ.N    ??_iotx_linkkit_master_connect_0
+    950                  return FAIL_RETURN;
+   \        0xE   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x12   0xBD16             POP      {R1,R2,R4,PC}
+    951              }
+    952              ctx->is_connected = 1;
+   \                     ??_iotx_linkkit_master_connect_0: (+1)
+   \       0x14   0x2001             MOVS     R0,#+1
+   \       0x16   0x60E0             STR      R0,[R4, #+12]
+    953          
+    954              memset(&dm_init_params, 0, sizeof(iotx_dm_init_params_t));
+   \       0x18   0x2200             MOVS     R2,#+0
+   \       0x1A   0x2108             MOVS     R1,#+8
+   \       0x1C   0x4668             MOV      R0,SP
+   \       0x1E   0x....'....        BL       __aeabi_memset4
+    955              dm_init_params.event_callback = _iotx_linkkit_event_callback;
+   \       0x22   0x....             LDR.N    R0,??DataTable5_22
+   \       0x24   0x9001             STR      R0,[SP, #+4]
+    956          
+    957              res = iotx_dm_connect(&dm_init_params);
+    958              if (res != SUCCESS_RETURN) {
+   \       0x26   0x4668             MOV      R0,SP
+   \       0x28   0x....'....        BL       iotx_dm_connect
+   \       0x2C   0x2800             CMP      R0,#+0
+   \       0x2E   0xD104             BNE.N    ??_iotx_linkkit_master_connect_1
+    959                  dm_log_err("DM Start Failed");
+    960                  ctx->is_connected = 0;
+    961                  return FAIL_RETURN;
+    962              }
+    963          
+    964              res = iotx_dm_subscribe(IOTX_DM_LOCAL_NODE_DEVID);
+    965              if (res != SUCCESS_RETURN) {
+   \       0x30   0x2000             MOVS     R0,#+0
+   \       0x32   0x....'....        BL       iotx_dm_subscribe
+   \       0x36   0x2800             CMP      R0,#+0
+   \       0x38   0xD004             BEQ.N    ??_iotx_linkkit_master_connect_2
+    966                  dm_log_err("DM Subscribe Failed");
+    967                  ctx->is_connected = 0;
+   \                     ??_iotx_linkkit_master_connect_1: (+1)
+   \       0x3A   0x2000             MOVS     R0,#+0
+   \       0x3C   0x60E0             STR      R0,[R4, #+12]
+    968                  return FAIL_RETURN;
+   \       0x3E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x42   0xBD16             POP      {R1,R2,R4,PC}
+    969              }
+    970          
+    971              type = IOTX_DM_EVENT_INITIALIZED;
+    972              _iotx_linkkit_event_callback(type, "{\"devid\":0}");
+   \                     ??_iotx_linkkit_master_connect_2: (+1)
+   \       0x44   0x....             LDR.N    R1,??DataTable5_23
+   \       0x46   0x200A             MOVS     R0,#+10
+   \       0x48   0x....'....        BL       _iotx_linkkit_event_callback
+    973          
+    974              return SUCCESS_RETURN;
+   \       0x4C   0x2000             MOVS     R0,#+0
+   \       0x4E   0xBD16             POP      {R1,R2,R4,PC}    ;; return
+    975          }
+    976          
+    977          #ifdef DEVICE_MODEL_GATEWAY
+    978          static int _iotx_linkkit_slave_connect(int devid)
+    979          {
+    980              int res = 0, msgid = 0, code = 0;
+    981              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+    982              iotx_linkkit_upstream_sync_callback_node_t *node = NULL;
+    983              void *semaphore = NULL;
+    984          
+    985              if (ctx->is_connected == 0) {
+    986                  dm_log_err("master isn't start");
+    987                  return FAIL_RETURN;
+    988              }
+    989          
+    990              if (devid <= 0) {
+    991                  dm_log_err("devid invalid");
+    992                  return FAIL_RETURN;
+    993              }
+    994          
+    995              /* Subdev Register */
+    996              res = iotx_dm_subdev_register(devid);
+    997              if (res < SUCCESS_RETURN) {
+    998                  return FAIL_RETURN;
+    999              }
+   1000          
+   1001              if (res > SUCCESS_RETURN) {
+   1002                  semaphore = HAL_SemaphoreCreate();
+   1003                  if (semaphore == NULL) {
+   1004                      return FAIL_RETURN;
+   1005                  }
+   1006          
+   1007                  msgid = res;
+   1008          
+   1009                  _iotx_linkkit_upstream_mutex_lock();
+   1010                  res = _iotx_linkkit_upstream_sync_callback_list_insert(msgid, semaphore, &node);
+   1011                  if (res != SUCCESS_RETURN) {
+   1012                      HAL_SemaphoreDestroy(semaphore);
+   1013                      _iotx_linkkit_upstream_mutex_unlock();
+   1014                      return FAIL_RETURN;
+   1015                  }
+   1016                  _iotx_linkkit_upstream_mutex_unlock();
+   1017          
+   1018                  res = HAL_SemaphoreWait(semaphore, IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS);
+   1019                  if (res < SUCCESS_RETURN) {
+   1020                      _iotx_linkkit_upstream_mutex_lock();
+   1021                      _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1022                      _iotx_linkkit_upstream_mutex_unlock();
+   1023                      return FAIL_RETURN;
+   1024                  }
+   1025          
+   1026                  _iotx_linkkit_upstream_mutex_lock();
+   1027                  code = node->code;
+   1028                  _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1029                  if (code != SUCCESS_RETURN) {
+   1030                      _iotx_linkkit_upstream_mutex_unlock();
+   1031                      return FAIL_RETURN;
+   1032                  }
+   1033                  _iotx_linkkit_upstream_mutex_unlock();
+   1034              }
+   1035          
+   1036              /* Subdev Add Topo */
+   1037              res = iotx_dm_subdev_topo_add(devid);
+   1038              if (res < SUCCESS_RETURN) {
+   1039                  _iotx_linkkit_mutex_unlock();
+   1040                  return FAIL_RETURN;
+   1041              }
+   1042              semaphore = HAL_SemaphoreCreate();
+   1043              if (semaphore == NULL) {
+   1044                  _iotx_linkkit_mutex_unlock();
+   1045                  return FAIL_RETURN;
+   1046              }
+   1047          
+   1048              msgid = res;
+   1049              _iotx_linkkit_upstream_mutex_lock();
+   1050              res = _iotx_linkkit_upstream_sync_callback_list_insert(msgid, semaphore, &node);
+   1051              if (res != SUCCESS_RETURN) {
+   1052                  HAL_SemaphoreDestroy(semaphore);
+   1053                  _iotx_linkkit_upstream_mutex_unlock();
+   1054                  return FAIL_RETURN;
+   1055              }
+   1056              _iotx_linkkit_upstream_mutex_unlock();
+   1057          
+   1058              res = HAL_SemaphoreWait(semaphore, IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS);
+   1059              if (res < SUCCESS_RETURN) {
+   1060                  _iotx_linkkit_upstream_mutex_lock();
+   1061                  _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1062                  _iotx_linkkit_upstream_mutex_unlock();
+   1063                  return FAIL_RETURN;
+   1064              }
+   1065          
+   1066              _iotx_linkkit_upstream_mutex_lock();
+   1067              code = node->code;
+   1068              _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1069              if (code != SUCCESS_RETURN) {
+   1070                  _iotx_linkkit_upstream_mutex_unlock();
+   1071                  return FAIL_RETURN;
+   1072              }
+   1073              _iotx_linkkit_upstream_mutex_unlock();
+   1074          
+   1075              return SUCCESS_RETURN;
+   1076          }
+   1077          
+   1078          static int _iotx_linkkit_subdev_delete_topo(int devid)
+   1079          {
+   1080              int res = 0, msgid = 0, code = 0;
+   1081              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   1082              iotx_linkkit_upstream_sync_callback_node_t *node = NULL;
+   1083              void *semaphore = NULL;
+   1084          
+   1085              if (ctx->is_connected == 0) {
+   1086                  dm_log_err("master isn't start");
+   1087                  return FAIL_RETURN;
+   1088              }
+   1089          
+   1090              if (devid <= 0) {
+   1091                  dm_log_err("devid invalid");
+   1092                  return FAIL_RETURN;
+   1093              }
+   1094          
+   1095              /* Subdev Delete Topo */
+   1096              res = iotx_dm_subdev_topo_del(devid);
+   1097              if (res < SUCCESS_RETURN) {
+   1098                  return FAIL_RETURN;
+   1099              }
+   1100              msgid = res;
+   1101          
+   1102              semaphore = HAL_SemaphoreCreate();
+   1103              if (semaphore == NULL) {
+   1104                  return FAIL_RETURN;
+   1105              }
+   1106          
+   1107              _iotx_linkkit_upstream_mutex_lock();
+   1108              res = _iotx_linkkit_upstream_sync_callback_list_insert(msgid, semaphore, &node);
+   1109              if (res != SUCCESS_RETURN) {
+   1110                  HAL_SemaphoreDestroy(semaphore);
+   1111                  _iotx_linkkit_upstream_mutex_unlock();
+   1112                  return FAIL_RETURN;
+   1113              }
+   1114              _iotx_linkkit_upstream_mutex_unlock();
+   1115          
+   1116              res = HAL_SemaphoreWait(semaphore, IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS);
+   1117              if (res < SUCCESS_RETURN) {
+   1118                  _iotx_linkkit_upstream_mutex_lock();
+   1119                  _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1120                  _iotx_linkkit_upstream_mutex_unlock();
+   1121                  return FAIL_RETURN;
+   1122              }
+   1123          
+   1124              _iotx_linkkit_upstream_mutex_lock();
+   1125              code = node->code;
+   1126              _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1127              if (code != SUCCESS_RETURN) {
+   1128                  _iotx_linkkit_upstream_mutex_unlock();
+   1129                  return FAIL_RETURN;
+   1130              }
+   1131              _iotx_linkkit_upstream_mutex_unlock();
+   1132          
+   1133              return SUCCESS_RETURN;
+   1134          }
+   1135          #endif
+   1136          
+
+   \                                 In section .text, align 2, keep-with-next
+   1137          static int _iotx_linkkit_master_close(void)
+   1138          {
+   \                     _iotx_linkkit_master_close: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   1139              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x2   0x....'....        BL       _iotx_linkkit_get_ctx
+   \        0x6   0x4604             MOV      R4,R0
+   1140          
+   1141              _iotx_linkkit_mutex_lock();
+   \        0x8   0x....'....        BL       _iotx_linkkit_mutex_lock
+   1142              if (ctx->is_opened == 0) {
+   \        0xC   0x68A0             LDR      R0,[R4, #+8]
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD104             BNE.N    ??_iotx_linkkit_master_close_0
+   1143                  _iotx_linkkit_mutex_unlock();
+   \       0x12   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1144                  return FAIL_RETURN;
+   \       0x16   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x1A   0xBD10             POP      {R4,PC}
+   1145              }
+   1146              ctx->is_opened = 0;
+   \                     ??_iotx_linkkit_master_close_0: (+1)
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0x60A0             STR      R0,[R4, #+8]
+   1147          
+   1148              iotx_dm_close();
+   \       0x20   0x....'....        BL       iotx_dm_close
+   1149          #ifdef DEVICE_MODEL_GATEWAY
+   1150              _iotx_linkkit_upstream_sync_callback_list_destroy();
+   1151              HAL_MutexDestroy(ctx->upstream_mutex);
+   1152          #endif
+   1153              _iotx_linkkit_mutex_unlock();
+   \       0x24   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1154              HAL_MutexDestroy(ctx->mutex);
+   \       0x28   0x6820             LDR      R0,[R4, #+0]
+   \       0x2A   0x....'....        BL       HAL_MutexDestroy
+   1155              memset(ctx, 0, sizeof(iotx_linkkit_ctx_t));
+   \       0x2E   0x2200             MOVS     R2,#+0
+   \       0x30   0x2118             MOVS     R1,#+24
+   \       0x32   0x4620             MOV      R0,R4
+   \       0x34   0x....'....        BL       __aeabi_memset4
+   1156          
+   1157              return SUCCESS_RETURN;
+   \       0x38   0x2000             MOVS     R0,#+0
+   \       0x3A   0xBD10             POP      {R4,PC}          ;; return
+   1158          }
+   1159          
+   1160          #ifdef DEVICE_MODEL_GATEWAY
+   1161          static int _iotx_linkkit_slave_close(int devid)
+   1162          {
+   1163              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   1164          
+   1165              _iotx_linkkit_mutex_lock();
+   1166              if (ctx->is_opened == 0) {
+   1167                  _iotx_linkkit_mutex_unlock();
+   1168                  return FAIL_RETURN;
+   1169              }
+   1170          
+   1171              /* Release Subdev Resources */
+   1172              iotx_dm_subdev_destroy(devid);
+   1173          
+   1174              _iotx_linkkit_mutex_unlock();
+   1175          
+   1176              return SUCCESS_RETURN;
+   1177          }
+   1178          #endif
+   1179          
+
+   \                                 In section .text, align 2, keep-with-next
+   1180          int IOT_Linkkit_Open(iotx_linkkit_dev_type_t dev_type, iotx_linkkit_dev_meta_info_t *meta_info)
+   1181          {
+   1182              int res = 0;
+   1183          
+   1184              if (dev_type < 0 || dev_type >= IOTX_LINKKIT_DEV_TYPE_MAX || meta_info == NULL) {
+                                  ^
+Warning[Pe186]: pointless comparison of unsigned integer with zero
+   \                     IOT_Linkkit_Open: (+1)
+   \        0x0   0x4602             MOV      R2,R0
+   \        0x2   0x2A02             CMP      R2,#+2
+   \        0x4   0xDA01             BGE.N    ??IOT_Linkkit_Open_0
+   \        0x6   0x2900             CMP      R1,#+0
+   \        0x8   0xD102             BNE.N    ??IOT_Linkkit_Open_1
+   1185                  dm_log_err("Invalid Parameter");
+   1186                  return FAIL_RETURN;
+   \                     ??IOT_Linkkit_Open_0: (+1)
+   \        0xA   0xF04F 0x30FF      MOV      R0,#-1
+   \        0xE   0x4770             BX       LR
+   1187              }
+   1188          
+   1189              switch (dev_type) {
+   \                     ??IOT_Linkkit_Open_1: (+1)
+   \       0x10   0x2800             CMP      R0,#+0
+   \       0x12   0xD101             BNE.N    ??IOT_Linkkit_Open_2
+   1190                  case IOTX_LINKKIT_DEV_TYPE_MASTER: {
+   1191                      res = _iotx_linkkit_master_open(meta_info);
+   \       0x14   0x4608             MOV      R0,R1
+   \       0x16   0x....             B.N      _iotx_linkkit_master_open
+   1192                      if (res == SUCCESS_RETURN) {
+   1193                          res = IOTX_DM_LOCAL_NODE_DEVID;
+   1194                      }
+   1195                  }
+   1196                  break;
+   1197                  case IOTX_LINKKIT_DEV_TYPE_SLAVE: {
+   1198          #ifdef DEVICE_MODEL_GATEWAY
+   1199                      res = _iotx_linkkit_slave_open(meta_info);
+   1200          #else
+   1201                      res = FAIL_RETURN;
+   1202          #endif
+   1203                  }
+   1204                  break;
+   1205                  default: {
+   1206                      dm_log_err("Unknown Device Type");
+   1207                      res = FAIL_RETURN;
+   \                     ??IOT_Linkkit_Open_2: (+1)
+   \       0x18   0xF04F 0x30FF      MOV      R0,#-1
+   1208                  }
+   1209                  break;
+   1210              }
+   1211          
+   1212              return res;
+   \       0x1C   0x4770             BX       LR               ;; return
+   1213          }
+   1214          
+
+   \                                 In section .text, align 2, keep-with-next
+   1215          int IOT_Linkkit_Connect(int devid)
+   1216          {
+   \                     IOT_Linkkit_Connect: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   1217              int res = 0;
+   1218              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x4   0x....'....        BL       _iotx_linkkit_get_ctx
+   1219          
+   1220              if (devid < 0) {
+   \        0x8   0x2C00             CMP      R4,#+0
+   \        0xA   0xD402             BMI.N    ??IOT_Linkkit_Connect_0
+   1221                  dm_log_err("Invalid Parameter");
+   1222                  return FAIL_RETURN;
+   1223              }
+   1224          
+   1225              if (ctx->is_opened == 0) {
+   \        0xC   0x6880             LDR      R0,[R0, #+8]
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD102             BNE.N    ??IOT_Linkkit_Connect_1
+   1226          
+   1227                  return FAIL_RETURN;
+   \                     ??IOT_Linkkit_Connect_0: (+1)
+   \       0x12   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x16   0xBD10             POP      {R4,PC}
+   1228              }
+   1229          
+   1230              _iotx_linkkit_mutex_lock();
+   \                     ??IOT_Linkkit_Connect_1: (+1)
+   \       0x18   0x....'....        BL       _iotx_linkkit_mutex_lock
+   1231          
+   1232              if (devid == IOTX_DM_LOCAL_NODE_DEVID) {
+   \       0x1C   0x2C00             CMP      R4,#+0
+   \       0x1E   0xD103             BNE.N    ??IOT_Linkkit_Connect_2
+   1233                  res = _iotx_linkkit_master_connect();
+   \       0x20   0x....'....        BL       _iotx_linkkit_master_connect
+   \       0x24   0x4604             MOV      R4,R0
+   \       0x26   0xE001             B.N      ??IOT_Linkkit_Connect_3
+   1234              } else {
+   1235          #ifdef DEVICE_MODEL_GATEWAY
+   1236                  res = _iotx_linkkit_slave_connect(devid);
+   1237          #else
+   1238                  res = FAIL_RETURN;
+   \                     ??IOT_Linkkit_Connect_2: (+1)
+   \       0x28   0xF04F 0x34FF      MOV      R4,#-1
+   1239          #endif
+   1240              }
+   1241              _iotx_linkkit_mutex_unlock();
+   \                     ??IOT_Linkkit_Connect_3: (+1)
+   \       0x2C   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1242          
+   1243              return res;
+   \       0x30   0x4620             MOV      R0,R4
+   \       0x32   0xBD10             POP      {R4,PC}          ;; return
+   1244          }
+   1245          
+
+   \                                 In section .text, align 2, keep-with-next
+   1246          void IOT_Linkkit_Yield(int timeout_ms)
+   1247          {
+   \                     IOT_Linkkit_Yield: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   1248              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0x4   0x....'....        BL       _iotx_linkkit_get_ctx
+   1249          
+   1250              if (timeout_ms <= 0) {
+   \        0x8   0x2C01             CMP      R4,#+1
+   \        0xA   0xDB0C             BLT.N    ??IOT_Linkkit_Yield_0
+   1251                  dm_log_err("Invalid Parameter");
+   1252                  return;
+   1253              }
+   1254          
+   1255              if (ctx->is_opened == 0 || ctx->is_connected == 0) {
+   \        0xC   0x6881             LDR      R1,[R0, #+8]
+   \        0xE   0x2900             CMP      R1,#+0
+   \       0x10   0xD009             BEQ.N    ??IOT_Linkkit_Yield_0
+   \       0x12   0x68C0             LDR      R0,[R0, #+12]
+   \       0x14   0x2800             CMP      R0,#+0
+   \       0x16   0xD006             BEQ.N    ??IOT_Linkkit_Yield_0
+   1256                  return;
+   1257              }
+   1258          
+   1259              iotx_dm_yield(timeout_ms);
+   \       0x18   0x4620             MOV      R0,R4
+   \       0x1A   0x....'....        BL       iotx_dm_yield
+   1260              iotx_dm_dispatch();
+   \       0x1E   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x22   0x....'....        B.W      iotx_dm_dispatch
+   \                     ??IOT_Linkkit_Yield_0: (+1)
+   \       0x26   0xBD10             POP      {R4,PC}          ;; return
+   1261          
+   1262          #ifdef DEVICE_MODEL_GATEWAY
+   1263              HAL_SleepMs(timeout_ms);
+   1264          #endif
+   1265          }
+   1266          
+
+   \                                 In section .text, align 2, keep-with-next
+   1267          int IOT_Linkkit_Close(int devid)
+   1268          {
+   1269              int res = 0;
+   1270          
+   1271              if (devid < 0) {
+   \                     IOT_Linkkit_Close: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD502             BPL.N    ??IOT_Linkkit_Close_0
+   1272                  dm_log_err("Invalid Parameter");
+   1273                  return FAIL_RETURN;
+   \        0x4   0xF04F 0x30FF      MOV      R0,#-1
+   \        0x8   0x4770             BX       LR
+   1274              }
+   1275          
+   1276              if (devid == IOTX_DM_LOCAL_NODE_DEVID) {
+   \                     ??IOT_Linkkit_Close_0: (+1)
+   \        0xA   0xD100             BNE.N    ??IOT_Linkkit_Close_1
+   1277                  res = _iotx_linkkit_master_close();
+   \        0xC   0x....             B.N      _iotx_linkkit_master_close
+   1278          #ifdef DEV_BIND_ENABLED
+   1279                  awss_bind_deinit();
+   1280          #endif
+   1281              } else {
+   1282          #ifdef DEVICE_MODEL_GATEWAY
+   1283                  res = _iotx_linkkit_slave_close(devid);
+   1284          #else
+   1285                  res = FAIL_RETURN;
+   \                     ??IOT_Linkkit_Close_1: (+1)
+   \        0xE   0xF04F 0x30FF      MOV      R0,#-1
+   1286          #endif
+   1287              }
+   1288          
+   1289              return res;
+   \       0x12   0x4770             BX       LR               ;; return
+   1290          }
+   1291          
+   1292          #ifdef DEVICE_MODEL_GATEWAY
+   1293          static int _iotx_linkkit_subdev_login(int devid)
+   1294          {
+   1295              int res = 0, msgid = 0, code = 0;
+   1296              iotx_linkkit_upstream_sync_callback_node_t *node = NULL;
+   1297              void *semaphore = NULL;
+   1298              void *callback = NULL;
+   1299          
+   1300              res = iotx_dm_subdev_login(devid);
+   1301              if (res < SUCCESS_RETURN) {
+   1302                  return FAIL_RETURN;
+   1303              }
+   1304          
+   1305              msgid = res;
+   1306              semaphore = HAL_SemaphoreCreate();
+   1307              if (semaphore == NULL) {
+   1308                  return FAIL_RETURN;
+   1309              }
+   1310          
+   1311              _iotx_linkkit_upstream_mutex_lock();
+   1312              res = _iotx_linkkit_upstream_sync_callback_list_insert(msgid, semaphore, &node);
+   1313              if (res != SUCCESS_RETURN) {
+   1314                  HAL_SemaphoreDestroy(semaphore);
+   1315                  _iotx_linkkit_upstream_mutex_unlock();
+   1316                  return FAIL_RETURN;
+   1317              }
+   1318              _iotx_linkkit_upstream_mutex_unlock();
+   1319          
+   1320              res = HAL_SemaphoreWait(semaphore, IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS);
+   1321              if (res < SUCCESS_RETURN) {
+   1322                  _iotx_linkkit_upstream_mutex_lock();
+   1323                  _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1324                  _iotx_linkkit_upstream_mutex_unlock();
+   1325                  return FAIL_RETURN;
+   1326              }
+   1327          
+   1328              _iotx_linkkit_upstream_mutex_lock();
+   1329              code = node->code;
+   1330              _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1331              if (code != SUCCESS_RETURN) {
+   1332                  _iotx_linkkit_upstream_mutex_unlock();
+   1333                  return FAIL_RETURN;
+   1334              }
+   1335              _iotx_linkkit_upstream_mutex_unlock();
+   1336          
+   1337              res = iotx_dm_subscribe(devid);
+   1338              if (res != SUCCESS_RETURN) {
+   1339                  return FAIL_RETURN;
+   1340              }
+   1341          
+   1342              iotx_dm_send_aos_active(devid);
+   1343              callback = iotx_event_callback(ITE_INITIALIZE_COMPLETED);
+   1344              if (callback) {
+   1345                  ((int (*)(const int))callback)(devid);
+   1346              }
+   1347          
+   1348              return res;
+   1349          }
+   1350          
+   1351          static int _iotx_linkkit_subdev_logout(int devid)
+   1352          {
+   1353              int res = 0, msgid = 0, code = 0;
+   1354              iotx_linkkit_upstream_sync_callback_node_t *node = NULL;
+   1355              void *semaphore = NULL;
+   1356          
+   1357              res = iotx_dm_subdev_logout(devid);
+   1358              if (res < SUCCESS_RETURN) {
+   1359                  return FAIL_RETURN;
+   1360              }
+   1361          
+   1362              msgid = res;
+   1363              semaphore = HAL_SemaphoreCreate();
+   1364              if (semaphore == NULL) {
+   1365                  return FAIL_RETURN;
+   1366              }
+   1367          
+   1368              _iotx_linkkit_upstream_mutex_lock();
+   1369              res = _iotx_linkkit_upstream_sync_callback_list_insert(msgid, semaphore, &node);
+   1370              if (res != SUCCESS_RETURN) {
+   1371                  HAL_SemaphoreDestroy(semaphore);
+   1372                  _iotx_linkkit_upstream_mutex_unlock();
+   1373                  return FAIL_RETURN;
+   1374              }
+   1375              _iotx_linkkit_upstream_mutex_unlock();
+   1376          
+   1377              res = HAL_SemaphoreWait(semaphore, IOTX_LINKKIT_SYNC_DEFAULT_TIMEOUT_MS);
+   1378              if (res < SUCCESS_RETURN) {
+   1379                  _iotx_linkkit_upstream_mutex_lock();
+   1380                  _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1381                  _iotx_linkkit_upstream_mutex_unlock();
+   1382                  return FAIL_RETURN;
+   1383              }
+   1384          
+   1385              _iotx_linkkit_upstream_mutex_lock();
+   1386              code = node->code;
+   1387              _iotx_linkkit_upstream_sync_callback_list_remove(msgid);
+   1388              if (code != SUCCESS_RETURN) {
+   1389                  _iotx_linkkit_upstream_mutex_unlock();
+   1390                  return FAIL_RETURN;
+   1391              }
+   1392              _iotx_linkkit_upstream_mutex_unlock();
+   1393          
+   1394              return res;
+   1395          }
+   1396          #endif
+   1397          
+
+   \                                 In section .text, align 4, keep-with-next
+   1398          int IOT_Linkkit_Report(int devid, iotx_linkkit_msg_type_t msg_type, unsigned char *payload, int payload_len)
+   1399          {
+   \                     IOT_Linkkit_Report: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460F             MOV      R7,R1
+   \        0x6   0x4614             MOV      R4,R2
+   \        0x8   0x461E             MOV      R6,R3
+   1400              int res = 0;
+   1401              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0xA   0x....'....        BL       _iotx_linkkit_get_ctx
+   \        0xE   0x4601             MOV      R1,R0
+   1402          
+   1403              if (devid < 0 || msg_type < 0 || msg_type >= IOTX_LINKKIT_MSG_MAX) {
+                                               ^
+Warning[Pe186]: pointless comparison of unsigned integer with zero
+   \       0x10   0x2D00             CMP      R5,#+0
+   \       0x12   0xD408             BMI.N    ??IOT_Linkkit_Report_1
+   \       0x14   0x4638             MOV      R0,R7
+   \       0x16   0x2810             CMP      R0,#+16
+   \       0x18   0xDA05             BGE.N    ??IOT_Linkkit_Report_1
+   1404                  dm_log_err("Invalid Parameter");
+   1405                  return FAIL_RETURN;
+   1406              }
+   1407          
+   1408              if (ctx->is_opened == 0 || ctx->is_connected == 0) {
+   \       0x1A   0x6888             LDR      R0,[R1, #+8]
+   \       0x1C   0x2800             CMP      R0,#+0
+   \       0x1E   0xD002             BEQ.N    ??IOT_Linkkit_Report_1
+   \       0x20   0x68C8             LDR      R0,[R1, #+12]
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD102             BNE.N    ??IOT_Linkkit_Report_2
+   1409                  return FAIL_RETURN;
+   \                     ??IOT_Linkkit_Report_1: (+1)
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xBDF2             POP      {R1,R4-R7,PC}
+   1410              }
+   1411          
+   1412              _iotx_linkkit_mutex_lock();
+   \                     ??IOT_Linkkit_Report_2: (+1)
+   \       0x2C   0x....'....        BL       _iotx_linkkit_mutex_lock
+   1413              switch (msg_type) {
+   \       0x30   0x2F03             CMP      R7,#+3
+   \       0x32   0xD83E             BHI.N    ??IOT_Linkkit_Report_3
+   \       0x34   0xE8DF 0xF007      TBB      [PC, R7]
+   \                     ??IOT_Linkkit_Report_0:
+   \       0x38   0x02 0x17          DC8      0x2,0x17,0x22,0x2D
+   \              0x22 0x2D    
+   1414          #if !defined(DEVICE_MODEL_RAWDATA_SOLO)
+   1415                  case ITM_MSG_POST_PROPERTY: {
+   1416                      if (payload == NULL || payload_len <= 0) {
+   \                     ??IOT_Linkkit_Report_4: (+1)
+   \       0x3C   0x2C00             CMP      R4,#+0
+   \       0x3E   0xD02C             BEQ.N    ??IOT_Linkkit_Report_5
+   \       0x40   0x2E01             CMP      R6,#+1
+   \       0x42   0xDB2A             BLT.N    ??IOT_Linkkit_Report_5
+   1417                          dm_log_err("Invalid Parameter");
+   1418                          _iotx_linkkit_mutex_unlock();
+   1419                          return FAIL_RETURN;
+   1420                      }
+   1421                      res = iotx_dm_post_property(devid, (char *)payload, payload_len);
+   \       0x44   0x4632             MOV      R2,R6
+   \       0x46   0x4621             MOV      R1,R4
+   \       0x48   0x4628             MOV      R0,R5
+   \       0x4A   0x....'....        BL       iotx_dm_post_property
+   \       0x4E   0x4604             MOV      R4,R0
+   1422          #ifdef LOG_REPORT_TO_CLOUD
+   1423                      if (1 == report_sample) {
+   \       0x50   0x....             LDR.N    R0,??DataTable5_21
+   \       0x52   0x6800             LDR      R0,[R0, #+0]
+   \       0x54   0x2801             CMP      R0,#+1
+   \       0x56   0xD12E             BNE.N    ??IOT_Linkkit_Report_6
+   1424                          send_permance_info(NULL, 0, "4", 1);
+   \       0x58   0x2301             MOVS     R3,#+1
+   \       0x5A   0x....             ADR.N    R2,??DataTable5_7  ;; "4"
+   \       0x5C   0x2100             MOVS     R1,#+0
+   \       0x5E   0x4608             MOV      R0,R1
+   \       0x60   0x....'....        BL       send_permance_info
+   \       0x64   0xE027             B.N      ??IOT_Linkkit_Report_6
+   1425                      }
+   1426          #endif
+   1427                  }
+   1428                  break;
+   1429          #ifdef DEVICE_MODEL_SHADOW
+   1430                  case ITM_MSG_PROPERTY_DESIRED_GET: {
+   1431                      if (payload == NULL || payload_len <= 0) {
+   1432                          dm_log_err("Invalid Parameter");
+   1433                          _iotx_linkkit_mutex_unlock();
+   1434                          return FAIL_RETURN;
+   1435                      }
+   1436                      res = iotx_dm_property_desired_get(devid, (char *)payload, payload_len);
+   1437                  }
+   1438                  break;
+   1439                  case ITM_MSG_PROPERTY_DESIRED_DELETE: {
+   1440                      if (payload == NULL || payload_len <= 0) {
+   1441                          dm_log_err("Invalid Parameter");
+   1442                          _iotx_linkkit_mutex_unlock();
+   1443                          return FAIL_RETURN;
+   1444                      }
+   1445                      res = iotx_dm_property_desired_delete(devid, (char *)payload, payload_len);
+   1446                  }
+   1447                  break;
+   1448          #endif
+   1449                  case ITM_MSG_DEVICEINFO_UPDATE: {
+   1450                      if (payload == NULL || payload_len <= 0) {
+   \                     ??IOT_Linkkit_Report_7: (+1)
+   \       0x66   0x2C00             CMP      R4,#+0
+   \       0x68   0xD017             BEQ.N    ??IOT_Linkkit_Report_5
+   \       0x6A   0x2E01             CMP      R6,#+1
+   \       0x6C   0xDB15             BLT.N    ??IOT_Linkkit_Report_5
+   1451                          dm_log_err("Invalid Parameter");
+   1452                          _iotx_linkkit_mutex_unlock();
+   1453                          return FAIL_RETURN;
+   1454                      }
+   1455                      res = iotx_dm_deviceinfo_update(devid, (char *)payload, payload_len);
+   \       0x6E   0x4632             MOV      R2,R6
+   \       0x70   0x4621             MOV      R1,R4
+   \       0x72   0x4628             MOV      R0,R5
+   \       0x74   0x....'....        BL       iotx_dm_deviceinfo_update
+   \       0x78   0x4604             MOV      R4,R0
+   1456                  }
+   1457                  break;
+   \       0x7A   0xE01C             B.N      ??IOT_Linkkit_Report_6
+   1458                  case ITM_MSG_DEVICEINFO_DELETE: {
+   1459                      if (payload == NULL || payload_len <= 0) {
+   \                     ??IOT_Linkkit_Report_8: (+1)
+   \       0x7C   0x2C00             CMP      R4,#+0
+   \       0x7E   0xD00C             BEQ.N    ??IOT_Linkkit_Report_5
+   \       0x80   0x2E01             CMP      R6,#+1
+   \       0x82   0xDB0A             BLT.N    ??IOT_Linkkit_Report_5
+   1460                          dm_log_err("Invalid Parameter");
+   1461                          _iotx_linkkit_mutex_unlock();
+   1462                          return FAIL_RETURN;
+   1463                      }
+   1464                      res = iotx_dm_deviceinfo_delete(devid, (char *)payload, payload_len);
+   \       0x84   0x4632             MOV      R2,R6
+   \       0x86   0x4621             MOV      R1,R4
+   \       0x88   0x4628             MOV      R0,R5
+   \       0x8A   0x....'....        BL       iotx_dm_deviceinfo_delete
+   \       0x8E   0x4604             MOV      R4,R0
+   1465                  }
+   1466                  break;
+   \       0x90   0xE011             B.N      ??IOT_Linkkit_Report_6
+   1467          #endif
+   1468                  case ITM_MSG_POST_RAW_DATA: {
+   1469                      if (payload == NULL || payload_len <= 0) {
+   \                     ??IOT_Linkkit_Report_9: (+1)
+   \       0x92   0x2C00             CMP      R4,#+0
+   \       0x94   0xD001             BEQ.N    ??IOT_Linkkit_Report_5
+   \       0x96   0x2E01             CMP      R6,#+1
+   \       0x98   0xDA04             BGE.N    ??IOT_Linkkit_Report_10
+   1470                          dm_log_err("Invalid Parameter");
+   1471                          _iotx_linkkit_mutex_unlock();
+   \                     ??IOT_Linkkit_Report_5: (+1)
+   \       0x9A   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1472                          return FAIL_RETURN;
+   \       0x9E   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xA2   0xBDF2             POP      {R1,R4-R7,PC}
+   1473                      }
+   1474                      res = iotx_dm_post_rawdata(devid, (char *)payload, payload_len);
+   \                     ??IOT_Linkkit_Report_10: (+1)
+   \       0xA4   0x4632             MOV      R2,R6
+   \       0xA6   0x4621             MOV      R1,R4
+   \       0xA8   0x4628             MOV      R0,R5
+   \       0xAA   0x....'....        BL       iotx_dm_post_rawdata
+   \       0xAE   0x4604             MOV      R4,R0
+   1475                  }
+   1476                  break;
+   \       0xB0   0xE001             B.N      ??IOT_Linkkit_Report_6
+   1477                  case ITM_MSG_LOGIN: {
+   1478          #ifdef DEVICE_MODEL_GATEWAY
+   1479                      res = _iotx_linkkit_subdev_login(devid);
+   1480                      if (res != SUCCESS_RETURN) {
+   1481                          _iotx_linkkit_mutex_unlock();
+   1482                          return FAIL_RETURN;
+   1483                      }
+   1484          #else
+   1485                      res = FAIL_RETURN;
+   1486          #endif
+   1487                  }
+   1488                  break;
+   1489                  case ITM_MSG_LOGOUT: {
+   1490          #ifdef DEVICE_MODEL_GATEWAY
+   1491                      res = _iotx_linkkit_subdev_logout(devid);
+   1492                      if (res != SUCCESS_RETURN) {
+   1493                          _iotx_linkkit_mutex_unlock();
+   1494                          return FAIL_RETURN;
+   1495                      }
+   1496          #else
+   1497                      res = FAIL_RETURN;
+   1498          #endif
+   1499                  }
+   1500                  break;
+   1501                  case ITM_MSG_DELETE_TOPO: {
+   1502          #ifdef DEVICE_MODEL_GATEWAY
+   1503                      res = _iotx_linkkit_subdev_delete_topo(devid);
+   1504                      if (res != SUCCESS_RETURN) {
+   1505                          _iotx_linkkit_mutex_unlock();
+   1506                          return FAIL_RETURN;
+   1507                      }
+   1508          #else
+   1509                      res = FAIL_RETURN;
+   1510          #endif
+   1511                  }
+   1512                  break;
+   1513          #ifdef DEVICE_MODEL_GATEWAY
+   1514          #ifdef DEVICE_MODEL_SUBDEV_OTA
+   1515                  case ITM_MSG_REPORT_SUBDEV_FIRMWARE_VERSION: {
+   1516                      res = iotx_dm_send_firmware_version(devid, (const char *)payload);
+   1517                  }
+   1518                  break;
+   1519          #endif
+   1520          #endif
+   1521                  default: {
+   1522                      dm_log_err("Unknown Message Type");
+   1523                      res = FAIL_RETURN;
+   \                     ??IOT_Linkkit_Report_3: (+1)
+   \       0xB2   0xF04F 0x34FF      MOV      R4,#-1
+   1524                  }
+   1525                  break;
+   1526              }
+   1527              _iotx_linkkit_mutex_unlock();
+   \                     ??IOT_Linkkit_Report_6: (+1)
+   \       0xB6   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1528              return res;
+   \       0xBA   0x4620             MOV      R0,R4
+   \       0xBC   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+   1529          }
+   1530          
+
+   \                                 In section .text, align 4, keep-with-next
+   1531          int IOT_Linkkit_Query(int devid, iotx_linkkit_msg_type_t msg_type, unsigned char *payload, int payload_len)
+   1532          {
+   \                     IOT_Linkkit_Query: (+1)
+   \        0x0   0xB5F8             PUSH     {R3-R7,LR}
+   \        0x2   0x4607             MOV      R7,R0
+   \        0x4   0x460E             MOV      R6,R1
+   \        0x6   0x4614             MOV      R4,R2
+   \        0x8   0x461D             MOV      R5,R3
+   1533              int res = 0;
+   1534              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0xA   0x....'....        BL       _iotx_linkkit_get_ctx
+   \        0xE   0x4601             MOV      R1,R0
+   1535          
+   1536              if (devid < 0 || msg_type < 0 || msg_type >= IOTX_LINKKIT_MSG_MAX) {
+                                               ^
+Warning[Pe186]: pointless comparison of unsigned integer with zero
+   \       0x10   0x2F00             CMP      R7,#+0
+   \       0x12   0xD408             BMI.N    ??IOT_Linkkit_Query_1
+   \       0x14   0x4630             MOV      R0,R6
+   \       0x16   0x2810             CMP      R0,#+16
+   \       0x18   0xDA05             BGE.N    ??IOT_Linkkit_Query_1
+   1537                  dm_log_err("Invalid Parameter");
+   1538                  return FAIL_RETURN;
+   1539              }
+   1540          
+   1541              if (ctx->is_opened == 0 || ctx->is_connected == 0) {
+   \       0x1A   0x6888             LDR      R0,[R1, #+8]
+   \       0x1C   0x2800             CMP      R0,#+0
+   \       0x1E   0xD002             BEQ.N    ??IOT_Linkkit_Query_1
+   \       0x20   0x68C8             LDR      R0,[R1, #+12]
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD102             BNE.N    ??IOT_Linkkit_Query_2
+   1542                  return FAIL_RETURN;
+   \                     ??IOT_Linkkit_Query_1: (+1)
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xBDF2             POP      {R1,R4-R7,PC}
+   1543              }
+   1544          
+   1545              _iotx_linkkit_mutex_lock();
+   \                     ??IOT_Linkkit_Query_2: (+1)
+   \       0x2C   0x....'....        BL       _iotx_linkkit_mutex_lock
+   1546              switch (msg_type) {
+   \       0x30   0x1FF6             SUBS     R6,R6,#+7
+   \       0x32   0x2E05             CMP      R6,#+5
+   \       0x34   0xD821             BHI.N    ??IOT_Linkkit_Query_3
+   \       0x36   0xE8DF 0xF006      TBB      [PC, R6]
+   \                     ??IOT_Linkkit_Query_0:
+   \       0x3A   0x03 0x20          DC8      0x3,0x20,0x7,0xD
+   \              0x07 0x0D    
+   \       0x3E   0x13 0x1A          DC8      0x13,0x1A
+   1547          #if !defined(DEVICE_MODEL_RAWDATA_SOLO)
+   1548                  case ITM_MSG_QUERY_TIMESTAMP: {
+   1549                      res = iotx_dm_qurey_ntp();
+   \                     ??IOT_Linkkit_Query_4: (+1)
+   \       0x40   0x....'....        BL       iotx_dm_qurey_ntp
+   \       0x44   0x4604             MOV      R4,R0
+   1550                  }
+   1551                  break;
+   \       0x46   0xE01A             B.N      ??IOT_Linkkit_Query_5
+   1552          #endif
+   1553                  case ITM_MSG_QUERY_TOPOLIST: {
+   1554          #ifdef DEVICE_MODEL_GATEWAY
+   1555                      res = iotx_dm_query_topo_list();
+   1556          #else
+   1557                      res = FAIL_RETURN;
+   1558          #endif
+   1559                  }
+   1560                  break;
+   1561                  case ITM_MSG_QUERY_FOTA_DATA: {
+   1562                      res = iotx_dm_fota_perform_sync((char *)payload, payload_len);
+   \                     ??IOT_Linkkit_Query_6: (+1)
+   \       0x48   0x4629             MOV      R1,R5
+   \       0x4A   0x4620             MOV      R0,R4
+   \       0x4C   0x....'....        BL       iotx_dm_fota_perform_sync
+   \       0x50   0x4604             MOV      R4,R0
+   1563                  }
+   1564                  break;
+   \       0x52   0xE014             B.N      ??IOT_Linkkit_Query_5
+   1565                  case ITM_MSG_QUERY_COTA_DATA: {
+   1566                      res = iotx_dm_cota_perform_sync((char *)payload, payload_len);
+   \                     ??IOT_Linkkit_Query_7: (+1)
+   \       0x54   0x4629             MOV      R1,R5
+   \       0x56   0x4620             MOV      R0,R4
+   \       0x58   0x....'....        BL       iotx_dm_cota_perform_sync
+   \       0x5C   0x4604             MOV      R4,R0
+   1567                  }
+   1568                  break;
+   \       0x5E   0xE00E             B.N      ??IOT_Linkkit_Query_5
+   1569                  case ITM_MSG_REQUEST_COTA: {
+   1570                      res = iotx_dm_cota_get_config("product", "file", "");
+   \                     ??IOT_Linkkit_Query_8: (+1)
+   \       0x60   0x....             ADR.N    R2,??DataTable5_18  ;; ""
+   \       0x62   0x....             LDR.N    R1,??DataTable5_24
+   \       0x64   0x....             LDR.N    R0,??DataTable5_25
+   \       0x66   0x....'....        BL       iotx_dm_cota_get_config
+   \       0x6A   0x4604             MOV      R4,R0
+   1571                  }
+   1572                  break;
+   \       0x6C   0xE007             B.N      ??IOT_Linkkit_Query_5
+   1573                  case ITM_MSG_REQUEST_FOTA_IMAGE: {
+   1574                      res = iotx_dm_fota_request_image((const char *)payload, payload_len);
+   \                     ??IOT_Linkkit_Query_9: (+1)
+   \       0x6E   0x4629             MOV      R1,R5
+   \       0x70   0x4620             MOV      R0,R4
+   \       0x72   0x....'....        BL       iotx_dm_fota_request_image
+   \       0x76   0x4604             MOV      R4,R0
+   1575                  }
+   1576                  break;
+   \       0x78   0xE001             B.N      ??IOT_Linkkit_Query_5
+   1577                  default: {
+   1578                      dm_log_err("Unknown Message Type");
+   1579                      res = FAIL_RETURN;
+   \                     ??IOT_Linkkit_Query_3: (+1)
+   \       0x7A   0xF04F 0x34FF      MOV      R4,#-1
+   1580                  }
+   1581                  break;
+   1582              }
+   1583              _iotx_linkkit_mutex_unlock();
+   \                     ??IOT_Linkkit_Query_5: (+1)
+   \       0x7E   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1584              return res;
+   \       0x82   0x4620             MOV      R0,R4
+   \       0x84   0xBDF2             POP      {R1,R4-R7,PC}    ;; return
+   1585          }
+   1586          
+
+   \                                 In section .text, align 2, keep-with-next
+   1587          int IOT_Linkkit_TriggerEvent(int devid, char *eventid, int eventid_len, char *payload, int payload_len)
+   1588          {
+   \                     IOT_Linkkit_TriggerEvent: (+1)
+   \        0x0   0xE92D 0x41FC      PUSH     {R2-R8,LR}
+   \        0x4   0x4606             MOV      R6,R0
+   \        0x6   0x460D             MOV      R5,R1
+   \        0x8   0x4617             MOV      R7,R2
+   \        0xA   0x461C             MOV      R4,R3
+   1589          #if !defined(DEVICE_MODEL_RAWDATA_SOLO)
+   1590              int res = 0;
+   1591              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   \        0xC   0x....'....        BL       _iotx_linkkit_get_ctx
+   \       0x10   0x4601             MOV      R1,R0
+   1592          
+   1593              if (devid < 0 || eventid == NULL || eventid_len <= 0 || payload == NULL || payload_len <= 0) {
+   \       0x12   0x2E00             CMP      R6,#+0
+   \       0x14   0xD410             BMI.N    ??IOT_Linkkit_TriggerEvent_0
+   \       0x16   0x2D00             CMP      R5,#+0
+   \       0x18   0xD00E             BEQ.N    ??IOT_Linkkit_TriggerEvent_0
+   \       0x1A   0x2F01             CMP      R7,#+1
+   \       0x1C   0xDB0C             BLT.N    ??IOT_Linkkit_TriggerEvent_0
+   \       0x1E   0x2C00             CMP      R4,#+0
+   \       0x20   0xD00A             BEQ.N    ??IOT_Linkkit_TriggerEvent_0
+   \       0x22   0xF8DD 0x8020      LDR      R8,[SP, #+32]
+   \       0x26   0xF1B8 0x0F01      CMP      R8,#+1
+   \       0x2A   0xDB05             BLT.N    ??IOT_Linkkit_TriggerEvent_0
+   1594                  dm_log_err("Invalid Parameter");
+   1595                  return FAIL_RETURN;
+   1596              }
+   1597          
+   1598              if (ctx->is_opened == 0 || ctx->is_connected == 0) {
+   \       0x2C   0x6888             LDR      R0,[R1, #+8]
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD002             BEQ.N    ??IOT_Linkkit_TriggerEvent_0
+   \       0x32   0x68C8             LDR      R0,[R1, #+12]
+   \       0x34   0x2800             CMP      R0,#+0
+   \       0x36   0xD102             BNE.N    ??IOT_Linkkit_TriggerEvent_1
+   1599                  return FAIL_RETURN;
+   \                     ??IOT_Linkkit_TriggerEvent_0: (+1)
+   \       0x38   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3C   0xE00D             B.N      ??IOT_Linkkit_TriggerEvent_2
+   1600              }
+   1601          
+   1602              _iotx_linkkit_mutex_lock();
+   \                     ??IOT_Linkkit_TriggerEvent_1: (+1)
+   \       0x3E   0x....'....        BL       _iotx_linkkit_mutex_lock
+   1603              res = iotx_dm_post_event(devid, eventid, eventid_len, payload, payload_len);
+   \       0x42   0xF8CD 0x8000      STR      R8,[SP, #+0]
+   \       0x46   0x4623             MOV      R3,R4
+   \       0x48   0x463A             MOV      R2,R7
+   \       0x4A   0x4629             MOV      R1,R5
+   \       0x4C   0x4630             MOV      R0,R6
+   \       0x4E   0x....'....        BL       iotx_dm_post_event
+   \       0x52   0x4604             MOV      R4,R0
+   1604              _iotx_linkkit_mutex_unlock();
+   \       0x54   0x....'....        BL       _iotx_linkkit_mutex_unlock
+   1605          
+   1606              return res;
+   \       0x58   0x4620             MOV      R0,R4
+   \                     ??IOT_Linkkit_TriggerEvent_2: (+1)
+   \       0x5A   0xE8BD 0x81F6      POP      {R1,R2,R4-R8,PC}  ;; return
+   1607          #else
+   1608              return -1;
+   1609          #endif
+   1610          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5:
+   \        0x0   0x....'....        DC32     g_iotx_linkkit_ctx
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_1:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_2:
+   \        0x0   0x....'....        DC32     ?_2
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_3:
+   \        0x0   0x....'....        DC32     ?_3
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_4:
+   \        0x0   0x....'....        DC32     ?_4
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_5:
+   \        0x0   0x....'....        DC32     ?_6
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_6:
+   \        0x0   0x....'....        DC32     ?_7
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_7:
+   \        0x0   0x34 0x00          DC8      "4",0x0,0x0
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_8:
+   \        0x0   0x....'....        DC32     ?_9
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_9:
+   \        0x0   0x....'....        DC32     ?_10
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_10:
+   \        0x0   0x....'....        DC32     ?_11
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_11:
+   \        0x0   0x....'....        DC32     ?_12
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_12:
+   \        0x0   0x....'....        DC32     ?_13
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_13:
+   \        0x0   0x....'....        DC32     ?_14
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_14:
+   \        0x0   0x....'....        DC32     ?_15
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_15:
+   \        0x0   0x....'....        DC32     ?_16
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_16:
+   \        0x0   0x....'....        DC32     ?_17
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_17:
+   \        0x0   0x....'....        DC32     ?_18
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_18:
+   \        0x0   0x00 0x00          DC8      "",0x0,0x0,0x0
+   \              0x00 0x00    
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_19:
+   \        0x0   0x....'....        DC32     ?_20
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_20:
+   \        0x0   0x....'....        DC32     `_iotx_linkkit_event_callback::__func__`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_21:
+   \        0x0   0x....'....        DC32     report_sample
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_22:
+   \        0x0   0x....'....        DC32     _iotx_linkkit_event_callback
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_23:
+   \        0x0   0x....'....        DC32     ?_23
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_24:
+   \        0x0   0x....'....        DC32     ?_26
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable5_25:
+   \        0x0   0x....'....        DC32     ?_25
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x6D 0x73          DC8 "msgid"
+   \              0x67 0x69    
+   \              0x64 0x00    
+   \        0x6   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x69 0x64          DC8 "id"
+   \              0x00         
+   \        0x3   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_2:
+   \        0x0   0x64 0x65          DC8 "devid"
+   \              0x76 0x69    
+   \              0x64 0x00    
+   \        0x6   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_3:
+   \        0x0   0x73 0x65          DC8 "serviceid"
+   \              0x72 0x76    
+   \              0x69 0x63    
+   \              0x65 0x69    
+   \              0x64 0x00    
+   \        0xA   0x00 0x00          DC8 0, 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_4:
+   \        0x0   0x70 0x61          DC8 "payload"
+   \              0x79 0x6C    
+   \              0x6F 0x61    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x63 0x74          DC8 "ctx"
+   \              0x78 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_6:
+   \        0x0   0x63 0x6F          DC8 "code"
+   \              0x64 0x65    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_7:
+   \        0x0   0x65 0x76          DC8 "eventid"
+   \              0x65 0x6E    
+   \              0x74 0x69    
+   \              0x64 0x00    
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x75 0x74          DC8 "utc"
+   \              0x63 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_9:
+   \        0x0   0x72 0x72          DC8 "rrpcid"
+   \              0x70 0x63    
+   \              0x69 0x64    
+   \              0x00         
+   \        0x7   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_10:
+   \        0x0   0x74 0x6F          DC8 "topo"
+   \              0x70 0x6F    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_11:
+   \        0x0   0x70 0x72          DC8 "productKey"
+   \              0x6F 0x64    
+   \              0x75 0x63    
+   \              0x74 0x4B    
+   \              0x65 0x79    
+   \              0x00         
+   \        0xB   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_12:
+   \        0x0   0x74 0x69          DC8 "time"
+   \              0x6D 0x65    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_13:
+   \        0x0   0x76 0x65          DC8 "version"
+   \              0x72 0x73    
+   \              0x69 0x6F    
+   \              0x6E 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_14:
+   \        0x0   0x63 0x6F          DC8 "configId"
+   \              0x6E 0x66    
+   \              0x69 0x67    
+   \              0x49 0x64    
+   \              0x00         
+   \        0x9   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_15:
+   \        0x0   0x63 0x6F          DC8 "configSize"
+   \              0x6E 0x66    
+   \              0x69 0x67    
+   \              0x53 0x69    
+   \              0x7A 0x65    
+   \              0x00         
+   \        0xB   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_16:
+   \        0x0   0x67 0x65          DC8 "getType"
+   \              0x74 0x54    
+   \              0x79 0x70    
+   \              0x65 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_17:
+   \        0x0   0x73 0x69          DC8 "sign"
+   \              0x67 0x6E    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 4
+   \                     ?_18:
+   \        0x0   0x73 0x69          DC8 "signMethod"
+   \              0x67 0x6E    
+   \              0x4D 0x65    
+   \              0x74 0x68    
+   \              0x6F 0x64    
+   \              0x00         
+   \        0xB   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x75 0x72          DC8 "url"
+   \              0x6C 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_20:
+   \        0x0   0x72 0x61          DC8 "raw_data"
+   \              0x77 0x5F    
+   \              0x64 0x61    
+   \              0x74 0x61    
+   \              0x00         
+   \        0x9   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 2
+   \        0x0   0x33 0x00          DC8 "3"
+
+   \                                 In section .rodata, align 2
+   \        0x0   0x35 0x00          DC8 "5"
+
+   \                                 In section .rodata, align 4
+   \                     ?_23:
+   \        0x0   0x7B 0x22          DC8 "{\"devid\":0}"
+   \              0x64 0x65    
+   \              0x76 0x69    
+   \              0x64 0x22    
+   \              0x3A 0x30    
+   \              0x7D 0x00    
+
+   \                                 In section .rodata, align 2
+   \        0x0   0x34 0x00          DC8 "4"
+
+   \                                 In section .rodata, align 4
+   \                     ?_25:
+   \        0x0   0x70 0x72          DC8 "product"
+   \              0x6F 0x64    
+   \              0x75 0x63    
+   \              0x74 0x00    
+
+   \                                 In section .rodata, align 4
+   \                     ?_26:
+   \        0x0   0x66 0x69          DC8 "file"
+   \              0x6C 0x65    
+   \              0x00         
+   \        0x5   0x00 0x00          DC8 0, 0, 0
+   \              0x00         
+
+   \                                 In section .rodata, align 1
+   \        0x0   0x00               DC8 ""
+   1611          
+   1612          #ifdef DEVICE_MODEL_GATEWAY
+   1613          int iot_linkkit_subdev_query_id(char product_key[IOTX_PRODUCT_KEY_LEN + 1], char device_name[IOTX_DEVICE_NAME_LEN + 1])
+   1614          {
+   1615              int res = -1;
+   1616              iotx_linkkit_ctx_t *ctx = _iotx_linkkit_get_ctx();
+   1617          
+   1618              if (ctx->is_opened == 0) {
+   1619                  return res;
+   1620              }
+   1621          
+   1622              iotx_dm_subdev_query(product_key, device_name, &res);
+   1623              return res;
+   1624          }
+   1625          #endif /* #ifdef DEVICE_MODEL_GATEWAY */
+   1626          
+   1627          #endif
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   INIT_AOS_DLIST_HEAD
+       0   IOT_Linkkit_Close
+         0   -> _iotx_linkkit_master_close
+       8   IOT_Linkkit_Connect
+         8   -> _iotx_linkkit_get_ctx
+         8   -> _iotx_linkkit_master_connect
+         8   -> _iotx_linkkit_mutex_lock
+         8   -> _iotx_linkkit_mutex_unlock
+       0   IOT_Linkkit_Open
+         0   -> _iotx_linkkit_master_open
+      24   IOT_Linkkit_Query
+        24   -> _iotx_linkkit_get_ctx
+        24   -> _iotx_linkkit_mutex_lock
+        24   -> _iotx_linkkit_mutex_unlock
+        24   -> iotx_dm_cota_get_config
+        24   -> iotx_dm_cota_perform_sync
+        24   -> iotx_dm_fota_perform_sync
+        24   -> iotx_dm_fota_request_image
+        24   -> iotx_dm_qurey_ntp
+      24   IOT_Linkkit_Report
+        24   -> _iotx_linkkit_get_ctx
+        24   -> _iotx_linkkit_mutex_lock
+        24   -> _iotx_linkkit_mutex_unlock
+        24   -> iotx_dm_deviceinfo_delete
+        24   -> iotx_dm_deviceinfo_update
+        24   -> iotx_dm_post_property
+        24   -> iotx_dm_post_rawdata
+        24   -> send_permance_info
+      32   IOT_Linkkit_TriggerEvent
+        32   -> _iotx_linkkit_get_ctx
+        32   -> _iotx_linkkit_mutex_lock
+        32   -> _iotx_linkkit_mutex_unlock
+        32   -> iotx_dm_post_event
+       8   IOT_Linkkit_Yield
+         8   -> _iotx_linkkit_get_ctx
+         0   -> iotx_dm_dispatch
+         8   -> iotx_dm_yield
+      24   _impl_copy
+        24   -> HAL_Malloc
+        24   -> __aeabi_memcpy
+        24   -> __aeabi_memset
+     720   _iotx_linkkit_event_callback
+       720   -- Indirect call
+       720   -> HAL_Free
+       720   -> HAL_Malloc
+       720   -> LITE_hexstr_convert
+       720   -> LITE_rich_hexdump
+       720   -> __aeabi_memcpy
+       720   -> __aeabi_memset
+       720   -> _impl_copy
+       720   -> check_target_msg
+       720   -> dm_utils_json_object_item
+       720   -> dm_utils_json_parse
+       720   -> iotx_dm_send_property_get_response
+       720   -> iotx_dm_send_rrpc_response
+       720   -> iotx_dm_send_service_response
+       720   -> iotx_event_callback
+       720   -> send_permance_info
+       720   -> strlen
+       0   _iotx_linkkit_get_ctx
+       8   _iotx_linkkit_master_close
+         8   -> HAL_MutexDestroy
+         8   -> __aeabi_memset4
+         8   -> _iotx_linkkit_get_ctx
+         8   -> _iotx_linkkit_mutex_lock
+         8   -> _iotx_linkkit_mutex_unlock
+         8   -> iotx_dm_close
+      16   _iotx_linkkit_master_connect
+        16   -> __aeabi_memset4
+        16   -> _iotx_linkkit_event_callback
+        16   -> _iotx_linkkit_get_ctx
+        16   -> iotx_dm_connect
+        16   -> iotx_dm_subscribe
+       8   _iotx_linkkit_master_open
+         8   -> HAL_MutexCreate
+         8   -> HAL_MutexDestroy
+         8   -> INIT_AOS_DLIST_HEAD
+         8   -> _iotx_linkkit_get_ctx
+         8   -> iotx_dm_open
+       8   _iotx_linkkit_mutex_lock
+         0   -> HAL_MutexLock
+         8   -> _iotx_linkkit_get_ctx
+       8   _iotx_linkkit_mutex_unlock
+         0   -> HAL_MutexUnlock
+         8   -> _iotx_linkkit_get_ctx
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable5
+       4  ??DataTable5_1
+       4  ??DataTable5_10
+       4  ??DataTable5_11
+       4  ??DataTable5_12
+       4  ??DataTable5_13
+       4  ??DataTable5_14
+       4  ??DataTable5_15
+       4  ??DataTable5_16
+       4  ??DataTable5_17
+       4  ??DataTable5_18
+       4  ??DataTable5_19
+       4  ??DataTable5_2
+       4  ??DataTable5_20
+       4  ??DataTable5_21
+       4  ??DataTable5_22
+       4  ??DataTable5_23
+       4  ??DataTable5_24
+       4  ??DataTable5_25
+       4  ??DataTable5_3
+       4  ??DataTable5_4
+       4  ??DataTable5_5
+       4  ??DataTable5_6
+       4  ??DataTable5_7
+       4  ??DataTable5_8
+       4  ??DataTable5_9
+       8  ?_0
+       4  ?_1
+       8  ?_10
+      12  ?_11
+       8  ?_12
+       8  ?_13
+      12  ?_14
+      12  ?_15
+       8  ?_16
+       8  ?_17
+      12  ?_18
+       4  ?_19
+       8  ?_2
+      12  ?_20
+       2  ?_21
+       2  ?_22
+      12  ?_23
+       2  ?_24
+       8  ?_25
+       8  ?_26
+       1  ?_27
+      12  ?_3
+       8  ?_4
+       4  ?_5
+       8  ?_6
+       8  ?_7
+       4  ?_8
+       8  ?_9
+       6  INIT_AOS_DLIST_HEAD
+      20  IOT_Linkkit_Close
+      52  IOT_Linkkit_Connect
+      30  IOT_Linkkit_Open
+     134  IOT_Linkkit_Query
+     190  IOT_Linkkit_Report
+      94  IOT_Linkkit_TriggerEvent
+      40  IOT_Linkkit_Yield
+      70  _impl_copy
+    2228  _iotx_linkkit_event_callback
+       6  _iotx_linkkit_get_ctx
+      60  _iotx_linkkit_master_close
+      80  _iotx_linkkit_master_connect
+      80  _iotx_linkkit_master_open
+      24  _iotx_linkkit_mutex_lock
+      24  _iotx_linkkit_mutex_unlock
+      24  g_iotx_linkkit_ctx
+       4  report_sample
+      32  -- Other
+
+ 
+    28 bytes in section .bss
+   243 bytes in section .rodata
+ 3 242 bytes in section .text
+ 
+ 3 242 bytes of CODE  memory
+   243 bytes of CONST memory
+    28 bytes of DATA  memory
+
+Errors: none
+Warnings: 5

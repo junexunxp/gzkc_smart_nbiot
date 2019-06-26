@@ -1,0 +1,200 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:22:25
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\mbedtls\library\version.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW4AB.tmp
+#        (C:\Development\gzkc_smart_nbiot\mbedtls\library\version.c -D DEBUG -D
+#        USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\version.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\version.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\mbedtls\library\version.c
+      1          /*
+      2           *  Version information
+      3           *
+      4           *  Copyright (C) 2006-2015, ARM Limited, All Rights Reserved
+      5           *  SPDX-License-Identifier: Apache-2.0
+      6           *
+      7           *  Licensed under the Apache License, Version 2.0 (the "License"); you may
+      8           *  not use this file except in compliance with the License.
+      9           *  You may obtain a copy of the License at
+     10           *
+     11           *  http://www.apache.org/licenses/LICENSE-2.0
+     12           *
+     13           *  Unless required by applicable law or agreed to in writing, software
+     14           *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     15           *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     16           *  See the License for the specific language governing permissions and
+     17           *  limitations under the License.
+     18           *
+     19           *  This file is part of mbed TLS (https://tls.mbed.org)
+     20           */
+     21          
+     22          #if !defined(MBEDTLS_CONFIG_FILE)
+     23          #include "mbedtls/config.h"
+     24          #else
+     25          #include MBEDTLS_CONFIG_FILE
+     26          #endif
+     27          
+     28          #if defined(MBEDTLS_VERSION_C)
+     29          
+     30          #include "mbedtls/version.h"
+     31          #include <string.h>
+     32          
+
+   \                                 In section .text, align 2, keep-with-next
+     33          unsigned int mbedtls_version_get_number( void )
+     34          {
+     35              return( MBEDTLS_VERSION_NUMBER );
+   \                     mbedtls_version_get_number: (+1)
+   \        0x0   0x....             LDR.N    R0,??DataTable2  ;; 0x20d0100
+   \        0x2   0x4770             BX       LR               ;; return
+     36          }
+     37          
+
+   \                                 In section .text, align 2, keep-with-next
+     38          void mbedtls_version_get_string( char *string )
+     39          {
+     40              memcpy( string, MBEDTLS_VERSION_STRING,
+     41                      sizeof( MBEDTLS_VERSION_STRING ) );
+   \                     mbedtls_version_get_string: (+1)
+   \        0x0   0x2207             MOVS     R2,#+7
+   \        0x2   0x....             LDR.N    R1,??DataTable2_1
+   \        0x4   0x....'....        B.W      __aeabi_memcpy
+     42          }
+     43          
+
+   \                                 In section .text, align 2, keep-with-next
+     44          void mbedtls_version_get_string_full( char *string )
+     45          {
+     46              memcpy( string, MBEDTLS_VERSION_STRING_FULL,
+     47                      sizeof( MBEDTLS_VERSION_STRING_FULL ) );
+   \                     mbedtls_version_get_string_full: (+1)
+   \        0x0   0x2210             MOVS     R2,#+16
+   \        0x2   0x....             LDR.N    R1,??DataTable2_2
+   \        0x4   0x....'....        B.W      __aeabi_memcpy
+     48          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2:
+   \        0x0   0x020D'0100        DC32     0x20d0100
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_1:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable2_2:
+   \        0x0   0x....'....        DC32     ?_1
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x32 0x2E          DC8 "2.13.1"
+   \              0x31 0x33    
+   \              0x2E 0x31    
+   \              0x00         
+   \        0x7   0x00               DC8 0
+
+   \                                 In section .rodata, align 4
+   \                     ?_1:
+   \        0x0   0x6D 0x62          DC8 "mbed TLS 2.13.1"
+   \              0x65 0x64    
+   \              0x20 0x54    
+   \              0x4C 0x53    
+   \              0x20 0x32    
+   \              0x2E 0x31    
+   \              0x33 0x2E    
+   \              0x31 0x00    
+     49          
+     50          #endif /* MBEDTLS_VERSION_C */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   mbedtls_version_get_number
+       0   mbedtls_version_get_string
+         0   -> __aeabi_memcpy
+       0   mbedtls_version_get_string_full
+         0   -> __aeabi_memcpy
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable2
+       4  ??DataTable2_1
+       4  ??DataTable2_2
+       8  ?_0
+      16  ?_1
+       4  mbedtls_version_get_number
+       8  mbedtls_version_get_string
+       8  mbedtls_version_get_string_full
+
+ 
+ 24 bytes in section .rodata
+ 32 bytes in section .text
+ 
+ 32 bytes of CODE  memory
+ 24 bytes of CONST memory
+
+Errors: none
+Warnings: none

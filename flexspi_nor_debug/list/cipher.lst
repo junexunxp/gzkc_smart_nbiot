@@ -1,0 +1,2717 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:20
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  C:\Development\gzkc_smart_nbiot\mbedtls\library\cipher.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EW510.tmp
+#        (C:\Development\gzkc_smart_nbiot\mbedtls\library\cipher.c -D DEBUG -D
+#        USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\cipher.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\cipher.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\mbedtls\library\cipher.c
+      1          /**
+      2           * \file cipher.c
+      3           *
+      4           * \brief Generic cipher wrapper for mbed TLS
+      5           *
+      6           * \author Adriaan de Jong <dejong@fox-it.com>
+      7           *
+      8           *  Copyright (C) 2006-2015, ARM Limited, All Rights Reserved
+      9           *  SPDX-License-Identifier: Apache-2.0
+     10           *
+     11           *  Licensed under the Apache License, Version 2.0 (the "License"); you may
+     12           *  not use this file except in compliance with the License.
+     13           *  You may obtain a copy of the License at
+     14           *
+     15           *  http://www.apache.org/licenses/LICENSE-2.0
+     16           *
+     17           *  Unless required by applicable law or agreed to in writing, software
+     18           *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+     19           *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     20           *  See the License for the specific language governing permissions and
+     21           *  limitations under the License.
+     22           *
+     23           *  This file is part of mbed TLS (https://tls.mbed.org)
+     24           */
+     25          
+     26          #if !defined(MBEDTLS_CONFIG_FILE)
+     27          #include "mbedtls/config.h"
+     28          #else
+     29          #include MBEDTLS_CONFIG_FILE
+     30          #endif
+     31          
+     32          #if defined(MBEDTLS_CIPHER_C)
+     33          
+     34          #include "mbedtls/cipher.h"
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp unsigned int mbedtls_cipher_get_block_size(mbedtls_cipher_context_t const *)
+   \                     mbedtls_cipher_get_block_size: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD002             BEQ.N    ??mbedtls_cipher_get_block_size_0
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x2900             CMP      R1,#+0
+   \        0x8   0xD101             BNE.N    ??mbedtls_cipher_get_block_size_1
+   \                     ??mbedtls_cipher_get_block_size_0: (+1)
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0x4770             BX       LR
+   \                     ??mbedtls_cipher_get_block_size_1: (+1)
+   \        0xE   0x4608             MOV      R0,R1
+   \       0x10   0x6940             LDR      R0,[R0, #+20]
+   \       0x12   0x4770             BX       LR               ;; return
+
+   \                                 In section .text, align 2, keep-with-next
+   \   static __interwork __softfp int mbedtls_cipher_get_iv_size(mbedtls_cipher_context_t const *)
+   \                     mbedtls_cipher_get_iv_size: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD002             BEQ.N    ??mbedtls_cipher_get_iv_size_0
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x2900             CMP      R1,#+0
+   \        0x8   0xD101             BNE.N    ??mbedtls_cipher_get_iv_size_1
+   \                     ??mbedtls_cipher_get_iv_size_0: (+1)
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0x4770             BX       LR
+   \                     ??mbedtls_cipher_get_iv_size_1: (+1)
+   \        0xE   0x6B81             LDR      R1,[R0, #+56]
+   \       0x10   0x2900             CMP      R1,#+0
+   \       0x12   0xD001             BEQ.N    ??mbedtls_cipher_get_iv_size_2
+   \       0x14   0x4608             MOV      R0,R1
+   \       0x16   0x4770             BX       LR
+   \                     ??mbedtls_cipher_get_iv_size_2: (+1)
+   \       0x18   0x6800             LDR      R0,[R0, #+0]
+   \       0x1A   0x68C0             LDR      R0,[R0, #+12]
+   \       0x1C   0x4770             BX       LR               ;; return
+     35          #include "mbedtls/cipher_internal.h"
+     36          #include "mbedtls/platform_util.h"
+     37          
+     38          #include <stdlib.h>
+     39          #include <string.h>
+     40          
+     41          #if defined(MBEDTLS_CHACHAPOLY_C)
+     42          #include "mbedtls/chachapoly.h"
+     43          #endif
+     44          
+     45          #if defined(MBEDTLS_GCM_C)
+     46          #include "mbedtls/gcm.h"
+     47          #endif
+     48          
+     49          #if defined(MBEDTLS_CCM_C)
+     50          #include "mbedtls/ccm.h"
+     51          #endif
+     52          
+     53          #if defined(MBEDTLS_CHACHA20_C)
+     54          #include "mbedtls/chacha20.h"
+     55          #endif
+     56          
+     57          #if defined(MBEDTLS_CMAC_C)
+     58          #include "mbedtls/cmac.h"
+     59          #endif
+     60          
+     61          #if defined(MBEDTLS_PLATFORM_C)
+     62          #include "mbedtls/platform.h"
+     63          #else
+     64          #define mbedtls_calloc calloc
+     65          #define mbedtls_free   free
+     66          #endif
+     67          
+     68          #if defined(MBEDTLS_GCM_C) || defined(MBEDTLS_CHACHAPOLY_C)
+     69          /* Compare the contents of two buffers in constant time.
+     70           * Returns 0 if the contents are bitwise identical, otherwise returns
+     71           * a non-zero value.
+     72           * This is currently only used by GCM and ChaCha20+Poly1305.
+     73           */
+
+   \                                 In section .text, align 2, keep-with-next
+     74          static int mbedtls_constant_time_memcmp( const void *v1, const void *v2, size_t len )
+     75          {
+   \                     mbedtls_constant_time_memcmp: (+1)
+   \        0x0   0xB470             PUSH     {R4-R6}
+   \        0x2   0x4603             MOV      R3,R0
+     76              const unsigned char *p1 = (const unsigned char*) v1;
+     77              const unsigned char *p2 = (const unsigned char*) v2;
+     78              size_t i;
+     79              unsigned char diff;
+     80          
+     81              for( diff = 0, i = 0; i < len; i++ )
+   \        0x4   0x2000             MOVS     R0,#+0
+   \        0x6   0x4604             MOV      R4,R0
+   \        0x8   0xE004             B.N      ??mbedtls_constant_time_memcmp_0
+     82                  diff |= p1[i] ^ p2[i];
+   \                     ??mbedtls_constant_time_memcmp_1: (+1)
+   \        0xA   0x5D1D             LDRB     R5,[R3, R4]
+   \        0xC   0x5D0E             LDRB     R6,[R1, R4]
+   \        0xE   0x4075             EORS     R5,R6,R5
+   \       0x10   0x4328             ORRS     R0,R5,R0
+   \       0x12   0x1C64             ADDS     R4,R4,#+1
+   \                     ??mbedtls_constant_time_memcmp_0: (+1)
+   \       0x14   0x4294             CMP      R4,R2
+   \       0x16   0xD3F8             BCC.N    ??mbedtls_constant_time_memcmp_1
+     83          
+     84              return (int)diff;
+   \       0x18   0xB2C0             UXTB     R0,R0
+   \       0x1A   0xBC70             POP      {R4-R6}
+   \       0x1C   0x4770             BX       LR               ;; return
+     85          }
+     86          #endif /* MBEDTLS_GCM_C || MBEDTLS_CHACHAPOLY_C */
+     87          
+
+   \                                 In section .bss, align 4
+     88          static int supported_init = 0;
+   \                     supported_init:
+   \        0x0                      DS8 4
+     89          
+
+   \                                 In section .text, align 2, keep-with-next
+     90          const int *mbedtls_cipher_list( void )
+     91          {
+     92              const mbedtls_cipher_definition_t *def;
+     93              int *type;
+     94          
+     95              if( ! supported_init )
+   \                     mbedtls_cipher_list: (+1)
+   \        0x0   0x....'....        LDR.W    R1,??DataTable21
+   \        0x4   0x6808             LDR      R0,[R1, #+0]
+   \        0x6   0x2800             CMP      R0,#+0
+   \        0x8   0xD10F             BNE.N    ??mbedtls_cipher_list_0
+     96              {
+     97                  def = mbedtls_cipher_definitions;
+   \        0xA   0x....'....        LDR.W    R2,??DataTable21_1
+     98                  type = mbedtls_cipher_supported;
+   \        0xE   0x....'....        LDR.W    R3,??DataTable21_2
+   \       0x12   0xE003             B.N      ??mbedtls_cipher_list_1
+     99          
+    100                  while( def->type != 0 )
+    101                      *type++ = (*def++).type;
+   \                     ??mbedtls_cipher_list_2: (+1)
+   \       0x14   0xF812 0x0B08      LDRB     R0,[R2], #+8
+   \       0x18   0xF843 0x0B04      STR      R0,[R3], #+4
+   \                     ??mbedtls_cipher_list_1: (+1)
+   \       0x1C   0x7810             LDRB     R0,[R2, #+0]
+   \       0x1E   0x2800             CMP      R0,#+0
+   \       0x20   0xD1F8             BNE.N    ??mbedtls_cipher_list_2
+    102          
+    103                  *type = 0;
+   \       0x22   0x2000             MOVS     R0,#+0
+   \       0x24   0x6018             STR      R0,[R3, #+0]
+    104          
+    105                  supported_init = 1;
+   \       0x26   0x2001             MOVS     R0,#+1
+   \       0x28   0x6008             STR      R0,[R1, #+0]
+    106              }
+    107          
+    108              return( mbedtls_cipher_supported );
+   \                     ??mbedtls_cipher_list_0: (+1)
+   \       0x2A   0x....'....        LDR.W    R0,??DataTable21_2
+   \       0x2E   0x4770             BX       LR               ;; return
+    109          }
+    110          
+
+   \                                 In section .text, align 2, keep-with-next
+    111          const mbedtls_cipher_info_t *mbedtls_cipher_info_from_type( const mbedtls_cipher_type_t cipher_type )
+    112          {
+    113              const mbedtls_cipher_definition_t *def;
+    114          
+    115              for( def = mbedtls_cipher_definitions; def->info != NULL; def++ )
+   \                     mbedtls_cipher_info_from_type: (+1)
+   \        0x0   0x....'....        LDR.W    R2,??DataTable21_1
+   \        0x4   0x4603             MOV      R3,R0
+   \        0x6   0xE000             B.N      ??mbedtls_cipher_info_from_type_0
+   \                     ??mbedtls_cipher_info_from_type_1: (+1)
+   \        0x8   0x3208             ADDS     R2,R2,#+8
+   \                     ??mbedtls_cipher_info_from_type_0: (+1)
+   \        0xA   0x6851             LDR      R1,[R2, #+4]
+   \        0xC   0x2900             CMP      R1,#+0
+   \        0xE   0xD004             BEQ.N    ??mbedtls_cipher_info_from_type_2
+    116                  if( def->type == cipher_type )
+   \       0x10   0x7811             LDRB     R1,[R2, #+0]
+   \       0x12   0x4299             CMP      R1,R3
+   \       0x14   0xD1F8             BNE.N    ??mbedtls_cipher_info_from_type_1
+    117                      return( def->info );
+   \       0x16   0x6850             LDR      R0,[R2, #+4]
+   \       0x18   0x4770             BX       LR
+    118          
+    119              return( NULL );
+   \                     ??mbedtls_cipher_info_from_type_2: (+1)
+   \       0x1A   0x2000             MOVS     R0,#+0
+   \       0x1C   0x4770             BX       LR               ;; return
+    120          }
+    121          
+
+   \                                 In section .text, align 2, keep-with-next
+    122          const mbedtls_cipher_info_t *mbedtls_cipher_info_from_string( const char *cipher_name )
+    123          {
+   \                     mbedtls_cipher_info_from_string: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    124              const mbedtls_cipher_definition_t *def;
+    125          
+    126              if( NULL == cipher_name )
+   \        0x4   0xD00E             BEQ.N    ??mbedtls_cipher_info_from_string_0
+    127                  return( NULL );
+    128          
+    129              for( def = mbedtls_cipher_definitions; def->info != NULL; def++ )
+   \        0x6   0x....'....        LDR.W    R5,??DataTable21_1
+   \        0xA   0xE000             B.N      ??mbedtls_cipher_info_from_string_1
+   \                     ??mbedtls_cipher_info_from_string_2: (+1)
+   \        0xC   0x3508             ADDS     R5,R5,#+8
+   \                     ??mbedtls_cipher_info_from_string_1: (+1)
+   \        0xE   0x6868             LDR      R0,[R5, #+4]
+   \       0x10   0x2800             CMP      R0,#+0
+   \       0x12   0xD007             BEQ.N    ??mbedtls_cipher_info_from_string_0
+    130                  if( !  strcmp( def->info->name, cipher_name ) )
+   \       0x14   0x4621             MOV      R1,R4
+   \       0x16   0x6880             LDR      R0,[R0, #+8]
+   \       0x18   0x....'....        BL       strcmp
+   \       0x1C   0x2800             CMP      R0,#+0
+   \       0x1E   0xD1F5             BNE.N    ??mbedtls_cipher_info_from_string_2
+    131                      return( def->info );
+   \       0x20   0x6868             LDR      R0,[R5, #+4]
+   \       0x22   0xBD32             POP      {R1,R4,R5,PC}
+    132          
+    133              return( NULL );
+   \                     ??mbedtls_cipher_info_from_string_0: (+1)
+   \       0x24   0x2000             MOVS     R0,#+0
+   \       0x26   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    134          }
+    135          
+
+   \                                 In section .text, align 2, keep-with-next
+    136          const mbedtls_cipher_info_t *mbedtls_cipher_info_from_values( const mbedtls_cipher_id_t cipher_id,
+    137                                                        int key_bitlen,
+    138                                                        const mbedtls_cipher_mode_t mode )
+    139          {
+   \                     mbedtls_cipher_info_from_values: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+   \        0x2   0x4603             MOV      R3,R0
+    140              const mbedtls_cipher_definition_t *def;
+    141          
+    142              for( def = mbedtls_cipher_definitions; def->info != NULL; def++ )
+   \        0x4   0x....'....        LDR.W    R4,??DataTable21_1
+   \        0x8   0xE000             B.N      ??mbedtls_cipher_info_from_values_0
+   \                     ??mbedtls_cipher_info_from_values_1: (+1)
+   \        0xA   0x3408             ADDS     R4,R4,#+8
+   \                     ??mbedtls_cipher_info_from_values_0: (+1)
+   \        0xC   0x6860             LDR      R0,[R4, #+4]
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD00F             BEQ.N    ??mbedtls_cipher_info_from_values_2
+    143                  if( def->info->base->cipher == cipher_id &&
+    144                      def->info->key_bitlen == (unsigned) key_bitlen &&
+    145                      def->info->mode == mode )
+   \       0x12   0x6980             LDR      R0,[R0, #+24]
+   \       0x14   0x7800             LDRB     R0,[R0, #+0]
+   \       0x16   0x461D             MOV      R5,R3
+   \       0x18   0x42A8             CMP      R0,R5
+   \       0x1A   0xD1F6             BNE.N    ??mbedtls_cipher_info_from_values_1
+   \       0x1C   0x6860             LDR      R0,[R4, #+4]
+   \       0x1E   0x6840             LDR      R0,[R0, #+4]
+   \       0x20   0x4288             CMP      R0,R1
+   \       0x22   0xD1F2             BNE.N    ??mbedtls_cipher_info_from_values_1
+   \       0x24   0x6860             LDR      R0,[R4, #+4]
+   \       0x26   0x7840             LDRB     R0,[R0, #+1]
+   \       0x28   0x4615             MOV      R5,R2
+   \       0x2A   0x42A8             CMP      R0,R5
+   \       0x2C   0xD1ED             BNE.N    ??mbedtls_cipher_info_from_values_1
+    146                      return( def->info );
+   \       0x2E   0x6860             LDR      R0,[R4, #+4]
+   \       0x30   0xE000             B.N      ??mbedtls_cipher_info_from_values_3
+    147          
+    148              return( NULL );
+   \                     ??mbedtls_cipher_info_from_values_2: (+1)
+   \       0x32   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_cipher_info_from_values_3: (+1)
+   \       0x34   0xBC30             POP      {R4,R5}
+   \       0x36   0x4770             BX       LR               ;; return
+    149          }
+    150          
+
+   \                                 In section .text, align 2, keep-with-next
+    151          void mbedtls_cipher_init( mbedtls_cipher_context_t *ctx )
+    152          {
+    153              memset( ctx, 0, sizeof( mbedtls_cipher_context_t ) );
+   \                     mbedtls_cipher_init: (+1)
+   \        0x0   0x2200             MOVS     R2,#+0
+   \        0x2   0x2140             MOVS     R1,#+64
+   \        0x4   0x....'....        B.W      __aeabi_memset4
+    154          }
+    155          
+
+   \                                 In section .text, align 2, keep-with-next
+    156          void mbedtls_cipher_free( mbedtls_cipher_context_t *ctx )
+    157          {
+   \                     mbedtls_cipher_free: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    158              if( ctx == NULL )
+   \        0x4   0xD00C             BEQ.N    ??mbedtls_cipher_free_0
+    159                  return;
+    160          
+    161          #if defined(MBEDTLS_CMAC_C)
+    162              if( ctx->cmac_ctx )
+    163              {
+    164                 mbedtls_platform_zeroize( ctx->cmac_ctx,
+    165                                           sizeof( mbedtls_cmac_context_t ) );
+    166                 mbedtls_free( ctx->cmac_ctx );
+    167              }
+    168          #endif
+    169          
+    170              if( ctx->cipher_ctx )
+   \        0x6   0x6BE0             LDR      R0,[R4, #+60]
+   \        0x8   0x2800             CMP      R0,#+0
+   \        0xA   0xD003             BEQ.N    ??mbedtls_cipher_free_1
+    171                  ctx->cipher_info->base->ctx_free_func( ctx->cipher_ctx );
+   \        0xC   0x6821             LDR      R1,[R4, #+0]
+   \        0xE   0x6989             LDR      R1,[R1, #+24]
+   \       0x10   0x6A09             LDR      R1,[R1, #+32]
+   \       0x12   0x4788             BLX      R1
+    172          
+    173              mbedtls_platform_zeroize( ctx, sizeof(mbedtls_cipher_context_t) );
+   \                     ??mbedtls_cipher_free_1: (+1)
+   \       0x14   0x2140             MOVS     R1,#+64
+   \       0x16   0x4620             MOV      R0,R4
+   \       0x18   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x1C   0x....'....        B.W      mbedtls_platform_zeroize
+   \                     ??mbedtls_cipher_free_0: (+1)
+   \       0x20   0xBD10             POP      {R4,PC}          ;; return
+    174          }
+    175          
+
+   \                                 In section .text, align 2, keep-with-next
+    176          int mbedtls_cipher_setup( mbedtls_cipher_context_t *ctx, const mbedtls_cipher_info_t *cipher_info )
+    177          {
+   \                     mbedtls_cipher_setup: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x000C             MOVS     R4,R1
+    178              if( NULL == cipher_info || NULL == ctx )
+   \        0x6   0xD001             BEQ.N    ??mbedtls_cipher_setup_0
+   \        0x8   0x2D00             CMP      R5,#+0
+   \        0xA   0xD102             BNE.N    ??mbedtls_cipher_setup_1
+    179                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_setup_0: (+1)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x10   0xBD32             POP      {R1,R4,R5,PC}
+    180          
+    181              memset( ctx, 0, sizeof( mbedtls_cipher_context_t ) );
+   \                     ??mbedtls_cipher_setup_1: (+1)
+   \       0x12   0x2200             MOVS     R2,#+0
+   \       0x14   0x2140             MOVS     R1,#+64
+   \       0x16   0x....'....        BL       __aeabi_memset4
+    182          
+    183              if( NULL == ( ctx->cipher_ctx = cipher_info->base->ctx_alloc_func() ) )
+   \       0x1A   0x69A0             LDR      R0,[R4, #+24]
+   \       0x1C   0x69C0             LDR      R0,[R0, #+28]
+   \       0x1E   0x4780             BLX      R0
+   \       0x20   0x63E8             STR      R0,[R5, #+60]
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD102             BNE.N    ??mbedtls_cipher_setup_2
+    184                  return( MBEDTLS_ERR_CIPHER_ALLOC_FAILED );
+   \       0x26   0x....'....        LDR.W    R0,??DataTable21_4  ;; 0xffff9e80
+   \       0x2A   0xBD32             POP      {R1,R4,R5,PC}
+    185          
+    186              ctx->cipher_info = cipher_info;
+   \                     ??mbedtls_cipher_setup_2: (+1)
+   \       0x2C   0x602C             STR      R4,[R5, #+0]
+    187          
+    188          #if defined(MBEDTLS_CIPHER_MODE_WITH_PADDING)
+    189              /*
+    190               * Ignore possible errors caused by a cipher mode that doesn't use padding
+    191               */
+    192          #if defined(MBEDTLS_CIPHER_PADDING_PKCS7)
+    193              (void) mbedtls_cipher_set_padding_mode( ctx, MBEDTLS_PADDING_PKCS7 );
+   \       0x2E   0x2100             MOVS     R1,#+0
+   \       0x30   0x4628             MOV      R0,R5
+   \       0x32   0x....'....        BL       mbedtls_cipher_set_padding_mode
+    194          #else
+    195              (void) mbedtls_cipher_set_padding_mode( ctx, MBEDTLS_PADDING_NONE );
+    196          #endif
+    197          #endif /* MBEDTLS_CIPHER_MODE_WITH_PADDING */
+    198          
+    199              return( 0 );
+   \       0x36   0x2000             MOVS     R0,#+0
+   \       0x38   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    200          }
+    201          
+
+   \                                 In section .text, align 2, keep-with-next
+    202          int mbedtls_cipher_setkey( mbedtls_cipher_context_t *ctx, const unsigned char *key,
+    203                  int key_bitlen, const mbedtls_operation_t operation )
+    204          {
+   \                     mbedtls_cipher_setkey: (+1)
+   \        0x0   0xB418             PUSH     {R3,R4}
+   \        0x2   0x0004             MOVS     R4,R0
+    205              if( NULL == ctx || NULL == ctx->cipher_info )
+   \        0x4   0xD002             BEQ.N    ??mbedtls_cipher_setkey_0
+   \        0x6   0x6820             LDR      R0,[R4, #+0]
+   \        0x8   0x2800             CMP      R0,#+0
+   \        0xA   0xD102             BNE.N    ??mbedtls_cipher_setkey_1
+    206                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_setkey_0: (+1)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x10   0xE02E             B.N      ??mbedtls_cipher_setkey_2
+    207          
+    208              if( ( ctx->cipher_info->flags & MBEDTLS_CIPHER_VARIABLE_KEY_LEN ) == 0 &&
+    209                  (int) ctx->cipher_info->key_bitlen != key_bitlen )
+   \                     ??mbedtls_cipher_setkey_1: (+1)
+   \       0x12   0x7C00             LDRB     R0,[R0, #+16]
+   \       0x14   0x0780             LSLS     R0,R0,#+30
+   \       0x16   0xD406             BMI.N    ??mbedtls_cipher_setkey_3
+   \       0x18   0x6820             LDR      R0,[R4, #+0]
+   \       0x1A   0x6840             LDR      R0,[R0, #+4]
+   \       0x1C   0x4290             CMP      R0,R2
+   \       0x1E   0xD002             BEQ.N    ??mbedtls_cipher_setkey_3
+    210              {
+    211                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \       0x20   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x24   0xE024             B.N      ??mbedtls_cipher_setkey_2
+    212              }
+    213          
+    214              ctx->key_bitlen = key_bitlen;
+   \                     ??mbedtls_cipher_setkey_3: (+1)
+   \       0x26   0x6062             STR      R2,[R4, #+4]
+    215              ctx->operation = operation;
+   \       0x28   0x7223             STRB     R3,[R4, #+8]
+    216          
+    217              /*
+    218               * For OFB, CFB and CTR mode always use the encryption key schedule
+    219               */
+    220              if( MBEDTLS_ENCRYPT == operation ||
+    221                  MBEDTLS_MODE_CFB == ctx->cipher_info->mode ||
+    222                  MBEDTLS_MODE_OFB == ctx->cipher_info->mode ||
+    223                  MBEDTLS_MODE_CTR == ctx->cipher_info->mode )
+   \       0x2A   0x4618             MOV      R0,R3
+   \       0x2C   0x2801             CMP      R0,#+1
+   \       0x2E   0xD00B             BEQ.N    ??mbedtls_cipher_setkey_4
+   \       0x30   0x6820             LDR      R0,[R4, #+0]
+   \       0x32   0x7840             LDRB     R0,[R0, #+1]
+   \       0x34   0x2803             CMP      R0,#+3
+   \       0x36   0xD007             BEQ.N    ??mbedtls_cipher_setkey_4
+   \       0x38   0x6820             LDR      R0,[R4, #+0]
+   \       0x3A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x3C   0x2804             CMP      R0,#+4
+   \       0x3E   0xD003             BEQ.N    ??mbedtls_cipher_setkey_4
+   \       0x40   0x6820             LDR      R0,[R4, #+0]
+   \       0x42   0x7840             LDRB     R0,[R0, #+1]
+   \       0x44   0x2805             CMP      R0,#+5
+   \       0x46   0xD107             BNE.N    ??mbedtls_cipher_setkey_5
+    224              {
+    225                  return ctx->cipher_info->base->setkey_enc_func( ctx->cipher_ctx, key,
+    226                          ctx->key_bitlen );
+   \                     ??mbedtls_cipher_setkey_4: (+1)
+   \       0x48   0x6862             LDR      R2,[R4, #+4]
+   \       0x4A   0x6BE0             LDR      R0,[R4, #+60]
+   \       0x4C   0x6823             LDR      R3,[R4, #+0]
+   \       0x4E   0x699B             LDR      R3,[R3, #+24]
+   \       0x50   0x695B             LDR      R3,[R3, #+20]
+   \       0x52   0xB001             ADD      SP,SP,#+4
+   \       0x54   0xBC10             POP      {R4}
+   \       0x56   0x4718             BX       R3
+    227              }
+    228          
+    229              if( MBEDTLS_DECRYPT == operation )
+   \                     ??mbedtls_cipher_setkey_5: (+1)
+   \       0x58   0x2B00             CMP      R3,#+0
+   \       0x5A   0xD107             BNE.N    ??mbedtls_cipher_setkey_6
+    230                  return ctx->cipher_info->base->setkey_dec_func( ctx->cipher_ctx, key,
+    231                          ctx->key_bitlen );
+   \       0x5C   0x6862             LDR      R2,[R4, #+4]
+   \       0x5E   0x6BE0             LDR      R0,[R4, #+60]
+   \       0x60   0x6823             LDR      R3,[R4, #+0]
+   \       0x62   0x699B             LDR      R3,[R3, #+24]
+   \       0x64   0x699B             LDR      R3,[R3, #+24]
+   \       0x66   0xB001             ADD      SP,SP,#+4
+   \       0x68   0xBC10             POP      {R4}
+   \       0x6A   0x4718             BX       R3
+    232          
+    233              return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_setkey_6: (+1)
+   \       0x6C   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \                     ??mbedtls_cipher_setkey_2: (+1)
+   \       0x70   0xBC12             POP      {R1,R4}
+   \       0x72   0x4770             BX       LR               ;; return
+    234          }
+    235          
+
+   \                                 In section .text, align 2, keep-with-next
+    236          int mbedtls_cipher_set_iv( mbedtls_cipher_context_t *ctx,
+    237                             const unsigned char *iv, size_t iv_len )
+    238          {
+   \                     mbedtls_cipher_set_iv: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    239              size_t actual_iv_size;
+    240          
+    241              if( NULL == ctx || NULL == ctx->cipher_info || NULL == iv )
+   \        0x4   0xD019             BEQ.N    ??mbedtls_cipher_set_iv_0
+   \        0x6   0x6820             LDR      R0,[R4, #+0]
+   \        0x8   0x2800             CMP      R0,#+0
+   \        0xA   0xD016             BEQ.N    ??mbedtls_cipher_set_iv_0
+   \        0xC   0x2900             CMP      R1,#+0
+   \        0xE   0xD014             BEQ.N    ??mbedtls_cipher_set_iv_0
+    242                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    243          
+    244              /* avoid buffer overflow in ctx->iv */
+    245              if( iv_len > MBEDTLS_MAX_IV_LENGTH )
+   \       0x10   0x2A11             CMP      R2,#+17
+   \       0x12   0xD302             BCC.N    ??mbedtls_cipher_set_iv_1
+    246                  return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+   \       0x14   0x....'....        LDR.W    R0,??DataTable21_5  ;; 0xffff9f80
+   \       0x18   0xBD32             POP      {R1,R4,R5,PC}
+    247          
+    248              if( ( ctx->cipher_info->flags & MBEDTLS_CIPHER_VARIABLE_IV_LEN ) != 0 )
+   \                     ??mbedtls_cipher_set_iv_1: (+1)
+   \       0x1A   0x7C00             LDRB     R0,[R0, #+16]
+   \       0x1C   0x07C0             LSLS     R0,R0,#+31
+   \       0x1E   0xD508             BPL.N    ??mbedtls_cipher_set_iv_2
+    249                  actual_iv_size = iv_len;
+   \       0x20   0x4615             MOV      R5,R2
+    250              else
+    251              {
+    252                  actual_iv_size = ctx->cipher_info->iv_size;
+    253          
+    254                  /* avoid reading past the end of input buffer */
+    255                  if( actual_iv_size > iv_len )
+    256                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    257              }
+    258          
+    259          #if defined(MBEDTLS_CHACHA20_C)
+    260              if ( ctx->cipher_info->type == MBEDTLS_CIPHER_CHACHA20 )
+    261              {
+    262                  if ( 0 != mbedtls_chacha20_starts( (mbedtls_chacha20_context*)ctx->cipher_ctx,
+    263                                                     iv,
+    264                                                     0U ) ) /* Initial counter value */
+    265                  {
+    266                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    267                  }
+    268              }
+    269          #endif
+    270          
+    271              memcpy( ctx->iv, iv, actual_iv_size );
+   \                     ??mbedtls_cipher_set_iv_3: (+1)
+   \       0x22   0x462A             MOV      R2,R5
+   \       0x24   0xF104 0x0028      ADD      R0,R4,#+40
+   \       0x28   0x....'....        BL       __aeabi_memcpy
+    272              ctx->iv_size = actual_iv_size;
+   \       0x2C   0x63A5             STR      R5,[R4, #+56]
+    273          
+    274              return( 0 );
+   \       0x2E   0x2000             MOVS     R0,#+0
+   \       0x30   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+   \                     ??mbedtls_cipher_set_iv_2: (+1)
+   \       0x32   0x6820             LDR      R0,[R4, #+0]
+   \       0x34   0x68C5             LDR      R5,[R0, #+12]
+   \       0x36   0x42AA             CMP      R2,R5
+   \       0x38   0xD2F3             BCS.N    ??mbedtls_cipher_set_iv_3
+   \                     ??mbedtls_cipher_set_iv_0: (+1)
+   \       0x3A   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x3E   0xBD32             POP      {R1,R4,R5,PC}
+    275          }
+    276          
+
+   \                                 In section .text, align 2, keep-with-next
+    277          int mbedtls_cipher_reset( mbedtls_cipher_context_t *ctx )
+    278          {
+    279              if( NULL == ctx || NULL == ctx->cipher_info )
+   \                     mbedtls_cipher_reset: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD002             BEQ.N    ??mbedtls_cipher_reset_0
+   \        0x4   0x6801             LDR      R1,[R0, #+0]
+   \        0x6   0x2900             CMP      R1,#+0
+   \        0x8   0xD102             BNE.N    ??mbedtls_cipher_reset_1
+    280                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_reset_0: (+1)
+   \        0xA   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \        0xE   0x4770             BX       LR
+    281          
+    282              ctx->unprocessed_len = 0;
+   \                     ??mbedtls_cipher_reset_1: (+1)
+   \       0x10   0x2100             MOVS     R1,#+0
+   \       0x12   0x6241             STR      R1,[R0, #+36]
+    283          
+    284              return( 0 );
+   \       0x14   0x4608             MOV      R0,R1
+   \       0x16   0x4770             BX       LR               ;; return
+    285          }
+    286          
+    287          #if defined(MBEDTLS_GCM_C) || defined(MBEDTLS_CHACHAPOLY_C)
+
+   \                                 In section .text, align 2, keep-with-next
+    288          int mbedtls_cipher_update_ad( mbedtls_cipher_context_t *ctx,
+    289                                const unsigned char *ad, size_t ad_len )
+    290          {
+   \                     mbedtls_cipher_update_ad: (+1)
+   \        0x0   0xB5E0             PUSH     {R5-R7,LR}
+    291              if( NULL == ctx || NULL == ctx->cipher_info )
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD002             BEQ.N    ??mbedtls_cipher_update_ad_0
+   \        0x6   0x6803             LDR      R3,[R0, #+0]
+   \        0x8   0x2B00             CMP      R3,#+0
+   \        0xA   0xD102             BNE.N    ??mbedtls_cipher_update_ad_1
+    292                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_update_ad_0: (+1)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x10   0xBD0E             POP      {R1-R3,PC}
+    293          
+    294          #if defined(MBEDTLS_GCM_C)
+    295              if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_update_ad_1: (+1)
+   \       0x12   0x785B             LDRB     R3,[R3, #+1]
+   \       0x14   0x2B06             CMP      R3,#+6
+   \       0x16   0xD10A             BNE.N    ??mbedtls_cipher_update_ad_2
+    296              {
+    297                  return mbedtls_gcm_starts( (mbedtls_gcm_context *) ctx->cipher_ctx, ctx->operation,
+    298                                     ctx->iv, ctx->iv_size, ad, ad_len );
+   \       0x18   0x9201             STR      R2,[SP, #+4]
+   \       0x1A   0x9100             STR      R1,[SP, #+0]
+   \       0x1C   0x6B83             LDR      R3,[R0, #+56]
+   \       0x1E   0xF100 0x0228      ADD      R2,R0,#+40
+   \       0x22   0xF990 0x1008      LDRSB    R1,[R0, #+8]
+   \       0x26   0x6BC0             LDR      R0,[R0, #+60]
+   \       0x28   0x....'....        BL       mbedtls_gcm_starts
+   \       0x2C   0xBD0E             POP      {R1-R3,PC}
+    299              }
+    300          #endif
+    301          
+    302          #if defined(MBEDTLS_CHACHAPOLY_C)
+    303              if (MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type )
+    304              {
+    305                  int result;
+    306                  mbedtls_chachapoly_mode_t mode;
+    307          
+    308                  mode = ( ctx->operation == MBEDTLS_ENCRYPT )
+    309                          ? MBEDTLS_CHACHAPOLY_ENCRYPT
+    310                          : MBEDTLS_CHACHAPOLY_DECRYPT;
+    311          
+    312                  result = mbedtls_chachapoly_starts( (mbedtls_chachapoly_context*) ctx->cipher_ctx,
+    313                                                                  ctx->iv,
+    314                                                                  mode );
+    315                  if ( result != 0 )
+    316                      return( result );
+    317          
+    318                  return mbedtls_chachapoly_update_aad( (mbedtls_chachapoly_context*) ctx->cipher_ctx,
+    319                                                                    ad, ad_len );
+    320              }
+    321          #endif
+    322          
+    323              return( 0 );
+   \                     ??mbedtls_cipher_update_ad_2: (+1)
+   \       0x2E   0x2000             MOVS     R0,#+0
+   \       0x30   0xBD0E             POP      {R1-R3,PC}       ;; return
+    324          }
+    325          #endif /* MBEDTLS_GCM_C || MBEDTLS_CHACHAPOLY_C */
+    326          
+
+   \                                 In section .text, align 2, keep-with-next
+    327          int mbedtls_cipher_update( mbedtls_cipher_context_t *ctx, const unsigned char *input,
+    328                             size_t ilen, unsigned char *output, size_t *olen )
+    329          {
+   \                     mbedtls_cipher_update: (+1)
+   \        0x0   0xE92D 0x47FF      PUSH     {R0-R10,LR}
+   \        0x4   0x4606             MOV      R6,R0
+   \        0x6   0x4689             MOV      R9,R1
+   \        0x8   0x4614             MOV      R4,R2
+   \        0xA   0x469A             MOV      R10,R3
+    330              int ret;
+    331              size_t block_size = 0;
+    332          
+    333              if( NULL == ctx || NULL == ctx->cipher_info || NULL == olen )
+   \        0xC   0x2E00             CMP      R6,#+0
+   \        0xE   0xD03F             BEQ.N    ??mbedtls_cipher_update_0
+   \       0x10   0x6830             LDR      R0,[R6, #+0]
+   \       0x12   0x2800             CMP      R0,#+0
+   \       0x14   0xD03C             BEQ.N    ??mbedtls_cipher_update_0
+   \       0x16   0x9D0C             LDR      R5,[SP, #+48]
+   \       0x18   0x2D00             CMP      R5,#+0
+   \       0x1A   0xD039             BEQ.N    ??mbedtls_cipher_update_0
+    334              {
+    335                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    336              }
+    337          
+    338              *olen = 0;
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0x6028             STR      R0,[R5, #+0]
+    339              block_size = mbedtls_cipher_get_block_size( ctx );
+   \       0x20   0x4630             MOV      R0,R6
+   \       0x22   0x....'....        BL       mbedtls_cipher_get_block_size
+   \       0x26   0x4607             MOV      R7,R0
+    340          
+    341              if( ctx->cipher_info->mode == MBEDTLS_MODE_ECB )
+   \       0x28   0x6830             LDR      R0,[R6, #+0]
+   \       0x2A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x2C   0x2801             CMP      R0,#+1
+   \       0x2E   0xD113             BNE.N    ??mbedtls_cipher_update_1
+    342              {
+    343                  if( ilen != block_size )
+   \       0x30   0x42BC             CMP      R4,R7
+   \       0x32   0xD002             BEQ.N    ??mbedtls_cipher_update_2
+    344                      return( MBEDTLS_ERR_CIPHER_FULL_BLOCK_EXPECTED );
+   \       0x34   0x....'....        LDR.W    R0,??DataTable21_6  ;; 0xffff9d80
+   \       0x38   0xE0F3             B.N      ??mbedtls_cipher_update_3
+    345          
+    346                  *olen = ilen;
+   \                     ??mbedtls_cipher_update_2: (+1)
+   \       0x3A   0x602C             STR      R4,[R5, #+0]
+    347          
+    348                  if( 0 != ( ret = ctx->cipher_info->base->ecb_func( ctx->cipher_ctx,
+    349                              ctx->operation, input, output ) ) )
+   \       0x3C   0x4653             MOV      R3,R10
+   \       0x3E   0x464A             MOV      R2,R9
+   \       0x40   0xF996 0x1008      LDRSB    R1,[R6, #+8]
+   \       0x44   0x6BF0             LDR      R0,[R6, #+60]
+   \       0x46   0x6834             LDR      R4,[R6, #+0]
+   \       0x48   0x69A4             LDR      R4,[R4, #+24]
+   \       0x4A   0x6864             LDR      R4,[R4, #+4]
+   \       0x4C   0x47A0             BLX      R4
+   \       0x4E   0x2800             CMP      R0,#+0
+   \       0x50   0xF040 0x80E7      BNE.W    ??mbedtls_cipher_update_3
+    350                  {
+    351                      return( ret );
+    352                  }
+    353          
+    354                  return( 0 );
+   \       0x54   0x2000             MOVS     R0,#+0
+   \       0x56   0xE0E4             B.N      ??mbedtls_cipher_update_3
+    355              }
+    356          
+    357          #if defined(MBEDTLS_GCM_C)
+    358              if( ctx->cipher_info->mode == MBEDTLS_MODE_GCM )
+   \                     ??mbedtls_cipher_update_1: (+1)
+   \       0x58   0x6830             LDR      R0,[R6, #+0]
+   \       0x5A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x5C   0x2806             CMP      R0,#+6
+   \       0x5E   0xD109             BNE.N    ??mbedtls_cipher_update_4
+    359              {
+    360                  *olen = ilen;
+   \       0x60   0x602C             STR      R4,[R5, #+0]
+    361                  return mbedtls_gcm_update( (mbedtls_gcm_context *) ctx->cipher_ctx, ilen, input,
+    362                                     output );
+   \       0x62   0x4653             MOV      R3,R10
+   \       0x64   0x464A             MOV      R2,R9
+   \       0x66   0x4621             MOV      R1,R4
+   \       0x68   0x6BF0             LDR      R0,[R6, #+60]
+   \       0x6A   0xB004             ADD      SP,SP,#+16
+   \       0x6C   0xE8BD 0x47F0      POP      {R4-R10,LR}
+   \       0x70   0x....'....        B.W      mbedtls_gcm_update
+    363              }
+    364          #endif
+    365          
+    366          #if defined(MBEDTLS_CHACHAPOLY_C)
+    367              if ( ctx->cipher_info->type == MBEDTLS_CIPHER_CHACHA20_POLY1305 )
+    368              {
+    369                  *olen = ilen;
+    370                  return mbedtls_chachapoly_update( (mbedtls_chachapoly_context*) ctx->cipher_ctx,
+    371                                                                ilen, input, output );
+    372              }
+    373          #endif
+    374          
+    375              if ( 0 == block_size )
+   \                     ??mbedtls_cipher_update_4: (+1)
+   \       0x74   0x2F00             CMP      R7,#+0
+   \       0x76   0xF000 0x8098      BEQ.W    ??mbedtls_cipher_update_5
+    376              {
+    377                  return MBEDTLS_ERR_CIPHER_INVALID_CONTEXT;
+    378              }
+    379          
+    380              if( input == output &&
+    381                 ( ctx->unprocessed_len != 0 || ilen % block_size ) )
+   \       0x7A   0x45D1             CMP      R9,R10
+   \       0x7C   0xD10B             BNE.N    ??mbedtls_cipher_update_6
+   \       0x7E   0x6A70             LDR      R0,[R6, #+36]
+   \       0x80   0x2800             CMP      R0,#+0
+   \       0x82   0xD105             BNE.N    ??mbedtls_cipher_update_0
+   \       0x84   0xFBB4 0xF0F7      UDIV     R0,R4,R7
+   \       0x88   0xFB07 0x4010      MLS      R0,R7,R0,R4
+   \       0x8C   0x2800             CMP      R0,#+0
+   \       0x8E   0xD002             BEQ.N    ??mbedtls_cipher_update_6
+    382              {
+    383                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_update_0: (+1)
+   \       0x90   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x94   0xE0C5             B.N      ??mbedtls_cipher_update_3
+    384              }
+    385          
+    386          #if defined(MBEDTLS_CIPHER_MODE_CBC)
+    387              if( ctx->cipher_info->mode == MBEDTLS_MODE_CBC )
+   \                     ??mbedtls_cipher_update_6: (+1)
+   \       0x96   0x6830             LDR      R0,[R6, #+0]
+   \       0x98   0x7840             LDRB     R0,[R0, #+1]
+   \       0x9A   0x2802             CMP      R0,#+2
+   \       0x9C   0xF040 0x808D      BNE.W    ??mbedtls_cipher_update_7
+    388              {
+    389                  size_t copy_len = 0;
+    390          
+    391                  /*
+    392                   * If there is not enough data for a full block, cache it.
+    393                   */
+    394                  if( ( ctx->operation == MBEDTLS_DECRYPT && NULL != ctx->add_padding &&
+    395                          ilen <= block_size - ctx->unprocessed_len ) ||
+    396                      ( ctx->operation == MBEDTLS_DECRYPT && NULL == ctx->add_padding &&
+    397                          ilen < block_size - ctx->unprocessed_len ) ||
+    398                       ( ctx->operation == MBEDTLS_ENCRYPT &&
+    399                          ilen < block_size - ctx->unprocessed_len ) )
+   \       0xA0   0xF996 0x0008      LDRSB    R0,[R6, #+8]
+   \       0xA4   0x2800             CMP      R0,#+0
+   \       0xA6   0xD106             BNE.N    ??mbedtls_cipher_update_8
+   \       0xA8   0x68F0             LDR      R0,[R6, #+12]
+   \       0xAA   0x2800             CMP      R0,#+0
+   \       0xAC   0xD003             BEQ.N    ??mbedtls_cipher_update_8
+   \       0xAE   0x6A70             LDR      R0,[R6, #+36]
+   \       0xB0   0x1A38             SUBS     R0,R7,R0
+   \       0xB2   0x42A0             CMP      R0,R4
+   \       0xB4   0xD212             BCS.N    ??mbedtls_cipher_update_9
+   \                     ??mbedtls_cipher_update_8: (+1)
+   \       0xB6   0xF996 0x0008      LDRSB    R0,[R6, #+8]
+   \       0xBA   0x2800             CMP      R0,#+0
+   \       0xBC   0xD106             BNE.N    ??mbedtls_cipher_update_10
+   \       0xBE   0x68F0             LDR      R0,[R6, #+12]
+   \       0xC0   0x2800             CMP      R0,#+0
+   \       0xC2   0xD103             BNE.N    ??mbedtls_cipher_update_10
+   \       0xC4   0x6A70             LDR      R0,[R6, #+36]
+   \       0xC6   0x1A38             SUBS     R0,R7,R0
+   \       0xC8   0x4284             CMP      R4,R0
+   \       0xCA   0xD307             BCC.N    ??mbedtls_cipher_update_9
+   \                     ??mbedtls_cipher_update_10: (+1)
+   \       0xCC   0xF996 0x0008      LDRSB    R0,[R6, #+8]
+   \       0xD0   0x2801             CMP      R0,#+1
+   \       0xD2   0xD10F             BNE.N    ??mbedtls_cipher_update_11
+   \       0xD4   0x6A70             LDR      R0,[R6, #+36]
+   \       0xD6   0x1A38             SUBS     R0,R7,R0
+   \       0xD8   0x4284             CMP      R4,R0
+   \       0xDA   0xD20B             BCS.N    ??mbedtls_cipher_update_11
+    400                  {
+    401                      memcpy( &( ctx->unprocessed_data[ctx->unprocessed_len] ), input,
+    402                              ilen );
+   \                     ??mbedtls_cipher_update_9: (+1)
+   \       0xDC   0x4622             MOV      R2,R4
+   \       0xDE   0x4649             MOV      R1,R9
+   \       0xE0   0x6A70             LDR      R0,[R6, #+36]
+   \       0xE2   0x4430             ADD      R0,R6,R0
+   \       0xE4   0x3014             ADDS     R0,R0,#+20
+   \       0xE6   0x....'....        BL       __aeabi_memcpy
+    403          
+    404                      ctx->unprocessed_len += ilen;
+   \       0xEA   0x6A70             LDR      R0,[R6, #+36]
+   \       0xEC   0x1824             ADDS     R4,R4,R0
+   \       0xEE   0x6274             STR      R4,[R6, #+36]
+    405                      return( 0 );
+   \       0xF0   0x2000             MOVS     R0,#+0
+   \       0xF2   0xE096             B.N      ??mbedtls_cipher_update_3
+    406                  }
+    407          
+    408                  /*
+    409                   * Process cached data first
+    410                   */
+    411                  if( 0 != ctx->unprocessed_len )
+   \                     ??mbedtls_cipher_update_11: (+1)
+   \       0xF4   0x6A70             LDR      R0,[R6, #+36]
+   \       0xF6   0x2800             CMP      R0,#+0
+   \       0xF8   0xD025             BEQ.N    ??mbedtls_cipher_update_12
+    412                  {
+    413                      copy_len = block_size - ctx->unprocessed_len;
+   \       0xFA   0x4680             MOV      R8,R0
+   \       0xFC   0xEBA7 0x0808      SUB      R8,R7,R8
+    414          
+    415                      memcpy( &( ctx->unprocessed_data[ctx->unprocessed_len] ), input,
+    416                              copy_len );
+   \      0x100   0x4642             MOV      R2,R8
+   \      0x102   0x4649             MOV      R1,R9
+   \      0x104   0x4430             ADD      R0,R6,R0
+   \      0x106   0x3014             ADDS     R0,R0,#+20
+   \      0x108   0x....'....        BL       __aeabi_memcpy
+    417          
+    418                      if( 0 != ( ret = ctx->cipher_info->base->cbc_func( ctx->cipher_ctx,
+    419                              ctx->operation, block_size, ctx->iv,
+    420                              ctx->unprocessed_data, output ) ) )
+   \      0x10C   0xF8CD 0xA004      STR      R10,[SP, #+4]
+   \      0x110   0xF106 0x0014      ADD      R0,R6,#+20
+   \      0x114   0x9000             STR      R0,[SP, #+0]
+   \      0x116   0xF106 0x0328      ADD      R3,R6,#+40
+   \      0x11A   0x463A             MOV      R2,R7
+   \      0x11C   0xF996 0x1008      LDRSB    R1,[R6, #+8]
+   \      0x120   0x6BF0             LDR      R0,[R6, #+60]
+   \      0x122   0xF8D6 0xC000      LDR      R12,[R6, #+0]
+   \      0x126   0xF8DC 0xC018      LDR      R12,[R12, #+24]
+   \      0x12A   0xF8DC 0xC008      LDR      R12,[R12, #+8]
+   \      0x12E   0x47E0             BLX      R12
+   \      0x130   0x2800             CMP      R0,#+0
+   \      0x132   0xD176             BNE.N    ??mbedtls_cipher_update_3
+    421                      {
+    422                          return( ret );
+    423                      }
+    424          
+    425                      *olen += block_size;
+   \      0x134   0x6828             LDR      R0,[R5, #+0]
+   \      0x136   0x1838             ADDS     R0,R7,R0
+   \      0x138   0x6028             STR      R0,[R5, #+0]
+    426                      output += block_size;
+   \      0x13A   0x44BA             ADD      R10,R10,R7
+    427                      ctx->unprocessed_len = 0;
+   \      0x13C   0x2000             MOVS     R0,#+0
+   \      0x13E   0x6270             STR      R0,[R6, #+36]
+    428          
+    429                      input += copy_len;
+   \      0x140   0x44C1             ADD      R9,R9,R8
+    430                      ilen -= copy_len;
+   \      0x142   0xEBA4 0x0408      SUB      R4,R4,R8
+    431                  }
+    432          
+    433                  /*
+    434                   * Cache final, incomplete block
+    435                   */
+    436                  if( 0 != ilen )
+   \                     ??mbedtls_cipher_update_12: (+1)
+   \      0x146   0x2C00             CMP      R4,#+0
+   \      0x148   0xD01C             BEQ.N    ??mbedtls_cipher_update_13
+    437                  {
+    438                      if( 0 == block_size )
+    439                      {
+    440                          return MBEDTLS_ERR_CIPHER_INVALID_CONTEXT;
+    441                      }
+    442          
+    443                      /* Encryption: only cache partial blocks
+    444                       * Decryption w/ padding: always keep at least one whole block
+    445                       * Decryption w/o padding: only cache partial blocks
+    446                       */
+    447                      copy_len = ilen % block_size;
+   \      0x14A   0xFBB4 0xF8F7      UDIV     R8,R4,R7
+   \      0x14E   0xFB07 0x4818      MLS      R8,R7,R8,R4
+    448                      if( copy_len == 0 &&
+    449                          ctx->operation == MBEDTLS_DECRYPT &&
+    450                          NULL != ctx->add_padding)
+   \      0x152   0xF1B8 0x0F00      CMP      R8,#+0
+   \      0x156   0xD107             BNE.N    ??mbedtls_cipher_update_14
+   \      0x158   0xF996 0x0008      LDRSB    R0,[R6, #+8]
+   \      0x15C   0x2800             CMP      R0,#+0
+   \      0x15E   0xD103             BNE.N    ??mbedtls_cipher_update_14
+   \      0x160   0x68F0             LDR      R0,[R6, #+12]
+   \      0x162   0x2800             CMP      R0,#+0
+   \      0x164   0xD000             BEQ.N    ??mbedtls_cipher_update_14
+    451                      {
+    452                          copy_len = block_size;
+   \      0x166   0x46B8             MOV      R8,R7
+    453                      }
+    454          
+    455                      memcpy( ctx->unprocessed_data, &( input[ilen - copy_len] ),
+    456                              copy_len );
+   \                     ??mbedtls_cipher_update_14: (+1)
+   \      0x168   0x4642             MOV      R2,R8
+   \      0x16A   0xEBA4 0x0008      SUB      R0,R4,R8
+   \      0x16E   0xEB09 0x0100      ADD      R1,R9,R0
+   \      0x172   0xF106 0x0014      ADD      R0,R6,#+20
+   \      0x176   0x....'....        BL       __aeabi_memcpy
+    457          
+    458                      ctx->unprocessed_len += copy_len;
+   \      0x17A   0x6A70             LDR      R0,[R6, #+36]
+   \      0x17C   0x4440             ADD      R0,R8,R0
+   \      0x17E   0x6270             STR      R0,[R6, #+36]
+    459                      ilen -= copy_len;
+   \      0x180   0xEBA4 0x0408      SUB      R4,R4,R8
+    460                  }
+    461          
+    462                  /*
+    463                   * Process remaining full blocks
+    464                   */
+    465                  if( ilen )
+   \                     ??mbedtls_cipher_update_13: (+1)
+   \      0x184   0x2C00             CMP      R4,#+0
+   \      0x186   0xD016             BEQ.N    ??mbedtls_cipher_update_15
+    466                  {
+    467                      if( 0 != ( ret = ctx->cipher_info->base->cbc_func( ctx->cipher_ctx,
+    468                              ctx->operation, ilen, ctx->iv, input, output ) ) )
+   \      0x188   0xF8CD 0xA004      STR      R10,[SP, #+4]
+   \      0x18C   0xF8CD 0x9000      STR      R9,[SP, #+0]
+   \      0x190   0xF106 0x0328      ADD      R3,R6,#+40
+   \      0x194   0x4622             MOV      R2,R4
+   \      0x196   0xF996 0x1008      LDRSB    R1,[R6, #+8]
+   \      0x19A   0x6BF0             LDR      R0,[R6, #+60]
+   \      0x19C   0x6836             LDR      R6,[R6, #+0]
+   \      0x19E   0x69B6             LDR      R6,[R6, #+24]
+   \      0x1A0   0x68B6             LDR      R6,[R6, #+8]
+   \      0x1A2   0x47B0             BLX      R6
+   \      0x1A4   0x2800             CMP      R0,#+0
+   \      0x1A6   0xD003             BEQ.N    ??mbedtls_cipher_update_16
+    469                      {
+    470                          return( ret );
+   \      0x1A8   0xE03B             B.N      ??mbedtls_cipher_update_3
+    471                      }
+   \                     ??mbedtls_cipher_update_5: (+1)
+   \      0x1AA   0x....'....        LDR.W    R0,??DataTable21_7  ;; 0xffff9c80
+   \      0x1AE   0xE038             B.N      ??mbedtls_cipher_update_3
+    472          
+    473                      *olen += ilen;
+   \                     ??mbedtls_cipher_update_16: (+1)
+   \      0x1B0   0x6828             LDR      R0,[R5, #+0]
+   \      0x1B2   0x1824             ADDS     R4,R4,R0
+   \      0x1B4   0x602C             STR      R4,[R5, #+0]
+    474                  }
+    475          
+    476                  return( 0 );
+   \                     ??mbedtls_cipher_update_15: (+1)
+   \      0x1B6   0x2000             MOVS     R0,#+0
+   \      0x1B8   0xE033             B.N      ??mbedtls_cipher_update_3
+    477              }
+    478          #endif /* MBEDTLS_CIPHER_MODE_CBC */
+    479          
+    480          #if defined(MBEDTLS_CIPHER_MODE_CFB)
+    481              if( ctx->cipher_info->mode == MBEDTLS_MODE_CFB )
+   \                     ??mbedtls_cipher_update_7: (+1)
+   \      0x1BA   0x6830             LDR      R0,[R6, #+0]
+   \      0x1BC   0x7840             LDRB     R0,[R0, #+1]
+   \      0x1BE   0x2803             CMP      R0,#+3
+   \      0x1C0   0xD113             BNE.N    ??mbedtls_cipher_update_17
+    482              {
+    483                  if( 0 != ( ret = ctx->cipher_info->base->cfb_func( ctx->cipher_ctx,
+    484                          ctx->operation, ilen, &ctx->unprocessed_len, ctx->iv,
+    485                          input, output ) ) )
+   \      0x1C2   0xF8CD 0xA008      STR      R10,[SP, #+8]
+   \      0x1C6   0xF8CD 0x9004      STR      R9,[SP, #+4]
+   \      0x1CA   0xF106 0x0028      ADD      R0,R6,#+40
+   \      0x1CE   0x9000             STR      R0,[SP, #+0]
+   \      0x1D0   0xF106 0x0324      ADD      R3,R6,#+36
+   \      0x1D4   0x4622             MOV      R2,R4
+   \      0x1D6   0xF996 0x1008      LDRSB    R1,[R6, #+8]
+   \      0x1DA   0x6BF0             LDR      R0,[R6, #+60]
+   \      0x1DC   0x6836             LDR      R6,[R6, #+0]
+   \      0x1DE   0x69B6             LDR      R6,[R6, #+24]
+   \      0x1E0   0x68F6             LDR      R6,[R6, #+12]
+   \      0x1E2   0x47B0             BLX      R6
+   \      0x1E4   0x2800             CMP      R0,#+0
+   \      0x1E6   0xD017             BEQ.N    ??mbedtls_cipher_update_18
+    486                  {
+    487                      return( ret );
+   \      0x1E8   0xE01B             B.N      ??mbedtls_cipher_update_3
+    488                  }
+    489          
+    490                  *olen = ilen;
+    491          
+    492                  return( 0 );
+    493              }
+    494          #endif /* MBEDTLS_CIPHER_MODE_CFB */
+    495          
+    496          #if defined(MBEDTLS_CIPHER_MODE_OFB)
+    497              if( ctx->cipher_info->mode == MBEDTLS_MODE_OFB )
+    498              {
+    499                  if( 0 != ( ret = ctx->cipher_info->base->ofb_func( ctx->cipher_ctx,
+    500                          ilen, &ctx->unprocessed_len, ctx->iv, input, output ) ) )
+    501                  {
+    502                      return( ret );
+    503                  }
+    504          
+    505                  *olen = ilen;
+    506          
+    507                  return( 0 );
+    508              }
+    509          #endif /* MBEDTLS_CIPHER_MODE_OFB */
+    510          
+    511          #if defined(MBEDTLS_CIPHER_MODE_CTR)
+    512              if( ctx->cipher_info->mode == MBEDTLS_MODE_CTR )
+   \                     ??mbedtls_cipher_update_17: (+1)
+   \      0x1EA   0x6830             LDR      R0,[R6, #+0]
+   \      0x1EC   0x7840             LDRB     R0,[R0, #+1]
+   \      0x1EE   0x2805             CMP      R0,#+5
+   \      0x1F0   0xD115             BNE.N    ??mbedtls_cipher_update_19
+    513              {
+    514                  if( 0 != ( ret = ctx->cipher_info->base->ctr_func( ctx->cipher_ctx,
+    515                          ilen, &ctx->unprocessed_len, ctx->iv,
+    516                          ctx->unprocessed_data, input, output ) ) )
+   \      0x1F2   0xF8CD 0xA008      STR      R10,[SP, #+8]
+   \      0x1F6   0xF8CD 0x9004      STR      R9,[SP, #+4]
+   \      0x1FA   0xF106 0x0014      ADD      R0,R6,#+20
+   \      0x1FE   0x9000             STR      R0,[SP, #+0]
+   \      0x200   0xF106 0x0328      ADD      R3,R6,#+40
+   \      0x204   0xF106 0x0224      ADD      R2,R6,#+36
+   \      0x208   0x4621             MOV      R1,R4
+   \      0x20A   0x6BF0             LDR      R0,[R6, #+60]
+   \      0x20C   0x6836             LDR      R6,[R6, #+0]
+   \      0x20E   0x69B6             LDR      R6,[R6, #+24]
+   \      0x210   0x6936             LDR      R6,[R6, #+16]
+   \      0x212   0x47B0             BLX      R6
+   \      0x214   0x2800             CMP      R0,#+0
+   \      0x216   0xD104             BNE.N    ??mbedtls_cipher_update_3
+    517                  {
+    518                      return( ret );
+    519                  }
+    520          
+    521                  *olen = ilen;
+   \                     ??mbedtls_cipher_update_18: (+1)
+   \      0x218   0x602C             STR      R4,[R5, #+0]
+    522          
+    523                  return( 0 );
+   \      0x21A   0x2000             MOVS     R0,#+0
+   \      0x21C   0xE001             B.N      ??mbedtls_cipher_update_3
+    524              }
+    525          #endif /* MBEDTLS_CIPHER_MODE_CTR */
+    526          
+    527          #if defined(MBEDTLS_CIPHER_MODE_XTS)
+    528              if( ctx->cipher_info->mode == MBEDTLS_MODE_XTS )
+    529              {
+    530                  if( ctx->unprocessed_len > 0 ) {
+    531                      /* We can only process an entire data unit at a time. */
+    532                      return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+    533                  }
+    534          
+    535                  ret = ctx->cipher_info->base->xts_func( ctx->cipher_ctx,
+    536                          ctx->operation, ilen, ctx->iv, input, output );
+    537                  if( ret != 0 )
+    538                  {
+    539                      return( ret );
+    540                  }
+    541          
+    542                  *olen = ilen;
+    543          
+    544                  return( 0 );
+    545              }
+    546          #endif /* MBEDTLS_CIPHER_MODE_XTS */
+    547          
+    548          #if defined(MBEDTLS_CIPHER_MODE_STREAM)
+    549              if( ctx->cipher_info->mode == MBEDTLS_MODE_STREAM )
+    550              {
+    551                  if( 0 != ( ret = ctx->cipher_info->base->stream_func( ctx->cipher_ctx,
+    552                                                              ilen, input, output ) ) )
+    553                  {
+    554                      return( ret );
+    555                  }
+    556          
+    557                  *olen = ilen;
+    558          
+    559                  return( 0 );
+    560              }
+    561          #endif /* MBEDTLS_CIPHER_MODE_STREAM */
+    562          
+    563              return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+   \                     ??mbedtls_cipher_update_19: (+1)
+   \      0x21E   0x....'....        LDR.W    R0,??DataTable21_5  ;; 0xffff9f80
+   \                     ??mbedtls_cipher_update_3: (+1)
+   \      0x222   0xB004             ADD      SP,SP,#+16
+   \      0x224   0xE8BD 0x87F0      POP      {R4-R10,PC}      ;; return
+    564          }
+    565          
+    566          #if defined(MBEDTLS_CIPHER_MODE_WITH_PADDING)
+    567          #if defined(MBEDTLS_CIPHER_PADDING_PKCS7)
+    568          /*
+    569           * PKCS7 (and PKCS5) padding: fill with ll bytes, with ll = padding_len
+    570           */
+
+   \                                 In section .text, align 2, keep-with-next
+    571          static void add_pkcs_padding( unsigned char *output, size_t output_len,
+    572                  size_t data_len )
+    573          {
+   \                     add_pkcs_padding: (+1)
+   \        0x0   0xB410             PUSH     {R4}
+    574              size_t padding_len = output_len - data_len;
+   \        0x2   0x1A89             SUBS     R1,R1,R2
+    575              unsigned char i;
+    576          
+    577              for( i = 0; i < padding_len; i++ )
+   \        0x4   0x2300             MOVS     R3,#+0
+   \        0x6   0xE003             B.N      ??add_pkcs_padding_0
+    578                  output[data_len + i] = (unsigned char) padding_len;
+   \                     ??add_pkcs_padding_1: (+1)
+   \        0x8   0xFA52 0xF483      UXTAB    R4,R2,R3
+   \        0xC   0x5501             STRB     R1,[R0, R4]
+   \        0xE   0x1C5B             ADDS     R3,R3,#+1
+   \                     ??add_pkcs_padding_0: (+1)
+   \       0x10   0x461C             MOV      R4,R3
+   \       0x12   0xB2E4             UXTB     R4,R4
+   \       0x14   0x428C             CMP      R4,R1
+   \       0x16   0xD3F7             BCC.N    ??add_pkcs_padding_1
+    579          }
+   \       0x18   0xBC10             POP      {R4}
+   \       0x1A   0x4770             BX       LR               ;; return
+    580          
+
+   \                                 In section .text, align 2, keep-with-next
+    581          static int get_pkcs_padding( unsigned char *input, size_t input_len,
+    582                  size_t *data_len )
+    583          {
+   \                     get_pkcs_padding: (+1)
+   \        0x0   0xB4F0             PUSH     {R4-R7}
+    584              size_t i, pad_idx;
+    585              unsigned char padding_len, bad = 0;
+    586          
+    587              if( NULL == input || NULL == data_len )
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD001             BEQ.N    ??get_pkcs_padding_0
+   \        0x6   0x2A00             CMP      R2,#+0
+   \        0x8   0xD102             BNE.N    ??get_pkcs_padding_1
+    588                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??get_pkcs_padding_0: (+1)
+   \        0xA   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \        0xE   0xE024             B.N      ??get_pkcs_padding_2
+    589          
+    590              padding_len = input[input_len - 1];
+   \                     ??get_pkcs_padding_1: (+1)
+   \       0x10   0x1843             ADDS     R3,R0,R1
+   \       0x12   0xF813 0x3C01      LDRB     R3,[R3, #-1]
+    591              *data_len = input_len - padding_len;
+   \       0x16   0x1ACC             SUBS     R4,R1,R3
+   \       0x18   0x6014             STR      R4,[R2, #+0]
+    592          
+    593              /* Avoid logical || since it results in a branch */
+    594              bad |= padding_len > input_len;
+   \       0x1A   0x4192             SBCS     R2,R2,R2
+    595              bad |= padding_len == 0;
+   \       0x1C   0x461C             MOV      R4,R3
+   \       0x1E   0x1E64             SUBS     R4,R4,#+1
+   \       0x20   0x41A4             SBCS     R4,R4,R4
+   \       0x22   0x0FE4             LSRS     R4,R4,#+31
+   \       0x24   0xEA54 0x72D2      ORRS     R2,R4,R2, LSR #+31
+    596          
+    597              /* The number of bytes checked must be independent of padding_len,
+    598               * so pick input_len, which is usually 8 or 16 (one block) */
+    599              pad_idx = input_len - padding_len;
+   \       0x28   0x1ACC             SUBS     R4,R1,R3
+    600              for( i = 0; i < input_len; i++ )
+   \       0x2A   0x2500             MOVS     R5,#+0
+   \       0x2C   0xE009             B.N      ??get_pkcs_padding_3
+    601                  bad |= ( input[i] ^ padding_len ) * ( i >= pad_idx );
+   \                     ??get_pkcs_padding_4: (+1)
+   \       0x2E   0x42A5             CMP      R5,R4
+   \       0x30   0x41B6             SBCS     R6,R6,R6
+   \       0x32   0x43F6             MVNS     R6,R6
+   \       0x34   0x0FF6             LSRS     R6,R6,#+31
+   \       0x36   0x5D47             LDRB     R7,[R0, R5]
+   \       0x38   0x405F             EORS     R7,R3,R7
+   \       0x3A   0xFB16 0xF607      SMULBB   R6,R6,R7
+   \       0x3E   0x4332             ORRS     R2,R6,R2
+   \       0x40   0x1C6D             ADDS     R5,R5,#+1
+   \                     ??get_pkcs_padding_3: (+1)
+   \       0x42   0x428D             CMP      R5,R1
+   \       0x44   0xD3F3             BCC.N    ??get_pkcs_padding_4
+    602          
+    603              return( MBEDTLS_ERR_CIPHER_INVALID_PADDING * ( bad != 0 ) );
+   \       0x46   0x4610             MOV      R0,R2
+   \       0x48   0xB2C0             UXTB     R0,R0
+   \       0x4A   0x1E40             SUBS     R0,R0,#+1
+   \       0x4C   0x4180             SBCS     R0,R0,R0
+   \       0x4E   0x43C0             MVNS     R0,R0
+   \       0x50   0x0FC0             LSRS     R0,R0,#+31
+   \       0x52   0x....'....        LDR.W    R1,??DataTable21_8  ;; 0xffff9e00
+   \       0x56   0xFB11 0xF000      SMULBB   R0,R1,R0
+   \                     ??get_pkcs_padding_2: (+1)
+   \       0x5A   0xBCF0             POP      {R4-R7}
+   \       0x5C   0x4770             BX       LR               ;; return
+    604          }
+    605          #endif /* MBEDTLS_CIPHER_PADDING_PKCS7 */
+    606          
+    607          #if defined(MBEDTLS_CIPHER_PADDING_ONE_AND_ZEROS)
+    608          /*
+    609           * One and zeros padding: fill with 80 00 ... 00
+    610           */
+
+   \                                 In section .text, align 2, keep-with-next
+    611          static void add_one_and_zeros_padding( unsigned char *output,
+    612                                                 size_t output_len, size_t data_len )
+    613          {
+   \                     add_one_and_zeros_padding: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+    614              size_t padding_len = output_len - data_len;
+   \        0x2   0x1A89             SUBS     R1,R1,R2
+    615              unsigned char i = 0;
+    616          
+    617              output[data_len] = 0x80;
+   \        0x4   0x2380             MOVS     R3,#+128
+   \        0x6   0x5483             STRB     R3,[R0, R2]
+    618              for( i = 1; i < padding_len; i++ )
+   \        0x8   0x2301             MOVS     R3,#+1
+   \        0xA   0xE004             B.N      ??add_one_and_zeros_padding_0
+    619                  output[data_len + i] = 0x00;
+   \                     ??add_one_and_zeros_padding_1: (+1)
+   \        0xC   0x2400             MOVS     R4,#+0
+   \        0xE   0xFA52 0xF583      UXTAB    R5,R2,R3
+   \       0x12   0x5544             STRB     R4,[R0, R5]
+   \       0x14   0x1C5B             ADDS     R3,R3,#+1
+   \                     ??add_one_and_zeros_padding_0: (+1)
+   \       0x16   0x461C             MOV      R4,R3
+   \       0x18   0xB2E4             UXTB     R4,R4
+   \       0x1A   0x428C             CMP      R4,R1
+   \       0x1C   0xD3F6             BCC.N    ??add_one_and_zeros_padding_1
+    620          }
+   \       0x1E   0xBC30             POP      {R4,R5}
+   \       0x20   0x4770             BX       LR               ;; return
+    621          
+
+   \                                 In section .text, align 2, keep-with-next
+    622          static int get_one_and_zeros_padding( unsigned char *input, size_t input_len,
+    623                                                size_t *data_len )
+    624          {
+   \                     get_one_and_zeros_padding: (+1)
+   \        0x0   0xB4F0             PUSH     {R4-R7}
+    625              size_t i;
+    626              unsigned char done = 0, prev_done, bad;
+   \        0x2   0x2400             MOVS     R4,#+0
+    627          
+    628              if( NULL == input || NULL == data_len )
+   \        0x4   0x2800             CMP      R0,#+0
+   \        0x6   0xD001             BEQ.N    ??get_one_and_zeros_padding_0
+   \        0x8   0x2A00             CMP      R2,#+0
+   \        0xA   0xD102             BNE.N    ??get_one_and_zeros_padding_1
+    629                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??get_one_and_zeros_padding_0: (+1)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x10   0xE030             B.N      ??get_one_and_zeros_padding_2
+    630          
+    631              bad = 0x80;
+   \                     ??get_one_and_zeros_padding_1: (+1)
+   \       0x12   0x2380             MOVS     R3,#+128
+    632              *data_len = 0;
+   \       0x14   0x4625             MOV      R5,R4
+   \       0x16   0x6015             STR      R5,[R2, #+0]
+    633              for( i = input_len; i > 0; i-- )
+   \       0x18   0x2900             CMP      R1,#+0
+   \       0x1A   0xE013             B.N      ??get_one_and_zeros_padding_3
+    634              {
+    635                  prev_done = done;
+    636                  done |= ( input[i - 1] != 0 );
+    637                  *data_len |= ( i - 1 ) * ( done != prev_done );
+    638                  bad ^= input[i - 1] * ( done != prev_done );
+   \                     ??get_one_and_zeros_padding_4: (+1)
+   \       0x1C   0x2500             MOVS     R5,#+0
+   \       0x1E   0xE00A             B.N      ??get_one_and_zeros_padding_5
+   \                     ??get_one_and_zeros_padding_6: (+1)
+   \       0x20   0x2600             MOVS     R6,#+0
+   \                     ??get_one_and_zeros_padding_7: (+1)
+   \       0x22   0x6817             LDR      R7,[R2, #+0]
+   \       0x24   0xF1A1 0x0C01      SUB      R12,R1,#+1
+   \       0x28   0xFB06 0xF60C      MUL      R6,R6,R12
+   \       0x2C   0x433E             ORRS     R6,R6,R7
+   \       0x2E   0x6016             STR      R6,[R2, #+0]
+   \       0x30   0x42AC             CMP      R4,R5
+   \       0x32   0xD0F3             BEQ.N    ??get_one_and_zeros_padding_4
+   \       0x34   0x2501             MOVS     R5,#+1
+   \                     ??get_one_and_zeros_padding_5: (+1)
+   \       0x36   0x1846             ADDS     R6,R0,R1
+   \       0x38   0xF816 0x6C01      LDRB     R6,[R6, #-1]
+   \       0x3C   0xFB15 0xF506      SMULBB   R5,R5,R6
+   \       0x40   0x406B             EORS     R3,R5,R3
+   \       0x42   0x1E49             SUBS     R1,R1,#+1
+   \                     ??get_one_and_zeros_padding_3: (+1)
+   \       0x44   0xD00C             BEQ.N    ??get_one_and_zeros_padding_8
+   \       0x46   0x4625             MOV      R5,R4
+   \       0x48   0x1846             ADDS     R6,R0,R1
+   \       0x4A   0xF816 0x6C01      LDRB     R6,[R6, #-1]
+   \       0x4E   0x1E76             SUBS     R6,R6,#+1
+   \       0x50   0x41B6             SBCS     R6,R6,R6
+   \       0x52   0x43F6             MVNS     R6,R6
+   \       0x54   0xEA54 0x74D6      ORRS     R4,R4,R6, LSR #+31
+   \       0x58   0x42AC             CMP      R4,R5
+   \       0x5A   0xD0E1             BEQ.N    ??get_one_and_zeros_padding_6
+   \       0x5C   0x2601             MOVS     R6,#+1
+   \       0x5E   0xE7E0             B.N      ??get_one_and_zeros_padding_7
+    639              }
+    640          
+    641              return( MBEDTLS_ERR_CIPHER_INVALID_PADDING * ( bad != 0 ) );
+   \                     ??get_one_and_zeros_padding_8: (+1)
+   \       0x60   0x4618             MOV      R0,R3
+   \       0x62   0xB2C0             UXTB     R0,R0
+   \       0x64   0x1E40             SUBS     R0,R0,#+1
+   \       0x66   0x4180             SBCS     R0,R0,R0
+   \       0x68   0x43C0             MVNS     R0,R0
+   \       0x6A   0x0FC0             LSRS     R0,R0,#+31
+   \       0x6C   0x....'....        LDR.W    R1,??DataTable21_8  ;; 0xffff9e00
+   \       0x70   0xFB11 0xF000      SMULBB   R0,R1,R0
+   \                     ??get_one_and_zeros_padding_2: (+1)
+   \       0x74   0xBCF0             POP      {R4-R7}
+   \       0x76   0x4770             BX       LR               ;; return
+    642          
+    643          }
+    644          #endif /* MBEDTLS_CIPHER_PADDING_ONE_AND_ZEROS */
+    645          
+    646          #if defined(MBEDTLS_CIPHER_PADDING_ZEROS_AND_LEN)
+    647          /*
+    648           * Zeros and len padding: fill with 00 ... 00 ll, where ll is padding length
+    649           */
+
+   \                                 In section .text, align 2, keep-with-next
+    650          static void add_zeros_and_len_padding( unsigned char *output,
+    651                                                 size_t output_len, size_t data_len )
+    652          {
+   \                     add_zeros_and_len_padding: (+1)
+   \        0x0   0xB470             PUSH     {R4-R6}
+    653              size_t padding_len = output_len - data_len;
+   \        0x2   0x1A8B             SUBS     R3,R1,R2
+    654              unsigned char i = 0;
+    655          
+    656              for( i = 1; i < padding_len; i++ )
+   \        0x4   0x2401             MOVS     R4,#+1
+   \        0x6   0x2600             MOVS     R6,#+0
+   \        0x8   0xE005             B.N      ??add_zeros_and_len_padding_0
+    657                  output[data_len + i - 1] = 0x00;
+   \                     ??add_zeros_and_len_padding_1: (+1)
+   \        0xA   0xFA52 0xF584      UXTAB    R5,R2,R4
+   \        0xE   0x4405             ADD      R5,R0,R5
+   \       0x10   0xF805 0x6C01      STRB     R6,[R5, #-1]
+   \       0x14   0x1C64             ADDS     R4,R4,#+1
+   \                     ??add_zeros_and_len_padding_0: (+1)
+   \       0x16   0x4625             MOV      R5,R4
+   \       0x18   0xB2ED             UXTB     R5,R5
+   \       0x1A   0x429D             CMP      R5,R3
+   \       0x1C   0xD3F5             BCC.N    ??add_zeros_and_len_padding_1
+    658              output[output_len - 1] = (unsigned char) padding_len;
+   \       0x1E   0x4408             ADD      R0,R0,R1
+   \       0x20   0xF800 0x3C01      STRB     R3,[R0, #-1]
+    659          }
+   \       0x24   0xBC70             POP      {R4-R6}
+   \       0x26   0x4770             BX       LR               ;; return
+    660          
+
+   \                                 In section .text, align 2, keep-with-next
+    661          static int get_zeros_and_len_padding( unsigned char *input, size_t input_len,
+    662                                                size_t *data_len )
+    663          {
+   \                     get_zeros_and_len_padding: (+1)
+   \        0x0   0xB470             PUSH     {R4-R6}
+    664              size_t i, pad_idx;
+    665              unsigned char padding_len, bad = 0;
+    666          
+    667              if( NULL == input || NULL == data_len )
+   \        0x2   0x2800             CMP      R0,#+0
+   \        0x4   0xD001             BEQ.N    ??get_zeros_and_len_padding_0
+   \        0x6   0x2A00             CMP      R2,#+0
+   \        0x8   0xD102             BNE.N    ??get_zeros_and_len_padding_1
+    668                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??get_zeros_and_len_padding_0: (+1)
+   \        0xA   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \        0xE   0xE024             B.N      ??get_zeros_and_len_padding_2
+    669          
+    670              padding_len = input[input_len - 1];
+   \                     ??get_zeros_and_len_padding_1: (+1)
+   \       0x10   0x1843             ADDS     R3,R0,R1
+   \       0x12   0xF813 0x3C01      LDRB     R3,[R3, #-1]
+    671              *data_len = input_len - padding_len;
+   \       0x16   0x1ACC             SUBS     R4,R1,R3
+   \       0x18   0x6014             STR      R4,[R2, #+0]
+    672          
+    673              /* Avoid logical || since it results in a branch */
+    674              bad |= padding_len > input_len;
+   \       0x1A   0x4192             SBCS     R2,R2,R2
+    675              bad |= padding_len == 0;
+   \       0x1C   0x461C             MOV      R4,R3
+   \       0x1E   0x1E64             SUBS     R4,R4,#+1
+   \       0x20   0x41A4             SBCS     R4,R4,R4
+   \       0x22   0x0FE4             LSRS     R4,R4,#+31
+   \       0x24   0xEA54 0x72D2      ORRS     R2,R4,R2, LSR #+31
+    676          
+    677              /* The number of bytes checked must be independent of padding_len */
+    678              pad_idx = input_len - padding_len;
+   \       0x28   0x1ACB             SUBS     R3,R1,R3
+    679              for( i = 0; i < input_len - 1; i++ )
+   \       0x2A   0x2400             MOVS     R4,#+0
+   \       0x2C   0xE008             B.N      ??get_zeros_and_len_padding_3
+    680                  bad |= input[i] * ( i >= pad_idx );
+   \                     ??get_zeros_and_len_padding_4: (+1)
+   \       0x2E   0x429C             CMP      R4,R3
+   \       0x30   0x41AD             SBCS     R5,R5,R5
+   \       0x32   0x43ED             MVNS     R5,R5
+   \       0x34   0x0FED             LSRS     R5,R5,#+31
+   \       0x36   0x5D06             LDRB     R6,[R0, R4]
+   \       0x38   0xFB15 0xF506      SMULBB   R5,R5,R6
+   \       0x3C   0x432A             ORRS     R2,R5,R2
+   \       0x3E   0x1C64             ADDS     R4,R4,#+1
+   \                     ??get_zeros_and_len_padding_3: (+1)
+   \       0x40   0x1E4D             SUBS     R5,R1,#+1
+   \       0x42   0x42AC             CMP      R4,R5
+   \       0x44   0xD3F3             BCC.N    ??get_zeros_and_len_padding_4
+    681          
+    682              return( MBEDTLS_ERR_CIPHER_INVALID_PADDING * ( bad != 0 ) );
+   \       0x46   0x4610             MOV      R0,R2
+   \       0x48   0xB2C0             UXTB     R0,R0
+   \       0x4A   0x1E40             SUBS     R0,R0,#+1
+   \       0x4C   0x4180             SBCS     R0,R0,R0
+   \       0x4E   0x43C0             MVNS     R0,R0
+   \       0x50   0x0FC0             LSRS     R0,R0,#+31
+   \       0x52   0x....'....        LDR.W    R1,??DataTable21_8  ;; 0xffff9e00
+   \       0x56   0xFB11 0xF000      SMULBB   R0,R1,R0
+   \                     ??get_zeros_and_len_padding_2: (+1)
+   \       0x5A   0xBC70             POP      {R4-R6}
+   \       0x5C   0x4770             BX       LR               ;; return
+    683          }
+    684          #endif /* MBEDTLS_CIPHER_PADDING_ZEROS_AND_LEN */
+    685          
+    686          #if defined(MBEDTLS_CIPHER_PADDING_ZEROS)
+    687          /*
+    688           * Zero padding: fill with 00 ... 00
+    689           */
+
+   \                                 In section .text, align 2, keep-with-next
+    690          static void add_zeros_padding( unsigned char *output,
+    691                                         size_t output_len, size_t data_len )
+    692          {
+    693              size_t i;
+    694          
+    695              for( i = data_len; i < output_len; i++ )
+   \                     add_zeros_padding: (+1)
+   \        0x0   0x2300             MOVS     R3,#+0
+   \        0x2   0xE001             B.N      ??add_zeros_padding_0
+    696                  output[i] = 0x00;
+   \                     ??add_zeros_padding_1: (+1)
+   \        0x4   0x5483             STRB     R3,[R0, R2]
+   \        0x6   0x1C52             ADDS     R2,R2,#+1
+   \                     ??add_zeros_padding_0: (+1)
+   \        0x8   0x428A             CMP      R2,R1
+   \        0xA   0xD3FB             BCC.N    ??add_zeros_padding_1
+    697          }
+   \        0xC   0x4770             BX       LR               ;; return
+    698          
+
+   \                                 In section .text, align 2, keep-with-next
+    699          static int get_zeros_padding( unsigned char *input, size_t input_len,
+    700                                        size_t *data_len )
+    701          {
+   \                     get_zeros_padding: (+1)
+   \        0x0   0xB430             PUSH     {R4,R5}
+    702              size_t i;
+    703              unsigned char done = 0, prev_done;
+   \        0x2   0x2300             MOVS     R3,#+0
+    704          
+    705              if( NULL == input || NULL == data_len )
+   \        0x4   0x2800             CMP      R0,#+0
+   \        0x6   0xD001             BEQ.N    ??get_zeros_padding_0
+   \        0x8   0x2A00             CMP      R2,#+0
+   \        0xA   0xD102             BNE.N    ??get_zeros_padding_1
+    706                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??get_zeros_padding_0: (+1)
+   \        0xC   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x10   0xE01B             B.N      ??get_zeros_padding_2
+    707          
+    708              *data_len = 0;
+   \                     ??get_zeros_padding_1: (+1)
+   \       0x12   0x461C             MOV      R4,R3
+   \       0x14   0x6014             STR      R4,[R2, #+0]
+    709              for( i = input_len; i > 0; i-- )
+   \                     ??get_zeros_padding_3: (+1)
+   \       0x16   0x2900             CMP      R1,#+0
+   \       0x18   0xD016             BEQ.N    ??get_zeros_padding_4
+    710              {
+    711                  prev_done = done;
+   \       0x1A   0x461C             MOV      R4,R3
+    712                  done |= ( input[i-1] != 0 );
+   \       0x1C   0x1845             ADDS     R5,R0,R1
+   \       0x1E   0xF815 0x5C01      LDRB     R5,[R5, #-1]
+   \       0x22   0x1E6D             SUBS     R5,R5,#+1
+   \       0x24   0x41AD             SBCS     R5,R5,R5
+   \       0x26   0x43ED             MVNS     R5,R5
+   \       0x28   0xEA53 0x73D5      ORRS     R3,R3,R5, LSR #+31
+    713                  *data_len |= i * ( done != prev_done );
+   \       0x2C   0x461D             MOV      R5,R3
+   \       0x2E   0xB2ED             UXTB     R5,R5
+   \       0x30   0xB2E4             UXTB     R4,R4
+   \       0x32   0x42A5             CMP      R5,R4
+   \       0x34   0xD101             BNE.N    ??get_zeros_padding_5
+   \       0x36   0x2400             MOVS     R4,#+0
+   \       0x38   0xE000             B.N      ??get_zeros_padding_6
+   \                     ??get_zeros_padding_5: (+1)
+   \       0x3A   0x2401             MOVS     R4,#+1
+   \                     ??get_zeros_padding_6: (+1)
+   \       0x3C   0x6815             LDR      R5,[R2, #+0]
+   \       0x3E   0x434C             MULS     R4,R4,R1
+   \       0x40   0x432C             ORRS     R4,R4,R5
+   \       0x42   0x6014             STR      R4,[R2, #+0]
+    714              }
+   \       0x44   0x1E49             SUBS     R1,R1,#+1
+   \       0x46   0xE7E6             B.N      ??get_zeros_padding_3
+    715          
+    716              return( 0 );
+   \                     ??get_zeros_padding_4: (+1)
+   \       0x48   0x2000             MOVS     R0,#+0
+   \                     ??get_zeros_padding_2: (+1)
+   \       0x4A   0xBC30             POP      {R4,R5}
+   \       0x4C   0x4770             BX       LR               ;; return
+    717          }
+    718          #endif /* MBEDTLS_CIPHER_PADDING_ZEROS */
+    719          
+    720          /*
+    721           * No padding: don't pad :)
+    722           *
+    723           * There is no add_padding function (check for NULL in mbedtls_cipher_finish)
+    724           * but a trivial get_padding function
+    725           */
+
+   \                                 In section .text, align 2, keep-with-next
+    726          static int get_no_padding( unsigned char *input, size_t input_len,
+    727                                        size_t *data_len )
+    728          {
+    729              if( NULL == input || NULL == data_len )
+   \                     get_no_padding: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD001             BEQ.N    ??get_no_padding_0
+   \        0x4   0x2A00             CMP      R2,#+0
+   \        0x6   0xD102             BNE.N    ??get_no_padding_1
+    730                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??get_no_padding_0: (+1)
+   \        0x8   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \        0xC   0x4770             BX       LR
+    731          
+    732              *data_len = input_len;
+   \                     ??get_no_padding_1: (+1)
+   \        0xE   0x6011             STR      R1,[R2, #+0]
+    733          
+    734              return( 0 );
+   \       0x10   0x2000             MOVS     R0,#+0
+   \       0x12   0x4770             BX       LR               ;; return
+    735          }
+    736          #endif /* MBEDTLS_CIPHER_MODE_WITH_PADDING */
+    737          
+
+   \                                 In section .text, align 2, keep-with-next
+    738          int mbedtls_cipher_finish( mbedtls_cipher_context_t *ctx,
+    739                             unsigned char *output, size_t *olen )
+    740          {
+   \                     mbedtls_cipher_finish: (+1)
+   \        0x0   0xB5FE             PUSH     {R1-R7,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x460E             MOV      R6,R1
+   \        0x6   0x4615             MOV      R5,R2
+    741              if( NULL == ctx || NULL == ctx->cipher_info || NULL == olen )
+   \        0x8   0x2C00             CMP      R4,#+0
+   \        0xA   0xD004             BEQ.N    ??mbedtls_cipher_finish_0
+   \        0xC   0x6820             LDR      R0,[R4, #+0]
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD001             BEQ.N    ??mbedtls_cipher_finish_0
+   \       0x12   0x2D00             CMP      R5,#+0
+   \       0x14   0xD102             BNE.N    ??mbedtls_cipher_finish_1
+    742                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_finish_0: (+1)
+   \       0x16   0x....'....        LDR.W    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x1A   0xBDFE             POP      {R1-R7,PC}
+    743          
+    744              *olen = 0;
+   \                     ??mbedtls_cipher_finish_1: (+1)
+   \       0x1C   0x2000             MOVS     R0,#+0
+   \       0x1E   0x6028             STR      R0,[R5, #+0]
+    745          
+    746              if( MBEDTLS_MODE_CFB == ctx->cipher_info->mode ||
+    747                  MBEDTLS_MODE_OFB == ctx->cipher_info->mode ||
+    748                  MBEDTLS_MODE_CTR == ctx->cipher_info->mode ||
+    749                  MBEDTLS_MODE_GCM == ctx->cipher_info->mode ||
+    750                  MBEDTLS_MODE_XTS == ctx->cipher_info->mode ||
+    751                  MBEDTLS_MODE_STREAM == ctx->cipher_info->mode )
+   \       0x20   0x6820             LDR      R0,[R4, #+0]
+   \       0x22   0x7840             LDRB     R0,[R0, #+1]
+   \       0x24   0x2803             CMP      R0,#+3
+   \       0x26   0xD013             BEQ.N    ??mbedtls_cipher_finish_2
+   \       0x28   0x6820             LDR      R0,[R4, #+0]
+   \       0x2A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x2C   0x2804             CMP      R0,#+4
+   \       0x2E   0xD00F             BEQ.N    ??mbedtls_cipher_finish_2
+   \       0x30   0x6820             LDR      R0,[R4, #+0]
+   \       0x32   0x7840             LDRB     R0,[R0, #+1]
+   \       0x34   0x2805             CMP      R0,#+5
+   \       0x36   0xD00B             BEQ.N    ??mbedtls_cipher_finish_2
+   \       0x38   0x6820             LDR      R0,[R4, #+0]
+   \       0x3A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x3C   0x2806             CMP      R0,#+6
+   \       0x3E   0xD007             BEQ.N    ??mbedtls_cipher_finish_2
+   \       0x40   0x6820             LDR      R0,[R4, #+0]
+   \       0x42   0x7840             LDRB     R0,[R0, #+1]
+   \       0x44   0x2809             CMP      R0,#+9
+   \       0x46   0xD003             BEQ.N    ??mbedtls_cipher_finish_2
+   \       0x48   0x6820             LDR      R0,[R4, #+0]
+   \       0x4A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x4C   0x2807             CMP      R0,#+7
+   \       0x4E   0xD101             BNE.N    ??mbedtls_cipher_finish_3
+    752              {
+    753                  return( 0 );
+   \                     ??mbedtls_cipher_finish_2: (+1)
+   \       0x50   0x2000             MOVS     R0,#+0
+   \       0x52   0xBDFE             POP      {R1-R7,PC}
+    754              }
+    755          
+    756              if ( ( MBEDTLS_CIPHER_CHACHA20          == ctx->cipher_info->type ) ||
+    757                   ( MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type ) )
+   \                     ??mbedtls_cipher_finish_3: (+1)
+   \       0x54   0x6820             LDR      R0,[R4, #+0]
+   \       0x56   0x7800             LDRB     R0,[R0, #+0]
+   \       0x58   0x2848             CMP      R0,#+72
+   \       0x5A   0xD003             BEQ.N    ??mbedtls_cipher_finish_4
+   \       0x5C   0x6820             LDR      R0,[R4, #+0]
+   \       0x5E   0x7800             LDRB     R0,[R0, #+0]
+   \       0x60   0x2849             CMP      R0,#+73
+   \       0x62   0xD101             BNE.N    ??mbedtls_cipher_finish_5
+    758              {
+    759                  return( 0 );
+   \                     ??mbedtls_cipher_finish_4: (+1)
+   \       0x64   0x2000             MOVS     R0,#+0
+   \       0x66   0xBDFE             POP      {R1-R7,PC}
+    760              }
+    761          
+    762              if( MBEDTLS_MODE_ECB == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_finish_5: (+1)
+   \       0x68   0x6820             LDR      R0,[R4, #+0]
+   \       0x6A   0x7840             LDRB     R0,[R0, #+1]
+   \       0x6C   0x2801             CMP      R0,#+1
+   \       0x6E   0xD106             BNE.N    ??mbedtls_cipher_finish_6
+    763              {
+    764                  if( ctx->unprocessed_len != 0 )
+   \       0x70   0x6A60             LDR      R0,[R4, #+36]
+   \       0x72   0x2800             CMP      R0,#+0
+   \       0x74   0xD001             BEQ.N    ??mbedtls_cipher_finish_7
+    765                      return( MBEDTLS_ERR_CIPHER_FULL_BLOCK_EXPECTED );
+   \       0x76   0x....             LDR.N    R0,??DataTable21_6  ;; 0xffff9d80
+   \       0x78   0xBDFE             POP      {R1-R7,PC}
+    766          
+    767                  return( 0 );
+   \                     ??mbedtls_cipher_finish_7: (+1)
+   \       0x7A   0x2000             MOVS     R0,#+0
+   \       0x7C   0xBDFE             POP      {R1-R7,PC}
+    768              }
+    769          
+    770          #if defined(MBEDTLS_CIPHER_MODE_CBC)
+    771              if( MBEDTLS_MODE_CBC == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_finish_6: (+1)
+   \       0x7E   0x6820             LDR      R0,[R4, #+0]
+   \       0x80   0x7840             LDRB     R0,[R0, #+1]
+   \       0x82   0x2802             CMP      R0,#+2
+   \       0x84   0xD14E             BNE.N    ??mbedtls_cipher_finish_8
+    772              {
+    773                  int ret = 0;
+    774          
+    775                  if( MBEDTLS_ENCRYPT == ctx->operation )
+   \       0x86   0xF994 0x0008      LDRSB    R0,[R4, #+8]
+   \       0x8A   0x2801             CMP      R0,#+1
+   \       0x8C   0xD126             BNE.N    ??mbedtls_cipher_finish_9
+    776                  {
+    777                      /* check for 'no padding' mode */
+    778                      if( NULL == ctx->add_padding )
+   \       0x8E   0x68E0             LDR      R0,[R4, #+12]
+   \       0x90   0x2800             CMP      R0,#+0
+   \       0x92   0xD106             BNE.N    ??mbedtls_cipher_finish_10
+    779                      {
+    780                          if( 0 != ctx->unprocessed_len )
+   \       0x94   0x6A60             LDR      R0,[R4, #+36]
+   \       0x96   0x2800             CMP      R0,#+0
+   \       0x98   0xD001             BEQ.N    ??mbedtls_cipher_finish_11
+    781                              return( MBEDTLS_ERR_CIPHER_FULL_BLOCK_EXPECTED );
+   \       0x9A   0x....             LDR.N    R0,??DataTable21_6  ;; 0xffff9d80
+   \       0x9C   0xBDFE             POP      {R1-R7,PC}
+    782          
+    783                          return( 0 );
+   \                     ??mbedtls_cipher_finish_11: (+1)
+   \       0x9E   0x2000             MOVS     R0,#+0
+   \       0xA0   0xBDFE             POP      {R1-R7,PC}
+    784                      }
+    785          
+    786                      ctx->add_padding( ctx->unprocessed_data, mbedtls_cipher_get_iv_size( ctx ),
+    787                              ctx->unprocessed_len );
+   \                     ??mbedtls_cipher_finish_10: (+1)
+   \       0xA2   0x4620             MOV      R0,R4
+   \       0xA4   0x....'....        BL       mbedtls_cipher_get_iv_size
+   \       0xA8   0x6A62             LDR      R2,[R4, #+36]
+   \       0xAA   0x4601             MOV      R1,R0
+   \       0xAC   0xF104 0x0014      ADD      R0,R4,#+20
+   \       0xB0   0x68E3             LDR      R3,[R4, #+12]
+   \       0xB2   0x4798             BLX      R3
+    788                  }
+    789                  else if( mbedtls_cipher_get_block_size( ctx ) != ctx->unprocessed_len )
+    790                  {
+    791                      /*
+    792                       * For decrypt operations, expect a full block,
+    793                       * or an empty block if no padding
+    794                       */
+    795                      if( NULL == ctx->add_padding && 0 == ctx->unprocessed_len )
+    796                          return( 0 );
+    797          
+    798                      return( MBEDTLS_ERR_CIPHER_FULL_BLOCK_EXPECTED );
+    799                  }
+    800          
+    801                  /* cipher block */
+    802                  if( 0 != ( ret = ctx->cipher_info->base->cbc_func( ctx->cipher_ctx,
+    803                          ctx->operation, mbedtls_cipher_get_block_size( ctx ), ctx->iv,
+    804                          ctx->unprocessed_data, output ) ) )
+   \                     ??mbedtls_cipher_finish_12: (+1)
+   \       0xB4   0x4620             MOV      R0,R4
+   \       0xB6   0x....'....        BL       mbedtls_cipher_get_block_size
+   \       0xBA   0x9601             STR      R6,[SP, #+4]
+   \       0xBC   0xF104 0x0114      ADD      R1,R4,#+20
+   \       0xC0   0x9100             STR      R1,[SP, #+0]
+   \       0xC2   0xF104 0x0328      ADD      R3,R4,#+40
+   \       0xC6   0x4602             MOV      R2,R0
+   \       0xC8   0xF994 0x1008      LDRSB    R1,[R4, #+8]
+   \       0xCC   0x6BE0             LDR      R0,[R4, #+60]
+   \       0xCE   0x6827             LDR      R7,[R4, #+0]
+   \       0xD0   0x69BF             LDR      R7,[R7, #+24]
+   \       0xD2   0x68BF             LDR      R7,[R7, #+8]
+   \       0xD4   0x47B8             BLX      R7
+   \       0xD6   0x2800             CMP      R0,#+0
+   \       0xD8   0xD010             BEQ.N    ??mbedtls_cipher_finish_13
+    805                  {
+    806                      return( ret );
+   \       0xDA   0xBDFE             POP      {R1-R7,PC}
+    807                  }
+   \                     ??mbedtls_cipher_finish_9: (+1)
+   \       0xDC   0x4620             MOV      R0,R4
+   \       0xDE   0x....'....        BL       mbedtls_cipher_get_block_size
+   \       0xE2   0x6A61             LDR      R1,[R4, #+36]
+   \       0xE4   0x4288             CMP      R0,R1
+   \       0xE6   0xD0E5             BEQ.N    ??mbedtls_cipher_finish_12
+   \       0xE8   0x68E0             LDR      R0,[R4, #+12]
+   \       0xEA   0x2800             CMP      R0,#+0
+   \       0xEC   0xD104             BNE.N    ??mbedtls_cipher_finish_14
+   \       0xEE   0x4608             MOV      R0,R1
+   \       0xF0   0x2800             CMP      R0,#+0
+   \       0xF2   0xD101             BNE.N    ??mbedtls_cipher_finish_14
+   \       0xF4   0x2000             MOVS     R0,#+0
+   \       0xF6   0xBDFE             POP      {R1-R7,PC}
+   \                     ??mbedtls_cipher_finish_14: (+1)
+   \       0xF8   0x....             LDR.N    R0,??DataTable21_6  ;; 0xffff9d80
+   \       0xFA   0xBDFE             POP      {R1-R7,PC}
+    808          
+    809                  /* Set output size for decryption */
+    810                  if( MBEDTLS_DECRYPT == ctx->operation )
+   \                     ??mbedtls_cipher_finish_13: (+1)
+   \       0xFC   0xF994 0x0008      LDRSB    R0,[R4, #+8]
+   \      0x100   0x2800             CMP      R0,#+0
+   \      0x102   0x4620             MOV      R0,R4
+   \      0x104   0xD109             BNE.N    ??mbedtls_cipher_finish_15
+    811                      return ctx->get_padding( output, mbedtls_cipher_get_block_size( ctx ),
+    812                                               olen );
+   \      0x106   0x....'....        BL       mbedtls_cipher_get_block_size
+   \      0x10A   0x462A             MOV      R2,R5
+   \      0x10C   0x4601             MOV      R1,R0
+   \      0x10E   0x4630             MOV      R0,R6
+   \      0x110   0x6923             LDR      R3,[R4, #+16]
+   \      0x112   0xB003             ADD      SP,SP,#+12
+   \      0x114   0xE8BD 0x40F0      POP      {R4-R7,LR}
+   \      0x118   0x4718             BX       R3
+    813          
+    814                  /* Set output size for encryption */
+    815                  *olen = mbedtls_cipher_get_block_size( ctx );
+   \                     ??mbedtls_cipher_finish_15: (+1)
+   \      0x11A   0x....'....        BL       mbedtls_cipher_get_block_size
+   \      0x11E   0x6028             STR      R0,[R5, #+0]
+    816                  return( 0 );
+   \      0x120   0x2000             MOVS     R0,#+0
+   \      0x122   0xBDFE             POP      {R1-R7,PC}
+    817              }
+    818          #else
+    819              ((void) output);
+    820          #endif /* MBEDTLS_CIPHER_MODE_CBC */
+    821          
+    822              return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+   \                     ??mbedtls_cipher_finish_8: (+1)
+   \      0x124   0x....             LDR.N    R0,??DataTable21_5  ;; 0xffff9f80
+   \      0x126   0xBDFE             POP      {R1-R7,PC}       ;; return
+    823          }
+    824          
+    825          #if defined(MBEDTLS_CIPHER_MODE_WITH_PADDING)
+
+   \                                 In section .text, align 4, keep-with-next
+    826          int mbedtls_cipher_set_padding_mode( mbedtls_cipher_context_t *ctx, mbedtls_cipher_padding_t mode )
+    827          {
+    828              if( NULL == ctx ||
+    829                  MBEDTLS_MODE_CBC != ctx->cipher_info->mode )
+   \                     mbedtls_cipher_set_padding_mode: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD003             BEQ.N    ??mbedtls_cipher_set_padding_mode_1
+   \        0x4   0x6802             LDR      R2,[R0, #+0]
+   \        0x6   0x7852             LDRB     R2,[R2, #+1]
+   \        0x8   0x2A02             CMP      R2,#+2
+   \        0xA   0xD001             BEQ.N    ??mbedtls_cipher_set_padding_mode_2
+    830              {
+    831                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_set_padding_mode_1: (+1)
+   \        0xC   0x....             LDR.N    R0,??DataTable21_3  ;; 0xffff9f00
+   \        0xE   0x4770             BX       LR
+    832              }
+    833          
+    834              switch( mode )
+   \                     ??mbedtls_cipher_set_padding_mode_2: (+1)
+   \       0x10   0x2904             CMP      R1,#+4
+   \       0x12   0xD81E             BHI.N    ??mbedtls_cipher_set_padding_mode_3
+   \       0x14   0xE8DF 0xF001      TBB      [PC, R1]
+   \                     ??mbedtls_cipher_set_padding_mode_0:
+   \       0x18   0x03 0x09          DC8      0x3,0x9,0xE,0x13
+   \              0x0E 0x13    
+   \       0x1C   0x18 0x00          DC8      0x18,0x0
+    835              {
+    836          #if defined(MBEDTLS_CIPHER_PADDING_PKCS7)
+    837              case MBEDTLS_PADDING_PKCS7:
+    838                  ctx->add_padding = add_pkcs_padding;
+   \                     ??mbedtls_cipher_set_padding_mode_4: (+1)
+   \       0x1E   0x....             LDR.N    R1,??DataTable21_9
+   \       0x20   0x60C1             STR      R1,[R0, #+12]
+    839                  ctx->get_padding = get_pkcs_padding;
+   \       0x22   0x....             LDR.N    R1,??DataTable21_10
+   \       0x24   0x6101             STR      R1,[R0, #+16]
+    840                  break;
+    841          #endif
+    842          #if defined(MBEDTLS_CIPHER_PADDING_ONE_AND_ZEROS)
+    843              case MBEDTLS_PADDING_ONE_AND_ZEROS:
+    844                  ctx->add_padding = add_one_and_zeros_padding;
+    845                  ctx->get_padding = get_one_and_zeros_padding;
+    846                  break;
+    847          #endif
+    848          #if defined(MBEDTLS_CIPHER_PADDING_ZEROS_AND_LEN)
+    849              case MBEDTLS_PADDING_ZEROS_AND_LEN:
+    850                  ctx->add_padding = add_zeros_and_len_padding;
+    851                  ctx->get_padding = get_zeros_and_len_padding;
+    852                  break;
+    853          #endif
+    854          #if defined(MBEDTLS_CIPHER_PADDING_ZEROS)
+    855              case MBEDTLS_PADDING_ZEROS:
+    856                  ctx->add_padding = add_zeros_padding;
+    857                  ctx->get_padding = get_zeros_padding;
+    858                  break;
+    859          #endif
+    860              case MBEDTLS_PADDING_NONE:
+    861                  ctx->add_padding = NULL;
+    862                  ctx->get_padding = get_no_padding;
+    863                  break;
+    864          
+    865              default:
+    866                  return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+    867              }
+    868          
+    869              return( 0 );
+   \                     ??mbedtls_cipher_set_padding_mode_5: (+1)
+   \       0x26   0x2000             MOVS     R0,#+0
+   \       0x28   0x4770             BX       LR               ;; return
+   \                     ??mbedtls_cipher_set_padding_mode_6: (+1)
+   \       0x2A   0x....             LDR.N    R1,??DataTable21_11
+   \       0x2C   0x60C1             STR      R1,[R0, #+12]
+   \       0x2E   0x....             LDR.N    R1,??DataTable21_12
+   \       0x30   0x6101             STR      R1,[R0, #+16]
+   \       0x32   0xE7F8             B.N      ??mbedtls_cipher_set_padding_mode_5
+   \                     ??mbedtls_cipher_set_padding_mode_7: (+1)
+   \       0x34   0x....             LDR.N    R1,??DataTable21_13
+   \       0x36   0x60C1             STR      R1,[R0, #+12]
+   \       0x38   0x....             LDR.N    R1,??DataTable21_14
+   \       0x3A   0x6101             STR      R1,[R0, #+16]
+   \       0x3C   0xE7F3             B.N      ??mbedtls_cipher_set_padding_mode_5
+   \                     ??mbedtls_cipher_set_padding_mode_8: (+1)
+   \       0x3E   0x....             LDR.N    R1,??DataTable21_15
+   \       0x40   0x60C1             STR      R1,[R0, #+12]
+   \       0x42   0x....             LDR.N    R1,??DataTable21_16
+   \       0x44   0x6101             STR      R1,[R0, #+16]
+   \       0x46   0xE7EE             B.N      ??mbedtls_cipher_set_padding_mode_5
+   \                     ??mbedtls_cipher_set_padding_mode_9: (+1)
+   \       0x48   0x2100             MOVS     R1,#+0
+   \       0x4A   0x60C1             STR      R1,[R0, #+12]
+   \       0x4C   0x....             LDR.N    R1,??DataTable21_17
+   \       0x4E   0x6101             STR      R1,[R0, #+16]
+   \       0x50   0xE7E9             B.N      ??mbedtls_cipher_set_padding_mode_5
+   \                     ??mbedtls_cipher_set_padding_mode_3: (+1)
+   \       0x52   0x....             LDR.N    R0,??DataTable21_5  ;; 0xffff9f80
+   \       0x54   0x4770             BX       LR
+    870          }
+    871          #endif /* MBEDTLS_CIPHER_MODE_WITH_PADDING */
+    872          
+    873          #if defined(MBEDTLS_GCM_C) || defined(MBEDTLS_CHACHAPOLY_C)
+
+   \                                 In section .text, align 2, keep-with-next
+    874          int mbedtls_cipher_write_tag( mbedtls_cipher_context_t *ctx,
+    875                                unsigned char *tag, size_t tag_len )
+    876          {
+    877              if( NULL == ctx || NULL == ctx->cipher_info || NULL == tag )
+   \                     mbedtls_cipher_write_tag: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD008             BEQ.N    ??mbedtls_cipher_write_tag_0
+   \        0x4   0x6803             LDR      R3,[R0, #+0]
+   \        0x6   0x2B00             CMP      R3,#+0
+   \        0x8   0xD005             BEQ.N    ??mbedtls_cipher_write_tag_0
+   \        0xA   0x2900             CMP      R1,#+0
+   \        0xC   0xD003             BEQ.N    ??mbedtls_cipher_write_tag_0
+    878                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    879          
+    880              if( MBEDTLS_ENCRYPT != ctx->operation )
+   \        0xE   0xF990 0x3008      LDRSB    R3,[R0, #+8]
+   \       0x12   0x2B01             CMP      R3,#+1
+   \       0x14   0xD001             BEQ.N    ??mbedtls_cipher_write_tag_1
+    881                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_write_tag_0: (+1)
+   \       0x16   0x....             LDR.N    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x18   0x4770             BX       LR
+    882          
+    883          #if defined(MBEDTLS_GCM_C)
+    884              if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_write_tag_1: (+1)
+   \       0x1A   0x6803             LDR      R3,[R0, #+0]
+   \       0x1C   0x785B             LDRB     R3,[R3, #+1]
+   \       0x1E   0x2B06             CMP      R3,#+6
+   \       0x20   0xD102             BNE.N    ??mbedtls_cipher_write_tag_2
+    885                  return mbedtls_gcm_finish( (mbedtls_gcm_context *) ctx->cipher_ctx, tag, tag_len );
+   \       0x22   0x6BC0             LDR      R0,[R0, #+60]
+   \       0x24   0x....'....        B.W      mbedtls_gcm_finish
+    886          #endif
+    887          
+    888          #if defined(MBEDTLS_CHACHAPOLY_C)
+    889              if ( MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type )
+    890              {
+    891                  /* Don't allow truncated MAC for Poly1305 */
+    892                  if ( tag_len != 16U )
+    893                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    894          
+    895                  return mbedtls_chachapoly_finish( (mbedtls_chachapoly_context*) ctx->cipher_ctx,
+    896                                                                tag );
+    897              }
+    898          #endif
+    899          
+    900              return( 0 );
+   \                     ??mbedtls_cipher_write_tag_2: (+1)
+   \       0x28   0x2000             MOVS     R0,#+0
+   \       0x2A   0x4770             BX       LR               ;; return
+    901          }
+    902          
+
+   \                                 In section .text, align 2, keep-with-next
+    903          int mbedtls_cipher_check_tag( mbedtls_cipher_context_t *ctx,
+    904                                const unsigned char *tag, size_t tag_len )
+    905          {
+   \                     mbedtls_cipher_check_tag: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0xB084             SUB      SP,SP,#+16
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4615             MOV      R5,R2
+    906              unsigned char check_tag[16];
+    907              int ret;
+    908          
+    909              if( NULL == ctx || NULL == ctx->cipher_info ||
+    910                  MBEDTLS_DECRYPT != ctx->operation )
+   \        0x8   0x2800             CMP      R0,#+0
+   \        0xA   0xD00C             BEQ.N    ??mbedtls_cipher_check_tag_0
+   \        0xC   0x6801             LDR      R1,[R0, #+0]
+   \        0xE   0x2900             CMP      R1,#+0
+   \       0x10   0xD009             BEQ.N    ??mbedtls_cipher_check_tag_0
+   \       0x12   0xF990 0x1008      LDRSB    R1,[R0, #+8]
+   \       0x16   0x2900             CMP      R1,#+0
+   \       0x18   0xD105             BNE.N    ??mbedtls_cipher_check_tag_0
+    911              {
+    912                  return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    913              }
+    914          
+    915          #if defined(MBEDTLS_GCM_C)
+    916              if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
+   \       0x1A   0x6801             LDR      R1,[R0, #+0]
+   \       0x1C   0x7849             LDRB     R1,[R1, #+1]
+   \       0x1E   0x2906             CMP      R1,#+6
+   \       0x20   0xD114             BNE.N    ??mbedtls_cipher_check_tag_1
+    917              {
+    918                  if( tag_len > sizeof( check_tag ) )
+   \       0x22   0x2D11             CMP      R5,#+17
+   \       0x24   0xD301             BCC.N    ??mbedtls_cipher_check_tag_2
+    919                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   \                     ??mbedtls_cipher_check_tag_0: (+1)
+   \       0x26   0x....             LDR.N    R0,??DataTable21_3  ;; 0xffff9f00
+   \       0x28   0xE011             B.N      ??mbedtls_cipher_check_tag_3
+    920          
+    921                  if( 0 != ( ret = mbedtls_gcm_finish( (mbedtls_gcm_context *) ctx->cipher_ctx,
+    922                                               check_tag, tag_len ) ) )
+   \                     ??mbedtls_cipher_check_tag_2: (+1)
+   \       0x2A   0x4669             MOV      R1,SP
+   \       0x2C   0x6BC0             LDR      R0,[R0, #+60]
+   \       0x2E   0x....'....        BL       mbedtls_gcm_finish
+   \       0x32   0x2800             CMP      R0,#+0
+   \       0x34   0xD10B             BNE.N    ??mbedtls_cipher_check_tag_3
+    923                  {
+    924                      return( ret );
+    925                  }
+    926          
+    927                  /* Check the tag in "constant-time" */
+    928                  if( mbedtls_constant_time_memcmp( tag, check_tag, tag_len ) != 0 )
+   \       0x36   0x462A             MOV      R2,R5
+   \       0x38   0x4669             MOV      R1,SP
+   \       0x3A   0x4620             MOV      R0,R4
+   \       0x3C   0x....'....        BL       mbedtls_constant_time_memcmp
+   \       0x40   0x2800             CMP      R0,#+0
+   \       0x42   0xD001             BEQ.N    ??mbedtls_cipher_check_tag_4
+    929                      return( MBEDTLS_ERR_CIPHER_AUTH_FAILED );
+   \       0x44   0x....             LDR.N    R0,??DataTable21_18  ;; 0xffff9d00
+   \       0x46   0xE002             B.N      ??mbedtls_cipher_check_tag_3
+    930          
+    931                  return( 0 );
+   \                     ??mbedtls_cipher_check_tag_4: (+1)
+   \       0x48   0x2000             MOVS     R0,#+0
+   \       0x4A   0xE000             B.N      ??mbedtls_cipher_check_tag_3
+    932              }
+    933          #endif /* MBEDTLS_GCM_C */
+    934          
+    935          #if defined(MBEDTLS_CHACHAPOLY_C)
+    936              if ( MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type )
+    937              {
+    938                  /* Don't allow truncated MAC for Poly1305 */
+    939                  if ( tag_len != sizeof( check_tag ) )
+    940                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+    941          
+    942                  ret = mbedtls_chachapoly_finish( (mbedtls_chachapoly_context*) ctx->cipher_ctx,
+    943                                                               check_tag );
+    944                  if ( ret != 0 )
+    945                  {
+    946                      return( ret );
+    947                  }
+    948          
+    949                  /* Check the tag in "constant-time" */
+    950                  if( mbedtls_constant_time_memcmp( tag, check_tag, tag_len ) != 0 )
+    951                      return( MBEDTLS_ERR_CIPHER_AUTH_FAILED );
+    952          
+    953                  return( 0 );
+    954              }
+    955          #endif /* MBEDTLS_CHACHAPOLY_C */
+    956          
+    957              return( 0 );
+   \                     ??mbedtls_cipher_check_tag_1: (+1)
+   \       0x4C   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_cipher_check_tag_3: (+1)
+   \       0x4E   0xB005             ADD      SP,SP,#+20
+   \       0x50   0xBD30             POP      {R4,R5,PC}       ;; return
+    958          }
+    959          #endif /* MBEDTLS_GCM_C || MBEDTLS_CHACHAPOLY_C */
+    960          
+    961          /*
+    962           * Packet-oriented wrapper for non-AEAD modes
+    963           */
+
+   \                                 In section .text, align 2, keep-with-next
+    964          int mbedtls_cipher_crypt( mbedtls_cipher_context_t *ctx,
+    965                            const unsigned char *iv, size_t iv_len,
+    966                            const unsigned char *input, size_t ilen,
+    967                            unsigned char *output, size_t *olen )
+    968          {
+   \                     mbedtls_cipher_crypt: (+1)
+   \        0x0   0xB5FE             PUSH     {R1-R7,LR}
+   \        0x2   0x4604             MOV      R4,R0
+   \        0x4   0x461D             MOV      R5,R3
+    969              int ret;
+    970              size_t finish_olen;
+    971          
+    972              if( ( ret = mbedtls_cipher_set_iv( ctx, iv, iv_len ) ) != 0 )
+   \        0x6   0x....'....        BL       mbedtls_cipher_set_iv
+   \        0xA   0x2800             CMP      R0,#+0
+   \        0xC   0xD11C             BNE.N    ??mbedtls_cipher_crypt_0
+    973                  return( ret );
+    974          
+    975              if( ( ret = mbedtls_cipher_reset( ctx ) ) != 0 )
+   \        0xE   0x4620             MOV      R0,R4
+   \       0x10   0x....'....        BL       mbedtls_cipher_reset
+   \       0x14   0x2800             CMP      R0,#+0
+   \       0x16   0xD117             BNE.N    ??mbedtls_cipher_crypt_0
+    976                  return( ret );
+   \       0x18   0x9E0A             LDR      R6,[SP, #+40]
+   \       0x1A   0x9F09             LDR      R7,[SP, #+36]
+   \       0x1C   0x9A08             LDR      R2,[SP, #+32]
+    977          
+    978              if( ( ret = mbedtls_cipher_update( ctx, input, ilen, output, olen ) ) != 0 )
+   \       0x1E   0x9600             STR      R6,[SP, #+0]
+   \       0x20   0x463B             MOV      R3,R7
+   \       0x22   0x4629             MOV      R1,R5
+   \       0x24   0x4620             MOV      R0,R4
+   \       0x26   0x....'....        BL       mbedtls_cipher_update
+   \       0x2A   0x2800             CMP      R0,#+0
+   \       0x2C   0xD10C             BNE.N    ??mbedtls_cipher_crypt_0
+    979                  return( ret );
+    980          
+    981              if( ( ret = mbedtls_cipher_finish( ctx, output + *olen, &finish_olen ) ) != 0 )
+   \       0x2E   0xAA01             ADD      R2,SP,#+4
+   \       0x30   0x6830             LDR      R0,[R6, #+0]
+   \       0x32   0x1839             ADDS     R1,R7,R0
+   \       0x34   0x4620             MOV      R0,R4
+   \       0x36   0x....'....        BL       mbedtls_cipher_finish
+   \       0x3A   0x2800             CMP      R0,#+0
+   \       0x3C   0xD104             BNE.N    ??mbedtls_cipher_crypt_0
+    982                  return( ret );
+    983          
+    984              *olen += finish_olen;
+   \       0x3E   0x6831             LDR      R1,[R6, #+0]
+   \       0x40   0x9801             LDR      R0,[SP, #+4]
+   \       0x42   0x1841             ADDS     R1,R0,R1
+   \       0x44   0x6031             STR      R1,[R6, #+0]
+    985          
+    986              return( 0 );
+   \       0x46   0x2000             MOVS     R0,#+0
+   \                     ??mbedtls_cipher_crypt_0: (+1)
+   \       0x48   0xBDFE             POP      {R1-R7,PC}       ;; return
+    987          }
+    988          
+    989          #if defined(MBEDTLS_CIPHER_MODE_AEAD)
+    990          /*
+    991           * Packet-oriented encryption for AEAD modes
+    992           */
+
+   \                                 In section .text, align 2, keep-with-next
+    993          int mbedtls_cipher_auth_encrypt( mbedtls_cipher_context_t *ctx,
+    994                                   const unsigned char *iv, size_t iv_len,
+    995                                   const unsigned char *ad, size_t ad_len,
+    996                                   const unsigned char *input, size_t ilen,
+    997                                   unsigned char *output, size_t *olen,
+    998                                   unsigned char *tag, size_t tag_len )
+    999          {
+   \                     mbedtls_cipher_auth_encrypt: (+1)
+   \        0x0   0xE92D 0x43F0      PUSH     {R4-R9,LR}
+   \        0x4   0xB087             SUB      SP,SP,#+28
+   \        0x6   0x9D0E             LDR      R5,[SP, #+56]
+   \        0x8   0x9E0F             LDR      R6,[SP, #+60]
+   \        0xA   0x9C10             LDR      R4,[SP, #+64]
+   \        0xC   0x9F11             LDR      R7,[SP, #+68]
+   \        0xE   0xF8DD 0xC048      LDR      R12,[SP, #+72]
+   \       0x12   0xF8DD 0xE04C      LDR      LR,[SP, #+76]
+   \       0x16   0xF8DD 0x8050      LDR      R8,[SP, #+80]
+   1000          #if defined(MBEDTLS_GCM_C)
+   1001              if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
+   \       0x1A   0xF8D0 0x9000      LDR      R9,[R0, #+0]
+   \       0x1E   0xF899 0x9001      LDRB     R9,[R9, #+1]
+   \       0x22   0xF1B9 0x0F06      CMP      R9,#+6
+   \       0x26   0xD111             BNE.N    ??mbedtls_cipher_auth_encrypt_0
+   1002              {
+   1003                  *olen = ilen;
+   \       0x28   0xF8CC 0x4000      STR      R4,[R12, #+0]
+   1004                  return( mbedtls_gcm_crypt_and_tag( ctx->cipher_ctx, MBEDTLS_GCM_ENCRYPT, ilen,
+   1005                                             iv, iv_len, ad, ad_len, input, output,
+   1006                                             tag_len, tag ) );
+   \       0x2C   0xF8CD 0xE018      STR      LR,[SP, #+24]
+   \       0x30   0xF8CD 0x8014      STR      R8,[SP, #+20]
+   \       0x34   0x9704             STR      R7,[SP, #+16]
+   \       0x36   0x9603             STR      R6,[SP, #+12]
+   \       0x38   0x9502             STR      R5,[SP, #+8]
+   \       0x3A   0x9301             STR      R3,[SP, #+4]
+   \       0x3C   0x9200             STR      R2,[SP, #+0]
+   \       0x3E   0x460B             MOV      R3,R1
+   \       0x40   0x4622             MOV      R2,R4
+   \       0x42   0x2101             MOVS     R1,#+1
+   \       0x44   0x6BC0             LDR      R0,[R0, #+60]
+   \       0x46   0x....'....        BL       mbedtls_gcm_crypt_and_tag
+   \       0x4A   0xE018             B.N      ??mbedtls_cipher_auth_encrypt_1
+   1007              }
+   1008          #endif /* MBEDTLS_GCM_C */
+   1009          #if defined(MBEDTLS_CCM_C)
+   1010              if( MBEDTLS_MODE_CCM == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_auth_encrypt_0: (+1)
+   \       0x4C   0xF8D0 0x9000      LDR      R9,[R0, #+0]
+   \       0x50   0xF899 0x9001      LDRB     R9,[R9, #+1]
+   \       0x54   0xF1B9 0x0F08      CMP      R9,#+8
+   \       0x58   0xD110             BNE.N    ??mbedtls_cipher_auth_encrypt_2
+   1011              {
+   1012                  *olen = ilen;
+   \       0x5A   0xF8CC 0x4000      STR      R4,[R12, #+0]
+   1013                  return( mbedtls_ccm_encrypt_and_tag( ctx->cipher_ctx, ilen,
+   1014                                               iv, iv_len, ad, ad_len, input, output,
+   1015                                               tag, tag_len ) );
+   \       0x5E   0xF8CD 0x8014      STR      R8,[SP, #+20]
+   \       0x62   0xF8CD 0xE010      STR      LR,[SP, #+16]
+   \       0x66   0x9703             STR      R7,[SP, #+12]
+   \       0x68   0x9602             STR      R6,[SP, #+8]
+   \       0x6A   0x9501             STR      R5,[SP, #+4]
+   \       0x6C   0x9300             STR      R3,[SP, #+0]
+   \       0x6E   0x4613             MOV      R3,R2
+   \       0x70   0x460A             MOV      R2,R1
+   \       0x72   0x4621             MOV      R1,R4
+   \       0x74   0x6BC0             LDR      R0,[R0, #+60]
+   \       0x76   0x....'....        BL       mbedtls_ccm_encrypt_and_tag
+   \       0x7A   0xE000             B.N      ??mbedtls_cipher_auth_encrypt_1
+   1016              }
+   1017          #endif /* MBEDTLS_CCM_C */
+   1018          #if defined(MBEDTLS_CHACHAPOLY_C)
+   1019              if ( MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type )
+   1020              {
+   1021                  /* ChachaPoly has fixed length nonce and MAC (tag) */
+   1022                  if ( ( iv_len != ctx->cipher_info->iv_size ) ||
+   1023                       ( tag_len != 16U ) )
+   1024                  {
+   1025                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   1026                  }
+   1027          
+   1028                  *olen = ilen;
+   1029                  return( mbedtls_chachapoly_encrypt_and_tag( ctx->cipher_ctx,
+   1030                                          ilen, iv, ad, ad_len, input, output, tag ) );
+   1031              }
+   1032          #endif /* MBEDTLS_CHACHAPOLY_C */
+   1033          
+   1034              return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+   \                     ??mbedtls_cipher_auth_encrypt_2: (+1)
+   \       0x7C   0x....             LDR.N    R0,??DataTable21_5  ;; 0xffff9f80
+   \                     ??mbedtls_cipher_auth_encrypt_1: (+1)
+   \       0x7E   0xB007             ADD      SP,SP,#+28
+   \       0x80   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+   1035          }
+   1036          
+   1037          /*
+   1038           * Packet-oriented decryption for AEAD modes
+   1039           */
+
+   \                                 In section .text, align 2, keep-with-next
+   1040          int mbedtls_cipher_auth_decrypt( mbedtls_cipher_context_t *ctx,
+   1041                                   const unsigned char *iv, size_t iv_len,
+   1042                                   const unsigned char *ad, size_t ad_len,
+   1043                                   const unsigned char *input, size_t ilen,
+   1044                                   unsigned char *output, size_t *olen,
+   1045                                   const unsigned char *tag, size_t tag_len )
+   1046          {
+   \                     mbedtls_cipher_auth_decrypt: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0xB086             SUB      SP,SP,#+24
+   \        0x6   0x4604             MOV      R4,R0
+   \        0x8   0x9D0E             LDR      R5,[SP, #+56]
+   \        0xA   0x9E0F             LDR      R6,[SP, #+60]
+   \        0xC   0x9810             LDR      R0,[SP, #+64]
+   \        0xE   0x9F11             LDR      R7,[SP, #+68]
+   \       0x10   0xF8DD 0xC048      LDR      R12,[SP, #+72]
+   \       0x14   0xF8DD 0xE04C      LDR      LR,[SP, #+76]
+   \       0x18   0xF8DD 0x8050      LDR      R8,[SP, #+80]
+   1047          #if defined(MBEDTLS_GCM_C)
+   1048              if( MBEDTLS_MODE_GCM == ctx->cipher_info->mode )
+   \       0x1C   0xF8D4 0x9000      LDR      R9,[R4, #+0]
+   \       0x20   0xF899 0x9001      LDRB     R9,[R9, #+1]
+   \       0x24   0xF1B9 0x0F06      CMP      R9,#+6
+   \       0x28   0xD114             BNE.N    ??mbedtls_cipher_auth_decrypt_0
+   1049              {
+   1050                  int ret;
+   1051          
+   1052                  *olen = ilen;
+   \       0x2A   0xF8CC 0x0000      STR      R0,[R12, #+0]
+   1053                  ret = mbedtls_gcm_auth_decrypt( ctx->cipher_ctx, ilen,
+   1054                                          iv, iv_len, ad, ad_len,
+   1055                                          tag, tag_len, input, output );
+   \       0x2E   0x9705             STR      R7,[SP, #+20]
+   \       0x30   0x9604             STR      R6,[SP, #+16]
+   \       0x32   0xF8CD 0x800C      STR      R8,[SP, #+12]
+   \       0x36   0xF8CD 0xE008      STR      LR,[SP, #+8]
+   \       0x3A   0x9501             STR      R5,[SP, #+4]
+   \       0x3C   0x9300             STR      R3,[SP, #+0]
+   \       0x3E   0x4613             MOV      R3,R2
+   \       0x40   0x460A             MOV      R2,R1
+   \       0x42   0x4601             MOV      R1,R0
+   \       0x44   0x6BE0             LDR      R0,[R4, #+60]
+   \       0x46   0x....'....        BL       mbedtls_gcm_auth_decrypt
+   1056          
+   1057                  if( ret == MBEDTLS_ERR_GCM_AUTH_FAILED )
+   \       0x4A   0xF110 0x0F12      CMN      R0,#+18
+   \       0x4E   0xD11E             BNE.N    ??mbedtls_cipher_auth_decrypt_1
+   1058                      ret = MBEDTLS_ERR_CIPHER_AUTH_FAILED;
+   \       0x50   0x....             LDR.N    R0,??DataTable21_18  ;; 0xffff9d00
+   1059          
+   1060                  return( ret );
+   \       0x52   0xE01C             B.N      ??mbedtls_cipher_auth_decrypt_1
+   1061              }
+   1062          #endif /* MBEDTLS_GCM_C */
+   1063          #if defined(MBEDTLS_CCM_C)
+   1064              if( MBEDTLS_MODE_CCM == ctx->cipher_info->mode )
+   \                     ??mbedtls_cipher_auth_decrypt_0: (+1)
+   \       0x54   0xF8D4 0x9000      LDR      R9,[R4, #+0]
+   \       0x58   0xF899 0x9001      LDRB     R9,[R9, #+1]
+   \       0x5C   0xF1B9 0x0F08      CMP      R9,#+8
+   \       0x60   0xD114             BNE.N    ??mbedtls_cipher_auth_decrypt_2
+   1065              {
+   1066                  int ret;
+   1067          
+   1068                  *olen = ilen;
+   \       0x62   0xF8CC 0x0000      STR      R0,[R12, #+0]
+   1069                  ret = mbedtls_ccm_auth_decrypt( ctx->cipher_ctx, ilen,
+   1070                                          iv, iv_len, ad, ad_len,
+   1071                                          input, output, tag, tag_len );
+   \       0x66   0xF8CD 0x8014      STR      R8,[SP, #+20]
+   \       0x6A   0xF8CD 0xE010      STR      LR,[SP, #+16]
+   \       0x6E   0x9703             STR      R7,[SP, #+12]
+   \       0x70   0x9602             STR      R6,[SP, #+8]
+   \       0x72   0x9501             STR      R5,[SP, #+4]
+   \       0x74   0x9300             STR      R3,[SP, #+0]
+   \       0x76   0x4613             MOV      R3,R2
+   \       0x78   0x460A             MOV      R2,R1
+   \       0x7A   0x4601             MOV      R1,R0
+   \       0x7C   0x6BE0             LDR      R0,[R4, #+60]
+   \       0x7E   0x....'....        BL       mbedtls_ccm_auth_decrypt
+   1072          
+   1073                  if( ret == MBEDTLS_ERR_CCM_AUTH_FAILED )
+   \       0x82   0xF110 0x0F0F      CMN      R0,#+15
+   \       0x86   0xD102             BNE.N    ??mbedtls_cipher_auth_decrypt_1
+   1074                      ret = MBEDTLS_ERR_CIPHER_AUTH_FAILED;
+   \       0x88   0x....             LDR.N    R0,??DataTable21_18  ;; 0xffff9d00
+   1075          
+   1076                  return( ret );
+   \       0x8A   0xE000             B.N      ??mbedtls_cipher_auth_decrypt_1
+   1077              }
+   1078          #endif /* MBEDTLS_CCM_C */
+   1079          #if defined(MBEDTLS_CHACHAPOLY_C)
+   1080              if ( MBEDTLS_CIPHER_CHACHA20_POLY1305 == ctx->cipher_info->type )
+   1081              {
+   1082                  int ret;
+   1083          
+   1084                  /* ChachaPoly has fixed length nonce and MAC (tag) */
+   1085                  if ( ( iv_len != ctx->cipher_info->iv_size ) ||
+   1086                       ( tag_len != 16U ) )
+   1087                  {
+   1088                      return( MBEDTLS_ERR_CIPHER_BAD_INPUT_DATA );
+   1089                  }
+   1090          
+   1091                  *olen = ilen;
+   1092                  ret = mbedtls_chachapoly_auth_decrypt( ctx->cipher_ctx, ilen,
+   1093                                          iv, ad, ad_len, tag, input, output );
+   1094          
+   1095                  if( ret == MBEDTLS_ERR_CHACHAPOLY_AUTH_FAILED )
+   1096                      ret = MBEDTLS_ERR_CIPHER_AUTH_FAILED;
+   1097          
+   1098                  return( ret );
+   1099              }
+   1100          #endif /* MBEDTLS_CHACHAPOLY_C */
+   1101          
+   1102              return( MBEDTLS_ERR_CIPHER_FEATURE_UNAVAILABLE );
+   \                     ??mbedtls_cipher_auth_decrypt_2: (+1)
+   \       0x8C   0x....             LDR.N    R0,??DataTable21_5  ;; 0xffff9f80
+   \                     ??mbedtls_cipher_auth_decrypt_1: (+1)
+   \       0x8E   0xB007             ADD      SP,SP,#+28
+   \       0x90   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+   1103          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21:
+   \        0x0   0x....'....        DC32     supported_init
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_1:
+   \        0x0   0x....'....        DC32     mbedtls_cipher_definitions
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_2:
+   \        0x0   0x....'....        DC32     mbedtls_cipher_supported
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_3:
+   \        0x0   0xFFFF'9F00        DC32     0xffff9f00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_4:
+   \        0x0   0xFFFF'9E80        DC32     0xffff9e80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_5:
+   \        0x0   0xFFFF'9F80        DC32     0xffff9f80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_6:
+   \        0x0   0xFFFF'9D80        DC32     0xffff9d80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_7:
+   \        0x0   0xFFFF'9C80        DC32     0xffff9c80
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_8:
+   \        0x0   0xFFFF'9E00        DC32     0xffff9e00
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_9:
+   \        0x0   0x....'....        DC32     add_pkcs_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_10:
+   \        0x0   0x....'....        DC32     get_pkcs_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_11:
+   \        0x0   0x....'....        DC32     add_one_and_zeros_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_12:
+   \        0x0   0x....'....        DC32     get_one_and_zeros_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_13:
+   \        0x0   0x....'....        DC32     add_zeros_and_len_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_14:
+   \        0x0   0x....'....        DC32     get_zeros_and_len_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_15:
+   \        0x0   0x....'....        DC32     add_zeros_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_16:
+   \        0x0   0x....'....        DC32     get_zeros_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_17:
+   \        0x0   0x....'....        DC32     get_no_padding
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable21_18:
+   \        0x0   0xFFFF'9D00        DC32     0xffff9d00
+   1104          #endif /* MBEDTLS_CIPHER_MODE_AEAD */
+   1105          
+   1106          #endif /* MBEDTLS_CIPHER_C */
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       8   add_one_and_zeros_padding
+       4   add_pkcs_padding
+      12   add_zeros_and_len_padding
+       0   add_zeros_padding
+       0   get_no_padding
+      16   get_one_and_zeros_padding
+      16   get_pkcs_padding
+      12   get_zeros_and_len_padding
+       8   get_zeros_padding
+      56   mbedtls_cipher_auth_decrypt
+        56   -> mbedtls_ccm_auth_decrypt
+        56   -> mbedtls_gcm_auth_decrypt
+      56   mbedtls_cipher_auth_encrypt
+        56   -> mbedtls_ccm_encrypt_and_tag
+        56   -> mbedtls_gcm_crypt_and_tag
+      32   mbedtls_cipher_check_tag
+        32   -> mbedtls_constant_time_memcmp
+        32   -> mbedtls_gcm_finish
+      32   mbedtls_cipher_crypt
+        32   -> mbedtls_cipher_finish
+        32   -> mbedtls_cipher_reset
+        32   -> mbedtls_cipher_set_iv
+        32   -> mbedtls_cipher_update
+      32   mbedtls_cipher_finish
+         0   -- Indirect call
+        32   -- Indirect call
+        32   -> mbedtls_cipher_get_block_size
+        32   -> mbedtls_cipher_get_iv_size
+       8   mbedtls_cipher_free
+         8   -- Indirect call
+         0   -> mbedtls_platform_zeroize
+       0   mbedtls_cipher_get_block_size
+       0   mbedtls_cipher_get_iv_size
+      16   mbedtls_cipher_info_from_string
+        16   -> strcmp
+       0   mbedtls_cipher_info_from_type
+       8   mbedtls_cipher_info_from_values
+       0   mbedtls_cipher_init
+         0   -> __aeabi_memset4
+       0   mbedtls_cipher_list
+       0   mbedtls_cipher_reset
+      16   mbedtls_cipher_set_iv
+        16   -> __aeabi_memcpy
+       0   mbedtls_cipher_set_padding_mode
+       8   mbedtls_cipher_setkey
+         0   -- Indirect call
+      16   mbedtls_cipher_setup
+        16   -- Indirect call
+        16   -> __aeabi_memset4
+        16   -> mbedtls_cipher_set_padding_mode
+      48   mbedtls_cipher_update
+        48   -- Indirect call
+        48   -> __aeabi_memcpy
+        48   -> mbedtls_cipher_get_block_size
+         0   -> mbedtls_gcm_update
+      16   mbedtls_cipher_update_ad
+        16   -> mbedtls_gcm_starts
+       0   mbedtls_cipher_write_tag
+         0   -> mbedtls_gcm_finish
+      12   mbedtls_constant_time_memcmp
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable21
+       4  ??DataTable21_1
+       4  ??DataTable21_10
+       4  ??DataTable21_11
+       4  ??DataTable21_12
+       4  ??DataTable21_13
+       4  ??DataTable21_14
+       4  ??DataTable21_15
+       4  ??DataTable21_16
+       4  ??DataTable21_17
+       4  ??DataTable21_18
+       4  ??DataTable21_2
+       4  ??DataTable21_3
+       4  ??DataTable21_4
+       4  ??DataTable21_5
+       4  ??DataTable21_6
+       4  ??DataTable21_7
+       4  ??DataTable21_8
+       4  ??DataTable21_9
+      34  add_one_and_zeros_padding
+      28  add_pkcs_padding
+      40  add_zeros_and_len_padding
+      14  add_zeros_padding
+      20  get_no_padding
+     120  get_one_and_zeros_padding
+      94  get_pkcs_padding
+      94  get_zeros_and_len_padding
+      78  get_zeros_padding
+     148  mbedtls_cipher_auth_decrypt
+     132  mbedtls_cipher_auth_encrypt
+      82  mbedtls_cipher_check_tag
+      74  mbedtls_cipher_crypt
+     296  mbedtls_cipher_finish
+      34  mbedtls_cipher_free
+      20  mbedtls_cipher_get_block_size
+      30  mbedtls_cipher_get_iv_size
+      40  mbedtls_cipher_info_from_string
+      30  mbedtls_cipher_info_from_type
+      56  mbedtls_cipher_info_from_values
+       8  mbedtls_cipher_init
+      48  mbedtls_cipher_list
+      24  mbedtls_cipher_reset
+      64  mbedtls_cipher_set_iv
+      86  mbedtls_cipher_set_padding_mode
+     116  mbedtls_cipher_setkey
+      58  mbedtls_cipher_setup
+     552  mbedtls_cipher_update
+      50  mbedtls_cipher_update_ad
+      44  mbedtls_cipher_write_tag
+      30  mbedtls_constant_time_memcmp
+       4  supported_init
+
+ 
+     4 bytes in section .bss
+ 2 620 bytes in section .text
+ 
+ 2 620 bytes of CODE memory
+     4 bytes of DATA memory
+
+Errors: none
+Warnings: none

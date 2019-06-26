@@ -1,0 +1,1604 @@
+###############################################################################
+#
+# IAR ANSI C/C++ Compiler V8.32.3.193/W32 for ARM         26/Jun/2019  16:21:13
+# Copyright 1999-2019 IAR Systems AB.
+#
+#    Cpu mode     =  
+#    Endian       =  little
+#    Source file  =  
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\at_conn_mgmt.c
+#    Command line =  
+#        -f C:\Users\nxf42695\AppData\Local\Temp\2\EWEA58.tmp
+#        (C:\Development\gzkc_smart_nbiot\csdk\eng\atm\at_conn_mgmt.c -D DEBUG
+#        -D USE_RTOS -D XIP_EXTERNAL_FLASH=1 -D XIP_BOOT_HEADER_ENABLE=1 -D
+#        CPU_MIMXRT1052DVL6B -D FSL_RTOS_FREE_RTOS -D PRINTF_ADVANCED_ENABLE -D
+#        "MBEDTLS_CONFIG_FILE=\"ksdk_mbedtls_config.h\"" -lC
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list -lA
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list --diag_suppress
+#        Pa082,Pa050 -o C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj
+#        --no_cse --no_unroll --no_inline --no_code_motion --no_tbaa
+#        --no_clustering --no_scheduling --debug --endian=little
+#        --cpu=Cortex-M7 -e --fpu=VFPv5_d16 --dlib_config "C:\Program Files
+#        (x86)\IAR Systems\Embedded Workbench
+#        8.2\arm\inc\c\DLib_Config_Normal.h" --preinclude
+#        C:\Development\gzkc_smart_nbiot/source\app_preinclude.h -I
+#        C:\Development\gzkc_smart_nbiot/board\ -I
+#        C:\Development\gzkc_smart_nbiot/source\ -I
+#        C:\Development\gzkc_smart_nbiot/CMSIS\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/freertos/portable\ -I
+#        C:\Development\gzkc_smart_nbiot/amazon-freertos/include\ -I
+#        C:\Development\gzkc_smart_nbiot/component/lists\ -I
+#        C:\Development\gzkc_smart_nbiot/component/serial_manager\ -I
+#        C:\Development\gzkc_smart_nbiot/component/uart\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv\ -I
+#        C:\Development\gzkc_smart_nbiot/component/kv/include\ -I
+#        C:\Development\gzkc_smart_nbiot/device\ -I
+#        C:\Development\gzkc_smart_nbiot/doc\ -I
+#        C:\Development\gzkc_smart_nbiot/drivers\ -I
+#        C:\Development\gzkc_smart_nbiot/src\ -I
+#        C:\Development\gzkc_smart_nbiot/startup\ -I
+#        C:\Development\gzkc_smart_nbiot/utilities\ -I
+#        C:\Development\gzkc_smart_nbiot/xip\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\atm\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_model\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_sign\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\infra\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\mqtt\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\wrappers\external_libs\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_cloud\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\CoAPPacket\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\coap_server\server\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\os\ -I
+#        C:\Development\gzkc_smart_nbiot\csdk\eng\dev_bind\impl\awss_reset\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\mbedtls\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\include\ -I
+#        C:\Development\gzkc_smart_nbiot\mbedtls\port\ksdk\ -Om)
+#    Locale       =  C
+#    List file    =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\list\at_conn_mgmt.lst
+#    Object file  =  
+#        C:\Development\gzkc_smart_nbiot\flexspi_nor_debug\obj\at_conn_mgmt.o
+#
+###############################################################################
+
+C:\Development\gzkc_smart_nbiot\csdk\eng\atm\at_conn_mgmt.c
+      1          /*
+      2           * Copyright (C) 2015-2019 Alibaba Group Holding Limited
+      3           */
+      4          
+      5          #include <stdio.h>
+      6          #include <string.h>
+      7          
+      8          #include "infra_types.h"
+      9          #include "mqtt_api.h"
+     10          #include "at_wrapper.h"
+     11          
+     12          #include "at_conn_mbox.h"
+     13          #include "at_conn_mgmt.h"
+     14          
+     15          #define AT_DEFAULT_INPUTMBOX_SIZE  3
+     16          #define AT_DEFAULT_PAYLOAD_SIZE (CONFIG_MQTT_MESSAGE_MAXLEN + CONFIG_MQTT_TOPIC_MAXLEN + 20)
+     17          
+     18          #define AT_DEFAULT_SEND_TIMEOUT_MS    1000
+     19          #define AT_DEFAULT_RECV_TIMEOUT_MS    1000
+     20          
+     21          #define DNS_MAX_NAME_LENGTH          256
+     22          #define AT_IP4_ANY_ADDR            "0.0.0.0"
+     23          #define IPV4_STR_MAX_LEN             16
+     24          
+     25          #define AT_MAX_PAYLOAD_SIZE          1512
+     26          
+     27          #define UNUSED_ATCONN                -1
+     28          
+     29          #ifdef AT_DEBUG_MODE
+     30          #define AT_DEBUG(...)       do{HAL_Printf(__VA_ARGS__);HAL_Printf("\r\n");}while(0)
+     31          #define AT_ERROR(...)       do{HAL_Printf(__VA_ARGS__);HAL_Printf("\r\n");}while(0)
+     32          #else
+     33          #define AT_DEBUG(...)
+     34          #define AT_ERROR(...)
+     35          #endif
+     36          
+     37          enum netconn_state {
+     38              NETCONN_NONE  = 0,
+     39              NETCONN_WRITE,
+     40              NETCONN_LISTEN,
+     41              NETCONN_CONNECT,
+     42              NETCONN_CLOSE
+     43          };
+     44          
+     45          /** Contains all internal pointers and states used for a socket */
+     46          struct at_conn {
+     47              /** connnection ID */
+     48          	int connid;
+     49              /** type of the netconn (TCP) */
+     50              enum netconn_type type;
+     51              /** current state of the netconn */
+     52              enum netconn_state state;
+     53              /** remote port number */
+     54          	uint16_t remote_port;
+     55              /** remote ip address */
+     56              char remote_ip[IPV4_STR_MAX_LEN];
+     57              /** data that was left from the previous read */
+     58              void *lastdata;
+     59              /** offset in the data that was left from the previous read */
+     60              uint16_t lastoffset;
+     61              /** mbox where received packets are stored until they are fetched
+     62                  by the neconn application thread. */
+     63              at_mbox_t recvmbox;
+     64              /** pointer buffer for mbox which is used by ringbuf module. */
+     65              void *recvbuf[AT_DEFAULT_INPUTMBOX_SIZE];
+     66              /** timeout to wait for sending data (which means enqueueing data for sending
+     67                  in internal buffers) in milliseconds */
+     68              int send_timeout_ms;
+     69              /** timeout in milliseconds to wait for new data to be received
+     70                  (or connections to arrive for listening netconns) */
+     71              int recv_timeout_ms;
+     72          };
+     73          
+     74          typedef struct at_netbuf {
+     75              void *payload;
+     76              uint16_t len;
+     77              uint16_t remote_port;
+     78              char  remote_ip[IPV4_STR_MAX_LEN];
+     79          } at_netbuf_t;
+     80          
+     81          /** The global array of available at */
+
+   \                                 In section .bss, align 4
+     82          static struct at_conn atconnects[AT_CONN_NUM];
+   \                     atconnects:
+   \        0x0                      DS8 168
+
+   \                                 In section .bss, align 4
+     83          static void *g_atconnmutex = NULL;
+   \                     g_atconnmutex:
+   \        0x0                      DS8 4
+     84          
+     85          #ifndef PLATFORM_HAS_DYNMEM
+     86          static at_netbuf_t atnetbuf[AT_DEFAULT_INPUTMBOX_SIZE] =
+     87                                      {{NULL, 0, 0, {'\0'}}};
+     88          
+     89          typedef struct at_payload {
+     90              uint8_t buf[AT_DEFAULT_PAYLOAD_SIZE];
+     91              uint8_t used;
+     92          } at_payload_t;
+     93          
+     94          static at_payload_t atpayload[AT_DEFAULT_INPUTMBOX_SIZE] =
+     95                                       {{{0}, 0}};
+     96          #endif
+     97          
+
+   \                                 In section .text, align 2, keep-with-next
+     98          static void *alloc_payload(int size)
+     99          {
+    100          #ifdef PLATFORM_HAS_DYNMEM
+    101              return HAL_Malloc(size);
+   \                     alloc_payload: (+1)
+   \        0x0   0x....'....        B.W      HAL_Malloc
+    102          #else
+    103              int i;
+    104          
+    105              if (size <= 0 || size > AT_DEFAULT_PAYLOAD_SIZE) {
+    106                  return NULL;
+    107              }
+    108          
+    109              for (i = 0; i < AT_DEFAULT_INPUTMBOX_SIZE; i++) {
+    110                  if (0 == atpayload[i].used) {
+    111                      atpayload[i].used = 1;
+    112                      return atpayload[i].buf;
+    113                  }
+    114              }
+    115          
+    116              return NULL;
+    117          #endif
+    118          }
+    119          
+
+   \                                 In section .text, align 2, keep-with-next
+    120          static void free_payload(void *payload)
+    121          {
+    122              if (payload) {
+   \                     free_payload: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD001             BEQ.N    ??free_payload_0
+    123          #ifdef PLATFORM_HAS_DYNMEM
+    124                  HAL_Free(payload);
+   \        0x4   0x....'....        B.W      HAL_Free
+    125          #else
+    126                  memset(payload, 0, sizeof(at_payload_t));
+    127          #endif
+    128             }
+    129          }
+   \                     ??free_payload_0: (+1)
+   \        0x8   0x4770             BX       LR               ;; return
+    130          
+
+   \                                 In section .text, align 2, keep-with-next
+    131          static at_netbuf_t *alloc_atnetbuf(void)
+    132          {
+    133          #ifdef PLATFORM_HAS_DYNMEM
+    134              return HAL_Malloc(sizeof(at_netbuf_t));
+   \                     alloc_atnetbuf: (+1)
+   \        0x0   0x2018             MOVS     R0,#+24
+   \        0x2   0x....'....        B.W      HAL_Malloc
+    135          #else
+    136              int i;
+    137          
+    138              for (i = 0; i < AT_DEFAULT_INPUTMBOX_SIZE; i++) {
+    139                  if (NULL == atnetbuf[i].payload) {
+    140                      return &atnetbuf[i];
+    141                  }
+    142              }
+    143          
+    144              return NULL;
+    145          #endif
+    146          }
+    147          
+
+   \                                 In section .text, align 2, keep-with-next
+    148          static void free_atnetbuf(at_netbuf_t *netbuf)
+    149          {
+    150              if (netbuf) {
+   \                     free_atnetbuf: (+1)
+   \        0x0   0x2800             CMP      R0,#+0
+   \        0x2   0xD001             BEQ.N    ??free_atnetbuf_0
+    151          #ifdef PLATFORM_HAS_DYNMEM
+    152                  HAL_Free(netbuf);
+   \        0x4   0x....'....        B.W      HAL_Free
+    153          #else
+    154                  memset(netbuf, 0, sizeof(at_netbuf_t));
+    155          #endif
+    156              }
+    157          }
+   \                     ??free_atnetbuf_0: (+1)
+   \        0x8   0x4770             BX       LR               ;; return
+    158          
+
+   \                                 In section .text, align 2, keep-with-next
+    159          static struct at_conn *get_conn(int c)
+    160          {
+    161              struct at_conn *conn = NULL;
+    162          
+    163              if ((c < 0) || (c >= AT_CONN_NUM)) {
+   \                     get_conn: (+1)
+   \        0x0   0x2803             CMP      R0,#+3
+   \        0x2   0xD301             BCC.N    ??get_conn_0
+    164                  AT_DEBUG("get_conn(%d): invalid", c);
+    165                  return NULL;
+   \        0x4   0x2000             MOVS     R0,#+0
+   \        0x6   0x4770             BX       LR
+    166              }
+    167          
+    168              conn = &atconnects[c];
+   \                     ??get_conn_0: (+1)
+   \        0x8   0x....'....        LDR.W    R1,??DataTable6
+   \        0xC   0xEBC0 0x02C0      RSB      R2,R0,R0, LSL #+3
+   \       0x10   0xEB01 0x00C2      ADD      R0,R1,R2, LSL #+3
+    169          
+    170              if (UNUSED_ATCONN == conn->connid) {
+   \       0x14   0x6801             LDR      R1,[R0, #+0]
+   \       0x16   0xF111 0x0F01      CMN      R1,#+1
+   \       0x1A   0xD100             BNE.N    ??get_conn_1
+    171                  AT_DEBUG("get_conn(%d): not active", c);
+    172                  return NULL;
+   \       0x1C   0x2000             MOVS     R0,#+0
+    173              }
+    174          
+    175              return conn;
+   \                     ??get_conn_1: (+1)
+   \       0x1E   0x4770             BX       LR               ;; return
+    176          }
+    177          
+
+   \                                 In section .text, align 2, keep-with-next
+    178          static int at_newconn(void)
+    179          {
+   \                     at_newconn: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+    180              int i;
+    181          
+    182              for (i = 0; i < AT_CONN_NUM; i++) {
+   \        0x2   0x2600             MOVS     R6,#+0
+   \        0x4   0x2438             MOVS     R4,#+56
+   \        0x6   0x....'....        LDR.W    R5,??DataTable6
+   \        0xA   0xE000             B.N      ??at_newconn_0
+   \                     ??at_newconn_1: (+1)
+   \        0xC   0x1C76             ADDS     R6,R6,#+1
+   \                     ??at_newconn_0: (+1)
+   \        0xE   0x2E03             CMP      R6,#+3
+   \       0x10   0xDA33             BGE.N    ??at_newconn_2
+    183                  if (atconnects[i].connid == UNUSED_ATCONN) {
+   \       0x12   0xFB04 0xF006      MUL      R0,R4,R6
+   \       0x16   0x5828             LDR      R0,[R5, R0]
+   \       0x18   0xF110 0x0F01      CMN      R0,#+1
+   \       0x1C   0xD1F6             BNE.N    ??at_newconn_1
+    184                  	if (at_mbox_new(&atconnects[i].recvmbox,
+    185                                      AT_DEFAULT_INPUTMBOX_SIZE,
+    186                                      atconnects[i].recvbuf) != 0) {
+   \       0x1E   0xFB04 0xF006      MUL      R0,R4,R6
+   \       0x22   0x4428             ADD      R0,R5,R0
+   \       0x24   0xF100 0x0224      ADD      R2,R0,#+36
+   \       0x28   0x2103             MOVS     R1,#+3
+   \       0x2A   0xFB04 0xF006      MUL      R0,R4,R6
+   \       0x2E   0x4428             ADD      R0,R5,R0
+   \       0x30   0x3020             ADDS     R0,R0,#+32
+   \       0x32   0x....'....        BL       at_mbox_new
+   \       0x36   0x2800             CMP      R0,#+0
+   \       0x38   0xD002             BEQ.N    ??at_newconn_3
+    187                          AT_ERROR("fai to new input mail box size %d \n", AT_DEFAULT_INPUTMBOX_SIZE);
+    188                          return -1;
+   \       0x3A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3E   0xBD70             POP      {R4-R6,PC}
+    189                      }
+    190                      
+    191                      atconnects[i].type            = NETCONN_INVALID;
+   \                     ??at_newconn_3: (+1)
+   \       0x40   0x2000             MOVS     R0,#+0
+   \       0x42   0xFB04 0xF106      MUL      R1,R4,R6
+   \       0x46   0x4429             ADD      R1,R5,R1
+   \       0x48   0x7108             STRB     R0,[R1, #+4]
+    192                      atconnects[i].state           = NETCONN_NONE;
+   \       0x4A   0xFB04 0xF106      MUL      R1,R4,R6
+   \       0x4E   0x4429             ADD      R1,R5,R1
+   \       0x50   0x7148             STRB     R0,[R1, #+5]
+    193                      atconnects[i].lastdata        = NULL;
+   \       0x52   0xFB04 0xF106      MUL      R1,R4,R6
+   \       0x56   0x4429             ADD      R1,R5,R1
+   \       0x58   0x6188             STR      R0,[R1, #+24]
+    194                      atconnects[i].lastoffset      = 0;
+   \       0x5A   0xFB04 0xF106      MUL      R1,R4,R6
+   \       0x5E   0x4429             ADD      R1,R5,R1
+   \       0x60   0x8388             STRH     R0,[R1, #+28]
+    195                      atconnects[i].connid          = i;
+   \       0x62   0xFB04 0xF006      MUL      R0,R4,R6
+   \       0x66   0x502E             STR      R6,[R5, R0]
+    196                      atconnects[i].send_timeout_ms = AT_DEFAULT_SEND_TIMEOUT_MS;
+   \       0x68   0xF44F 0x707A      MOV      R0,#+1000
+   \       0x6C   0xFB04 0xF106      MUL      R1,R4,R6
+   \       0x70   0x4429             ADD      R1,R5,R1
+   \       0x72   0x6308             STR      R0,[R1, #+48]
+    197                      atconnects[i].recv_timeout_ms = AT_DEFAULT_RECV_TIMEOUT_MS;
+   \       0x74   0x6348             STR      R0,[R1, #+52]
+    198                      return i;
+   \       0x76   0x4630             MOV      R0,R6
+   \       0x78   0xBD70             POP      {R4-R6,PC}
+    199                  }
+    200              }
+    201          
+    202              return -1;
+   \                     ??at_newconn_2: (+1)
+   \       0x7A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x7E   0xBD70             POP      {R4-R6,PC}       ;; return
+    203          }
+    204          
+
+   \                                 In section .text, align 2, keep-with-next
+    205          static void at_drainconn(struct at_conn *conn)
+    206          {
+   \                     at_drainconn: (+1)
+   \        0x0   0xB51C             PUSH     {R2-R4,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    207              at_netbuf_t *mem;
+    208          
+    209              if (NULL == conn)
+   \        0x4   0xD026             BEQ.N    ??at_drainconn_0
+    210              	return;
+    211          
+    212              if (at_mbox_valid(&conn->recvmbox)) {
+   \        0x6   0xF104 0x0020      ADD      R0,R4,#+32
+   \        0xA   0x....'....        BL       at_mbox_valid
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD110             BNE.N    ??at_drainconn_1
+   \       0x12   0xBD13             POP      {R0,R1,R4,PC}
+    213                  while (at_mbox_tryfetch(&conn->recvmbox, (void **)(&mem)) != AT_MBOX_EMPTY) {
+    214                      if (mem != NULL) {
+   \                     ??at_drainconn_2: (+1)
+   \       0x14   0x9800             LDR      R0,[SP, #+0]
+   \       0x16   0x2800             CMP      R0,#+0
+   \       0x18   0xD00C             BEQ.N    ??at_drainconn_1
+    215                          if (mem->payload) {
+   \       0x1A   0x6800             LDR      R0,[R0, #+0]
+   \       0x1C   0x2800             CMP      R0,#+0
+   \       0x1E   0xD006             BEQ.N    ??at_drainconn_3
+    216                              free_payload(mem->payload);
+   \       0x20   0x9800             LDR      R0,[SP, #+0]
+   \       0x22   0x6800             LDR      R0,[R0, #+0]
+   \       0x24   0x....'....        BL       free_payload
+    217                              mem->payload = NULL;
+   \       0x28   0x2000             MOVS     R0,#+0
+   \       0x2A   0x9900             LDR      R1,[SP, #+0]
+   \       0x2C   0x6008             STR      R0,[R1, #+0]
+    218                          }
+    219                          free_atnetbuf(mem);
+   \                     ??at_drainconn_3: (+1)
+   \       0x2E   0x9800             LDR      R0,[SP, #+0]
+   \       0x30   0x....'....        BL       free_atnetbuf
+    220                      }
+    221                  }
+   \                     ??at_drainconn_1: (+1)
+   \       0x34   0x4669             MOV      R1,SP
+   \       0x36   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x3A   0x....'....        BL       at_mbox_tryfetch
+   \       0x3E   0xF110 0x0F01      CMN      R0,#+1
+   \       0x42   0xD1E7             BNE.N    ??at_drainconn_2
+    222                  at_mbox_free(&conn->recvmbox);
+   \       0x44   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x48   0x....'....        BL       at_mbox_free
+    223                  at_mbox_set_invalid(&conn->recvmbox);
+   \       0x4C   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x50   0x....'....        BL       at_mbox_set_invalid
+    224              }
+    225          
+    226              return;
+   \                     ??at_drainconn_0: (+1)
+   \       0x54   0xBD13             POP      {R0,R1,R4,PC}    ;; return
+    227          }    
+    228          
+
+   \                                 In section .text, align 2, keep-with-next
+    229          static int at_freeconn(struct at_conn *conn)
+    230          {
+   \                     at_freeconn: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x0004             MOVS     R4,R0
+    231              at_netbuf_t  *buf = NULL;
+    232          
+    233              if (NULL == conn)
+   \        0x4   0xD102             BNE.N    ??at_freeconn_0
+    234              	return -1;
+   \        0x6   0xF04F 0x30FF      MOV      R0,#-1
+   \        0xA   0xBD32             POP      {R1,R4,R5,PC}
+    235              
+    236              if (NULL != conn->lastdata) {
+   \                     ??at_freeconn_0: (+1)
+   \        0xC   0x69A0             LDR      R0,[R4, #+24]
+   \        0xE   0x2800             CMP      R0,#+0
+   \       0x10   0xD00A             BEQ.N    ??at_freeconn_1
+    237                  buf = (at_netbuf_t *) conn->lastdata;
+   \       0x12   0x4605             MOV      R5,R0
+    238          
+    239                  if (buf->payload) {
+   \       0x14   0x6828             LDR      R0,[R5, #+0]
+   \       0x16   0x2800             CMP      R0,#+0
+   \       0x18   0xD003             BEQ.N    ??at_freeconn_2
+    240                      free_payload(buf->payload);
+   \       0x1A   0x....'....        BL       free_payload
+    241                      buf->payload = NULL;
+   \       0x1E   0x2000             MOVS     R0,#+0
+   \       0x20   0x6028             STR      R0,[R5, #+0]
+    242                  }
+    243          
+    244                  free_atnetbuf(buf);
+   \                     ??at_freeconn_2: (+1)
+   \       0x22   0x4628             MOV      R0,R5
+   \       0x24   0x....'....        BL       free_atnetbuf
+    245              }
+    246          
+    247              conn->lastdata   = NULL;
+   \                     ??at_freeconn_1: (+1)
+   \       0x28   0x2000             MOVS     R0,#+0
+   \       0x2A   0x61A0             STR      R0,[R4, #+24]
+    248              conn->lastoffset = 0;
+   \       0x2C   0x83A0             STRH     R0,[R4, #+28]
+    249          
+    250              at_drainconn(conn);   
+   \       0x2E   0x4620             MOV      R0,R4
+   \       0x30   0x....'....        BL       at_drainconn
+    251          
+    252              conn->type       = NETCONN_INVALID;
+   \       0x34   0x2000             MOVS     R0,#+0
+   \       0x36   0x7120             STRB     R0,[R4, #+4]
+    253              conn->state      = NETCONN_NONE;
+   \       0x38   0x7160             STRB     R0,[R4, #+5]
+    254              conn->connid     = UNUSED_ATCONN;
+   \       0x3A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3E   0x6020             STR      R0,[R4, #+0]
+    255          
+    256              return 0;
+   \       0x40   0x2000             MOVS     R0,#+0
+   \       0x42   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    257          }
+    258          
+
+   \                                 In section .text, align 2, keep-with-next
+    259          static int at_conn_fetch(struct at_conn *conn, at_netbuf_t **new_buf)
+    260          {
+   \                     at_conn_fetch: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+    261              uint32_t ret = 0;
+    262              void *buf = NULL;
+   \        0x6   0x2000             MOVS     R0,#+0
+   \        0x8   0x9000             STR      R0,[SP, #+0]
+    263          
+    264              if (NULL == conn || NULL == new_buf) {
+   \        0xA   0x2D00             CMP      R5,#+0
+   \        0xC   0xD001             BEQ.N    ??at_conn_fetch_0
+   \        0xE   0x2C00             CMP      R4,#+0
+   \       0x10   0xD102             BNE.N    ??at_conn_fetch_1
+    265                  return -1;
+   \                     ??at_conn_fetch_0: (+1)
+   \       0x12   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x16   0xBD32             POP      {R1,R4,R5,PC}
+    266              }
+    267          
+    268              if (!at_mbox_valid(&conn->recvmbox)) {
+   \                     ??at_conn_fetch_1: (+1)
+   \       0x18   0xF105 0x0020      ADD      R0,R5,#+32
+   \       0x1C   0x....'....        BL       at_mbox_valid
+   \       0x20   0x2800             CMP      R0,#+0
+   \       0x22   0xD102             BNE.N    ??at_conn_fetch_2
+    269                  AT_ERROR("conn %d invalid recvmbox\n", conn->connid);
+    270                  return -1;
+   \       0x24   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x28   0xBD32             POP      {R1,R4,R5,PC}
+    271              }
+    272          
+    273              ret = at_mbox_fetch(&conn->recvmbox, &buf, conn->recv_timeout_ms);
+    274              if (ret == AT_MBOX_TIMEOUT) {
+   \                     ??at_conn_fetch_2: (+1)
+   \       0x2A   0x6B6A             LDR      R2,[R5, #+52]
+   \       0x2C   0x4669             MOV      R1,SP
+   \       0x2E   0xF105 0x0020      ADD      R0,R5,#+32
+   \       0x32   0x....'....        BL       at_mbox_fetch
+   \       0x36   0xF110 0x0F01      CMN      R0,#+1
+   \       0x3A   0xD102             BNE.N    ??at_conn_fetch_3
+    275                  AT_ERROR("at conn %d fetch data time out %d\n", conn->connid, conn->recv_timeout_ms);
+    276                  return -1;
+   \       0x3C   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x40   0xBD32             POP      {R1,R4,R5,PC}
+    277              }
+    278          
+    279              *new_buf = buf;
+   \                     ??at_conn_fetch_3: (+1)
+   \       0x42   0x9800             LDR      R0,[SP, #+0]
+   \       0x44   0x6020             STR      R0,[R4, #+0]
+    280              return 0;
+   \       0x46   0x2000             MOVS     R0,#+0
+   \       0x48   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    281          }
+    282          
+    283          /****************************public interface*********************/
+
+   \                                 In section .text, align 2, keep-with-next
+    284          int at_conn_input(struct at_conn_input *param)
+    285          {
+   \                     at_conn_input: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+    286              int  s = -1;
+    287              void *data = NULL;
+    288              int len = 0;
+    289              char *remote_ip = NULL;
+    290              uint16_t remote_port = 0;
+    291              struct at_conn *conn = NULL;
+    292              at_netbuf_t *buf  = NULL;
+    293          
+    294              if (NULL == param) {
+   \        0x4   0x2800             CMP      R0,#+0
+   \        0x6   0xD102             BNE.N    ??at_conn_input_0
+    295                  AT_ERROR("at conn input param NULL\n");
+    296                  return -1;
+   \        0x8   0xF04F 0x30FF      MOV      R0,#-1
+   \        0xC   0xE069             B.N      ??at_conn_input_1
+    297              }
+    298          
+    299              s = param->fd;
+   \                     ??at_conn_input_0: (+1)
+   \        0xE   0x6807             LDR      R7,[R0, #+0]
+    300              data = param->data;
+   \       0x10   0x6845             LDR      R5,[R0, #+4]
+    301              len = param->datalen;
+   \       0x12   0x6886             LDR      R6,[R0, #+8]
+    302              remote_ip = param->remote_ip;
+   \       0x14   0x68C4             LDR      R4,[R0, #+12]
+    303              remote_port = param->remote_port;
+   \       0x16   0xF8B0 0x9010      LDRH     R9,[R0, #+16]
+    304          
+    305              if (NULL == data || 0 == len) {
+   \       0x1A   0x2D00             CMP      R5,#+0
+   \       0x1C   0xD001             BEQ.N    ??at_conn_input_2
+   \       0x1E   0x2E00             CMP      R6,#+0
+   \       0x20   0xD102             BNE.N    ??at_conn_input_3
+    306                  AT_ERROR("low level invalid input data\n");
+    307                  return -1;
+   \                     ??at_conn_input_2: (+1)
+   \       0x22   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x26   0xE05C             B.N      ??at_conn_input_1
+    308              }
+    309          
+    310              if (remote_ip != NULL &&
+    311                  strlen(remote_ip) > IPV4_STR_MAX_LEN) {
+   \                     ??at_conn_input_3: (+1)
+   \       0x28   0x2C00             CMP      R4,#+0
+   \       0x2A   0xD007             BEQ.N    ??at_conn_input_4
+   \       0x2C   0x4620             MOV      R0,R4
+   \       0x2E   0x....'....        BL       strlen
+   \       0x32   0x2811             CMP      R0,#+17
+   \       0x34   0xD302             BCC.N    ??at_conn_input_4
+    312                  AT_ERROR("invalid ip string");
+    313                  return -1;
+   \       0x36   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3A   0xE052             B.N      ??at_conn_input_1
+    314              }
+    315          
+    316              conn = get_conn(s);
+   \                     ??at_conn_input_4: (+1)
+   \       0x3C   0x4638             MOV      R0,R7
+   \       0x3E   0x....'....        BL       get_conn
+   \       0x42   0x4680             MOV      R8,R0
+    317              if (NULL == conn) {
+   \       0x44   0xF1B8 0x0F00      CMP      R8,#+0
+   \       0x48   0xD102             BNE.N    ??at_conn_input_5
+    318                  AT_ERROR("conn %d doesn't exist\n", s);
+    319                  return -1;
+   \       0x4A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x4E   0xE048             B.N      ??at_conn_input_1
+    320              }
+    321          
+    322              if (conn->connid < 0) {
+   \                     ??at_conn_input_5: (+1)
+   \       0x50   0xF8D8 0x0000      LDR      R0,[R8, #+0]
+   \       0x54   0x2800             CMP      R0,#+0
+   \       0x56   0xD502             BPL.N    ??at_conn_input_6
+    323                  AT_ERROR("conn %d invalid connid\n", s);
+    324                  return -1;
+   \       0x58   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x5C   0xE041             B.N      ??at_conn_input_1
+    325              }
+    326          
+    327              if (!at_mbox_valid(&conn->recvmbox)) {
+   \                     ??at_conn_input_6: (+1)
+   \       0x5E   0xF108 0x0020      ADD      R0,R8,#+32
+   \       0x62   0x....'....        BL       at_mbox_valid
+   \       0x66   0x2800             CMP      R0,#+0
+   \       0x68   0xD102             BNE.N    ??at_conn_input_7
+    328                  AT_ERROR("invalid conn to input packet\n");
+    329                  return -1;
+   \       0x6A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x6E   0xE038             B.N      ??at_conn_input_1
+    330              }
+    331          
+    332              buf = alloc_atnetbuf();
+   \                     ??at_conn_input_7: (+1)
+   \       0x70   0x....'....        BL       alloc_atnetbuf
+   \       0x74   0x0007             MOVS     R7,R0
+    333              if (NULL == buf) {
+   \       0x76   0xD102             BNE.N    ??at_conn_input_8
+    334                  AT_ERROR("alloc at net buf size %d fail\n", sizeof(at_netbuf_t));
+    335                  return -1;
+   \       0x78   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x7C   0xE031             B.N      ??at_conn_input_1
+    336              }
+    337              memset(buf, 0, sizeof(*buf));
+   \                     ??at_conn_input_8: (+1)
+   \       0x7E   0x2200             MOVS     R2,#+0
+   \       0x80   0x2118             MOVS     R1,#+24
+   \       0x82   0x....'....        BL       __aeabi_memset4
+    338          
+    339              buf->payload = alloc_payload(len);
+   \       0x86   0x4630             MOV      R0,R6
+   \       0x88   0x....'....        BL       alloc_payload
+   \       0x8C   0x6038             STR      R0,[R7, #+0]
+    340              if (NULL == buf->payload) {
+   \       0x8E   0x2800             CMP      R0,#+0
+   \       0x90   0xD105             BNE.N    ??at_conn_input_9
+    341                  free_atnetbuf(buf);
+   \       0x92   0x4638             MOV      R0,R7
+   \       0x94   0x....'....        BL       free_atnetbuf
+    342                  AT_ERROR("alloc payload size %d fail\n", len);
+    343                  return -1;
+   \       0x98   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x9C   0xE021             B.N      ??at_conn_input_1
+    344              }
+    345          
+    346              memcpy(buf->payload, data, len);
+   \                     ??at_conn_input_9: (+1)
+   \       0x9E   0x4632             MOV      R2,R6
+   \       0xA0   0x4629             MOV      R1,R5
+   \       0xA2   0x....'....        BL       __aeabi_memcpy
+    347              buf->len = len;
+   \       0xA6   0x80BE             STRH     R6,[R7, #+4]
+    348              buf->remote_port = remote_port;
+   \       0xA8   0xF8A7 0x9006      STRH     R9,[R7, #+6]
+    349              if (remote_ip)
+   \       0xAC   0x2C00             CMP      R4,#+0
+   \       0xAE   0xD005             BEQ.N    ??at_conn_input_10
+    350                  memcpy(buf->remote_ip, remote_ip, IPV4_STR_MAX_LEN);
+   \       0xB0   0x2210             MOVS     R2,#+16
+   \       0xB2   0x4621             MOV      R1,R4
+   \       0xB4   0xF107 0x0008      ADD      R0,R7,#+8
+   \       0xB8   0x....'....        BL       __aeabi_memcpy
+    351              
+    352              if (at_mbox_trypost(&conn->recvmbox, buf) != 0) {
+   \                     ??at_conn_input_10: (+1)
+   \       0xBC   0x4639             MOV      R1,R7
+   \       0xBE   0xF108 0x0020      ADD      R0,R8,#+32
+   \       0xC2   0x....'....        BL       at_mbox_trypost
+   \       0xC6   0x2800             CMP      R0,#+0
+   \       0xC8   0xD00A             BEQ.N    ??at_conn_input_11
+    353                  free_payload(buf->payload);
+   \       0xCA   0x6838             LDR      R0,[R7, #+0]
+   \       0xCC   0x....'....        BL       free_payload
+    354                  buf->payload = NULL;
+   \       0xD0   0x2000             MOVS     R0,#+0
+   \       0xD2   0x6038             STR      R0,[R7, #+0]
+    355                  free_atnetbuf(buf);
+   \       0xD4   0x4638             MOV      R0,R7
+   \       0xD6   0x....'....        BL       free_atnetbuf
+    356                  AT_ERROR("try post recv packet fail\n");
+    357                  return -1;
+   \       0xDA   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xDE   0xE000             B.N      ??at_conn_input_1
+    358              }
+    359          
+    360              return 0;
+   \                     ??at_conn_input_11: (+1)
+   \       0xE0   0x2000             MOVS     R0,#+0
+   \                     ??at_conn_input_1: (+1)
+   \       0xE2   0xE8BD 0x83F2      POP      {R1,R4-R9,PC}    ;; return
+    361           }
+    362          
+
+   \                                 In section .text, align 2, keep-with-next
+    363          int at_conn_init(void)
+    364          {
+   \                     at_conn_init: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+    365              static int at_conn_init_done = 0;
+    366              int i;
+    367          
+    368              if (at_conn_init_done) {
+   \        0x2   0x....             LDR.N    R4,??DataTable6_1
+   \        0x4   0x6820             LDR      R0,[R4, #+0]
+   \        0x6   0x2800             CMP      R0,#+0
+   \        0x8   0xD001             BEQ.N    ??at_conn_init_0
+    369                  AT_ERROR("at conn have already init done\n");
+    370                  return 0;
+   \        0xA   0x2000             MOVS     R0,#+0
+   \        0xC   0xBD32             POP      {R1,R4,R5,PC}
+    371              }
+    372          
+    373          	for (i = 0; i < AT_CONN_NUM; i++) {
+   \                     ??at_conn_init_0: (+1)
+   \        0xE   0x2000             MOVS     R0,#+0
+   \       0x10   0xF04F 0x31FF      MOV      R1,#-1
+   \       0x14   0x....             LDR.N    R2,??DataTable6
+   \       0x16   0xE004             B.N      ??at_conn_init_1
+    374          		atconnects[i].connid = UNUSED_ATCONN;
+   \                     ??at_conn_init_2: (+1)
+   \       0x18   0xEBC0 0x03C0      RSB      R3,R0,R0, LSL #+3
+   \       0x1C   0x00DB             LSLS     R3,R3,#+3
+   \       0x1E   0x50D1             STR      R1,[R2, R3]
+    375          	}
+   \       0x20   0x1C40             ADDS     R0,R0,#+1
+   \                     ??at_conn_init_1: (+1)
+   \       0x22   0x2803             CMP      R0,#+3
+   \       0x24   0xDBF8             BLT.N    ??at_conn_init_2
+    376          
+    377              g_atconnmutex = HAL_MutexCreate();
+   \       0x26   0x....             LDR.N    R5,??DataTable6_2
+   \       0x28   0x....'....        BL       HAL_MutexCreate
+   \       0x2C   0x6028             STR      R0,[R5, #+0]
+    378              if (g_atconnmutex == NULL) {
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD102             BNE.N    ??at_conn_init_3
+    379                  AT_ERROR("failed to creat g_atconnmutex \n");
+    380                  return -1;
+   \       0x32   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x36   0xBD32             POP      {R1,R4,R5,PC}
+    381              }
+    382          
+    383              if (HAL_AT_CONN_Init() != 0) {
+   \                     ??at_conn_init_3: (+1)
+   \       0x38   0x....'....        BL       HAL_AT_CONN_Init
+   \       0x3C   0x2800             CMP      R0,#+0
+   \       0x3E   0xD005             BEQ.N    ??at_conn_init_4
+    384                  AT_ERROR("at conn low level init fail\n");
+    385                  HAL_MutexDestroy(g_atconnmutex);
+   \       0x40   0x6828             LDR      R0,[R5, #+0]
+   \       0x42   0x....'....        BL       HAL_MutexDestroy
+    386                  return -1;
+   \       0x46   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x4A   0xBD32             POP      {R1,R4,R5,PC}
+    387              }
+    388          
+    389              at_conn_init_done = 1;
+   \                     ??at_conn_init_4: (+1)
+   \       0x4C   0x2001             MOVS     R0,#+1
+   \       0x4E   0x6020             STR      R0,[R4, #+0]
+    390          
+    391              return 0 ;
+   \       0x50   0x2000             MOVS     R0,#+0
+   \       0x52   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    392          }
+
+   \                                 In section .bss, align 4
+   \                     `at_conn_init::at_conn_init_done`:
+   \        0x0                      DS8 4
+    393          
+
+   \                                 In section .text, align 2, keep-with-next
+    394          int at_conn_getaddrinfo(const char *nodename, char resultip[16])
+    395          {
+   \                     at_conn_getaddrinfo: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4605             MOV      R5,R0
+   \        0x4   0x460C             MOV      R4,R1
+    396          	int namelen;
+    397          
+    398          	if (NULL == nodename || NULL == resultip) {
+   \        0x6   0x2D00             CMP      R5,#+0
+   \        0x8   0xD001             BEQ.N    ??at_conn_getaddrinfo_0
+   \        0xA   0x2C00             CMP      R4,#+0
+   \        0xC   0xD102             BNE.N    ??at_conn_getaddrinfo_1
+    399          		return -1;
+   \                     ??at_conn_getaddrinfo_0: (+1)
+   \        0xE   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x12   0xBD32             POP      {R1,R4,R5,PC}
+    400          	}
+    401          	
+    402              namelen = strlen(nodename);
+   \                     ??at_conn_getaddrinfo_1: (+1)
+   \       0x14   0x....'....        BL       strlen
+    403              if (namelen > DNS_MAX_NAME_LENGTH)
+   \       0x18   0xF240 0x1101      MOVW     R1,#+257
+   \       0x1C   0x4288             CMP      R0,R1
+   \       0x1E   0xDB02             BLT.N    ??at_conn_getaddrinfo_2
+    404                  return -1;
+   \       0x20   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x24   0xBD32             POP      {R1,R4,R5,PC}
+    405          
+    406              if (HAL_AT_CONN_DomainToIp((char *)nodename, resultip) != 0) {
+   \                     ??at_conn_getaddrinfo_2: (+1)
+   \       0x26   0x4621             MOV      R1,R4
+   \       0x28   0x4628             MOV      R0,R5
+   \       0x2A   0x....'....        BL       HAL_AT_CONN_DomainToIp
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD002             BEQ.N    ??at_conn_getaddrinfo_3
+    407                  AT_ERROR("domain to ip failed.");
+    408                  return -1;
+   \       0x32   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x36   0xBD32             POP      {R1,R4,R5,PC}
+    409              }
+    410          
+    411              return 0;
+   \                     ??at_conn_getaddrinfo_3: (+1)
+   \       0x38   0x2000             MOVS     R0,#+0
+   \       0x3A   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    412          }
+    413          
+
+   \                                 In section .text, align 2, keep-with-next
+    414          int at_conn_setup(netconn_type_t type)
+    415          {
+   \                     at_conn_setup: (+1)
+   \        0x0   0xB570             PUSH     {R4-R6,LR}
+   \        0x2   0x4604             MOV      R4,R0
+    416          	struct at_conn *conn = NULL;
+    417              int connid = -1;
+    418          
+    419              if (type >= NETCONN_TYPE_NUM || type <= NETCONN_INVALID) {
+   \        0x4   0x2802             CMP      R0,#+2
+   \        0x6   0xDA01             BGE.N    ??at_conn_setup_0
+   \        0x8   0x0020             MOVS     R0,R4
+   \        0xA   0xD102             BNE.N    ??at_conn_setup_1
+    420              	return -1;
+   \                     ??at_conn_setup_0: (+1)
+   \        0xC   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x10   0xBD70             POP      {R4-R6,PC}
+    421              }
+    422          
+    423              HAL_MutexLock(g_atconnmutex);
+   \                     ??at_conn_setup_1: (+1)
+   \       0x12   0x....             LDR.N    R5,??DataTable6_2
+   \       0x14   0x6828             LDR      R0,[R5, #+0]
+   \       0x16   0x....'....        BL       HAL_MutexLock
+    424              if ((connid = at_newconn()) == -1) {
+   \       0x1A   0x....'....        BL       at_newconn
+   \       0x1E   0x4606             MOV      R6,R0
+   \       0x20   0xF116 0x0F01      CMN      R6,#+1
+   \       0x24   0xD003             BEQ.N    ??at_conn_setup_2
+    425                  AT_ERROR("fai to new at conn\n");
+    426                  HAL_MutexUnlock(g_atconnmutex);
+    427              	return -1;
+    428              }
+    429          
+    430              if ((conn = get_conn(connid)) == NULL) {
+   \       0x26   0x....'....        BL       get_conn
+   \       0x2A   0x2800             CMP      R0,#+0
+   \       0x2C   0xD105             BNE.N    ??at_conn_setup_3
+    431              	AT_ERROR("fai to get at conn\n");
+    432                  HAL_MutexUnlock(g_atconnmutex);
+   \                     ??at_conn_setup_2: (+1)
+   \       0x2E   0x6828             LDR      R0,[R5, #+0]
+   \       0x30   0x....'....        BL       HAL_MutexUnlock
+    433              	return -1;
+   \       0x34   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x38   0xBD70             POP      {R4-R6,PC}
+    434              }
+    435          
+    436              conn->type = type;
+   \                     ??at_conn_setup_3: (+1)
+   \       0x3A   0x7104             STRB     R4,[R0, #+4]
+    437              conn->state = NETCONN_NONE;
+   \       0x3C   0x2100             MOVS     R1,#+0
+   \       0x3E   0x7141             STRB     R1,[R0, #+5]
+    438              HAL_MutexUnlock(g_atconnmutex);
+   \       0x40   0x6828             LDR      R0,[R5, #+0]
+   \       0x42   0x....'....        BL       HAL_MutexUnlock
+    439          
+    440              return connid;
+   \       0x46   0x4630             MOV      R0,R6
+   \       0x48   0xBD70             POP      {R4-R6,PC}       ;; return
+    441          }
+    442          
+
+   \                                 In section .text, align 2, keep-with-next
+    443          int at_conn_start(int connid, char* remoteipaddr, uint16_t remoteport)
+    444          {
+   \                     at_conn_start: (+1)
+   \        0x0   0xE92D 0x43F8      PUSH     {R3-R9,LR}
+   \        0x4   0xB086             SUB      SP,SP,#+24
+   \        0x6   0x4607             MOV      R7,R0
+   \        0x8   0x4688             MOV      R8,R1
+   \        0xA   0x4615             MOV      R5,R2
+    445          	char *ipv4anyadrr = AT_IP4_ANY_ADDR;
+   \        0xC   0x....             LDR.N    R6,??DataTable6_3
+    446          	at_conn_t statconn = {0};
+   \        0xE   0x4668             MOV      R0,SP
+   \       0x10   0x2118             MOVS     R1,#+24
+   \       0x12   0x....'....        BL       __aeabi_memclr4
+    447              struct at_conn *conn = NULL;
+    448           
+    449              HAL_MutexLock(g_atconnmutex);
+   \       0x16   0x....'....        LDR.W    R9,??DataTable6_2
+   \       0x1A   0xF8D9 0x0000      LDR      R0,[R9, #+0]
+   \       0x1E   0x....'....        BL       HAL_MutexLock
+    450              conn = get_conn(connid);
+   \       0x22   0x4638             MOV      R0,R7
+   \       0x24   0x....'....        BL       get_conn
+   \       0x28   0x0004             MOVS     R4,R0
+    451              if (NULL == conn) {
+   \       0x2A   0xD028             BEQ.N    ??at_conn_start_0
+    452                  AT_ERROR("at_startconn: invalid conn\n");
+    453                  HAL_MutexUnlock(g_atconnmutex);
+    454                  return -1;
+    455              }
+    456          
+    457              if (conn->state != NETCONN_NONE) {
+   \       0x2C   0x7960             LDRB     R0,[R4, #+5]
+   \       0x2E   0x2800             CMP      R0,#+0
+   \       0x30   0xD125             BNE.N    ??at_conn_start_0
+    458                  AT_ERROR("at_startconn: conn %d state is %d \n", connid, conn->state);
+    459                  HAL_MutexUnlock(g_atconnmutex);
+    460                  return -1;
+    461              }
+    462          
+    463              statconn.fd = connid;
+   \       0x32   0x9700             STR      R7,[SP, #+0]
+    464              statconn.r_port = remoteport;
+   \       0x34   0x4628             MOV      R0,R5
+   \       0x36   0x9003             STR      R0,[SP, #+12]
+    465              statconn.l_port = -1;
+   \       0x38   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3C   0x9004             STR      R0,[SP, #+16]
+    466              statconn.addr = (char *)remoteipaddr;
+   \       0x3E   0xF8CD 0x8008      STR      R8,[SP, #+8]
+    467              if (NULL == statconn.addr) {
+   \       0x42   0x4640             MOV      R0,R8
+   \       0x44   0x2800             CMP      R0,#+0
+   \       0x46   0xD100             BNE.N    ??at_conn_start_1
+    468                  statconn.addr = ipv4anyadrr;
+   \       0x48   0x9602             STR      R6,[SP, #+8]
+    469              }
+    470          
+    471              switch (conn->type) {
+   \                     ??at_conn_start_1: (+1)
+   \       0x4A   0x7920             LDRB     R0,[R4, #+4]
+   \       0x4C   0x2801             CMP      R0,#+1
+   \       0x4E   0xD116             BNE.N    ??at_conn_start_0
+    472                  case NETCONN_TCP:
+    473                      statconn.type = TCP_CLIENT;
+   \       0x50   0x2001             MOVS     R0,#+1
+   \       0x52   0xF88D 0x0004      STRB     R0,[SP, #+4]
+    474                      if (HAL_AT_CONN_Start(&statconn) != 0) {
+   \       0x56   0x4668             MOV      R0,SP
+   \       0x58   0x....'....        BL       HAL_AT_CONN_Start
+   \       0x5C   0x2800             CMP      R0,#+0
+   \       0x5E   0xD10E             BNE.N    ??at_conn_start_0
+    475                          AT_ERROR("fail to setup tcp connect, remote is %s port is %d.\n", statconn.addr, remoteport);
+    476                          HAL_MutexUnlock(g_atconnmutex);
+    477                          return -1;
+    478                      }
+    479                      memcpy(conn->remote_ip, statconn.addr, IPV4_STR_MAX_LEN);
+   \       0x60   0x2210             MOVS     R2,#+16
+   \       0x62   0x9902             LDR      R1,[SP, #+8]
+   \       0x64   0xF104 0x0008      ADD      R0,R4,#+8
+   \       0x68   0x....'....        BL       __aeabi_memcpy
+    480                      conn->remote_port = remoteport;
+   \       0x6C   0x80E5             STRH     R5,[R4, #+6]
+    481                      break;
+    482                  default:
+    483                      AT_ERROR("Unsupported at connection type.\n");
+    484                      HAL_MutexUnlock(g_atconnmutex);
+    485                      return -1;
+    486              }
+    487          
+    488              /* Update at conn state */
+    489              conn->state = NETCONN_CONNECT;
+   \       0x6E   0x2003             MOVS     R0,#+3
+   \       0x70   0x7160             STRB     R0,[R4, #+5]
+    490              HAL_MutexUnlock(g_atconnmutex);
+   \       0x72   0xF8D9 0x0000      LDR      R0,[R9, #+0]
+   \       0x76   0x....'....        BL       HAL_MutexUnlock
+    491          
+    492              return 0;
+   \       0x7A   0x2000             MOVS     R0,#+0
+   \       0x7C   0xE005             B.N      ??at_conn_start_2
+   \                     ??at_conn_start_0: (+1)
+   \       0x7E   0xF8D9 0x0000      LDR      R0,[R9, #+0]
+   \       0x82   0x....'....        BL       HAL_MutexUnlock
+   \       0x86   0xF04F 0x30FF      MOV      R0,#-1
+   \                     ??at_conn_start_2: (+1)
+   \       0x8A   0xB007             ADD      SP,SP,#+28
+   \       0x8C   0xE8BD 0x83F0      POP      {R4-R9,PC}       ;; return
+    493          }
+
+   \                                 In section .rodata, align 4
+   \        0x0   0x0000'0000        DC32 0
+   \        0x4   0x00 0x00          DC8 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+   \              0x00 0x00    
+    494          
+
+   \                                 In section .text, align 2, keep-with-next
+    495          int at_conn_close(int c)
+    496          {
+   \                     at_conn_close: (+1)
+   \        0x0   0xB538             PUSH     {R3-R5,LR}
+   \        0x2   0x4605             MOV      R5,R0
+    497              struct at_conn *conn = NULL;
+    498              int err;
+    499          
+    500              AT_DEBUG("at_close(%d)\r\n", c);
+    501          
+    502              conn = get_conn(c);
+   \        0x4   0x....'....        BL       get_conn
+   \        0x8   0x0004             MOVS     R4,R0
+    503              if (NULL == conn) {
+   \        0xA   0xD102             BNE.N    ??at_conn_close_0
+    504                  return -1;
+   \        0xC   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x10   0xBD32             POP      {R1,R4,R5,PC}
+    505              }
+    506          
+    507              if (conn->state == NETCONN_CONNECT) {
+   \                     ??at_conn_close_0: (+1)
+   \       0x12   0x7960             LDRB     R0,[R4, #+5]
+   \       0x14   0x2803             CMP      R0,#+3
+   \       0x16   0xD104             BNE.N    ??at_conn_close_1
+    508                  if (HAL_AT_CONN_Close(c, -1) != 0) {
+   \       0x18   0xF04F 0x31FF      MOV      R1,#-1
+   \       0x1C   0x4628             MOV      R0,R5
+   \       0x1E   0x....'....        BL       HAL_AT_CONN_Close
+    509                      AT_DEBUG("HAL_AT_close failed.");
+    510                  }
+    511              }
+    512          
+    513              HAL_MutexLock(g_atconnmutex);
+   \                     ??at_conn_close_1: (+1)
+   \       0x22   0x....             LDR.N    R5,??DataTable6_2
+   \       0x24   0x6828             LDR      R0,[R5, #+0]
+   \       0x26   0x....'....        BL       HAL_MutexLock
+    514              err = at_freeconn(conn);
+   \       0x2A   0x4620             MOV      R0,R4
+   \       0x2C   0x....'....        BL       at_freeconn
+   \       0x30   0x4604             MOV      R4,R0
+    515              HAL_MutexUnlock(g_atconnmutex);
+   \       0x32   0x6828             LDR      R0,[R5, #+0]
+   \       0x34   0x....'....        BL       HAL_MutexUnlock
+    516              if (err != 0) {
+   \       0x38   0x2C00             CMP      R4,#+0
+   \       0x3A   0xD002             BEQ.N    ??at_conn_close_2
+    517                  AT_ERROR("at_freeconn failed in %s.", __func__);
+    518                  return -1;
+   \       0x3C   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x40   0xBD32             POP      {R1,R4,R5,PC}
+    519              }
+    520          
+    521              return 0;
+   \                     ??at_conn_close_2: (+1)
+   \       0x42   0x2000             MOVS     R0,#+0
+   \       0x44   0xBD32             POP      {R1,R4,R5,PC}    ;; return
+    522          }
+    523          
+
+   \                                 In section .text, align 2, keep-with-next
+    524          int at_conn_recvbufempty(int c)
+    525          {
+   \                     at_conn_recvbufempty: (+1)
+   \        0x0   0xB510             PUSH     {R4,LR}
+    526              struct at_conn *conn = NULL;
+    527          
+    528              conn = get_conn(c);
+   \        0x2   0x....'....        BL       get_conn
+   \        0x6   0x0004             MOVS     R4,R0
+    529              if (NULL == conn) {
+   \        0x8   0xD102             BNE.N    ??at_conn_recvbufempty_0
+    530                  AT_ERROR("at_recvbufempty cannot get socket %d\n", c);
+    531                  return -1;
+   \        0xA   0xF04F 0x30FF      MOV      R0,#-1
+   \        0xE   0xBD10             POP      {R4,PC}
+    532              }
+    533          
+    534              /* remain data */
+    535              if (conn->lastdata)
+   \                     ??at_conn_recvbufempty_0: (+1)
+   \       0x10   0x69A0             LDR      R0,[R4, #+24]
+   \       0x12   0x2800             CMP      R0,#+0
+   \       0x14   0xD001             BEQ.N    ??at_conn_recvbufempty_1
+    536                  return 0;
+   \       0x16   0x2000             MOVS     R0,#+0
+   \       0x18   0xBD10             POP      {R4,PC}
+    537          
+    538              if (!at_mbox_valid(&conn->recvmbox)) {
+   \                     ??at_conn_recvbufempty_1: (+1)
+   \       0x1A   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x1E   0x....'....        BL       at_mbox_valid
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD102             BNE.N    ??at_conn_recvbufempty_2
+    539                  AT_ERROR("conn %d invalid recvmbox\n", c);
+    540                  return -1;
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xBD10             POP      {R4,PC}
+    541              }
+    542          
+    543              return at_mbox_empty(&conn->recvmbox);
+   \                     ??at_conn_recvbufempty_2: (+1)
+   \       0x2C   0xF104 0x0020      ADD      R0,R4,#+32
+   \       0x30   0xE8BD 0x4010      POP      {R4,LR}
+   \       0x34   0x....'....        B.W      at_mbox_empty
+    544          }
+    545          
+
+   \                                 In section .text, align 2, keep-with-next
+    546          int at_conn_send(int c, const void *data, uint32_t size)
+    547          {
+   \                     at_conn_send: (+1)
+   \        0x0   0xB57C             PUSH     {R2-R6,LR}
+   \        0x2   0x4606             MOV      R6,R0
+   \        0x4   0x460C             MOV      R4,R1
+   \        0x6   0x4615             MOV      R5,R2
+    548              struct at_conn *conn = NULL;
+    549          
+    550              if (NULL == data || size == 0 || size > AT_MAX_PAYLOAD_SIZE) {
+   \        0x8   0x2C00             CMP      R4,#+0
+   \        0xA   0xD005             BEQ.N    ??at_conn_send_0
+   \        0xC   0x2D00             CMP      R5,#+0
+   \        0xE   0xD003             BEQ.N    ??at_conn_send_0
+   \       0x10   0xF240 0x50E9      MOVW     R0,#+1513
+   \       0x14   0x4285             CMP      R5,R0
+   \       0x16   0xD302             BCC.N    ??at_conn_send_1
+    551                  AT_ERROR("at_conn_send fail to send, size %d\n", size);
+    552                  return -1;
+   \                     ??at_conn_send_0: (+1)
+   \       0x18   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x1C   0xBD76             POP      {R1,R2,R4-R6,PC}
+    553              }
+    554          
+    555              conn = get_conn(c);
+   \                     ??at_conn_send_1: (+1)
+   \       0x1E   0x4630             MOV      R0,R6
+   \       0x20   0x....'....        BL       get_conn
+    556              if (NULL == conn) {
+   \       0x24   0x2800             CMP      R0,#+0
+   \       0x26   0xD102             BNE.N    ??at_conn_send_2
+    557                  AT_ERROR("at_conn_send fail to get conn %d\n", c);
+    558                  return -1;
+   \       0x28   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2C   0xBD76             POP      {R1,R2,R4-R6,PC}
+    559              }
+    560          
+    561              if (conn->type == NETCONN_TCP) {
+   \                     ??at_conn_send_2: (+1)
+   \       0x2E   0x7901             LDRB     R1,[R0, #+4]
+   \       0x30   0x2901             CMP      R1,#+1
+   \       0x32   0xD105             BNE.N    ??at_conn_send_3
+    562                  if (conn->state == NETCONN_NONE) {
+   \       0x34   0x7941             LDRB     R1,[R0, #+5]
+   \       0x36   0x2900             CMP      R1,#+0
+   \       0x38   0xD102             BNE.N    ??at_conn_send_3
+    563                      AT_ERROR("at_conn_send connect %d state %d\n", c, conn->state);
+    564                      return -1;
+   \       0x3A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x3E   0xBD76             POP      {R1,R2,R4-R6,PC}
+    565                  }
+    566              }
+    567          
+    568              if (HAL_AT_CONN_Send(c, (uint8_t *)data, size, NULL, -1, conn->send_timeout_ms)) {
+   \                     ??at_conn_send_3: (+1)
+   \       0x40   0x6B00             LDR      R0,[R0, #+48]
+   \       0x42   0x9001             STR      R0,[SP, #+4]
+   \       0x44   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x48   0x9000             STR      R0,[SP, #+0]
+   \       0x4A   0x2300             MOVS     R3,#+0
+   \       0x4C   0x462A             MOV      R2,R5
+   \       0x4E   0x4621             MOV      R1,R4
+   \       0x50   0x4630             MOV      R0,R6
+   \       0x52   0x....'....        BL       HAL_AT_CONN_Send
+   \       0x56   0x2800             CMP      R0,#+0
+   \       0x58   0xD002             BEQ.N    ??at_conn_send_4
+    569                  AT_ERROR("c %d fail to send do nothing for now\n", c);
+    570                  return -1;
+   \       0x5A   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x5E   0xBD76             POP      {R1,R2,R4-R6,PC}
+    571              }
+    572          
+    573              return size;
+   \                     ??at_conn_send_4: (+1)
+   \       0x60   0x4628             MOV      R0,R5
+   \       0x62   0xBD76             POP      {R1,R2,R4-R6,PC}  ;; return
+    574          }
+    575          
+
+   \                                 In section .text, align 2, keep-with-next
+    576          int at_conn_recv(int c, void *mem, uint32_t len)
+    577          {
+   \                     at_conn_recv: (+1)
+   \        0x0   0xE92D 0x47FC      PUSH     {R2-R10,LR}
+   \        0x4   0x460D             MOV      R5,R1
+   \        0x6   0x4614             MOV      R4,R2
+    578              struct at_conn        *conn    = NULL;
+    579              at_netbuf_t           *buf     = NULL;
+   \        0x8   0x2100             MOVS     R1,#+0
+   \        0xA   0x9100             STR      R1,[SP, #+0]
+    580              int                    off     = 0;
+   \        0xC   0x460E             MOV      R6,R1
+    581              uint16_t               buflen  = 0;
+    582              uint16_t               copylen = 0;
+    583              int                    err     = 0;
+    584              uint8_t                done    = 0;
+   \        0xE   0x460F             MOV      R7,R1
+    585          
+    586              if (NULL == mem || 0 == len) {
+   \       0x10   0x2D00             CMP      R5,#+0
+   \       0x12   0xD001             BEQ.N    ??at_conn_recv_0
+   \       0x14   0x2C00             CMP      R4,#+0
+   \       0x16   0xD102             BNE.N    ??at_conn_recv_1
+    587                  return -1;
+   \                     ??at_conn_recv_0: (+1)
+   \       0x18   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x1C   0xE065             B.N      ??at_conn_recv_2
+    588              }
+    589          
+    590              conn = get_conn(c);
+   \                     ??at_conn_recv_1: (+1)
+   \       0x1E   0x....'....        BL       get_conn
+    591              if (NULL == conn) {
+   \       0x22   0x2800             CMP      R0,#+0
+   \       0x24   0xD163             BNE.N    ??at_conn_recv_3
+    592                  AT_ERROR("at_conn_recv fail to get conn %d\n", c);
+    593                  return -1;
+   \       0x26   0xF04F 0x30FF      MOV      R0,#-1
+   \       0x2A   0xE05E             B.N      ??at_conn_recv_2
+    594              }
+    595          
+    596              do {
+    597                  if (conn->lastdata) {
+    598                      buf = conn->lastdata;
+    599                  } else {
+    600                      err = at_conn_fetch(conn, &buf);
+    601                      if (err != 0 || buf == NULL || buf->payload == NULL) {
+   \                     ??at_conn_recv_4: (+1)
+   \       0x2C   0x4669             MOV      R1,SP
+   \       0x2E   0x4640             MOV      R0,R8
+   \       0x30   0x....'....        BL       at_conn_fetch
+   \       0x34   0x2800             CMP      R0,#+0
+   \       0x36   0xD161             BNE.N    ??at_conn_recv_5
+   \       0x38   0x9800             LDR      R0,[SP, #+0]
+   \       0x3A   0x2800             CMP      R0,#+0
+   \       0x3C   0xD05E             BEQ.N    ??at_conn_recv_5
+   \       0x3E   0x6800             LDR      R0,[R0, #+0]
+   \       0x40   0x2800             CMP      R0,#+0
+   \       0x42   0xD05B             BEQ.N    ??at_conn_recv_5
+    602                          if (off > 0) {
+    603                              return off;
+    604                          } else {
+    605                              return -1;
+    606                          }
+    607                      }
+    608          
+    609                      conn->lastdata = buf;
+   \       0x44   0x9800             LDR      R0,[SP, #+0]
+   \       0x46   0xF8C8 0x0018      STR      R0,[R8, #+24]
+    610                  }
+    611          
+    612                  buflen = buf->len;
+    613                  AT_DEBUG("at_conn_recv: buflen=%u, len=%u, off=%d, lastoffset=%u\n", 
+    614                           buflen, len, off, conn->lastoffset);
+    615          
+    616                  buflen -= conn->lastoffset;
+   \                     ??at_conn_recv_6: (+1)
+   \       0x4A   0x9800             LDR      R0,[SP, #+0]
+   \       0x4C   0x8880             LDRH     R0,[R0, #+4]
+   \       0x4E   0xF8B8 0x901C      LDRH     R9,[R8, #+28]
+   \       0x52   0xEBA0 0x0909      SUB      R9,R0,R9
+    617                  if (len > buflen) {
+   \       0x56   0x4648             MOV      R0,R9
+   \       0x58   0xB280             UXTH     R0,R0
+   \       0x5A   0x42A0             CMP      R0,R4
+   \       0x5C   0xD228             BCS.N    ??at_conn_recv_7
+    618                      copylen = buflen;
+   \       0x5E   0x46CA             MOV      R10,R9
+   \       0x60   0xFA1F 0xFA8A      UXTH     R10,R10
+    619                  } else {
+    620                      copylen = len;
+    621                  }
+    622          
+    623                  memcpy(&((uint8_t *)mem)[off], &((uint8_t *)buf->payload)[conn->lastoffset], copylen);
+   \                     ??at_conn_recv_8: (+1)
+   \       0x64   0x4652             MOV      R2,R10
+   \       0x66   0x9800             LDR      R0,[SP, #+0]
+   \       0x68   0x6800             LDR      R0,[R0, #+0]
+   \       0x6A   0xF8B8 0x101C      LDRH     R1,[R8, #+28]
+   \       0x6E   0x4401             ADD      R1,R0,R1
+   \       0x70   0x19A8             ADDS     R0,R5,R6
+   \       0x72   0x....'....        BL       __aeabi_memcpy
+    624                  off += copylen;
+   \       0x76   0x4456             ADD      R6,R10,R6
+    625          
+    626                  if (NETCONN_TCP == conn->type) {
+   \       0x78   0xF898 0x0004      LDRB     R0,[R8, #+4]
+   \       0x7C   0x2801             CMP      R0,#+1
+   \       0x7E   0xD11E             BNE.N    ??at_conn_recv_9
+    627                      if (len < copylen) {
+   \       0x80   0x4554             CMP      R4,R10
+   \       0x82   0xD319             BCC.N    ??at_conn_recv_10
+    628                          AT_ERROR("invalid copylen %d, len = %d\n", copylen, len);
+    629                          return -1;
+    630                      }
+    631          
+    632                      len -= copylen;
+   \       0x84   0xEBB4 0x040A      SUBS     R4,R4,R10
+    633                      if (len <= 0) {
+   \       0x88   0xD100             BNE.N    ??at_conn_recv_11
+    634                          done = 1;
+   \       0x8A   0x2701             MOVS     R7,#+1
+    635                      }
+    636                  } else {
+    637                      done = 1;
+    638                  }
+    639          
+    640                  if ((NETCONN_TCP == conn->type) && (buflen > copylen)) {
+   \                     ??at_conn_recv_11: (+1)
+   \       0x8C   0x2801             CMP      R0,#+1
+   \       0x8E   0xD118             BNE.N    ??at_conn_recv_12
+   \       0x90   0xFA1F 0xF989      UXTH     R9,R9
+   \       0x94   0x45CA             CMP      R10,R9
+   \       0x96   0xDA14             BGE.N    ??at_conn_recv_12
+    641                      conn->lastdata = buf;
+   \       0x98   0x9800             LDR      R0,[SP, #+0]
+   \       0x9A   0xF8C8 0x0018      STR      R0,[R8, #+24]
+    642                      conn->lastoffset += copylen;
+   \       0x9E   0xF8B8 0x001C      LDRH     R0,[R8, #+28]
+   \       0xA2   0x4482             ADD      R10,R10,R0
+   \       0xA4   0xF8A8 0xA01C      STRH     R10,[R8, #+28]
+   \       0xA8   0xE01C             B.N      ??at_conn_recv_13
+    643                  } else {
+   \                     ??at_conn_recv_14: (+1)
+   \       0xAA   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xAE   0xE01C             B.N      ??at_conn_recv_2
+   \                     ??at_conn_recv_7: (+1)
+   \       0xB0   0x46A2             MOV      R10,R4
+   \       0xB2   0xFA1F 0xFA8A      UXTH     R10,R10
+   \       0xB6   0xE7D5             B.N      ??at_conn_recv_8
+   \                     ??at_conn_recv_10: (+1)
+   \       0xB8   0xF04F 0x30FF      MOV      R0,#-1
+   \       0xBC   0xE015             B.N      ??at_conn_recv_2
+   \                     ??at_conn_recv_9: (+1)
+   \       0xBE   0x2701             MOVS     R7,#+1
+   \       0xC0   0xE7E4             B.N      ??at_conn_recv_11
+    644                      conn->lastdata = NULL;
+   \                     ??at_conn_recv_12: (+1)
+   \       0xC2   0x2000             MOVS     R0,#+0
+   \       0xC4   0xF8C8 0x0018      STR      R0,[R8, #+24]
+    645                      conn->lastoffset = 0;
+   \       0xC8   0xF8A8 0x001C      STRH     R0,[R8, #+28]
+    646                      free_payload(buf->payload);
+   \       0xCC   0x9800             LDR      R0,[SP, #+0]
+   \       0xCE   0x6800             LDR      R0,[R0, #+0]
+   \       0xD0   0x....'....        BL       free_payload
+    647                      buf->payload = NULL;
+   \       0xD4   0x2000             MOVS     R0,#+0
+   \       0xD6   0x9900             LDR      R1,[SP, #+0]
+   \       0xD8   0x6008             STR      R0,[R1, #+0]
+    648                      free_atnetbuf(buf);
+   \       0xDA   0x9800             LDR      R0,[SP, #+0]
+   \       0xDC   0x....'....        BL       free_atnetbuf
+    649                      buf = NULL;
+   \       0xE0   0x2000             MOVS     R0,#+0
+   \       0xE2   0x9000             STR      R0,[SP, #+0]
+    650                  }
+    651              } while (!done);
+   \                     ??at_conn_recv_13: (+1)
+   \       0xE4   0x0038             MOVS     R0,R7
+   \       0xE6   0xD003             BEQ.N    ??at_conn_recv_15
+    652          
+    653              return off;
+   \       0xE8   0x4630             MOV      R0,R6
+   \                     ??at_conn_recv_2: (+1)
+   \       0xEA   0xE8BD 0x87F6      POP      {R1,R2,R4-R10,PC}  ;; return
+   \                     ??at_conn_recv_3: (+1)
+   \       0xEE   0x4680             MOV      R8,R0
+   \                     ??at_conn_recv_15: (+1)
+   \       0xF0   0xF8D8 0x0018      LDR      R0,[R8, #+24]
+   \       0xF4   0x2800             CMP      R0,#+0
+   \       0xF6   0xD099             BEQ.N    ??at_conn_recv_4
+   \       0xF8   0x9000             STR      R0,[SP, #+0]
+   \       0xFA   0xE7A6             B.N      ??at_conn_recv_6
+   \                     ??at_conn_recv_5: (+1)
+   \       0xFC   0x2E01             CMP      R6,#+1
+   \       0xFE   0xDBD4             BLT.N    ??at_conn_recv_14
+   \      0x100   0x4630             MOV      R0,R6
+   \      0x102   0xE7F2             B.N      ??at_conn_recv_2
+    654          }
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6:
+   \        0x0   0x....'....        DC32     atconnects
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_1:
+   \        0x0   0x....'....        DC32     `at_conn_init::at_conn_init_done`
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_2:
+   \        0x0   0x....'....        DC32     g_atconnmutex
+
+   \                                 In section .text, align 4, keep-with-next
+   \                     ??DataTable6_3:
+   \        0x0   0x....'....        DC32     ?_0
+
+   \                                 In section .rodata, align 4
+   \                     ?_0:
+   \        0x0   0x30 0x2E          DC8 "0.0.0.0"
+   \              0x30 0x2E    
+   \              0x30 0x2E    
+   \              0x30 0x00    
+
+   Maximum stack usage in bytes:
+
+   .cstack Function
+   ------- --------
+       0   alloc_atnetbuf
+         0   -> HAL_Malloc
+       0   alloc_payload
+         0   -> HAL_Malloc
+      16   at_conn_close
+        16   -> HAL_AT_CONN_Close
+        16   -> HAL_MutexLock
+        16   -> HAL_MutexUnlock
+        16   -> at_freeconn
+        16   -> get_conn
+      16   at_conn_fetch
+        16   -> at_mbox_fetch
+        16   -> at_mbox_valid
+      16   at_conn_getaddrinfo
+        16   -> HAL_AT_CONN_DomainToIp
+        16   -> strlen
+      16   at_conn_init
+        16   -> HAL_AT_CONN_Init
+        16   -> HAL_MutexCreate
+        16   -> HAL_MutexDestroy
+      32   at_conn_input
+        32   -> __aeabi_memcpy
+        32   -> __aeabi_memset4
+        32   -> alloc_atnetbuf
+        32   -> alloc_payload
+        32   -> at_mbox_trypost
+        32   -> at_mbox_valid
+        32   -> free_atnetbuf
+        32   -> free_payload
+        32   -> get_conn
+        32   -> strlen
+      40   at_conn_recv
+        40   -> __aeabi_memcpy
+        40   -> at_conn_fetch
+        40   -> free_atnetbuf
+        40   -> free_payload
+        40   -> get_conn
+       8   at_conn_recvbufempty
+         0   -> at_mbox_empty
+         8   -> at_mbox_valid
+         8   -> get_conn
+      24   at_conn_send
+        24   -> HAL_AT_CONN_Send
+        24   -> get_conn
+      16   at_conn_setup
+        16   -> HAL_MutexLock
+        16   -> HAL_MutexUnlock
+        16   -> at_newconn
+        16   -> get_conn
+      56   at_conn_start
+        56   -> HAL_AT_CONN_Start
+        56   -> HAL_MutexLock
+        56   -> HAL_MutexUnlock
+        56   -> __aeabi_memclr4
+        56   -> __aeabi_memcpy
+        56   -> get_conn
+      16   at_drainconn
+        16   -> at_mbox_free
+        16   -> at_mbox_set_invalid
+        16   -> at_mbox_tryfetch
+        16   -> at_mbox_valid
+        16   -> free_atnetbuf
+        16   -> free_payload
+      16   at_freeconn
+        16   -> at_drainconn
+        16   -> free_atnetbuf
+        16   -> free_payload
+      16   at_newconn
+        16   -> at_mbox_new
+       0   free_atnetbuf
+         0   -> HAL_Free
+       0   free_payload
+         0   -> HAL_Free
+       0   get_conn
+
+
+   Section sizes:
+
+   Bytes  Function/Label
+   -----  --------------
+       4  ??DataTable6
+       4  ??DataTable6_1
+       4  ??DataTable6_2
+       4  ??DataTable6_3
+       8  ?_0
+      24  ?_1
+       6  alloc_atnetbuf
+       4  alloc_payload
+      70  at_conn_close
+      74  at_conn_fetch
+      60  at_conn_getaddrinfo
+      84  at_conn_init
+       4  at_conn_init_done
+     230  at_conn_input
+     260  at_conn_recv
+      56  at_conn_recvbufempty
+     100  at_conn_send
+      74  at_conn_setup
+     144  at_conn_start
+      86  at_drainconn
+      68  at_freeconn
+     128  at_newconn
+     168  atconnects
+      10  free_atnetbuf
+      10  free_payload
+       4  g_atconnmutex
+      32  get_conn
+
+ 
+   176 bytes in section .bss
+    32 bytes in section .rodata
+ 1 512 bytes in section .text
+ 
+ 1 512 bytes of CODE  memory
+    32 bytes of CONST memory
+   176 bytes of DATA  memory
+
+Errors: none
+Warnings: none
