@@ -8,7 +8,7 @@
 #include "infra_config.h"
 
 /* uart config */
-#define AT_UART_PORT 1
+#define AT_UART_PORT 2
 #define AT_UART_LINUX_DEV    "/dev/ttyUSB0"
 #define AT_UART_BAUDRATE     115200
 #define AT_UART_DATA_WIDTH   DATA_WIDTH_8BIT
@@ -25,7 +25,7 @@
 #define AT_SEND_DELIMITER       "\r"
 
 #if defined(AT_TCP_HAL_SIM800)
-#define AT_CMD_DATA_INTERVAL_MS 50
+#define AT_CMD_DATA_INTERVAL_MS 500
 #endif
 
 #ifdef PLATFORM_HAS_OS

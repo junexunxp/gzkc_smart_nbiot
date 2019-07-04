@@ -22,10 +22,10 @@
 
 unsigned char srandom_inited = 0;
 #ifndef SECURITY_MATERIAL_APP
-#define PRODUCT_KEY_D      "a1I5Y6v8HwT"
-#define PRODUCT_SECRET_D   "S56FG57Rqjr24CHo"
-#define DEVICE_NAME_D      "smart_wm_test1"
-#define DEVICE_SECRET_D    "3qLxqnrCCxhEVJUJjq88jEYkPwi2CZCr"
+#define PRODUCT_KEY_D      "a19tSQTMCN4"
+#define PRODUCT_SECRET_D   "2ncbXUM1u5j8KsPD"
+#define DEVICE_NAME_D      "gzkc_iot_gw1"
+#define DEVICE_SECRET_D    "Pb9kRSZJLlh2RVdAFTEaBh8xiIy9WQrl"
 #define FIRMWARE_VER_D	 "1.1.1"
 #endif
 
@@ -186,7 +186,7 @@ int32_t HAL_AT_Uart_Init(uart_dev_t *uart)
 #if USE_LPUART_RTOS
   lpuart_config.srcclk = BOARD_DebugConsoleSrcFreq();
   lpuart_config.base   = (LPUART_Type *)s_uartBaseAddrs[uart->port];
-  NVIC_SetPriority(LPUART3_IRQn,  (1<<__NVIC_PRIO_BITS) - 1);
+  NVIC_SetPriority(LPUART3_IRQn,  5);
   LPUART_RTOS_Init(&handle, &t_handle, &lpuart_config);
 #else
 	lpuart_config_t config = {0};
