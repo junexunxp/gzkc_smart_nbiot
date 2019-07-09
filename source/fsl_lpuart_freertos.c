@@ -15,7 +15,8 @@
 #ifndef FSL_COMPONENT_ID
 #define FSL_COMPONENT_ID "platform.drivers.lpuart_freertos"
 #endif
-
+#define TASK_NOTIFY 1
+//static uint8_t txcomplete_set = 0;
 static void LPUART_RTOS_Callback(LPUART_Type *base, lpuart_handle_t *state, status_t status, void *param)
 {
     lpuart_rtos_handle_t *handle = (lpuart_rtos_handle_t *)param;
@@ -26,23 +27,47 @@ static void LPUART_RTOS_Callback(LPUART_Type *base, lpuart_handle_t *state, stat
 
     if (status == kStatus_LPUART_RxIdle)
     {
+    	#if TASK_NOTIFY
+		handle->rxEventFlag |= RTOS_LPUART_COMPLETE;
+		vTaskNotifyGiveFromISR(handle->rxtaskNotify,&xHigherPriorityTaskWoken);//
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		#else
         xResult = xEventGroupSetBitsFromISR(handle->rxEvent, RTOS_LPUART_COMPLETE, &xHigherPriorityTaskWoken);
+		#endif
     }
     else if (status == kStatus_LPUART_TxIdle)
     {
+    	#if TASK_NOTIFY
+		handle->txEventFlag |= RTOS_LPUART_COMPLETE;
+		vTaskNotifyGiveFromISR(handle->txtaskNotify,&xHigherPriorityTaskWoken);//
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		#else
         xResult = xEventGroupSetBitsFromISR(handle->txEvent, RTOS_LPUART_COMPLETE, &xHigherPriorityTaskWoken);
+        #endif
     }
     else if (status == kStatus_LPUART_RxRingBufferOverrun)
     {
+    	#if TASK_NOTIFY
+		handle->rxEventFlag |= RTOS_LPUART_RING_BUFFER_OVERRUN;
+		vTaskNotifyGiveFromISR(handle->rxtaskNotify,&xHigherPriorityTaskWoken);//
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		#else
         xResult =
             xEventGroupSetBitsFromISR(handle->rxEvent, RTOS_LPUART_RING_BUFFER_OVERRUN, &xHigherPriorityTaskWoken);
+		#endif
     }
     else if (status == kStatus_LPUART_RxHardwareOverrun)
     {
         /* Clear Overrun flag (OR) in LPUART STAT register */
         LPUART_ClearStatusFlags(base, kLPUART_RxOverrunFlag);
+		#if TASK_NOTIFY
+		handle->rxEventFlag |= RTOS_LPUART_HARDWARE_BUFFER_OVERRUN;
+		vTaskNotifyGiveFromISR(handle->rxtaskNotify,&xHigherPriorityTaskWoken);//
+		portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
+		#else
         xResult =
             xEventGroupSetBitsFromISR(handle->rxEvent, RTOS_LPUART_HARDWARE_BUFFER_OVERRUN, &xHigherPriorityTaskWoken);
+		#endif
     }
 
     if (xResult != pdFAIL)
@@ -235,9 +260,14 @@ int LPUART_RTOS_Send(lpuart_rtos_handle_t *handle, const uint8_t *buffer, uint32
 
     /* Non-blocking call */
     LPUART_TransferSendNonBlocking(handle->base, handle->t_state, &handle->txTransfer);
-
+#if TASK_NOTIFY
+	handle->txtaskNotify = xTaskGetCurrentTaskHandle();
+	ulTaskNotifyTake(pdFALSE,timeout/portTICK_PERIOD_MS);
+	ev = handle->txEventFlag;
+	handle->txEventFlag = 0;
+#else
     ev = xEventGroupWaitBits(handle->txEvent, RTOS_LPUART_COMPLETE, pdTRUE, pdFALSE, timeout);
-	
+#endif	
     //if (!(ev & RTOS_LPUART_COMPLETE))
     //{
     ///	LPUART_TransferAbortSend(handle->base, handle->t_state);
@@ -249,8 +279,15 @@ int LPUART_RTOS_Send(lpuart_rtos_handle_t *handle, const uint8_t *buffer, uint32
 		retval = kStatus_Success;
 
 	}else{
-		HAL_Printf("lpuart tx failed, event 0x%x\r\n",ev);
-		retval = kStatus_Fail;
+		//if(txcomplete_set){
+		//	retval = kStatus_Success;
+		//	txcomplete_set= 0;
+		//}else{
+			HAL_Printf("lpuart tx failed, event 0x%x, timeout value %d, send length %d, send value %s\r\n",ev,timeout,length,buffer);
+			retval = kStatus_Fail;
+
+		//}
+		
 	}
 
     if (pdFALSE == xSemaphoreGive(handle->txSemaphore))
@@ -316,10 +353,17 @@ int LPUART_RTOS_Receive(lpuart_rtos_handle_t *handle, uint8_t *buffer, uint32_t 
 
     /* Non-blocking call */
     LPUART_TransferReceiveNonBlocking(handle->base, handle->t_state, &handle->rxTransfer, &n);
+#if TASK_NOTIFY
+	handle->rxtaskNotify = xTaskGetCurrentTaskHandle();
+	ulTaskNotifyTake(pdFALSE,timeout/portTICK_PERIOD_MS);
+	ev = handle->rxEventFlag;
+	handle->rxEventFlag = 0;
+#else
 
     ev = xEventGroupWaitBits(
         handle->rxEvent, RTOS_LPUART_COMPLETE | RTOS_LPUART_RING_BUFFER_OVERRUN | RTOS_LPUART_HARDWARE_BUFFER_OVERRUN,
         pdTRUE, pdFALSE, timeout);
+#endif
     if (ev & RTOS_LPUART_HARDWARE_BUFFER_OVERRUN)
     {
         /* Stop data transfer to application buffer, ring buffer is still active */

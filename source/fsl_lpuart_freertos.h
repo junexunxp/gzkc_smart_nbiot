@@ -73,6 +73,10 @@ typedef struct _lpuart_rtos_handle
     StaticEventGroup_t txEventBuffer;    /*!< Statically allocated memory for txEvent */
     StaticEventGroup_t rxEventBuffer;    /*!< Statically allocated memory for rxEvent */
 #endif
+	TaskHandle_t txtaskNotify;
+	uint32_t txEventFlag;
+	TaskHandle_t rxtaskNotify;
+	uint32_t rxEventFlag;
 } lpuart_rtos_handle_t;
 /*! \endcond */
 
