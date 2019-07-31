@@ -18,6 +18,7 @@
 #include "fsl_trng.h"
 #include "fsl_clock.h"
 #include "fsl_lpuart.h"
+#include "fsl_debug_console.h"
 
 
 unsigned char srandom_inited = 0;
@@ -639,16 +640,12 @@ void HAL_MutexUnlock(void *mutex)
  * @see None.
  * @note None.
  */
- #if 0
+
 void HAL_Printf(const char *fmt, ...)
 {
-        va_list args;
-        va_start(args, fmt);
-        format_printf(fmt,args);
-        va_end(args);
-	return;
+        PRINTF(fmt);
 }
-#endif
+
 
 uint32_t HAL_Random(uint32_t region)
 {

@@ -18,8 +18,13 @@
  ******************************************************************************/
 /*! @brief The board name */
 #define BOARD_NAME "IMXRT1050-EVKB"
+#define BOARD_TYPE_EVK                          0
+#define BOARD_TYPE_GW                           1
 
+#define BOARD_TYPE                              BOARD_TYPE_EVK
+     
 /* The UART to use for debug messages. */
+#if (BOARD_TYPE == BOARD_TYPE_EVK)
 #define BOARD_DEBUG_UART_TYPE kSerialPort_Uart
 #define BOARD_DEBUG_UART_BASEADDR (uint32_t) LPUART1
 #define BOARD_DEBUG_UART_INSTANCE 1U
@@ -31,6 +36,17 @@
 
 #ifndef BOARD_DEBUG_UART_BAUDRATE
 #define BOARD_DEBUG_UART_BAUDRATE (115200U)
+#endif
+#elif (BOARD_TYPE == BOARD_TYPE_GW)
+#define BOARD_DEBUG_UART_TYPE                   DEBUG_CONSOLE_DEVICE_TYPE_LPUART
+#define BOARD_DEBUG_UART_BASEADDR               (uint32_t)LPUART4
+#define BOARD_DEBUG_UART_INSTANCE               4U
+#define BOARD_DEBUG_UART_CLK_FREQ               BOARD_DebugConsoleSrcFreq()
+#define BOARD_DEBUG_UART_IRQn                   LPUART4_IRQn
+#define BOARD_DEBUG_UART_IRQHandler             LPUART4_IRQHandler
+#define BOARD_DEBUG_UART_BAUDRATE               (9600U)                         // TODO: boost to 921600 after fix RJ45 issue
+#define BOARD_DEBUG_UART_TX_IOMUX               IOMUXC_GPIO_SD_B1_00_LPUART4_TX
+#define BOARD_DEBUG_UART_RX_IOMUX               IOMUXC_GPIO_SD_B1_01_LPUART4_RX
 #endif /* BOARD_DEBUG_UART_BAUDRATE */
 
 /*! @brief The USER_LED used for board */
@@ -171,6 +187,9 @@
 #define BOARD_INITGT202SHIELD_IRQ_NAME "IRQ"                   /*!< Identifier name */
 #define BOARD_INITGT202SHIELD_IRQ_DIRECTION kGPIO_DigitalInput /*!< Direction */
 
+#define BOARD_INITGT202SHIELD_IRQn                  (GPIO1_Combined_16_31_IRQn)
+#define BOARD_INITGT202SHIELD_ISR                   GPIO1_Combined_16_31_IRQHandler
+
 /*! @brief The WIFI-QCA Silex 2401 shield pin. */
 #define BOARD_INITSILEX2401SHIELD_PWRON_GPIO GPIO1                    /*!< GPIO device name: GPIO */
 #define BOARD_INITSILEX2401SHIELD_PWRON_PORT 1U                       /*!< PORT device index: 1 */
@@ -188,6 +207,8 @@
 #define BOARD_INITSILEX2401SHIELD_IRQ_NAME "IRQ"                   /*!< Identifier name */
 #define BOARD_INITSILEX2401SHIELD_IRQ_DIRECTION kGPIO_DigitalInput /*!< Direction */
 
+#define BOARD_INITSILEX2401SHIELD_IRQn              GPIO1_Combined_0_15_IRQn
+#define BOARD_INITSILEX2401SHIELD_ISR               GPIO1_Combined_0_15_IRQHandler
 /* @Brief Board accelerator sensor configuration */
 #define BOARD_ACCEL_I2C_BASEADDR LPI2C1
 /* Select USB1 PLL (480 MHz) as LPI2C's clock source */
@@ -269,6 +290,102 @@ status_t BOARD_Camera_I2C_ReceiveSCCB(
 #endif /* SDK_I2C_BASED_COMPONENT_USED */
 void BOARD_SD_Pin_Config(uint32_t speed, uint32_t strength);
 void BOARD_MMC_Pin_Config(uint32_t speed, uint32_t strength);
+#if (BOARD_TYPE == BOARD_TYPE_EVK)
+
+/* The UART to use for shell */
+#define BOARD_SHELL_UART_BASEADDR            LPUART3
+#define BOARD_SHELL_UART_IRQHandler          LPUART3_IRQHandler
+#define BOARD_SHELL_UART_CLK_FREQ            BOARD_DebugConsoleSrcFreq()
+#define BOARD_SHELL_UART_IRQn                LPUART3_IRQn
+#define BOARD_SHELL_UART_IRQLevel            5
+#define BOARD_SHELL_UART_BAUDRATE            (115200U)
+#define BOARD_SHELL_UART_TX_IOMUX            IOMUXC_GPIO_AD_B1_06_LPUART3_TX
+#define BOARD_SHELL_UART_RX_IOMUX            IOMUXC_GPIO_AD_B1_07_LPUART3_RX
+/* The UART to use for ZB Serial Communication */
+#define BOARD_ZB_UART_BASEADDR               LPUART8
+#define BOARD_ZB_UART_CLK_FREQ               BOARD_DebugConsoleSrcFreq()
+#define BOARD_ZB_UART_IRQn                   LPUART8_IRQn
+#define BOARD_ZB_UART_IRQHandler             LPUART8_IRQHandler
+#define BOARD_ZB_UART_BAUDRATE               (1000000U)
+#define BOARD_ZB_UART_IRQLevel               3
+#define BOARD_ZB_UART_DMAMUX                 kDmaRequestMuxLPUART8Tx
+#define BOARD_ZB_UART_TX_IOMUX               IOMUXC_GPIO_AD_B1_10_LPUART8_TX
+#define BOARD_ZB_UART_RX_IOMUX               IOMUXC_GPIO_AD_B1_11_LPUART8_RX
+
+/* The UART to use for ESP8266 Serial Communication */
+#define BOARD_ESP8266_UART_BASEADDR          LPUART2
+#define BOARD_ESP8266_UART_CLK_FREQ          BOARD_DebugConsoleSrcFreq()
+#define BOARD_ESP8266_UART_IRQn              LPUART2_IRQn
+#define BOARD_ESP8266_UART_IRQHandler        LPUART2_IRQHandler
+#define BOARD_ESP8266_UART_BAUDRATE          (115200U)
+#define BOARD_ESP8266_UART_RXDMAMUX          kDmaRequestMuxLPUART2Rx
+#define BOARD_ESP8266_UART_TXDMAMUX          kDmaRequestMuxLPUART2Tx
+#define BOARD_ESP8266_UART_TX_IOMUX          IOMUXC_GPIO_AD_B1_02_LPUART2_TX
+#define BOARD_ESP8266_UART_RX_IOMUX          IOMUXC_GPIO_AD_B1_03_LPUART2_RX
+#define BOARD_ESP8266_HW_RESET_PORT          GPIO1
+#define BOARD_ESP8266_HW_RESET_PIN           (16U)
+#define BOARD_ESP8266_HW_RESET_IOMUXC        IOMUXC_GPIO_AD_B1_00_GPIO1_IO16
+
+/* The Pin to use for JN5189 HW Reset */
+#define BOARD_JN5189_HW_RESET_PORT           GPIO1
+#define BOARD_JN5189_HW_RESET_PIN            (17U)
+#define BORAD_JN5189_HW_RESET_IOMUXC         IOMUXC_GPIO_AD_B1_01_GPIO1_IO17
+
+/* The pins to use for function debug */
+#define DEBUG_IO_PORT_1                      GPIO1
+#define DEBUG_IO_PIN_1                       (20U)
+#define DEBUG_IO_IOMUXC_1                    IOMUXC_GPIO_AD_B1_04_GPIO1_IO20
+
+#define DEBUG_IO_PORT_2                      GPIO1
+#define DEBUG_IO_PIN_2                       (21U)
+#define DEBUG_IO_IOMUXC_2                    IOMUXC_GPIO_AD_B1_05_GPIO1_IO21
+
+#elif (BOARD_TYPE == BOARD_TYPE_GW)
+
+/* The UART to use for ZB Serial Communication */
+#define BOARD_ZB_UART_BASEADDR               LPUART2
+#define BOARD_ZB_UART_CLK_FREQ               BOARD_DebugConsoleSrcFreq()
+#define BOARD_ZB_UART_IRQn                   LPUART2_IRQn
+#define BOARD_ZB_UART_IRQHandler             LPUART2_IRQHandler
+#define BOARD_ZB_UART_BAUDRATE               (250000U)
+#define BOARD_ZB_UART_IRQLevel               3
+#define BOARD_ZB_UART_DMAMUX                 kDmaRequestMuxLPUART2Tx
+#define BOARD_ZB_UART_TX_IOMUX               IOMUXC_GPIO_AD_B1_02_LPUART2_TX
+#define BOARD_ZB_UART_RX_IOMUX               IOMUXC_GPIO_AD_B1_03_LPUART2_RX
+
+/* The UART to use for ESP8266 Serial Communication */
+#define BOARD_ESP8266_UART_BASEADDR          LPUART1
+#define BOARD_ESP8266_UART_CLK_FREQ          BOARD_DebugConsoleSrcFreq()
+#define BOARD_ESP8266_UART_IRQn              LPUART1_IRQn
+#define BOARD_ESP8266_UART_IRQHandler        LPUART1_IRQHandler
+#define BOARD_ESP8266_UART_BAUDRATE          (115200U)
+#define BOARD_ESP8266_UART_RXDMAMUX          kDmaRequestMuxLPUART1Rx
+#define BOARD_ESP8266_UART_TXDMAMUX          kDmaRequestMuxLPUART1Tx
+#define BOARD_ESP8266_UART_TX_IOMUX          IOMUXC_GPIO_AD_B0_12_LPUART1_TX
+#define BOARD_ESP8266_UART_RX_IOMUX          IOMUXC_GPIO_AD_B0_13_LPUART1_RX
+#define BOARD_ESP8266_HW_RESET_PORT          GPIO1
+#define BOARD_ESP8266_HW_RESET_PIN           (29)
+#define BOARD_ESP8266_HW_RESET_IOMUXC        IOMUXC_GPIO_AD_B1_13_GPIO1_IO29
+
+/* The Pin to use for JN5189 HW Reset */
+#define BOARD_JN5189_HW_RESET_PORT           GPIO1
+#define BOARD_JN5189_HW_RESET_PIN            (15U)
+#define BORAD_JN5189_HW_RESET_IOMUXC         IOMUXC_GPIO_AD_B0_15_GPIO1_IO15
+
+/* The pins to use for function debug */
+#define DEBUG_IO_PORT_1                      GPIO1
+#define DEBUG_IO_PIN_1                       (20U)
+#define DEBUG_IO_IOMUXC_1                    IOMUXC_GPIO_AD_B1_04_GPIO1_IO20
+
+#define DEBUG_IO_PORT_2                      GPIO1
+#define DEBUG_IO_PIN_2                       (21U)
+#define DEBUG_IO_IOMUXC_2                    IOMUXC_GPIO_AD_B1_05_GPIO1_IO21
+
+#else
+
+#error "Incorrect BOARD_TYPE defined in board.h"
+
+#endif
 
 #if defined(__cplusplus)
 }

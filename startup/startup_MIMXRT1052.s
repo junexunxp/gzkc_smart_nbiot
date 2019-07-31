@@ -322,6 +322,24 @@ __Vectors_Size  EQU   __Vectors_End - __Vectors
         SECTION .text:CODE:REORDER:NOROOT(2)
 Reset_Handler
         CPSID   I               ; Mask interrupts
+        LDR     R0, =0x400AC044
+        MOV32   R1, 0xAAAAAAF5
+        STR     R1, [R0]
+
+        LDR     R0, =0x400AC040
+        LDR     R1, [R0]
+        ORR     R1, R1, #4
+        STR     R1, [R0]
+        
+        LDR     R0, =0x400AC038
+        LDR     R1, [R0]
+        MOVT    R1, #0x0000
+        MOV     R2, #0x7        // 64KB ITCM
+        MOV     R3, #0xA        // 512KB DTCM (384KB actually)
+        LSL     R2, R2, #16
+        LSL     R3, R3, #20
+        ORR     R1, R2, R3
+        STR     R1, [R0]
         LDR     R0, =0xE000ED08
         LDR     R1, =__vector_table
         STR     R1, [R0]
