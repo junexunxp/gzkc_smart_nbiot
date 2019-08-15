@@ -43,6 +43,15 @@ extern "C" {
 #define SEND_BIND_REQUEST_COMMAND        1
 
 
+/**Heartbeat report**/
+#define ZCL_HEARTBEAT_MIN_REPORT_INTERVAL   3
+#define ZCL_HEARTBEAT_MAX_REPORT_INTERVAL   6
+#define ZCL_HEARTBEAT_TIMEOUT_VALUE         0
+#define ZCL_HEARTBEAT_CHANGE_VALUE          0
+
+
+#define EXAMPLE_SUBDEV_MAX_NUM          64
+
 /****************************************************************************/
 /***        Type Definitions                                              ***/
 /****************************************************************************/

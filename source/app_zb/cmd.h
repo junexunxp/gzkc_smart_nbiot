@@ -69,6 +69,7 @@ teZcbStatus eReadAttributeRequest(uint8_t u8AddrMode,
                                   uint8_t u8DstEp,
                                   uint16_t u16ClusterId,
                                   uint16_t u16ManuCode,
+                                  bool    bIsManuSpecific,
                                   uint8_t u8NumOfAttr,
                                   uint16_t* au16AttrList);
 

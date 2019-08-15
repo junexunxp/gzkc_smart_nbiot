@@ -152,6 +152,9 @@ typedef enum
     
     /* ZLL */
     E_ZB_CLUSTERID_ZLL_COMMISIONING         = 0x1000,
+
+    /*AliIotSecurity*/
+    E_ZB_CLUSTERID_ALIIOTSECURITY           = 0xfc01,
 } eZigbee_ClusterID;
 
 /** Enumerated type of attributes in the Basic Cluster */
@@ -206,7 +209,7 @@ typedef enum
 } eZigbee_AttributeIDLevelControlCluster;
 
 
-/** Enumerated type of attributes in the Level Control Cluster */
+/** Enumerated type of attributes in the Color Control Cluster */
 typedef enum
 {
     E_ZB_ATTRIBUTEID_COLOUR_CURRENTHUE      = 0x0000,
@@ -287,6 +290,18 @@ typedef enum
 {
      E_ZB_ATTRIBUTEID_MS_OCC_OCCUPANCY = 0x0000,
 } eZigbee_AttributeIDOccupancyCluster;
+
+typedef enum 
+{
+    /* ALIIOTSECURITY attribute set attribute ID's  */
+    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_ISEFFECTIVE           = 0x0000,    /* Mandatory */
+
+    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTKEY            = 0x4000,    /* Mandatory */
+    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTSECRET,                     /* Optional */
+    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICENAME,                        /* Mandatory */
+    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICESECRET,                        /* Mandatory */
+} eZigbee_AttributeIDAliIotSecurityCluster;
+
 
 /* Unit Of Measure enumerations (D.3.2.2.4.1) */
 typedef enum

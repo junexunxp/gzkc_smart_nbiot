@@ -80,16 +80,17 @@ void SysMgr_CleanBootFlag(void)
 {
     BaseType_t rt;
     uint32_t size;
-    
-    /* any value != BOOTFLAGMN treat as clean */
-    uint32_t value = 0x00000000;
-    rt = kv_item_set(systemFILE_NAME_BOOTCONFIG, (uint8_t *)&value, sizeof(uint32_t));
+    rt = kv_item_delete(systemFILE_NAME_BOOTCONFIG);
     assert(rt == 0);
-    
-    uint32_t kvalue = 0;
-    rt = kv_item_get(systemFILE_NAME_BOOTCONFIG, (uint8_t *)&kvalue, &size);
-    assert(rt == 0);
-    
-    assert(kvalue == value);
+//    /* any value != BOOTFLAGMN treat as clean */
+//    uint32_t value = 0x00000000;
+//    rt = kv_item_set(systemFILE_NAME_BOOTCONFIG, (uint8_t *)&value, sizeof(uint32_t));
+//    assert(rt == 0);
+//    
+//    uint32_t kvalue = 0;
+//    rt = kv_item_get(systemFILE_NAME_BOOTCONFIG, (uint8_t *)&kvalue, &size);
+//    assert(rt == 0);
+//    
+//    assert(kvalue == value);
 }
 

@@ -12,6 +12,8 @@
 #include "fsl_lpuart.h"
 #include "fsl_device_registers.h"
 #include "fsl_debug_console.h"
+#include "infra_config.h"
+#include "infra_compat.h"
 
 #include <stdio.h>
 #include <string.h>
@@ -26,17 +28,184 @@
 #include "zcb.h"
 #include "cmd.h"
 
+#include "dbManager.h"
+
 #define ZB_DEVICE_TABLE_NULL_NODE_ID            0
 #define ZB_DEVICE_TABLE_NULL_IEEE_ADDR          0
 #define ZB_DEVICE_ENDPOINT_COUNT_DEFAULT        1
 
+extern TimerHandle_t zbDeviceTimer;
 
 tsZbNetworkInfo zbNetworkInfo;
 tsZbDeviceInfo deviceTable[MAX_ZD_DEVICE_NUMBERS];
 tsZbDeviceAttribute attributeTable[MAX_ZD_ATTRIBUTE_NUMBERS_TOTAL];
+tsZbDeviceConfigReport reportHeartBeatTable[MAX_ZD_DEVICE_NUMBERS];
+
+extern sub_dev_addr_map_t sub_dev_am[EXAMPLE_SUBDEV_MAX_NUM];
+
+/***export function****/
+extern tsZbDeviceInfo* zb_device_find_device_info_by_device_id(uint32_t device_id);
 
 
-static bool bZD_ValidityCheckOfNodeId(uint16_t u16NodeId)
+/***local function****/
+static teZcbStatus zb_device_manage_set_hearbeat_interval(uint16_t u16NodeId,
+                                                  uint8_t u8SrcEndpoint,
+                                                  uint8_t u8DstEndpoint,
+                                                  uint16_t u16ClusterId,
+                                                  uint16_t u16AttributeId,
+                                                  uint8_t u8DataType,
+                                                  uint16_t u16MinIntv,
+                                                  uint16_t u16MaxIntv,
+                                                  uint16_t u16TimeOut,
+                                                  uint64_t u64Change);
+
+
+
+static TimerHandle_t zbd_second_timer = NULL;
+static QueueHandle_t zbd_timer_event_mutex = NULL;
+struct list_head zb_device_list_head;
+struct list_head zb_device_timer_head;
+
+typedef int (*zbd_timer_cb_fun)(void *args);
+
+typedef struct{
+	struct dlist_s *prev;
+	struct dlist_s *next;
+	int time_set;
+	int time_left;
+	zbd_timer_cb_fun cb_function;
+	void *cb_args;
+}zbd_timer_event_t;
+
+
+static void zbd_s_timer_cb(TimerHandle_t cb_timerhdl){
+	xSemaphoreTake(zbd_timer_event_mutex, portMAX_DELAY);
+	if(list_empty(&zb_device_timer_head)){
+
+		HAL_Printf("Error state, no items in the timer event list\r\n");
+		xTimerStop(zbd_second_timer, 0);
+		return;
+	}
+	zbd_timer_event_t *wte = (zbd_timer_event_t *)zb_device_timer_head.next;
+	do{
+		if(wte->time_left > 0){
+			wte->time_left--;
+	
+		}else{
+			int ret_cb = -1;
+			if(wte->cb_function){
+				
+				ret_cb = wte->cb_function(wte->cb_args);
+				
+			}
+			
+			if(ret_cb == -1){
+				
+				list_del((dlist_t *)wte);
+				vPortFree(wte);
+				
+			}else if(ret_cb == 0){
+
+				wte->time_left = wte->time_set;
+				
+			}else{
+				wte->time_left = ret_cb;
+			}
+			
+            
+			
+		}
+        wte= (zbd_timer_event_t *)wte->next;
+		if(!wte){
+			break;
+		}
+	}while((void *)wte != (void *)&zb_device_timer_head);
+
+	if(list_empty(&zb_device_timer_head)){
+		HAL_Printf("All timer event handled, will stop the periodic timer\r\n");
+		xTimerStop(zbd_second_timer, 0);
+	}
+	xSemaphoreGive(zbd_timer_event_mutex);
+
+}
+
+
+
+
+static int zbd_s_timer_start(int time_s, zbd_timer_cb_fun cb_function, void *cb_args){
+	
+	if(list_empty(&zb_device_timer_head)){
+		xTimerStart(zbd_second_timer,pdMS_TO_TICKS(1000));
+	}
+	
+	xSemaphoreTake(zbd_timer_event_mutex, portMAX_DELAY);
+	zbd_timer_event_t *wme = pvPortMalloc(sizeof(zbd_timer_event_t));
+	if(!wme){
+		xSemaphoreGive(zbd_timer_event_mutex);
+
+		return - 1;
+	}
+	memset(wme,0,sizeof(*wme));
+	wme->time_left = time_s;
+	wme->time_set = time_s;
+	wme->cb_args = cb_args;
+	wme->cb_function = cb_function;
+	list_add((dlist_t *)wme,&zb_device_timer_head);
+	xSemaphoreGive(zbd_timer_event_mutex);
+	return 0;
+
+}
+
+static void zbd_s_timer_timeout_set(void *cbargs, int time_s){
+	xSemaphoreTake(zbd_timer_event_mutex, portMAX_DELAY);
+	if(!list_empty(&zb_device_timer_head)){
+		
+		zbd_timer_event_t *wte = (zbd_timer_event_t *)zb_device_timer_head.next;
+		do{
+			if(wte->cb_args == cbargs){
+				wte->time_left = time_s?time_s:wte->time_set;
+				break;
+			}
+			wte= (zbd_timer_event_t *)wte->next;
+			if(!wte){
+				break;
+			}
+		}while((void *)wte != (void *)&zb_device_timer_head);
+	}
+	xSemaphoreGive(zbd_timer_event_mutex);
+
+
+
+}
+
+
+
+static void zbd_s_timer_stop(void *cbargs){
+	xSemaphoreTake(zbd_timer_event_mutex, portMAX_DELAY);
+	if(!list_empty(&zb_device_timer_head)){
+		
+		zbd_timer_event_t *wte = (zbd_timer_event_t *)zb_device_timer_head.next;
+		do{
+			if(wte->cb_args == cbargs){
+				list_del((dlist_t *)wte);
+				vPortFree(wte);
+				break;
+			}
+            wte= (zbd_timer_event_t *)wte->next;
+			if(!wte){
+				break;
+			}
+		}while((void *)wte != (void *)&zb_device_timer_head);
+		if(list_empty(&zb_device_timer_head)){
+			xTimerStop(zbd_second_timer, 0);
+			HAL_Printf("wm timer stopped\r\n");
+		}
+	}
+	xSemaphoreGive(zbd_timer_event_mutex);
+}
+
+
+ bool bZD_ValidityCheckOfNodeId(uint16_t u16NodeId)
 {
     if ((u16NodeId == ZB_DEVICE_TABLE_NULL_NODE_ID) 
         || (u16NodeId >= E_ZB_BROADCAST_ADDRESS_LOWPOWERROUTERS)) {
@@ -132,7 +301,7 @@ tsZbDeviceInfo* tZDM_FindDeviceByIeeeAddress(uint64_t u64IeeeAddr, uint16_t shor
 			if(shortaddr && (deviceTable[i].u16NodeId != shortaddr)){
 				LOG(ZDM, WARN, "Short address changed... should update it!\r\n");
 				deviceTable[i].u16NodeId = shortaddr;
-
+				dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));
 				
 			}
 			return &(deviceTable[i]);
@@ -161,7 +330,9 @@ tsZbDeviceInfo* tZDM_AddNewDeviceToDeviceTable(uint16_t u16NodeId, uint64_t u64I
 			deviceTable[i].u16NodeId = u16NodeId;
 			deviceTable[i].u64IeeeAddress = u64IeeeAddr;
 			deviceTable[i].eDeviceState = E_ZB_DEVICE_STATE_NEW_JOINED;
-            zbNetworkInfo.u16DeviceCount ++;
+                        zbNetworkInfo.u16DeviceCount ++;
+                        dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));
+                        dbManagerUpdate(DBM_ZD_NETWORK_INFO_KEY,&zbNetworkInfo,sizeof(zbNetworkInfo));
 			return &(deviceTable[i]);
 		}		
 	}
@@ -175,12 +346,42 @@ uint16_t zb_device_child_num(void ){
 
 }
 
+
+tsZbDeviceAttribute* tZDM_AttributeInAttributeTable(uint16_t u16NodeId,
+                                                    uint8_t u8Endpoint,
+                                                    uint16_t u16ClusterId,
+                                                    uint16_t u16AttributeId,
+                                                    uint8_t u8DataType)								                                    
+                                  
+{
+   for(uint16_t i = 0; i < MAX_ZD_ATTRIBUTE_NUMBERS_TOTAL; i++)
+   	{
+	  	if(attributeTable[i].u16NodeId ==u16NodeId)
+  		{
+  			if(attributeTable[i].u8Endpoint ==u8Endpoint)
+  		    {
+  			    if(attributeTable[i].u16ClusterId ==u16ClusterId)
+  				{		  		
+					if(attributeTable[i].u16AttributeId == u16AttributeId)
+			        {
+			            return &(attributeTable[i]);
+			        }
+  			    }
+  			}
+  		}
+   	}
+   return NULL;
+}
+
+
 tsZbDeviceAttribute* tZDM_AddNewAttributeToAttributeTable(uint16_t u16NodeId,
                                                           uint8_t u8Endpoint,
                                                           uint16_t u16ClusterId,
                                                           uint16_t u16AttributeId,
                                                           uint8_t u8DataType)
 {
+	tsZbDeviceAttribute* findAttributeInAttributeTable=NULL;
+
 	if (!bZD_ValidityCheckOfNodeId(u16NodeId)) {		
 		return NULL;
 	}
@@ -188,8 +389,16 @@ tsZbDeviceAttribute* tZDM_AddNewAttributeToAttributeTable(uint16_t u16NodeId,
     if (!bZD_ValidityCheckOfEndpointId(u8Endpoint)) {		
 		return NULL;
 	}
+	
+	findAttributeInAttributeTable=tZDM_AttributeInAttributeTable(u16NodeId,u8Endpoint,u16ClusterId,u16AttributeId,u8DataType);
+	if(findAttributeInAttributeTable!=NULL)
+	  {
+		  return findAttributeInAttributeTable;
+	  }
+
 
     for (uint16_t i = 0; i < MAX_ZD_ATTRIBUTE_NUMBERS_TOTAL; i++) {
+  
         if (attributeTable[i].u16NodeId == ZB_DEVICE_TABLE_NULL_NODE_ID) {
             attributeTable[i].u16NodeId      = u16NodeId;
             attributeTable[i].u8Endpoint     = u8Endpoint;
@@ -198,6 +407,7 @@ tsZbDeviceAttribute* tZDM_AddNewAttributeToAttributeTable(uint16_t u16NodeId,
             attributeTable[i].u8DataType     = u8DataType;
             tsZbDeviceCluster* devCluster = tZDM_FindClusterEntryInDeviceTable(u16NodeId, u8Endpoint, u16ClusterId);
             devCluster->u8AttributeCount ++;
+            dbManagerUpdate(DBM_ZD_ATTRIBUTE_TABLE_KEY,&attributeTable,sizeof(attributeTable));
             return &(attributeTable[i]);
         }
     }
@@ -320,8 +530,23 @@ void bZDM_EraseAttributeInfoByNodeId(uint16_t u16NodeId)
             memset(&(attributeTable[i]), 0, sizeof(attributeTable));
         }
     }
+	dbManagerUpdate(DBM_ZD_ATTRIBUTE_TABLE_KEY,&attributeTable,sizeof(attributeTable));
 }
 
+void bZDM_EraseHeartBeatAttributeInfoByNodeId(uint16_t u16NodeId)
+{
+   for(uint16_t i=0;i<MAX_ZD_DEVICE_NUMBERS;i++)
+   {
+		if(reportHeartBeatTable[i].u16NodeId == u16NodeId) {	
+				
+		 	memset(&(reportHeartBeatTable[i]), 0, sizeof(reportHeartBeatTable));
+			break;
+
+		}
+   }
+   dbManagerUpdate(DBM_ZD_HEARTBEAT_TABLE_KEY,&reportHeartBeatTable,sizeof(reportHeartBeatTable));
+   
+}
 
 
 
@@ -335,7 +560,9 @@ bool bZDM_EraseDeviceFromDeviceTable(uint64_t u64IeeeAddr)
 	{
 		if (deviceTable[i].u64IeeeAddress == u64IeeeAddr) {
 		    bZDM_EraseAttributeInfoByNodeId(deviceTable[i].u16NodeId);
+			bZDM_EraseHeartBeatAttributeInfoByNodeId(deviceTable[i].u16NodeId);
 			memset(&(deviceTable[i]), 0, sizeof(tsZbDeviceInfo));
+			dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));			
 			return true;
 		}
 	}
@@ -343,22 +570,175 @@ bool bZDM_EraseDeviceFromDeviceTable(uint64_t u64IeeeAddr)
 	return false;
 }
 
+tsZbDeviceConfigReport* tZDM_ReportAttributeInHeartBeatTable(uint16_t u16NodeId,
+                                                    uint8_t u8SrcEndpoint,
+                                                    uint8_t u8DstEndpoint,
+                                                    uint16_t u16ClusterId,
+                                                    uint16_t u16AttributeId,
+                                                    uint8_t u8DataType)								                                    
+                                  
+{
+	if (!bZD_ValidityCheckOfNodeId(u16NodeId)) {		
+		return NULL;
+	}
+
+
+   for(uint16_t i = 0; i < MAX_ZD_DEVICE_NUMBERS; i++)
+   	{
+	  	if(reportHeartBeatTable[i].u16NodeId ==u16NodeId)
+  		{
+		  	return &(reportHeartBeatTable[i]);
+  		}
+   	}
+   return NULL;
+}
+
+
+tsZbDeviceConfigReport* tZDM_AddNewReportAttributeToHeartBeatTable(uint16_t u16NodeId,
+                                                          uint8_t u8SrcEndpoint,
+                                                          uint8_t u8DstEndpoint,
+                                                          uint16_t u16ClusterId,
+                                                          uint16_t u16AttributeId,
+                                                          uint8_t u8DataType,
+                                                          uint16_t u16MinIntv,
+														  uint16_t u16MaxIntv,
+														  uint16_t u16TimeOut,
+														  uint64_t u64Change)
+{
+	tsZbDeviceConfigReport* findReportAttributeInHeartBeatTable=NULL;
+
+	if (!bZD_ValidityCheckOfNodeId(u16NodeId)) {		
+		return NULL;
+	}
+
+    if (!bZD_ValidityCheckOfEndpointId(u8SrcEndpoint)) {		
+		return NULL;
+	}
+	
+	findReportAttributeInHeartBeatTable = tZDM_ReportAttributeInHeartBeatTable(u16NodeId,u8SrcEndpoint,u8DstEndpoint,u16ClusterId,u16AttributeId,u8DataType);
+	if(findReportAttributeInHeartBeatTable!=NULL)
+	  {
+		  return findReportAttributeInHeartBeatTable;
+	  }
+
+
+    for (uint16_t i = 0; i < MAX_ZD_DEVICE_NUMBERS; i++) {
+  
+        if (reportHeartBeatTable[i].u16NodeId == ZB_DEVICE_TABLE_NULL_NODE_ID) {
+            reportHeartBeatTable[i].u16NodeId      = u16NodeId;
+            reportHeartBeatTable[i].u8DstEndpoint    = u8DstEndpoint;
+            reportHeartBeatTable[i].u8SrcEndpoint   = u8SrcEndpoint;
+            reportHeartBeatTable[i].u16AttributeId = u16AttributeId;
+			reportHeartBeatTable[i].u16ClusterId = u16ClusterId;
+            reportHeartBeatTable[i].u8DataType     = u8DataType;
+			reportHeartBeatTable[i].u16MinIntv   = u16MinIntv;
+            reportHeartBeatTable[i].u16MaxIntv = u16MaxIntv;
+			reportHeartBeatTable[i].u16TimeOut = u16TimeOut;
+            reportHeartBeatTable[i].u64Change  = u64Change;
+			dbManagerUpdate(DBM_ZD_HEARTBEAT_TABLE_KEY,&reportHeartBeatTable,sizeof(reportHeartBeatTable));
+            return &(reportHeartBeatTable[i]);
+        }
+    }
+    LOG(ZDM, WARN, "The heart beat attribute table is full already!\r\n");
+    return NULL;
+}
+
+
 
 
 void vZDM_ClearAllDeviceTables()
 {
 	memset(deviceTable, 0, sizeof(tsZbDeviceInfo) * MAX_ZD_DEVICE_NUMBERS);
     memset(attributeTable, 0, sizeof(tsZbDeviceAttribute) * MAX_ZD_ATTRIBUTE_NUMBERS_TOTAL);
+	memset(reportHeartBeatTable, 0, sizeof(tsZbDeviceConfigReport) * MAX_ZD_DEVICE_NUMBERS);
     memset(&zbNetworkInfo, 0, sizeof(tsZbNetworkInfo));
+ //   memset(sub_dev_am,0,sizeof(sub_dev_am)*EXAMPLE_SUBDEV_MAX_NUM);	
+    dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));
+    dbManagerUpdate(DBM_ZD_NETWORK_INFO_KEY,&zbNetworkInfo,sizeof(zbNetworkInfo));
+    dbManagerUpdate(DBM_ZD_HEARTBEAT_TABLE_KEY,&reportHeartBeatTable,sizeof(reportHeartBeatTable));
+    dbManagerUpdate(DBM_ZD_ATTRIBUTE_TABLE_KEY,&attributeTable,sizeof(attributeTable));
+//    dbManagerUpdate(DBM_ZD_SUB_DEVICE_AM_TABLE_KEY,&sub_dev_am,sizeof(sub_dev_am));
 }
 
 
 
 void vZbDeviceTable_Init()
 {
-    vZDM_ClearAllDeviceTables();
+    if(zbd_second_timer == NULL){
+            zbd_second_timer = xTimerCreate("wm_second_timer", 1000, pdTRUE, NULL, (TimerCallbackFunction_t)zbd_s_timer_cb);
+            if(zbd_timer_event_mutex == NULL){
+                    zbd_timer_event_mutex = (QueueHandle_t )xSemaphoreCreateMutex();
+                    if(zbd_timer_event_mutex == NULL){
+
+                            HAL_Printf("zbd_timer_event_mutex create failed\r\n");
+                    }
+            }
+
+            list_init(&zb_device_list_head);
+            list_init(&zb_device_timer_head);
+    }
+ //   vZDM_ClearAllDeviceTables();
 }
 
+int  vZDM_GetAllDeviceTable()
+{
+    int status = 0;
+	int len =0;
+	
+	len = sizeof(deviceTable);
+	status = dbManagerRead(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,&len);
+	if(status != 0 )
+	{
+		LOG(ZDM, ERR, "dbManagerRead deviceTable fail\r\n");
+	}
+
+	len = sizeof(zbNetworkInfo);
+	status = dbManagerRead(DBM_ZD_NETWORK_INFO_KEY,&zbNetworkInfo,&len);
+	if(status != 0 )
+	{
+		LOG(ZDM, ERR, "dbManagerRead zbNetworkInfo fail\r\n");
+	}
+
+	len = sizeof(attributeTable);
+	status = dbManagerRead(DBM_ZD_ATTRIBUTE_TABLE_KEY,&attributeTable,&len);
+	if(status != 0 )
+	{
+		LOG(ZDM, ERR, "dbManagerRead attributeTable fail\r\n");
+	}
+
+	len = sizeof(reportHeartBeatTable);
+	status = dbManagerRead(DBM_ZD_HEARTBEAT_TABLE_KEY,&reportHeartBeatTable,&len);
+	if(status != 0 )
+	{
+		LOG(ZDM, ERR, "dbManagerRead reportHeartBeatTable fail\r\n");
+	}
+	return status;
+}
+
+void vZDM_SetAllDeviceOffLine()
+{
+	for (uint16_t i = 0; i < MAX_ZD_DEVICE_NUMBERS; i++) {
+		if(deviceTable[i].u64IeeeAddress != NULL){
+		deviceTable[i].eDeviceState = E_ZB_DEVICE_STATE_OFF_LINE;
+		dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));
+		}
+	}
+}
+
+
+
+void vZDM_ReadZDDateBase()
+{
+	int len=0;
+	len = sizeof(zbNetworkInfo);
+	HAL_Kv_Get(DBM_ZD_NETWORK_INFO_KEY,&zbNetworkInfo,&len);
+	len = sizeof(deviceTable);
+	HAL_Kv_Get(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,&len);
+	len = sizeof(attributeTable);
+	HAL_Kv_Get(DBM_ZD_ATTRIBUTE_TABLE_KEY,&attributeTable,&len);
+	len = sizeof(reportHeartBeatTable);
+	HAL_Kv_Get(DBM_ZD_HEARTBEAT_TABLE_KEY,&reportHeartBeatTable,&len);
+}
 
 
 void vZDM_NewDeviceQualifyProcess(tsZbDeviceInfo* device)
@@ -461,6 +841,7 @@ void vZDM_NewDeviceQualifyProcess(tsZbDeviceInfo* device)
                                                               device->sZDEndpoint[i].u8EndpointId, 
                                                               E_ZB_CLUSTERID_BASIC,  
                                                               ZB_MANU_CODE_DEFAULT, 
+                                                              MANUFACTURER_SPECIFIC_FALSE,
                                                               1, 
                                                               au16AttrList) != E_ZCB_OK)
                                     {
@@ -688,15 +1069,232 @@ void vZDM_NewDeviceQualifyProcess(tsZbDeviceInfo* device)
     }
 
 }
+static teZcbStatus zb_device_manage_cluster_bind(tsZbDeviceInfo *device){
+	int i,j;
+	uint16_t clusterId;
+	teZcbStatus ret = E_ZCB_ERROR;
+
+	for (i = 0; i < device->u8EndpointCount; i++)
+	{
+		for (j = 0; j < device->sZDEndpoint[i].u8ClusterCount; j++)
+		{
+			uint16_t clusterId = device->sZDEndpoint[i].sZDCluster[j].u16ClusterId;
+			switch (clusterId)
+			{
+				case E_ZB_CLUSTERID_BASIC:							  
+					break;
+					
+				case E_ZB_CLUSTERID_ONOFF:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_ONOFF_ONOFF,
+														 E_ZB_ATTRIBUTE_BOOL_TYPE);
+					ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+										   device->sZDEndpoint[i].u8EndpointId,
+										   E_ZB_CLUSTERID_ONOFF,
+										   SEND_BIND_REQUEST_COMMAND);
+					zb_device_manage_set_hearbeat_interval(device->u16NodeId,
+                                                          ZB_ENDPOINT_SRC_DEFAULT,
+                                                          ZB_ENDPOINT_DST_DEFAULT,
+                                                          E_ZB_CLUSTERID_ONOFF,
+                                                          E_ZB_ATTRIBUTEID_ONOFF_ONOFF,
+                                                          E_ZB_ATTRIBUTE_BOOL_TYPE,
+                                                          ZCL_HEARTBEAT_MIN_REPORT_INTERVAL,
+                                                          ZCL_HEARTBEAT_MAX_REPORT_INTERVAL,
+                                                          ZCL_HEARTBEAT_TIMEOUT_VALUE,
+                                                          ZCL_HEARTBEAT_CHANGE_VALUE);
+				}
+					break;
+					
+				case E_ZB_CLUSTERID_LEVEL_CONTROL:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_LEVEL_CURRENTLEVEL,
+														 E_ZB_ATTRIBUTE_UINT8_TYPE); 
+					ret = eSendBindUnbindCommand(device->u64IeeeAddress, 
+										   device->sZDEndpoint[i].u8EndpointId, 
+										   E_ZB_CLUSTERID_LEVEL_CONTROL,
+										   SEND_BIND_REQUEST_COMMAND);
+					zb_device_manage_set_hearbeat_interval(device->u16NodeId,
+                                                          ZB_ENDPOINT_SRC_DEFAULT,
+                                                          ZB_ENDPOINT_DST_DEFAULT,
+                                                          E_ZB_CLUSTERID_LEVEL_CONTROL,
+                                                          E_ZB_ATTRIBUTEID_LEVEL_CURRENTLEVEL,
+                                                          E_ZB_ATTRIBUTE_UINT8_TYPE,
+                                                          ZCL_HEARTBEAT_MIN_REPORT_INTERVAL,
+                                                          ZCL_HEARTBEAT_MAX_REPORT_INTERVAL,
+                                                          ZCL_HEARTBEAT_TIMEOUT_VALUE,
+                                                          ZCL_HEARTBEAT_CHANGE_VALUE);
+				}
+					break; 
+					
+				case E_ZB_CLUSTERID_COLOR_CONTROL:
+				{
+					switch (device->sZDEndpoint[i].u16DeviceType)
+					{
+						case E_ZB_DEVICEID_LIGHT_COLOR_TEMP:
+						{
+							tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+																 device->sZDEndpoint[i].u8EndpointId,
+																 clusterId,
+																 E_ZB_ATTRIBUTEID_COLOUR_COLOURTEMPERATURE,
+																 E_ZB_ATTRIBUTE_UINT64_TYPE);
+							ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+												   device->sZDEndpoint[i].u8EndpointId,
+												   E_ZB_CLUSTERID_COLOR_CONTROL,
+												   SEND_BIND_REQUEST_COMMAND);
+						}
+
+							break;
+							
+						case E_ZB_DEVICEID_LIGHT_COLOR_EXT:
+						{
+							tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+																 device->sZDEndpoint[i].u8EndpointId,
+																 clusterId,
+																 E_ZB_ATTRIBUTEID_COLOUR_COLOURTEMPERATURE,
+																 E_ZB_ATTRIBUTE_UINT64_TYPE);
+							tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+																 device->sZDEndpoint[i].u8EndpointId,
+																 clusterId,
+																 E_ZB_ATTRIBUTEID_COLOUR_CURRENTX,
+																 E_ZB_ATTRIBUTE_UINT64_TYPE);
+							tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+																 device->sZDEndpoint[i].u8EndpointId,
+																 clusterId,
+																 E_ZB_ATTRIBUTEID_COLOUR_CURRENTY,
+																 E_ZB_ATTRIBUTE_UINT64_TYPE);										 
+							ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+												   device->sZDEndpoint[i].u8EndpointId,
+												   E_ZB_CLUSTERID_COLOR_CONTROL,
+												   SEND_BIND_REQUEST_COMMAND);
+						}
+							break;
+							
+						default:
+							break;
+						
+					}
+				}
+					break;
+
+				case E_ZB_CLUSTERID_MEASUREMENTSENSING_TEMP:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_MS_TEMP_MEASURED,
+														 E_ZB_ATTRIBUTE_UINT64_TYPE);
+					ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+										   device->sZDEndpoint[i].u8EndpointId,
+										   E_ZB_CLUSTERID_MEASUREMENTSENSING_TEMP,
+										   SEND_BIND_REQUEST_COMMAND);
+				}
+					break;
+					
+				case E_ZB_CLUSTERID_MEASUREMENTSENSING_HUM:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_MS_HUM_MEASURED,
+														 E_ZB_ATTRIBUTE_UINT64_TYPE);
+					ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+										   device->sZDEndpoint[i].u8EndpointId,
+										   E_ZB_CLUSTERID_MEASUREMENTSENSING_HUM,
+										   SEND_BIND_REQUEST_COMMAND);								  
+				}
+					break;
+					
+				case E_ZB_CLUSTERID_MEASUREMENTSENSING_ILLUM:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_MS_ILLUM_MEASURED,
+														 E_ZB_ATTRIBUTE_UINT64_TYPE);
+					ret = eSendBindUnbindCommand(device->u64IeeeAddress,
+										   device->sZDEndpoint[i].u8EndpointId,
+										   E_ZB_CLUSTERID_MEASUREMENTSENSING_ILLUM,
+										   SEND_BIND_REQUEST_COMMAND);
+				}
+					break;
+
+				case E_ZB_CLUSTERID_OCCUPANCYSENSING:
+				{
+					tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+														 device->sZDEndpoint[i].u8EndpointId,
+														 clusterId,
+														 E_ZB_ATTRIBUTEID_MS_OCC_OCCUPANCY,
+														 E_ZB_ATTRIBUTE_UINT64_TYPE);																		  
+				}
+					break;
+					
+				default:
+					break;
+			}
+		}
+
+	}
+	
+	device->eDeviceState = E_ZB_DEVICE_BIND_OVER;
+    return ret;
+}
+
+static teZcbStatus zb_device_manage_attr_read(tsZbDeviceInfo *device){
+	int i,j;
+	uint16_t clusterId;
+	teZcbStatus ret = E_ZCB_ERROR;
+	uint16_t attribute_id = E_ZB_ATTRIBUTEID_BASIC_MODEL_ID;
+	for (i = 0; i < device->u8EndpointCount; i++)
+	{
+	    for (j = 0; j < device->sZDEndpoint[i].u8ClusterCount; j++)
+	    {
+	        clusterId = device->sZDEndpoint[i].sZDCluster[j].u16ClusterId;
+
+			if(clusterId == E_ZB_CLUSTERID_BASIC){
+
+				tZDM_AddNewAttributeToAttributeTable(device->u16NodeId,
+													 device->sZDEndpoint[i].u8EndpointId,
+													 clusterId,
+													 attribute_id,
+													 E_ZB_ATTRIBUTE_STRING_TYPE);
+
+				ret = eReadAttributeRequest(E_ZD_ADDRESS_MODE_SHORT, 
+	                                      device->u16NodeId, 
+	                                      ZB_ENDPOINT_SRC_DEFAULT, 
+	                                      device->sZDEndpoint[i].u8EndpointId, 
+	                                      E_ZB_CLUSTERID_BASIC,  
+	                                      ZB_MANU_CODE_DEFAULT, 
+                                          MANUFACTURER_SPECIFIC_FALSE,
+	                                      1, 
+	                                      &attribute_id);
+
+			}
+	        
+	    }
+	}
+	return ret;
+}
+
+
 
 void zb_device_rxedcmd_process(uint32_t device_id, char *cmd, uint8_t value){
+	tsZbDeviceInfo*  device = NULL;
 	if( strstr(cmd, "LightSwitch")){
+		device = zb_device_find_device_info_by_device_id(device_id);
+		if(device != NULL){
 
-		eOnOff(E_ZB_ADDRESS_MODE_SHORT,
-							   deviceTable[device_id].u16NodeId,
-							   1,
-							   1,
-							   value);
+				eOnOff(E_ZB_ADDRESS_MODE_SHORT,
+                                       device->u16NodeId, //deviceTable[device_id].u16NodeId
+                                       1,
+                                       1,
+                                       value);
+			}
 
 	}else if(strstr(cmd, "startZbNet")){
 		switch (value){
@@ -735,48 +1333,309 @@ void zb_device_rxedcmd_process(uint32_t device_id, char *cmd, uint8_t value){
 
 }
 
-static void zb_device_iot_se_req_timeoutcb(TimerHandle_t thdl){
-	zb_device_iot_se_req_t *zbdi = (zb_device_iot_se_req_t *)thdl;//((xTIMER *)thdl)->pvTimerID;
+
+
+
+static teZcbStatus zb_device_manage_set_hearbeat_interval(uint16_t u16NodeId,
+                                                  uint8_t u8SrcEndpoint,
+                                                  uint8_t u8DstEndpoint,
+                                                  uint16_t u16ClusterId,
+                                                  uint16_t u16AttributeId,
+                                                  uint8_t u8DataType,
+                                                  uint16_t u16MinIntv,
+                                                  uint16_t u16MaxIntv,
+                                                  uint16_t u16TimeOut,
+                                                  uint64_t u64Change){
+
+
+	tsZbDeviceConfigReport* findReportAttributeInHeartBeatTable = NULL;
+
+
+	findReportAttributeInHeartBeatTable = tZDM_ReportAttributeInHeartBeatTable(u16NodeId,u8SrcEndpoint,u8DstEndpoint,u16ClusterId,u16AttributeId,u8DataType);
+	if(findReportAttributeInHeartBeatTable == NULL)
+	{
+	   if(eConfigureReportingCommand(E_ZD_ADDRESS_MODE_SHORT,
+								   u16NodeId,
+								   u8SrcEndpoint,
+								   u8DstEndpoint,
+								   u16ClusterId,
+								   ZB_MANU_CODE_DEFAULT,
+								   u8DataType,
+								   u16AttributeId,
+								   u16MinIntv,
+								   u16MaxIntv,
+								   u64Change) != E_ZCB_OK){
+		   LOG(ZBCMD, ERR, "Sending set heartbeat command fail\r\n");
+		   return E_ZCB_COMMS_FAILED;
+
+	   }
+		tZDM_AddNewReportAttributeToHeartBeatTable(u16NodeId,u8SrcEndpoint,u8DstEndpoint,u16ClusterId,u16AttributeId,u8DataType,u16MinIntv,u16MaxIntv,u16TimeOut,u64Change);
+	}
+
+	return E_ZCB_OK;
+
+}
+
+static int zb_device_iot_se_req_timeoutcb(void *args){
+
+	zb_device_iot_se_req_t *zbdi = (zb_device_iot_se_req_t *)args;//((xTIMER *)thdl)->pvTimerID;
+	int ret = 10;
 	if(!zbdi){
 		HAL_Printf("Invalid parameters\r\n");
-		xTimerStop(thdl, 0);
+		return -1;
 	}
+
+	if(zbdi->timeout == 0){
+		ret = -1;
+		HAL_Printf("Secrety request timeout\r\n");
+		goto zbd_done;
+	}
+	zbdi->timeout--;
+	
 	switch(zbdi->items_get){
-
-		case 0:{
-
+		
+		case ZB_DEVICE_MANAGE_ACTIVE_EP_REQ:{
+			teZcbStatus st = eActiveEndpointRequest(zbdi->devinfo->u16NodeId);		
+			HAL_Printf("Active endpoint request status 0x%x\r\n",st);
+		}
+		break;
+		
+		case ZB_DEVICE_MANAGE_SIMPLE_DESC_REQ:{
+			uint8_t epArrayIndex;
+			teZcbStatus st;
+			for(epArrayIndex=0;epArrayIndex<zbdi->devinfo->u8EndpointCount;epArrayIndex++){
+				st = eSimpleDescriptorRequest(zbdi->devinfo->u16NodeId, zbdi->devinfo->sZDEndpoint[epArrayIndex].u8EndpointId);
+			}
+			HAL_Printf("Simple descriptor request result 0x%x\r\n",st);
 			
+		}
+		break;
+
+		
+		case ZB_DEVICE_MANAGE_ATTRIBUTE_READ:{
+			teZcbStatus st = zb_device_manage_attr_read(zbdi->devinfo);
+			HAL_Printf("Device manage attribute read result 0x%x\r\n",st);
+		}
+		break;
+
+
+		case ZB_DEVICE_MANAGE_CLUSTER_BIND:{
+			teZcbStatus st = zb_device_manage_cluster_bind(zbdi->devinfo);
+			HAL_Printf("Cluster bind result 0x%x\r\n",st);
+		}
+		break;
+
+		case ZB_DEVICE_MANAGE_PKEY_REQ:{
+			uint16_t au16AttrList = E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTKEY;
+            tZDM_AddNewAttributeToAttributeTable(zbdi->devinfo->u16NodeId,
+                                                    ZB_ENDPOINT_SRC_DEFAULT,
+                                                    E_ZB_CLUSTERID_ALIIOTSECURITY,
+                                                    E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTKEY,
+                                                    E_ZB_ATTRIBUTE_STRING_TYPE);
+			eReadAttributeRequest(E_ZD_ADDRESS_MODE_SHORT, 
+                                  zbdi->devinfo->u16NodeId, 
+                                  ZB_ENDPOINT_SRC_DEFAULT, 
+                                  1, 
+                                  E_ZB_CLUSTERID_ALIIOTSECURITY,  
+                                  ZB_MANU_CODE_DEFAULT, 
+                                  MANUFACTURER_SPECIFIC_TRUE,
+                                  1, 
+                                  &au16AttrList);
+			HAL_Printf("Request product key\r\n");
 			
 		}
 		break;
 		
-		case 1:{
-			
+		case ZB_DEVICE_MANAGE_PSECRET_REQ:{
+			uint16_t au16AttrList = E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTSECRET;
+            tZDM_AddNewAttributeToAttributeTable(zbdi->devinfo->u16NodeId,
+                                                ZB_ENDPOINT_SRC_DEFAULT,
+                                                E_ZB_CLUSTERID_ALIIOTSECURITY,
+                                                E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTSECRET,
+                                                E_ZB_ATTRIBUTE_STRING_TYPE);
+			eReadAttributeRequest(E_ZD_ADDRESS_MODE_SHORT, 
+                                  zbdi->devinfo->u16NodeId, 
+                                  ZB_ENDPOINT_SRC_DEFAULT, 
+                                  1, 
+                                  E_ZB_CLUSTERID_ALIIOTSECURITY,  
+                                  ZB_MANU_CODE_DEFAULT, 
+                                  MANUFACTURER_SPECIFIC_TRUE,
+                                  1, 
+                                  &au16AttrList);
+			HAL_Printf("Request product secret\r\n");
 
 		}
 		break;
 		
-		case 2:{
-			
+		case ZB_DEVICE_MANAGE_DNAME_REQ:{
+			uint16_t au16AttrList = E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICENAME;
+            tZDM_AddNewAttributeToAttributeTable(zbdi->devinfo->u16NodeId,
+                                                ZB_ENDPOINT_SRC_DEFAULT,
+                                                E_ZB_CLUSTERID_ALIIOTSECURITY,
+                                                E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICENAME,
+                                                E_ZB_ATTRIBUTE_STRING_TYPE);
+			eReadAttributeRequest(E_ZD_ADDRESS_MODE_SHORT, 
+                                  zbdi->devinfo->u16NodeId, 
+                                  ZB_ENDPOINT_SRC_DEFAULT, 
+                                  1, 
+                                  E_ZB_CLUSTERID_ALIIOTSECURITY,  
+                                  ZB_MANU_CODE_DEFAULT, 
+                                  MANUFACTURER_SPECIFIC_TRUE,
+                                  1, 
+                                  &au16AttrList);
+			HAL_Printf("Request device name\r\n");
 
 
 		}
 		break;
 		
-		case 3:{
-			
+		case ZB_DEVICE_MANAGE_DSECRET_REQ:{
+			uint16_t au16AttrList = E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICESECRET;
+            tZDM_AddNewAttributeToAttributeTable(zbdi->devinfo->u16NodeId,
+                                                ZB_ENDPOINT_SRC_DEFAULT,
+                                                E_ZB_CLUSTERID_ALIIOTSECURITY,
+                                                E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICESECRET,
+                                                E_ZB_ATTRIBUTE_STRING_TYPE);
+			eReadAttributeRequest(E_ZD_ADDRESS_MODE_SHORT, 
+                                  zbdi->devinfo->u16NodeId, 
+                                  ZB_ENDPOINT_SRC_DEFAULT, 
+                                  1, 
+                                  E_ZB_CLUSTERID_ALIIOTSECURITY,  
+                                  ZB_MANU_CODE_DEFAULT, 
+                                  MANUFACTURER_SPECIFIC_TRUE,
+                                  1, 
+                                  &au16AttrList);
+			HAL_Printf("Request device secret\r\n");
 
 		}
 		break;
 		
+		case ZB_DEVICE_MANAGE_COMPLETE:{
+			HAL_Printf("IoT security request success, report device to cloud\r\n");
+			gateway_sub_dev_add(zbdi->devinfo,zbdi->product_key,zbdi->product_secret,zbdi->device_name,zbdi->device_secret);
+            zbdi->devinfo->eDeviceState = E_ZB_DEVICE_STATE_ACTIVE;
+			xTimerStart(zbDeviceTimer,pdMS_TO_TICKS(1000));
+			ret = -1;
+		}
+		
+		default:{
+			ret = -1;
+		}
+		break;
+	}
+	zbd_done:
+	if(ret == -1){
+		list_del((dlist_t *)zbdi);
+		vPortFree(zbdi);
+	}
+	
+	return ret;
+
+}
+
+zb_device_iot_se_req_t *zb_device_get_iot_se_req_data(tsZbDeviceInfo *devinfo){
+	zb_device_iot_se_req_t *wte = (zb_device_iot_se_req_t *)zb_device_list_head.next;
+	do{
+		if(wte->devinfo  == devinfo){
+			return wte;
+		}
+		wte= (zb_device_iot_se_req_t *)wte->next;
+		if(!wte){
+			break;
+		}
+	}while((void *)wte != (void *)&zb_device_list_head);
+	return NULL;
+}
+
+void zb_device_handle_zb_response(tsZbDeviceInfo *devinfo, zb_device_mange_st_e msgtype){
+
+	zb_device_iot_se_req_t *zbdi = zb_device_get_iot_se_req_data(devinfo);
+	
+	if(!zbdi){
+		HAL_Printf("Error to locate the iot security request primitive\r\n");
+		return;
+	}
+	int ret = 0;
+	HAL_Printf("Rxed msg type 0x%x\r\n",msgtype);
+	if(zbdi->items_get == msgtype){
+		zbdi->items_get++;
+	}
+	ret = zb_device_iot_se_req_timeoutcb(zbdi);
+	if(ret == -1){
+
+		zbd_s_timer_stop(zbdi);
+
+	}else{
+		zbd_s_timer_timeout_set(zbdi, ret);
+
+	}
+
+}
+
+void zb_device_handle_iot_se_response(tsZbDeviceAttribute *attrv, tsZbDeviceInfo *devinfo){
+	zb_device_iot_se_req_t *zbdi = zb_device_get_iot_se_req_data(devinfo);
+	
+	if(!zbdi){
+		HAL_Printf("Can't locate the iot security request primitive\r\n");
+		return;
+	}
+	int ret = 0;
+	switch(attrv->u16AttributeId){
+		case E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTKEY:{
+			HAL_Printf("Rxed product key %s\r\n",attrv->uData.sData.pData);
+			memcpy(zbdi->product_key,attrv->uData.sData.pData,attrv->uData.sData.u8Length);
+			if(zbdi->items_get == E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTKEY){
+				zbdi->items_get++;
+			}
+			ret = zb_device_iot_se_req_timeoutcb(zbdi);
+		}
+		break;
+		case E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTSECRET:{
+			HAL_Printf("Rxed product secret %s\r\n",attrv->uData.sData.pData);
+			memcpy(zbdi->product_secret,attrv->uData.sData.pData,attrv->uData.sData.u8Length);
+		
+			if(zbdi->items_get == E_ZB_ATTRIBUTEID_ALIIOTSECURITY_PRODUCTSECRET){
+				zbdi->items_get++;
+			}
+			ret = zb_device_iot_se_req_timeoutcb(zbdi);
+
+		}
+		break;
+		case E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICENAME:{
+			HAL_Printf("Rxed device name %s\r\n",attrv->uData.sData.pData);
+			memcpy(zbdi->device_name,attrv->uData.sData.pData,attrv->uData.sData.u8Length);
+			if(zbdi->items_get == E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICENAME){
+				zbdi->items_get++;
+			}
+			ret = zb_device_iot_se_req_timeoutcb(zbdi);
+
+
+
+		}
+		break;
+		case E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICESECRET:{
+			HAL_Printf("Rxed device secrit %s\r\n",attrv->uData.sData.pData);
+			memcpy(zbdi->device_secret,attrv->uData.sData.pData,attrv->uData.sData.u8Length);
+			if(zbdi->items_get == E_ZB_ATTRIBUTEID_ALIIOTSECURITY_DEVICESECRET){
+				zbdi->items_get++;
+			}
+			ret = zb_device_iot_se_req_timeoutcb(zbdi);
+
+		}
+		break;
 		default:{
 
 
+			HAL_Printf("Unknown attribute response received 0x%x\r\n",attrv->u16AttributeId);
+			
 		}
 		break;
 	}
-	
+	if(ret == -1){
 
+		zbd_s_timer_stop(zbdi);
+
+	}
 }
 
 
@@ -787,8 +1646,9 @@ static const char device_secret[] = "868Cv5e9mewx6YHXiRRHjEpRkfKLCRec";
 
 
 
-void zb_device_request_IoT_security(tsZbDeviceInfo *devinfo){
-#if 1
+
+void zb_device_request_IoT_security(tsZbDeviceInfo *devinfo, bool new_join){
+#if 0
 	gateway_sub_dev_add(devinfo,product_key,product_secret,device_name,device_secret);
 
 
@@ -798,13 +1658,13 @@ void zb_device_request_IoT_security(tsZbDeviceInfo *devinfo){
 		memset(zbdi,0,sizeof(*zbdi));
 		zbdi->devinfo = devinfo;
 		zbdi->timeout = IOT_SE_REQ_TIMEOUT_S;
-		zbdi->items_get = 0;
-		TimerHandle_t thdl = xTimerCreate("iot_se_req", pdMS_TO_TICKS(1000), pdTRUE, (void *const)zbdi, (TimerCallbackFunction_t)zb_device_iot_se_req_timeoutcb);
-		if(!thdl){
-
-			HAL_Printf("zb device req iot se failed to create timer\r\n");
+		zbdi->items_get = new_join?ZB_DEVICE_MANAGE_ACTIVE_EP_REQ:ZB_DEVICE_MANAGE_PKEY_REQ;
+		if(zbd_s_timer_start(2,zb_device_iot_se_req_timeoutcb,zbdi) != 0){
+			vPortFree(zbdi);
+			//TODO: Need send leave cmd to the newly joined device
 			return;
 		}
+		list_add((dlist_t *)zbdi,&zb_device_list_head);
 		
 	}
 #endif
@@ -854,7 +1714,7 @@ void vZDM_cJSON_DeviceCreate(tsZbDeviceInfo *device)
     */
 #if ALI_IOT_PLATFORM
 	LOG(ZDM, INFO, "Add device to cloud\r\n");
-	zb_device_request_IoT_security(device);
+	zb_device_request_IoT_security(device,false);
 
 #else
     LOG(ZDM, INFO, "ZCB_cJSON_DeviceCreate\r\n");
@@ -1196,7 +2056,7 @@ void vZDM_cJSON_DeviceDelete(tsZbDeviceInfo *device)
     LOG(ZDM, INFO, "ZCB_cJSON_DeviceDelete\r\n");
 #if ALI_IOT_PLATFORM
 	
-	gateway_delete_subdev(0);
+	gateway_delete_subdev_complete(device);
 
 #else
     if (device == NULL)

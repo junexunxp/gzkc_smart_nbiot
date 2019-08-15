@@ -333,7 +333,8 @@ teZcbStatus eReadAttributeRequest(uint8_t u8AddrMode,
                                   uint8_t u8DstEp,
                                   uint16_t u16ClusterId,
                                   uint16_t u16ManuCode,
-                                  uint8_t u8NumOfAttr,
+                                  bool    bIsManuSpecific,
+                                  uint8_t u8NumOfAttr,                            
                                   uint16_t* au16AttrList)
 {
     uint8_t u8SequenceNo;
@@ -350,7 +351,7 @@ teZcbStatus eReadAttributeRequest(uint8_t u8AddrMode,
     sReadAttrReq.u8DestinationEndPointId    = u8DstEp;
     sReadAttrReq.u16ClusterId               = htons(u16ClusterId);
     sReadAttrReq.bDirectionIsServerToClient = SEND_DIR_FROM_CLIENT_TO_SERVER;
-    sReadAttrReq.bIsManufacturerSpecific    = MANUFACTURER_SPECIFIC_FALSE;
+    sReadAttrReq.bIsManufacturerSpecific    = bIsManuSpecific;
     sReadAttrReq.u16ManufacturerCode        = htons(u16ManuCode);
     sReadAttrReq.u8NumberOfAttributes       = u8NumOfAttr;
 
@@ -410,11 +411,11 @@ teZcbStatus eSendBindUnbindCommand(uint64_t u64TargetIeeeAddr,
     
     memset( (char *)&sBindUnbindReq, 0, u16Length );
 
-    sBindUnbindReq.u64SrcAddress = htond(u64TargetIeeeAddr);
+    sBindUnbindReq.u64SrcAddress = (u64TargetIeeeAddr); //htond
     sBindUnbindReq.u8SrcEndpoint = u8TargetEp;
     sBindUnbindReq.u16ClusterId  = htons(u16ClusterId);
     sBindUnbindReq.u8DstAddrMode = E_ZD_ADDRESS_MODE_IEEE;
-    sBindUnbindReq.uAddressField.sExtended.u64DstAddress = htond(zbNetworkInfo.u64IeeeAddress);
+    sBindUnbindReq.uAddressField.sExtended.u64DstAddress = (zbNetworkInfo.u64IeeeAddress);//htond
     sBindUnbindReq.uAddressField.sExtended.u8DstEndPoint = ZB_ENDPOINT_ATTR;
     
     LOG(ZBCMD, INFO, "Send (Un-)Binding request to 0x%016llX (%d)\r\n", u64TargetIeeeAddr, u16Length);
@@ -510,7 +511,7 @@ teZcbStatus eConfigureReportingCommand(uint8_t u8AddrMode,
     
     LOG(ZBCMD, INFO, "Send Reporting Configuration request to 0x%04X\r\n", u16Addr);
     
-    sAttributeReportingConfigurationRequest.u8TargetAddrMode = E_ZB_ADDRESS_MODE_SHORT_NO_ACK;
+    sAttributeReportingConfigurationRequest.u8TargetAddrMode = E_ZB_ADDRESS_MODE_SHORT;
     sAttributeReportingConfigurationRequest.u16TargetAddress = htons(u16Addr);
     sAttributeReportingConfigurationRequest.u8SrcEndpoint    = u8SrcEp;
     sAttributeReportingConfigurationRequest.u8DstEndpoint    = u8DstEp;    

@@ -34,7 +34,7 @@
 #include "zigbee_cmd.h"
 #include "zb_ota_test.h"
 
-#define ZB_DEVICE_MESSAGE_PERIOD_TIMER_MS    3000   //3s
+#define ZB_DEVICE_MESSAGE_PERIOD_TIMER_MS    (1000*ZCL_HEARTBEAT_MAX_REPORT_INTERVAL) //6000 //6s  
 #define ZB_DEVICE_MESSAGE_TIMER_OUT_COUNT    3
 
 /* to calculate the time of device receiving last message */
@@ -92,6 +92,10 @@ TimerHandle_t zbDeviceTimer;
 // ---------------------------------------------------------------
 // Exported Functions
 // ---------------------------------------------------------------
+
+extern bool bZD_ValidityCheckOfNodeId(uint16_t u16NodeId);
+
+
 
 void eZCB_Init(void) {
 
@@ -152,7 +156,8 @@ static void eDeviceTimer_Init()
   {
     LOG(ZCB, ERR, "zbDeviceTimer[%d] create fail\r\n");
   }
-  
+
+
 }
 
 
@@ -682,6 +687,8 @@ static void ZCB_HandleNetworkJoined(void *pvUser, uint16_t u16Length, void *pvMe
         LOG(ZCB, INFO, "Control bridge address 0x%04X (0x%016llX)\r\n", 
                        u16ShortAddress,
                        (unsigned long long int)u64IEEEAddress);
+	
+	    dbManagerUpdate(DBM_ZD_NETWORK_INFO_KEY,&zbNetworkInfo,sizeof(zbNetworkInfo));
 
         ZCB_UploadZigeeNetworkInfo(&zbNetworkInfo);
 
@@ -711,25 +718,15 @@ static void ZCB_HandleDeviceAnnounce(void *pvUser, uint16_t u16Length, void *pvM
     tsZbDeviceInfo* sDevice = tZDM_FindDeviceByIeeeAddress(u64IEEEAddress,u16ShortAddress);
     if (sDevice == NULL) {
         if ((sDevice = tZDM_AddNewDeviceToDeviceTable(u16ShortAddress, u64IEEEAddress)) != NULL) {
-            vZDM_NewDeviceQualifyProcess(sDevice);
+            //vZDM_NewDeviceQualifyProcess(sDevice);
+            zb_device_request_IoT_security(sDevice,true);
             //zb_new_device_register2cloud(sDevice);
         }
     }else{
     	//Report device to cloud
     	//TODO: Device ID should link to the Device short address
 		//gateway_sub_dev_add(sDevice);
-		zb_device_request_IoT_security(sDevice);
-		zb_device_iot_se_req_t *zbdi = pvPortMalloc(sizeof(zb_device_iot_se_req_t));
-		if(zbdi){
-			memset(zbdi,0,sizeof(*zbdi));
-			zbdi->devinfo = sDevice;
-			zbdi->timeout = IOT_SE_REQ_TIMEOUT_S;
-
-			
-
-		}
-		
-
+		zb_device_request_IoT_security(sDevice,false);
     }
 	
 }
@@ -744,7 +741,7 @@ static void ZCB_HandleDeviceLeave(void *pvUser, uint16_t u16Length, void *pvMess
 	uint64_t    u64IeeeAddr;
 	uint8_t *ptr = pvMessage;
 	memcpy(&u64IeeeAddr,ptr,8);
-	u64IeeeAddr = ntohd(u64IeeeAddr);
+	//u64IeeeAddr = ntohd(u64IeeeAddr);
 	ptr += 8;
 	
     uint8_t     u8RejoinStatus = *ptr;
@@ -817,13 +814,17 @@ static void ZCB_HandleAttributeReport(void *pvUser, uint16_t u16Length, void *pv
         return;
     }
 
+    if (sDevice->eDeviceState == E_ZB_DEVICE_BIND_OVER) {
+        zb_device_handle_zb_response(sDevice,ZB_DEVICE_MANAGE_CLUSTER_BIND);    
+    }
+
+
     uint8_t index = uZDM_FindDevTableIndexByNodeId(sDevice->u16NodeId);
-   // xTimerReset(deviceTimer[index].xTimers, 0);
     zbDeviceTimerCount[index] = 0;
 
     if (sDevice->eDeviceState == E_ZB_DEVICE_STATE_OFF_LINE) {
-        sDevice->eDeviceState = E_ZB_DEVICE_STATE_ACTIVE;
-        vZDM_cJSON_DevStateUpdate(sDevice);
+	sDevice->eDeviceState = E_ZB_DEVICE_REQUEST_ALISE_AGAIN;   
+        zb_device_request_IoT_security(sDevice,false);
     }
     
     tsZbDeviceAttribute *sAttribute = tZDM_FindAttributeEntryByElement(u16ShortAddress,
@@ -909,8 +910,7 @@ static void ZCB_HandleAttributeReport(void *pvUser, uint16_t u16Length, void *pv
     else
         LOG(ZCB, INFO, "attr value = %d\r\n", sAttribute->uData.u64Data);
 
-    if (sDevice->eDeviceState == E_ZB_DEVICE_STATE_ACTIVE)
-        vZDM_cJSON_AttrUpdate(sAttribute);
+
 
 #if 1
     if ((sDevice->sZDEndpoint[0].u16DeviceType == 2) //Alarm Button
@@ -967,7 +967,8 @@ static void ZCB_HandleActiveEndPointResp(void *pvUser, uint16_t u16Length, void 
         }
         LOG(ZCB, INFO, "\r\n");
         sDevice->eDeviceState = E_ZB_DEVICE_STATE_GET_CLUSTER;
-        vZDM_NewDeviceQualifyProcess(sDevice);
+        //vZDM_NewDeviceQualifyProcess(sDevice);
+		zb_device_handle_zb_response(sDevice,ZB_DEVICE_MANAGE_ACTIVE_EP_REQ);
     }  
 }
 
@@ -1010,6 +1011,7 @@ static void ZCB_HandleSimpleDescriptorResponse(void *pvUser, uint16_t u16Length,
         uint16_t tempClusterId = 0;
         for (uint8_t i = 0; i < u8ClusterCount; i++) {
             tempClusterId = au16Clusters[i];
+            tempClusterId = ntohs(tempClusterId);
             if ((tempClusterId != E_ZB_CLUSTERID_GROUPS)
                 && (tempClusterId != E_ZB_CLUSTERID_SCENES)
                 && (tempClusterId != E_ZB_CLUSTERID_IDENTIFY)
@@ -1020,11 +1022,12 @@ static void ZCB_HandleSimpleDescriptorResponse(void *pvUser, uint16_t u16Length,
         }
         devEp->u8ClusterCount = actualClusCnt;
         if (u8Endpoint == sDevice->sZDEndpoint[sDevice->u8EndpointCount - 1].u8EndpointId) {
-            sDevice->eDeviceState = E_ZB_DEVICE_STATE_READ_ATTRIBUTE;            
+            sDevice->eDeviceState = E_ZB_DEVICE_STATE_READ_ATTRIBUTE;
+			zb_device_handle_zb_response(sDevice,ZB_DEVICE_MANAGE_SIMPLE_DESC_REQ);
         } else {
             sDevice->eDeviceState = E_ZB_DEVICE_STATE_GET_CLUSTER;
         }
-        vZDM_NewDeviceQualifyProcess(sDevice);
+       
     }
 } 
 
@@ -1052,7 +1055,7 @@ static void ZCB_HandleReadAttrResp(void *pvUser, uint16_t u16Length, void *pvMes
 	u16SizeOfAttributesInBytes = ntohs(u16SizeOfAttributesInBytes);
 	ptr += 2;
 	
-    uint8_t     auAttributeValue[50];
+    uint8_t     auAttributeValue[100];
 
 	memcpy(auAttributeValue,ptr,u16Length - (ptr - (uint8_t *)pvMessage));
 
@@ -1120,7 +1123,7 @@ static void ZCB_HandleReadAttrResp(void *pvUser, uint16_t u16Length, void *pvMes
                     
         case E_ZCL_OSTRING:
         case E_ZCL_CSTRING:
-            sAttribute->uData.sData.u8Length = (uint8_t)ntohs(u16SizeOfAttributesInBytes);
+            sAttribute->uData.sData.u8Length = (uint8_t)(u16SizeOfAttributesInBytes);
             if (sAttribute->uData.sData.pData == NULL) {
                 sAttribute->uData.sData.pData = pvPortMalloc(sizeof(uint8_t) * (sAttribute->uData.sData.u8Length + 1));
             }      
@@ -1145,7 +1148,11 @@ static void ZCB_HandleReadAttrResp(void *pvUser, uint16_t u16Length, void *pvMes
     if (sDevice->eDeviceState != E_ZB_DEVICE_STATE_ACTIVE) {
         if ((u16ClusterId == E_ZB_CLUSTERID_BASIC) && (u16AttributeId == E_ZB_ATTRIBUTEID_BASIC_MODEL_ID)) {
             sDevice->eDeviceState = E_ZB_DEVICE_STATE_BIND_CLUSTER;
-            vZDM_NewDeviceQualifyProcess(sDevice);
+            zb_device_handle_zb_response(sDevice,ZB_DEVICE_MANAGE_ATTRIBUTE_READ);
+        }else{
+
+			zb_device_handle_iot_se_response(sAttribute,sDevice);
+
         }
     }
 }
@@ -1433,17 +1440,24 @@ static void vDevTimerCallback(TimerHandle_t xTimers)
     for(i=0;i<sizeof(zbDeviceTimerCount);i++)
     {
 
-        if(zbDeviceTimerCount[i]<ZB_DEVICE_MESSAGE_TIMER_OUT_COUNT)
+      if(bZD_ValidityCheckOfNodeId(deviceTable[i].u16NodeId))
+      {    
+        if(deviceTable[i].eDeviceState == E_ZB_DEVICE_STATE_ACTIVE) 
         {
-             zbDeviceTimerCount[i]++;
+          if(zbDeviceTimerCount[i]<ZB_DEVICE_MESSAGE_TIMER_OUT_COUNT)
+          {
+               zbDeviceTimerCount[i]++;
+               
+          }
         }
+      }
 
-        LOG(ZCB, INFO, "Device 0x%04X did not received Heartbeat, timeSinceLastMsg = %d min\r\n", deviceTable[i].u16NodeId, zbDeviceTimerCount[i]);
         if (zbDeviceTimerCount[i] >= ZB_DEVICE_MESSAGE_TIMER_OUT_COUNT) {
-            
+            LOG(ZCB, ERR, "Device 0x%04X did not received Heartbeat, timeSinceLastMsg = %d min\r\n", deviceTable[i].u16NodeId, zbDeviceTimerCount[i]);
             offLineZD++;
             deviceTable[i].eDeviceState = E_ZB_DEVICE_STATE_OFF_LINE;
-            vZDM_cJSON_DevStateUpdate(&deviceTable[i]);
+			dbManagerUpdate(DBM_ZD_DEVICE_TABLE_KEY,&deviceTable,sizeof(deviceTable));
+            gateway_delete_subdev(&deviceTable[i]);
         }
     }  
    

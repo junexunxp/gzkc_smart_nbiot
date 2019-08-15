@@ -42,18 +42,10 @@ void HAL_Printf(const char *fmt, ...);
         HAL_Printf("\033[0m\r\n"); \
     } while (0)
 
-#define EXAMPLE_SUBDEV_MAX_NUM          64
 
-
-
-typedef struct{
-	tsZbDeviceInfo *zb_device_ib;
-	int dev_id;
-}sub_dev_addr_map_t;
 sub_dev_addr_map_t sub_dev_am[EXAMPLE_SUBDEV_MAX_NUM];
 
-
-uint8_t sub_dev_id[EXAMPLE_SUBDEV_MAX_NUM];
+//uint8_t sub_dev_id[EXAMPLE_SUBDEV_MAX_NUM];
 
 typedef struct {
     int master_devid;
@@ -68,6 +60,16 @@ typedef struct {
 
 static user_example_ctx_t g_user_example_ctx;
 static uint16_t active_sub_device_num = 0;
+
+tsZbDeviceInfo* zb_device_find_device_info_by_device_id(uint32_t device_id){
+
+	for(uint16_t i=0;i<EXAMPLE_SUBDEV_MAX_NUM;i++){
+       		if(sub_dev_am[i].dev_id == device_id)
+				return sub_dev_am[i].zb_device_ib ;
+		}
+	return NULL;
+
+}
 
 uint16_t sub_dev_free_space_get(void ){
 	uint16_t index;
@@ -132,28 +134,38 @@ int gateway_sub_dev_add(tsZbDeviceInfo *devInfo, char *product_key, char *produc
 		char ieeaddr[24]={0};
 		byte_array_2hex_string((uint8_t *)&devInfo->u64IeeeAddress,ieeaddr,8);
 		int kv_saved_previous = HAL_Kv_Get(ieeaddr,&subdev, &read_len);
-		
-		strncpy(subdev.product_key, product_key, strlen(product_key));
-		strncpy(subdev.product_secret, product_secret, strlen(product_secret));
-		strncpy(subdev.device_name, device_name, strlen(device_name));
-		strncpy(subdev.device_secret, device_secret, strlen(device_secret));
-		
-		
-		int ret = HAL_Kv_Set(ieeaddr,&subdev, sizeof(subdev), 0);
-		if(ret != 0){
-			HAL_Printf("Add new sub device secret info to kv failed, key name %s\r\n",ieeaddr);
-			return ret;
+		int needupdate = 0;
+		if(kv_saved_previous == 0){
+			if((memcmp(subdev.product_key, product_key, strlen(product_key)) != 0) || 
+				(memcmp(subdev.product_secret, product_secret, strlen(product_secret)) != 0)||
+				(memcmp(subdev.device_name, device_name, strlen(device_name)) != 0)||
+				(memcmp(subdev.device_secret, device_secret, strlen(device_secret)) != 0)){
+				needupdate = 1;
+				memset(&subdev,0,sizeof(subdev));
+			}
+
+		}
+		if(needupdate){
+			strncpy(subdev.product_key, product_key, strlen(product_key));
+			strncpy(subdev.product_secret, product_secret, strlen(product_secret));
+			strncpy(subdev.device_name, device_name, strlen(device_name));
+			strncpy(subdev.device_secret, device_secret, strlen(device_secret));
+			int ret = HAL_Kv_Set(ieeaddr,&subdev, sizeof(subdev), 0);
+			if(ret != 0){
+				HAL_Printf("Add new sub device secret info to kv failed, key name %s\r\n",ieeaddr);
+				return ret;
+			}
 		}
 		sub_dev_am[item_indx].zb_device_ib = devInfo;
 		sub_dev_am[item_indx].dev_id = -1;
+		sub_dev_am[item_indx].bIsOnLine = false;
 		active_sub_device_num++;
-		if(kv_saved_previous == 0){
-
+		if(kv_saved_previous == 0){			
+			HAL_Printf("Sub device secret info has been in kv, key name %s\r\n",ieeaddr);
 			g_user_example_ctx.permit_join = 1;
-
-
 		}
-		HAL_Printf("Add new sub device secret info to kv, key name %s\r\n",ieeaddr);
+        g_user_example_ctx.subdev_index = item_indx;
+		
 	}else{
 		//Handle device reboot condition
 		g_user_example_ctx.permit_join = 1;
@@ -217,7 +229,7 @@ static int user_property_set_event_handler(const int devid, const char *request,
     }
     ls = cJSON_GetObjectItem(p_root,"LightSwitch");
     if((ls  != NULL) && (cJSON_IsNumber(ls))){
-    	zb_device_rxedcmd_process(devid - 1,"LightSwitch",ls->valueint);
+    	zb_device_rxedcmd_process(devid,"LightSwitch",ls->valueint);
     }
 	ls = cJSON_GetObjectItem(p_root,"startZbNet");
 	if((ls	!= NULL) && (cJSON_IsNumber(ls))){
@@ -309,13 +321,49 @@ void user_deviceinfo_delete(void)
 
 
 
-int gateway_delete_subdev(uint8_t index){
-	if(index > EXAMPLE_SUBDEV_MAX_NUM){
+int gateway_delete_subdev(tsZbDeviceInfo *device){
+	if(!device){
 
 		return -1;
 	}
-	return IOT_Linkkit_Report(sub_dev_id[index], ITM_MSG_LOGOUT,
+	uint16_t item_indx = sub_dev_find_item((uint8_t *)&device->u64IeeeAddress);
+	if(item_indx == EXAMPLE_SUBDEV_MAX_NUM){
+		HAL_Printf("%s no items find\r\n",__func__);
+		return -1;
+		
+	}
+	
+	int ret =  IOT_Linkkit_Report(sub_dev_am[item_indx].dev_id, ITM_MSG_LOGOUT,
 								 NULL,0);
+	//sub_dev_am[item_indx].dev_id = -1;
+	//sub_dev_am[item_indx].zb_device_ib = NULL;
+	sub_dev_am[item_indx].bIsOnLine = false;
+	return ret;
+	
+}
+
+
+int gateway_delete_subdev_complete(tsZbDeviceInfo *device){
+	if(!device){
+
+		return -1;
+	}
+	uint16_t item_indx = sub_dev_find_item((uint8_t *)&device->u64IeeeAddress);
+	if(item_indx == EXAMPLE_SUBDEV_MAX_NUM){
+		HAL_Printf("%s no items find\r\n",__func__);
+		return -1;
+		
+	}
+	
+	int ret =  IOT_Linkkit_Report(sub_dev_am[item_indx].dev_id, ITM_MSG_LOGOUT,
+								 NULL,0);
+	//delete device id
+	IOT_Linkkit_Close(sub_dev_am[item_indx].dev_id);
+	sub_dev_am[item_indx].dev_id = -1;
+	sub_dev_am[item_indx].zb_device_ib = NULL;
+	sub_dev_am[item_indx].bIsOnLine = false;
+	active_sub_device_num--;
+	return ret;	
 }
 
 
@@ -324,7 +372,7 @@ int gateway_add_subdev(uint8_t index){
 
 		return -1;
 	}
-	if(sub_dev_am[index].dev_id != -1){
+	if(sub_dev_am[index].bIsOnLine == true){
 
 		HAL_Printf("Device already reported to cloud, device id %d\r\n",sub_dev_am[index].dev_id);
 		return -1;
@@ -340,15 +388,21 @@ int gateway_add_subdev(uint8_t index){
 		return -1;
 	}
 
-	
-	sub_dev_am[index].dev_id = IOT_Linkkit_Open(IOTX_LINKKIT_DEV_TYPE_SLAVE, &ldm);
-	devid = sub_dev_am[index].dev_id;
-	if (devid == FAIL_RETURN) {
-		EXAMPLE_TRACE("subdev open Failed\n");
-		return FAIL_RETURN;
-	}
-	EXAMPLE_TRACE("subdev open susseed, devid = %d\n", devid);
-
+	if(sub_dev_am[index].dev_id == -1)
+    {
+        sub_dev_am[index].dev_id = IOT_Linkkit_Open(IOTX_LINKKIT_DEV_TYPE_SLAVE, &ldm);
+        devid = sub_dev_am[index].dev_id;
+        if (devid == FAIL_RETURN) {
+            EXAMPLE_TRACE("subdev open Failed\n");
+            return FAIL_RETURN;
+        }
+        EXAMPLE_TRACE("subdev open susseed, devid = %d\n", devid);
+    }
+    else
+    {
+        devid = sub_dev_am[index].dev_id;
+    }
+    
 	res = IOT_Linkkit_Connect(devid);
 	if (res == FAIL_RETURN) {
 		EXAMPLE_TRACE("subdev connect Failed\n");
@@ -362,6 +416,7 @@ int gateway_add_subdev(uint8_t index){
 		return res;
 	}
 	EXAMPLE_TRACE("subdev login success: devid = %d\n", devid);
+    sub_dev_am[index].bIsOnLine = true;
 	return res;
 
 
@@ -564,14 +619,24 @@ void gateway_run(void *pvParameters)
 		if (eErasePersistentData() != E_ZCB_OK) {
 			LOG(GW, ERR, "Erase Zigbee PD failed\r\n");
 		}
-
+//                eSetChannelMask(ZB_CHANNEL_DEFAULT);
+//		eStartNetwork();
+                vZDM_ClearAllDeviceTables();
 		/* wait a while to avoid zigbee data transaction when operate FLASH */
 		vTaskDelay(1000);
 
 		SysMgr_MarkConnected();
 
 	}else{
-		eStartNetwork();
+//            if (eErasePersistentData() != E_ZCB_OK) {
+//                          LOG(GW, ERR, "Erase Zigbee PD failed\r\n");
+//                  }
+//              /* wait a while to avoid zigbee data transaction when operate FLASH */
+//		vTaskDelay(1000);
+//                eSetChannelMask(ZB_CHANNEL_DEFAULT);
+//		eStartNetwork();
+               vZDM_GetAllDeviceTable();
+               vZDM_SetAllDeviceOffLine();               
 	}
 
 	
@@ -595,7 +660,7 @@ void gateway_run(void *pvParameters)
 			if (user_example_ctx->subdev_index < EXAMPLE_SUBDEV_MAX_NUM) {
 				/* Add next subdev */
 				gateway_add_subdev(user_example_ctx->subdev_index);
-				user_example_ctx->subdev_index++;
+			//	user_example_ctx->subdev_index++;
 			}
                         user_example_ctx->permit_join = 0;
 		}

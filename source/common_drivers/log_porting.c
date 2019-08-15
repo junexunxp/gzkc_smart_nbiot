@@ -22,7 +22,7 @@ const char *LOG_LV[] =
     "-E- "
 };
 
-int32_t g_CurLogLevel = WARN;
+int32_t g_CurLogLevel = ERR;
 
 /*-----------------------------------------------------------*/
 

@@ -22,11 +22,17 @@ extern "C" {
 #define PACKED __attribute__((__packed__))
 #define ZB_DEVICE_ID_IVALID			(0xffffffff)
 #define MAX_NB_READ_ATTRIBUTES                  10
-#define MAX_ZD_DEVICE_NUMBERS                   64
+#define MAX_ZD_DEVICE_NUMBERS                   1
 #define MAX_ZD_ENDPOINT_NUMBERS_PER_DEV          5
 #define MAX_ZD_CLUSTER_NUMBERS_PER_EP           15
 #define MAX_ZD_ATTRIBUTE_NUMBERS_TOTAL         128       
 
+/***Zigbee data base manager****/  
+#define  DBM_ZD_NETWORK_INFO_KEY     "zigbeeNetworkInfo"
+#define  DBM_ZD_DEVICE_TABLE_KEY     "zigbeeDeviceTable"
+#define  DBM_ZD_ATTRIBUTE_TABLE_KEY  "zigbeeAttributeTable"
+#define  DBM_ZD_HEARTBEAT_TABLE_KEY  "zigbeeHeartBeatTable"
+//#define  DBM_ZD_SUB_DEVICE_AM_TABLE_KEY  "zigbeeSubDeviceAMTable"
 
 /****************************************************************************/
 /***        Type Definitions                                              ***/
@@ -166,6 +172,9 @@ typedef struct
 
 typedef enum
 {
+	E_ZB_ATTRIBUTE_BOOL_TYPE         =0x10,
+	E_ZB_ATTRIBUTE_UINT8_TYPE		 =0x20,
+
     E_ZB_ATTRIBUTE_UINT64_TYPE       = 0x80,
     E_ZB_ATTRIBUTE_STRING_TYPE       = 0x81
 } tsZbAttributeGeneralType;
@@ -179,6 +188,10 @@ typedef enum
 	E_ZB_DEVICE_STATE_ACTIVE         = 0x02,
 	E_ZB_DEVICE_STATE_OFF_LINE       = 0x03,
 	E_ZB_DEVICE_STATE_LEFT           = 0x04,
+
+	E_ZB_DEVICE_BIND_OVER            = 0x05,
+	E_ZB_DEVICE_REQUEST_ALISE_AGAIN  = 0x06,
+
 
     E_ZB_DEVICE_STATE_GET_ENDPOINT   = 0x20,
     E_ZB_DEVICE_STATE_GET_CLUSTER    = 0x21,
@@ -224,6 +237,33 @@ typedef struct
 
 
 
+
+typedef struct 
+{
+    uint16_t u16NodeId;
+    uint8_t u8DstEndpoint;
+	uint8_t u8SrcEndpoint;
+    uint16_t u16ClusterId;
+	uint16_t u16AttributeId;
+	uint8_t u8DataType;
+	uint16_t u16MinIntv;
+	uint16_t u16MaxIntv;
+	uint16_t u16TimeOut;
+	uint64_t u64Change;
+} PACKED tsZbDeviceConfigReport;
+
+
+typedef struct 
+{
+    uint16_t u16NodeId;
+    uint8_t u8DstEndpoint;
+	uint8_t u8SrcEndpoint;
+    uint16_t u16ClusterId;
+	uint16_t u16AttributeId;
+} PACKED tsZbDeviceReadReportConfig;
+
+
+
 typedef struct
 {
 	uint16_t u16ClusterId;
@@ -252,7 +292,11 @@ typedef struct
 	tsZbDeviceEndPoint sZDEndpoint[MAX_ZD_ENDPOINT_NUMBERS_PER_DEV];
 } PACKED tsZbDeviceInfo;
 
-
+typedef struct{
+	tsZbDeviceInfo *zb_device_ib;
+	int dev_id;
+	bool bIsOnLine;
+}sub_dev_addr_map_t;
 
 typedef struct
 {
@@ -263,16 +307,29 @@ typedef struct
 	teZbNetworkState eNetworkState;
 } tsZbNetworkInfo;
 
-
+typedef enum{
+	ZB_DEVICE_MANAGE_ACTIVE_EP_REQ,
+	ZB_DEVICE_MANAGE_SIMPLE_DESC_REQ,
+	ZB_DEVICE_MANAGE_ATTRIBUTE_READ,
+	ZB_DEVICE_MANAGE_CLUSTER_BIND,
+	ZB_DEVICE_MANAGE_PKEY_REQ,
+	ZB_DEVICE_MANAGE_PSECRET_REQ,
+	ZB_DEVICE_MANAGE_DNAME_REQ,
+	ZB_DEVICE_MANAGE_DSECRET_REQ,
+	ZB_DEVICE_MANAGE_COMPLETE
+}zb_device_mange_st_e;
+	
 #define IOT_SE_REQ_TIMEOUT_S			60
-
 typedef struct{
+	struct dlist_s *prev;
+	struct dlist_s *next;
+
 	tsZbDeviceInfo *devinfo;
 	uint8_t product_key[20];
 	uint8_t product_secret[64];
 	uint8_t device_name[32];
 	uint8_t device_secret[64];
-	uint8_t items_get;
+	zb_device_mange_st_e items_get;
 	uint8_t timeout;
 
 }zb_device_iot_se_req_t;
@@ -317,6 +374,11 @@ bool bZDM_EraseDeviceFromDeviceTable(uint64_t u64IeeeAddr);
 void vZDM_ClearAllDeviceTables();
 
 void vZbDeviceTable_Init();
+
+int  vZDM_GetAllDeviceTable();
+
+void vZDM_SetAllDeviceOffLine();
+
 
 
 void vZDM_NewDeviceQualifyProcess(tsZbDeviceInfo* device);
